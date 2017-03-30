@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store/modules/user'
+import iView from 'iview'
 import Layout from '@/components/common/Layout'
 import Bucket from '@/components/bucket/Bucket'
 import File from '@/components/bucket/File'
@@ -9,10 +11,11 @@ import Login from '@/components/login/Login'
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     routes: [{
         path: '/',
         component: Layout,
+        meta: { requiresAuth: true },
         children: [{
                 path: '',
                 redirect: '/bucket'
@@ -40,3 +43,25 @@ export default new Router({
         component: Login
     }]
 });
+
+router.beforeEach((to, from, next) => {
+    iView.LoadingBar.start();
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!store.state.login) {
+            next({
+                path: '/login',
+                query: { redirect: to.fullPath }
+            })
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
+})
+
+router.afterEach((to, from, next) => {
+    iView.LoadingBar.finish();
+})
+
+export default router;

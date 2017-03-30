@@ -1,7 +1,7 @@
 <template>
     <div class="section-login">
         <div class="bg-login"></div>
-        <img src="../../assets/logo.png"/> 
+        <img src="../../assets/logo.png" />
         <Form ref="formInline"
               :model="formInline"
               :rules="ruleInline"
@@ -30,8 +30,7 @@
     </div>
 </template>
 <script>
-import { handler } from '../service/Aws'
-import moment from 'moment'
+import { LOGIN, USERINFO } from '../service/API'
 export default {
     data() {
         return {
@@ -58,12 +57,19 @@ export default {
     },
 
     methods: {
-        handleSubmit(name) {
+        async handleSubmit(name) {
+            let _this = this
             this.$refs[name].validate((valid) => {
                 if (valid) {
-                    this.$Message.success('提交成功!');
+                    _this.$http.post(LOGIN, {..._this.formInline}).then(res => {
+                        this.$store.dispatch('setUserInfo', res)
+                        this.$router.push('/')
+                        //let redirect = this.$route.params.redirect
+                        //console.log(redirect)
+                        //!redirect ? this.$router.replace(redirect) : this.$router.replace('#/')
+                    })
                 } else {
-                    this.$Message.error('表单验证失败!');
+                    this.$Message.error('表单验证失败!')
                 }
             })
         }
@@ -89,10 +95,10 @@ export default {
         right: 0;
         width: 250px;
     }
-    button{
+    button {
         width: 250px;
     }
-    img{
+    img {
         position: absolute;
         margin: 285px auto auto auto;
         top: 0;
