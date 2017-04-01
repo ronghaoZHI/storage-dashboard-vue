@@ -13,6 +13,7 @@ export default {
     html,body{
         height: 100%;
         width: 100%;
+        min-width: 1060px;
     }
     #app {
       font-family: 'Avenir', Helvetica, Arial, sans-serif;

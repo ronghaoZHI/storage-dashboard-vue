@@ -1,12 +1,10 @@
 <template>
-    <div class="layout"
-         :class="{'layout-hide-text': spanLeft < 5}">
+    <div class="layout">
         <Row type="flex"
              class="layout-row">
-            <i-col :span="spanLeft"
-                   class="layout-menu-left">
+            <div class="layout-menu">
                 <Menu active-name="bucket"
-                      theme="light"
+                      theme="dark"
                       width="auto"
                       @on-select="goRouter">
                     <div class="layout-logo-left">
@@ -34,17 +32,14 @@
                         <span class="layout-text">Keychain</span>
                     </Menu-item>
                 </Menu>
-            </i-col>
-            <i-col :span="spanRight">
-                <div class="layout-right">
+            </div>
+            <div class="layout-container">
+                <div class="flex-box">
                     <div class="layout-header">
                         <div class="layout-header-left">
-                            <i-button type="text"
-                                      @click="toggleClick">
-                                <Icon type="navicon"
-                                      size="32"></Icon>
-                            </i-button>
-                            <h2>{{title}}</h2>
+                            <a>CDN-X</a>
+                            <a>CWN-X</a>
+                            <a>CLN-X</a>
                         </div>
                         <div class="layout-header-right">
                             <Dropdown style="margin-left: 20px"
@@ -62,7 +57,7 @@
                         <router-view></router-view>
                     </div>
                 </div>
-            </i-col>
+            </div>
         </Row>
     </div>
 </template>
@@ -71,28 +66,12 @@ import user from '../../store/modules/user'
 export default {
     data() {
         return {
-            spanLeft: 5,
-            spanRight: 19,
             username: user.state.userInfo.username,
-            title: this.$route.meta.title
-        }
-    },
-    computed: {
-        iconSize() {
-            return this.spanLeft === 5 ? 24 : 36;
+            title: this.$route.meta.title,
+            iconSize: 24
         }
     },
     methods: {
-        toggleClick() {
-            console.log(this.$route);
-            if (this.spanLeft === 5) {
-                this.spanLeft = 2;
-                this.spanRight = 22;
-            } else {
-                this.spanLeft = 5;
-                this.spanRight = 19;
-            }
-        },
         goRouter(link) {
             this.$router.push({ name: link })
         }
@@ -109,9 +88,14 @@ export default {
 
 .layout-row {
     height: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    .layout-container{
+        flex: 1;
+    }
 }
 
-.layout-right {
+.flex-box {
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -150,8 +134,9 @@ export default {
     line-height: 24px
 }
 
-.layout-menu-left {
-    background: #fff;
+.layout-menu {
+    width: 200px;
+    background: #464c5b;
 }
 
 .layout-header {
@@ -161,11 +146,6 @@ export default {
     height: 60px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-    .layout-header-left {
-        display: inline-flex;
-        align-items: center;
-        justify-content: flex-start;
-    }
     .layout-header-right {
         margin-right: 16px;
     }
@@ -173,6 +153,16 @@ export default {
         color: #657180;
         font-size: 14px;
         font-weight: bolder;
+    }
+}
+
+.layout-header-left{
+    a {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+        width: 90px;
     }
 }
 
@@ -189,21 +179,6 @@ export default {
 
 .logo-samll {
     display: none;
-}
-
-.layout-hide-text {
-    .layout-text {
-        display: none;
-    }
-    .layout-logo-left {
-        text-align: center;
-    }
-    .layout-logo-left>.logo-big {
-        display: none;
-    }
-    .layout-logo-left>.logo-samll {
-        display: inline-block;
-    }
 }
 
 .ivu-col {

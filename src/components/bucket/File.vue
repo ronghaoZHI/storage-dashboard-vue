@@ -1,4 +1,4 @@
-<template>    
+<template>
     <div>
         <div class="layout-bsc-toolbar">
             <div>
@@ -11,7 +11,12 @@
                 <Breadcrumb-item>{{bucket}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Table :show-header="showHeader" :context="self" :columns="header" :data="contents" ></Table>
+        <Table :show-header="showHeader"
+               :stripe="true"
+               :context="self"
+               :highlight-row="true"
+               :columns="fileHeader"
+               :data="contents"></Table>
     </div>
 </template>
 <script>
@@ -20,52 +25,88 @@ import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 export default {
     data() {
-        return{
+        return {
             contents: [],
             self: this,
-            showHeader: false,
-            header: [
+            showHeader: true,
+            iconSize: 16,
+            fileHeader: [
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                },
                 {
                     title: 'Key',
-                    key: 'Key'
-                },{
+                    key: 'Key',
+                    width: 240,
+                    ellipsis: true,
+                    sortable: true,
+                    render(row, column, index) {
+                        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong>${row.Key}</strong>`;
+                    }
+                }, {
                     title: 'Size',
-                    key: 'Size'
-                },{
+                    width: 90,
+                    align: 'right',
+                    key: 'convertSize'
+                }, {
                     title: 'Create time',
-                    key: 'LastModified'
-                },{
+                    key: 'LastModified',
+                    width: 140,
+                    sortable: true
+                }, {
                     title: 'Actions',
                     key: 'actions',
-                    width: 150,
+                    width: 170,
                     align: 'center',
-                    render (row, column, index) {
-                        return `<i-button size="small">查看</i-button>`;
+                    render(row, column, index) {
+                        return row.Type === 'folder' ? `<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
+                         `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
+                        <i-button size="small"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="eye" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="link" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
                     }
                 }
-            ],
+            ]
         }
     },
     computed: {
-      bucket: function(){
-        return this.$route.params.bucket
-      }
+        bucket: function () {
+            return this.$route.params.bucket
+        }
     },
-    mounted(){
+    mounted() {
         this.getData()
     },
-    components:{
-        bucket: function(){
+    components: {
+        bucket: function () {
             return this.$route.params.bucket
         }
     },
     methods: {
         async getData() {
-            let res = await handler('listObjects',{Bucket: this.bucket})
-            this.contents = _.forEach(res.Contents,(item) => {
-                item.Size = bytes(item.Size)
+            let res = await handler('listObjects', { Bucket: this.bucket, Delimiter: '/' })
+            this.contents = _.forEach(res.CommonPrefixes, (foler) => {
+                foler.Key = foler.Prefix
+                foler.Type = 'folder'
+                foler.LastModified = ''
+                foler.convertSize = ''
+                delete foler.Prefix
+            }).concat(_.forEach(res.Contents, (item) => {
+                item.convertSize = bytes(item.Size)
+                item.Type = 'file'
                 item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
-            })
+            }))
+        }
+    },
+    watch: {
+        contents: {
+            handler: function (val, oldVal) {
+                console.log(val, oldVal)
+            },
+            deep: true
         }
     }
 }
@@ -94,9 +135,9 @@ const bytes = (bytes) => {
 }
 </script>
 <style lang="less" scoped>
-    .layout-bsc-toolbar{
-        button{
-            margin-right: 8px;
-        }
+.layout-bsc-toolbar {
+    button {
+        margin-right: 8px;
     }
+}
 </style>
