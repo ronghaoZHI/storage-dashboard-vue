@@ -1,7 +1,7 @@
 <template>
     <div class="section-login">
         <div class="bg-login"></div>
-        <img src="../../assets/logo.png" />
+        <img src="../../assets/logo.png" alt="logo" />
         <Form ref="formInline"
               :model="formInline"
               :rules="ruleInline"
@@ -24,7 +24,7 @@
             </Form-item>
             <Form-item>
                 <Button type="primary"
-                        @click="handleSubmit('formInline')">登录</Button>
+                        @click="handleSubmit('formInline')">Login</Button>
             </Form-item>
         </Form>
     </div>
@@ -40,11 +40,11 @@ export default {
             },
             ruleInline: {
                 email: [
-                    { required: true, message: '请填写邮箱地址', trigger: 'blur' }
+                    { required: true, message: 'Need email', trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '请填写密码', trigger: 'blur' },
-                    { type: 'string', min: 6, message: '密码长度不能小于6位', trigger: 'blur' }
+                    { required: true, message: 'Need password', trigger: 'blur' },
+                    { type: 'string', min: 6, message: 'Requires 6 charactors', trigger: 'blur' }
                 ]
             }
         }
@@ -63,13 +63,13 @@ export default {
                 if (valid) {
                     _this.$http.post(LOGIN, {..._this.formInline}).then(res => {
                         this.$store.dispatch('setUserInfo', res)
-                        this.$router.push('/')
-                        //let redirect = this.$route.params.redirect
-                        //console.log(redirect)
-                        //!redirect ? this.$router.replace(redirect) : this.$router.replace('#/')
+                        let redirect = this.$route.query.redirect //get redirect path
+                        !!redirect ? this.$router.push(redirect) : this.$router.push('/')
+                    },err => {
+                        this.$Message.error('Login fail')
                     })
                 } else {
-                    this.$Message.error('表单验证失败!')
+                    this.$Message.error('Input validate fail')
                 }
             })
         }

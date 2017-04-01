@@ -22,19 +22,23 @@ const router = new Router({
             }, {
                 path: '/bucket',
                 name: 'bucket',
+                meta: { title: 'My storage' },
                 component: Bucket
             },
             {
                 path: '/file/:bucket',
                 name: 'file',
+                meta: { title: 'My storage' },
                 component: File
             }, {
                 path: '/dashboard',
                 name: 'dashboard',
+                meta: { title: 'Dashboard' },
                 component: Dashboard,
             }, {
                 path: '/keychain',
                 name: 'keychain',
+                meta: { title: 'Keychain' },
                 component: Keychain,
             }
         ]
