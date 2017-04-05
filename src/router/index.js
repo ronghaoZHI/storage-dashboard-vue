@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '../store/modules/user'
+import User from '../store/modules/user'
+import Store from '../store'
 import iView from 'iview'
+import { getUserInfoData } from '../components/service/Data'
 import Layout from '@/components/common/Layout'
 import Bucket from '@/components/bucket/Bucket'
 import File from '@/components/bucket/File'
@@ -51,13 +53,15 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!store.state.login) {
+        if (User.state.login) {
+            next()
+        } else if (isServerLogin) {
+            next()
+        } else {
             next({
                 path: '/login',
                 query: { redirect: to.fullPath }
             })
-        } else {
-            next()
         }
     } else {
         next()
@@ -67,5 +71,14 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from, next) => {
     iView.LoadingBar.finish();
 })
+
+// when the user refresh the page, the server has login state 
+const isServerLogin = async() => {
+    let info = await getUserInfoData()
+    Store.dispatch('setUserInfo', {
+        info: info
+    })
+    return info.username ? true : false
+}
 
 export default router;

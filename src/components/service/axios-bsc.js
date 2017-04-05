@@ -1,5 +1,6 @@
 import axios from 'axios'
-
+//for cros cookie
+axios.defaults.withCredentials = true
 axios.interceptors.request.use(function(config) {
     return config;
 }, function(error) {

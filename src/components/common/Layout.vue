@@ -35,24 +35,7 @@
             </div>
             <div class="layout-container">
                 <div class="flex-box">
-                    <div class="layout-header">
-                        <div class="layout-header-left">
-                            <a>CDN-X</a>
-                            <a>CWN-X</a>
-                            <a>CLN-X</a>
-                        </div>
-                        <div class="layout-header-right">
-                            <Dropdown style="margin-left: 20px"
-                                      placement="bottom-end">
-                                <a class="dropdown-link"
-                                   href="javascript:void(0)">{{username}}</a>
-                                <Dropdown-menu slot="list">
-                                    <Dropdown-item disabled>Change password</Dropdown-item>
-                                    <Dropdown-item divided>Logout</Dropdown-item>
-                                </Dropdown-menu>
-                            </Dropdown>
-                        </div>
-                    </div>
+                    <header-top :username='userInfo.username'></header-top>
                     <div class="layout-content">
                         <router-view></router-view>
                     </div>
@@ -63,18 +46,31 @@
 </template>
 <script>
 import user from '../../store/modules/user'
+import headerTop from './Header'
+import {mapState, mapActions} from 'vuex'
 export default {
     data() {
         return {
-            username: user.state.userInfo.username,
             title: this.$route.meta.title,
             iconSize: 24
+        }
+    },
+    mounted(){
+        this.getUserInfo();
+    },
+    components: {headerTop},
+    computed: {
+        userInfo () {
+            return user.state.userInfo
         }
     },
     methods: {
         goRouter(link) {
             this.$router.push({ name: link })
-        }
+        },
+         ...mapActions([
+            'getUserInfo'
+        ])
     }
 };
 </script>
@@ -137,33 +133,6 @@ export default {
 .layout-menu {
     width: 200px;
     background: #464c5b;
-}
-
-.layout-header {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    background: #fff;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-    .layout-header-right {
-        margin-right: 16px;
-    }
-    .dropdown-link {
-        color: #657180;
-        font-size: 14px;
-        font-weight: bolder;
-    }
-}
-
-.layout-header-left{
-    a {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        height: 60px;
-        width: 90px;
-    }
 }
 
 .layout-logo-left {

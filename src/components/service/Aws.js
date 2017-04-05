@@ -1,17 +1,14 @@
 import { HOST } from './HOST'
 import AWS from 'aws-sdk'
+import { ACCESSKEY } from './API'
+import axios from './axios-bsc'
 
 let key
 
 export const clear = () => key = undefined
 
 export const getKey = () => {
-    return new Promise((resolve, reject) => {
-        return resolve({
-            accesskey: "m47qygx91jaz25reiuon",
-            secretkey: "I3GdHsh72jKs4BEr87gxbh5osy+CPrYywWIL3Mko"
-        })
-    })
+    return axios.get(ACCESSKEY).then(res => key = res.data[0])
 }
 
 export const config = ({ accesskey, secretkey }, timeout = 10000, region = 'us-west-1') => {

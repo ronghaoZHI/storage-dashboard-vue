@@ -2,8 +2,6 @@
     <div>Dashboard</div>
 </template>
 <script>
-import { handler } from '../service/Aws'
-import moment from 'moment'
 export default {
     data() {
         return{
@@ -13,10 +11,6 @@ export default {
     mounted(){
         
     },
-    components:{
-        
-    },
-
     methods: {
         
     }

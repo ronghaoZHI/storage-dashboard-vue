@@ -53,13 +53,14 @@ export default {
                 }, {
                     title: 'Create time',
                     key: 'LastModified',
+                    align: 'right',
                     width: 140,
                     sortable: true
                 }, {
                     title: 'Actions',
                     key: 'actions',
                     width: 170,
-                    align: 'center',
+                    align: 'right',
                     render(row, column, index) {
                         return row.Type === 'folder' ? `<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
                          `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
