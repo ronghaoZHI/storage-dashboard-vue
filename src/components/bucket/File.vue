@@ -16,7 +16,8 @@
                :context="self"
                :highlight-row="true"
                :columns="fileHeader"
-               :data="contents"></Table>
+               :data="contents"
+               @on-row-click="rowClick"></Table>
     </div>
 </template>
 <script>
@@ -76,38 +77,45 @@ export default {
     computed: {
         bucket: function () {
             return this.$route.params.bucket
+        },
+        prefix: function () {
+            return this.$route.params.prefix === 'noprefix' ? '' : this.$route.params.prefix
         }
     },
     mounted() {
         this.getData()
     },
-    components: {
-        bucket: function () {
-            return this.$route.params.bucket
-        }
-    },
     methods: {
         async getData() {
-            let res = await handler('listObjects', { Bucket: this.bucket, Delimiter: '/' })
+            let res = await handler('listObjects', { 
+                Bucket: this.bucket,
+                Delimiter: '/',
+                Marker: this.prefix,
+                Prefix: this.prefix
+            })
             this.contents = _.forEach(res.CommonPrefixes, (foler) => {
-                foler.Key = foler.Prefix
+                foler.Key = this.keyFilter(foler.Prefix)
                 foler.Type = 'folder'
                 foler.LastModified = ''
                 foler.convertSize = ''
-                delete foler.Prefix
             }).concat(_.forEach(res.Contents, (item) => {
+                item.Key = this.keyFilter(item.Key)
                 item.convertSize = bytes(item.Size)
                 item.Type = 'file'
                 item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
             }))
+        },
+        rowClick(item) {
+            item.Type === 'folder' && this.$router.push({ name: 'file', params: { bucket: this.bucket,prefix: item.Prefix }})
+        },
+        keyFilter(key) {
+            return key.slice(this.prefix.length)
         }
     },
     watch: {
-        contents: {
-            handler: function (val, oldVal) {
-                console.log(val, oldVal)
-            },
-            deep: true
+        // the contents array need refresh when the $route value changed
+        '$route' (to, from) {
+            to.path !== from.path && this.getData()
         }
     }
 }
@@ -123,16 +131,11 @@ const bytes = (bytes) => {
         return '-'
     }
 
-    let isNegative = bytes < 0;
-    if (isNegative) {
-        bytes = -bytes;
-    }
-
     let units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
     let exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
     let number = (bytes / Math.pow(1024, Math.floor(exponent))).toFixed(1)
 
-    return (isNegative ? '-' : '') + number + ' ' + units[exponent]
+    return number + ' ' + units[exponent]
 }
 </script>
 <style lang="less" scoped>

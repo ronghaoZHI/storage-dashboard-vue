@@ -18,31 +18,29 @@ const router = new Router({
         component: Layout,
         meta: { requiresAuth: true },
         children: [{
-                path: '',
-                redirect: '/bucket'
-            }, {
-                path: '/bucket',
-                name: 'bucket',
-                meta: { title: 'My storage' },
-                component: Bucket
-            },
-            {
-                path: '/file/:bucket',
-                name: 'file',
-                meta: { title: 'My storage' },
-                component: File
-            }, {
-                path: '/dashboard',
-                name: 'dashboard',
-                meta: { title: 'Dashboard' },
-                component: Dashboard,
-            }, {
-                path: '/keychain',
-                name: 'keychain',
-                meta: { title: 'Keychain' },
-                component: Keychain,
-            }
-        ]
+            path: '',
+            redirect: '/bucket'
+        }, {
+            path: '/bucket',
+            name: 'bucket',
+            meta: { title: 'My storage' },
+            component: Bucket
+        }, {
+            path: '/bucket/:bucket/prefix/:prefix',
+            name: 'file',
+            meta: { title: 'My storage' },
+            component: File
+        }, {
+            path: '/dashboard',
+            name: 'dashboard',
+            meta: { title: 'Dashboard' },
+            component: Dashboard,
+        }, {
+            path: '/keychain',
+            name: 'keychain',
+            meta: { title: 'Keychain' },
+            component: Keychain,
+        }]
     }, {
         path: '/login',
         component: Login

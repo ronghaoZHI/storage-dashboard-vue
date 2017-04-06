@@ -6,7 +6,7 @@
                 <Breadcrumb-item>Bucket list</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Table :show-header="showHeader" :context="self" :columns="header" :data="bucketList" ></Table>
+        <Table :show-header="showHeader" :context="self" :columns="header" :data="bucketList" @on-row-click="rowClick" ></Table>
     </div>
 </template>
 <script>
@@ -23,6 +23,7 @@ export default {
                     key: 'Name'
                 },{
                     title: 'Create time',
+                    align: 'right',
                     key: 'CreationDate'
                 },{
                     title: 'Actions',
@@ -30,7 +31,9 @@ export default {
                     width: 350,
                     align: 'center',
                     render (row, column, index) {
-                        return `<i-button style="margin: 0 6px;" size="small" @click="showFile(${index})">文件管理</i-button><i-button style="margin: 0 6px;" size="small" @click="bucketSetting(${index})">空间设置</i-button><i-button style="margin: 0 6px;" size="small" @click="deleteBucket(${index})">删除</i-button>`;
+                        return `<i-button style="margin: 0 6px;" size="small">文件管理</i-button>
+                        <i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})">空间设置</i-button>
+                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucket(${index})">删除</i-button>`;
                     }
                 }
             ],
@@ -47,10 +50,13 @@ export default {
                 return item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
             })
         },
-        showFile(index) {
-            let item = this.bucketList[index]
+        bucketSetting() {
+            
+        },
+        deleteBucket() {},
+        rowClick(item) {
             this.$store.dispatch('selectBucket',item)
-            this.$router.push({name:'file',params: { bucket: item.Name}})
+            this.$router.push({name:'file',params: { bucket: item.Name,prefix: 'noprefix'}})
         }
     }
 }
