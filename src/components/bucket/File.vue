@@ -9,6 +9,8 @@
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
                 <Breadcrumb-item>{{bucket}}</Breadcrumb-item>
+                <Breadcrumb-item v-for="bc in breadcrumb"
+                                 :key="bc.id">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <Table :show-header="showHeader"
@@ -31,47 +33,7 @@ export default {
             self: this,
             showHeader: true,
             iconSize: 16,
-            fileHeader: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },
-                {
-                    title: 'Key',
-                    key: 'Key',
-                    width: 240,
-                    ellipsis: true,
-                    sortable: true,
-                    render(row, column, index) {
-                        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong>${row.Key}</strong>`;
-                    }
-                }, {
-                    title: 'Size',
-                    width: 90,
-                    align: 'right',
-                    key: 'convertSize'
-                }, {
-                    title: 'Create time',
-                    key: 'LastModified',
-                    align: 'right',
-                    width: 140,
-                    sortable: true
-                }, {
-                    title: 'Actions',
-                    key: 'actions',
-                    width: 170,
-                    align: 'right',
-                    render(row, column, index) {
-                        return row.Type === 'folder' ? `<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
-                         `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
-                        <i-button size="small"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
-                        <i-button size="small"><Icon type="eye" :size="iconSize"></Icon></i-button>
-                        <i-button size="small"><Icon type="link" :size="iconSize"></Icon></i-button>
-                        <i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
-                    }
-                }
-            ]
+            fileHeader: fileHeaderSetting
         }
     },
     computed: {
@@ -80,6 +42,25 @@ export default {
         },
         prefix: function () {
             return this.$route.params.prefix === 'noprefix' ? '' : this.$route.params.prefix
+        },
+        breadcrumb: function () {
+            if (!!this.prefix) {
+                let prefixArray = this.prefix.split('/')
+                let routeArray = []
+
+                prefixArray.pop()
+
+                _.each(prefixArray, (item, index) => {
+                    routeArray.push({
+                        text: item,
+                        id: index
+                    })
+                })
+
+                return routeArray
+            } else {
+                return []
+            }
         }
     },
     mounted() {
@@ -87,7 +68,7 @@ export default {
     },
     methods: {
         async getData() {
-            let res = await handler('listObjects', { 
+            let res = await handler('listObjects', {
                 Bucket: this.bucket,
                 Delimiter: '/',
                 Marker: this.prefix,
@@ -106,7 +87,7 @@ export default {
             }))
         },
         rowClick(item) {
-            item.Type === 'folder' && this.$router.push({ name: 'file', params: { bucket: this.bucket,prefix: item.Prefix }})
+            item.Type === 'folder' && this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
         },
         keyFilter(key) {
             return key.slice(this.prefix.length)
@@ -114,7 +95,7 @@ export default {
     },
     watch: {
         // the contents array need refresh when the $route value changed
-        '$route' (to, from) {
+        '$route'(to, from) {
             to.path !== from.path && this.getData()
         }
     }
@@ -137,6 +118,48 @@ const bytes = (bytes) => {
 
     return number + ' ' + units[exponent]
 }
+
+const fileHeaderSetting = [
+    {
+        type: 'selection',
+        width: 60,
+        align: 'center'
+    },
+    {
+        title: 'Key',
+        key: 'Key',
+        width: 240,
+        ellipsis: true,
+        sortable: true,
+        render(row, column, index) {
+            return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong>${row.Key}</strong>`;
+        }
+    }, {
+        title: 'Size',
+        width: 90,
+        align: 'right',
+        key: 'convertSize'
+    }, {
+        title: 'Create time',
+        key: 'LastModified',
+        align: 'right',
+        width: 140,
+        sortable: true
+    }, {
+        title: 'Actions',
+        key: 'actions',
+        width: 170,
+        align: 'right',
+        render(row, column, index) {
+            return row.Type === 'folder' ? `<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
+                `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
+                        <i-button size="small"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="eye" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="link" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
+        }
+    }
+]
 </script>
 <style lang="less" scoped>
 .layout-bsc-toolbar {
