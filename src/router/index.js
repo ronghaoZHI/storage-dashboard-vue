@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import User from '../store/modules/user'
-import Store from '../store'
 import iView from 'iview'
 import { getUserInfoData } from '../components/service/Data'
 import Layout from '@/components/common/Layout'
@@ -75,9 +74,6 @@ router.afterEach((to, from, next) => {
 // when the user refresh the page, the server has login state 
 const isServerLogin = async() => {
     let info = await getUserInfoData()
-    Store.dispatch('setUserInfo', {
-        info: info
-    })
     return info.username ? true : false
 }
 

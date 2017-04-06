@@ -2,40 +2,10 @@
     <div class="layout">
         <Row type="flex"
              class="layout-row">
-            <div class="layout-menu">
-                <Menu active-name="bucket"
-                      theme="dark"
-                      width="auto"
-                      @on-select="goRouter">
-                    <div class="layout-logo-left">
-                        <img class="logo-big"
-                             src="../../assets/logo.png"
-                             height="30px" />
-                        <img class="logo-samll"
-                             src="../../assets/logo-small.png"
-                             height="30px" />
-                    </div>
-                    <Menu-item name="bucket">
-                        <Icon type="soup-can-outline"
-                              :size="iconSize"></Icon>
-                        <span class="layout-text">My Storage</span>
-                    </Menu-item>
-                    <Menu-item name="dashboard">
-                        <Icon type="podium"
-                              :size="iconSize"></Icon>
-                        <span class="layout-text">Dashboard</span>
-                    </Menu-item>
-                    <Menu-item name="keychain">
-                        <Icon type="key"
-                              class="menu-icon-fix"
-                              :size="iconSize"></Icon>
-                        <span class="layout-text">Keychain</span>
-                    </Menu-item>
-                </Menu>
-            </div>
+            <menu-left></menu-left>
             <div class="layout-container">
                 <div class="flex-box">
-                    <header-top :username='userInfo.username'></header-top>
+                    <header-top :username='username'></header-top>
                     <div class="layout-content">
                         <router-view></router-view>
                     </div>
@@ -47,6 +17,7 @@
 <script>
 import user from '../../store/modules/user'
 import headerTop from './Header'
+import menuLeft from './Menu'
 import {mapState, mapActions} from 'vuex'
 export default {
     data() {
@@ -58,16 +29,13 @@ export default {
     mounted(){
         this.getUserInfo();
     },
-    components: {headerTop},
+    components: {headerTop,menuLeft},
     computed: {
-        userInfo () {
-            return user.state.userInfo
+        username () {
+            return user.state.username
         }
     },
     methods: {
-        goRouter(link) {
-            this.$router.push({ name: link })
-        },
          ...mapActions([
             'getUserInfo'
         ])
@@ -129,44 +97,6 @@ export default {
     display: inline-block;
     line-height: 24px
 }
-
-.layout-menu {
-    width: 200px;
-    background: #464c5b;
-}
-
-.layout-logo-left {
-    width: 90%;
-    height: 30px;
-    border-radius: 3px;
-    margin: 15px auto;
-}
-
-.layout-ceiling-main a {
-    color: #9ba7b5;
-}
-
-.logo-samll {
-    display: none;
-}
-
-.ivu-col {
-    transition: width .2s ease-in-out;
-}
-
-.ivu-menu-item {
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    span {
-        margin-left: 5px;
-    }
-    .menu-icon-fix {
-        width: 21px;
-    }
-}
-
 
 /* fix table width bug when toggle menu */
 
