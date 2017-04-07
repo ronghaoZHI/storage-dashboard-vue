@@ -8,9 +8,9 @@
             </div>
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
-                <Breadcrumb-item>{{bucket}}</Breadcrumb-item>
-                <Breadcrumb-item v-for="bc in breadcrumb"
-                                 :key="bc.id">{{bc.text}}</Breadcrumb-item>
+                <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
+                <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)"
+                                 :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <Table :show-header="showHeader"
@@ -19,6 +19,7 @@
                :highlight-row="true"
                :columns="fileHeader"
                :data="contents"
+               no-data-text="No data"
                @on-row-click="rowClick"></Table>
     </div>
 </template>
@@ -44,23 +45,7 @@ export default {
             return this.$route.params.prefix === 'noprefix' ? '' : this.$route.params.prefix
         },
         breadcrumb: function () {
-            if (!!this.prefix) {
-                let prefixArray = this.prefix.split('/')
-                let routeArray = []
-
-                prefixArray.pop()
-
-                _.each(prefixArray, (item, index) => {
-                    routeArray.push({
-                        text: item,
-                        id: index
-                    })
-                })
-
-                return routeArray
-            } else {
-                return []
-            }
+            return convertPrefix2Router(this.prefix)
         }
     },
     mounted() {
@@ -91,6 +76,9 @@ export default {
         },
         keyFilter(key) {
             return key.slice(this.prefix.length)
+        },
+        getUrl(prefix) {
+            return `#/bucket/${this.bucket}/prefix/${prefix.replace('/','%2F')}`
         }
     },
     watch: {
@@ -98,6 +86,27 @@ export default {
         '$route'(to, from) {
             to.path !== from.path && this.getData()
         }
+    }
+}
+
+// shit 
+const convertPrefix2Router = (prefix) => {
+    if (!!prefix) {
+        let prefixArray = prefix.split('/')
+        let routeArray = []
+
+        prefixArray.pop()
+        _.each(prefixArray, (item, index) => {
+            let copyArray = _.clone(prefixArray)
+            copyArray.length = index + 1
+            routeArray.push({
+                text: item,
+                prefix: copyArray.join('/') + '/'
+            })
+        })
+        return routeArray
+    } else {
+        return []
     }
 }
 
