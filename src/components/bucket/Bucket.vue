@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket" @click="createBucketModal = true">Add bucket</Button>
+            <Button class="button-bsc-add-bucket"
+                    @click="createBucketModal = true">Add bucket</Button>
             <Breadcrumb>
                 <Breadcrumb-item>Bucket list</Breadcrumb-item>
             </Breadcrumb>
@@ -15,10 +16,17 @@
         <Modal v-model="createBucketModal"
                title="Add bucket"
                ok-text="OK"
+               @on-ok="addBucket()"
+               @on-cancel="createBucketValue = ''"
                cancel-text="Cancel">
-            <Input v-model="createBucketValue" placeholder="Please fill in the bucket name" style="width: 300px"></Input>
-            <span v-show="createBucketValue.length < 3">Requires 3 characters</span>
+            <Input v-model="createBucketValue"
+                   @on-change="check()"
+                   placeholder="Please fill in the bucket name"
+                   style="width: 300px"></Input>
+            <span class="info-input-error"
+                  v-show="inputCheck">Requires 3 characters</span>
         </Modal>
+
     </div>
 </template>
 <script>
@@ -29,29 +37,11 @@ export default {
         return {
             createBucketValue: '',
             createBucketModal: false,
+            inputCheck: false,
             self: this,
             showHeader: false,
             iconSize: 18,
-            header: [
-                {
-                    title: 'Bucket name',
-                    key: 'Name'
-                }, {
-                    title: 'Create time',
-                    align: 'right',
-                    key: 'CreationDate'
-                }, {
-                    title: 'Actions',
-                    key: 'actions',
-                    width: 200,
-                    align: 'center',
-                    render(row, column, index) {
-                        return `<i-button style="margin: 0 6px;" size="small"><Icon type="document" :size="iconSize"></Icon></i-button>
-                        <i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button>
-                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucket(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
-                    }
-                }
-            ],
+            header: headSetting,
             bucketList: this.bucketList
         }
     },
@@ -68,15 +58,84 @@ export default {
         bucketSetting() {
 
         },
-        deleteBucket() { },
+        deleteBucketModal(item) {
+            this.$Modal.confirm({
+                content: 'test',
+                okText: 'Submit',
+                cancelText: 'Cancle',
+                onOk: () => this.deleteBucket(this.bucketList[item])
+            })
+        },
+        async deleteBucket(bucket){
+            try {
+                let buckets = await handler('listObjects', { Bucket: bucket.Name })
+                await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
+                await handler('deleteBucket', { Bucket: bucket.Name })
+                this.getBucketList()
+            } catch (error) {
+                console.log(error)
+                this.$Message.error(error.message)
+            }
+        },
         rowClick(item) {
             this.$store.dispatch('selectBucket', item)
             this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
+        },
+        addBucket() {
+            // the 'this' in arrow function is not point to vue
+            let _this = this
+            if (this.createBucketValue.length > 2) {
+                handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
+                    _this.$Message.success('Add bucket success')
+                    _this.getBucketList()
+                    _this.createBucketValue = ''
+                }, err => {
+                    _this.$Message.error(err.message)
+                })
+            } else {
+                this.$Message.warning('Requires 3 characters')
+            }
+        },
+        check() {
+            this.inputCheck = this.createBucketValue.length > 2 ? false : true
         }
     }
 }
 
+const batchDeletion = (list, bucket) => {
+    return Promise.all(Array.map(list, function (item) {
+        return handler('deleteObject', {
+            Bucket: bucket,
+            Key: item.Key || item.Prefix
+        })
+    }))
+}
+
+const headSetting = [
+    {
+        title: 'Bucket name',
+        key: 'Name'
+    }, {
+        title: 'Create time',
+        align: 'right',
+        key: 'CreationDate'
+    }, {
+        title: 'Actions',
+        key: 'actions',
+        width: 200,
+        align: 'center',
+        render(row, column, index) {
+            return `<i-button style="margin: 0 6px;" size="small"><Icon type="document" :size="iconSize"></Icon></i-button>
+                        <i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button>
+                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketModal(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
+        }
+    }
+]
+
 </script>
 <style lang="less" scoped>
-
+.info-input-error {
+    margin-left: 12px;
+    color: red;
+}
 </style>

@@ -7,7 +7,7 @@
         </div>
         <div class="layout-header-right">
             <Dropdown style="margin-left: 20px"
-                    @on-click="menuClick"
+                      @on-click="menuClick"
                       placement="bottom-end">
                 <a class="dropdown-link"
                    href="javascript:void(0)">{{username}}</a>
@@ -31,9 +31,9 @@ export default {
     },
     props: ['username'],
     methods: {
-        menuClick: function(name){
+        menuClick: function (name) {
             let _this = this
-            if(name === 'logout') {
+            if (name === 'logout') {
                 this.$store.dispatch('logout').then(() => {
                     _this.$router.push('/login')
                 })
@@ -61,7 +61,7 @@ export default {
     }
 }
 
-.layout-header-left{
+.layout-header-left {
     a {
         display: inline-flex;
         justify-content: center;
