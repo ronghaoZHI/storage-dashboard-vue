@@ -9,7 +9,8 @@
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
                 <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
-                <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)"
+                <Breadcrumb-item v-for="bc in breadcrumb"
+                                 :href="getUrl(bc.prefix)"
                                  :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
@@ -33,7 +34,7 @@ export default {
             contents: [],
             self: this,
             showHeader: true,
-            iconSize: 16,
+            iconSize: 18,
             fileHeader: fileHeaderSetting
         }
     },
@@ -78,7 +79,7 @@ export default {
             return key.slice(this.prefix.length)
         },
         getUrl(prefix) {
-            return `#/bucket/${this.bucket}/prefix/${prefix.replace('/','%2F')}`
+            return `#/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
         }
     },
     watch: {

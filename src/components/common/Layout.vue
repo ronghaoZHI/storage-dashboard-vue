@@ -18,7 +18,6 @@
 import user from '../../store/modules/user'
 import headerTop from './Header'
 import menuLeft from './Menu'
-import {mapState, mapActions} from 'vuex'
 export default {
     data() {
         return {
@@ -26,19 +25,11 @@ export default {
             iconSize: 24
         }
     },
-    mounted(){
-        this.getUserInfo();
-    },
     components: {headerTop,menuLeft},
     computed: {
         username () {
             return user.state.username
         }
-    },
-    methods: {
-         ...mapActions([
-            'getUserInfo'
-        ])
     }
 };
 </script>

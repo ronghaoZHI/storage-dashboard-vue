@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket">Add bucket</Button>
+            <Button class="button-bsc-add-bucket" @click="createBucketModal = true">Add bucket</Button>
             <Breadcrumb>
                 <Breadcrumb-item>Bucket list</Breadcrumb-item>
             </Breadcrumb>
@@ -12,6 +12,13 @@
                :data="bucketList"
                @on-row-click="rowClick"
                no-data-text="Please create your first bucket"></Table>
+        <Modal v-model="createBucketModal"
+               title="Add bucket"
+               ok-text="OK"
+               cancel-text="Cancel">
+            <Input v-model="createBucketValue" placeholder="Please fill in the bucket name" style="width: 300px"></Input>
+            <span v-show="createBucketValue.length < 3">Requires 3 characters</span>
+        </Modal>
     </div>
 </template>
 <script>
@@ -20,8 +27,11 @@ import moment from 'moment'
 export default {
     data() {
         return {
+            createBucketValue: '',
+            createBucketModal: false,
             self: this,
             showHeader: false,
+            iconSize: 18,
             header: [
                 {
                     title: 'Bucket name',
@@ -33,12 +43,12 @@ export default {
                 }, {
                     title: 'Actions',
                     key: 'actions',
-                    width: 350,
+                    width: 200,
                     align: 'center',
                     render(row, column, index) {
-                        return `<i-button style="margin: 0 6px;" size="small">File management</i-button>
-                        <i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})">Bucket setting</i-button>
-                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucket(${index})">Delete</i-button>`;
+                        return `<i-button style="margin: 0 6px;" size="small"><Icon type="document" :size="iconSize"></Icon></i-button>
+                        <i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button>
+                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucket(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
                     }
                 }
             ],

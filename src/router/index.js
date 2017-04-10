@@ -50,9 +50,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (User.state.login) {
-            next()
-        } else if (isServerLogin) {
+        if (User.state.username) {
             next()
         } else {
             next({
@@ -68,11 +66,5 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from, next) => {
     iView.LoadingBar.finish();
 })
-
-// when the user refresh the page, the server has login state 
-const isServerLogin = async() => {
-    let info = await getUserInfoData()
-    return info.username ? true : false
-}
 
 export default router;

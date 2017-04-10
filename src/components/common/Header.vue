@@ -7,12 +7,13 @@
         </div>
         <div class="layout-header-right">
             <Dropdown style="margin-left: 20px"
+                    @on-click="menuClick"
                       placement="bottom-end">
                 <a class="dropdown-link"
                    href="javascript:void(0)">{{username}}</a>
                 <Dropdown-menu slot="list">
                     <Dropdown-item disabled>Change password</Dropdown-item>
-                    <Dropdown-item divided>Logout</Dropdown-item>
+                    <Dropdown-item name="logout">Logout</Dropdown-item>
                 </Dropdown-menu>
             </Dropdown>
         </div>
@@ -30,7 +31,14 @@ export default {
     },
     props: ['username'],
     methods: {
-
+        menuClick: function(name){
+            let _this = this
+            if(name === 'logout') {
+                this.$store.dispatch('logout').then(() => {
+                    _this.$router.push('/login')
+                })
+            }
+        }
     }
 }
 
