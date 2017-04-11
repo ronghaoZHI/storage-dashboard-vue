@@ -5,7 +5,7 @@ import { ACCESSKEY } from './API'
 import axios from './axios-bsc'
 
 // just for $message
-var vm = new Vue({})
+let vm = new Vue({})
 
 let key
 
