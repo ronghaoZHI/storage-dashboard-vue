@@ -89,8 +89,8 @@ export default {
                     _this.$Message.success('Add bucket success')
                     _this.getBucketList()
                     _this.createBucketValue = ''
-                }, err => {
-                    _this.$Message.error(err.message)
+                }, error => {
+                    _this.$Message.error(error.message)
                 })
             } else {
                 this.$Message.warning('Requires 3 characters')

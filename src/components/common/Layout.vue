@@ -18,11 +18,11 @@
 import user from '../../store/modules/user'
 import headerTop from './Header'
 import menuLeft from './Menu'
+import {mapState, mapActions} from 'vuex'
 export default {
     data() {
         return {
-            title: this.$route.meta.title,
-            iconSize: 24
+            
         }
     },
     components: {headerTop,menuLeft},
@@ -30,7 +30,7 @@ export default {
         username () {
             return user.state.username
         }
-    }
+    },
 };
 </script>
 

@@ -2,10 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import User from '../store/modules/user'
 import iView from 'iview'
-import { getUserInfoData } from '../components/service/Data'
 import Layout from '@/components/common/Layout'
 import Bucket from '@/components/bucket/Bucket'
 import File from '@/components/bucket/File'
+import Upload from '@/components/bucket/Upload'
 import Dashboard from '@/components/dashboard/Dashboard'
 import Keychain from '@/components/keychain/Keychain'
 import Login from '@/components/login/Login'
@@ -30,6 +30,11 @@ const router = new Router({
             name: 'file',
             meta: { title: 'My storage' },
             component: File
+        }, {
+            path: '/upload/:bucket/prefix/:prefix',
+            name: 'upload',
+            meta: { title: 'My storage' },
+            component: Upload,
         }, {
             path: '/dashboard',
             name: 'dashboard',

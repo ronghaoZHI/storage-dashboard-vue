@@ -1,26 +1,41 @@
 <template>
-    <div id="app">
+    <div id="app"
+         v-drop>
         <router-view></router-view>
     </div>
 </template>
 <script>
 export default {
-    name: 'app'
+    name: 'app',
+    directives: {
+        //remove the default drop and drag actions 
+        drop: {
+            bind: function (el) {
+                let doc = document.getElementsByTagName('body')[0]
+                doc.ondrop = (e) => e.preventDefault()
+                doc.ondragleave = (e) => e.preventDefault()
+                doc.ondragenter = (e) => e.preventDefault()
+                doc.ondragover = (e) => e.preventDefault()
+            }
+        }
+    }
 }
 </script>
 
 <style lang="less">
-    html,body{
-        height: 100%;
-        width: 100%;
-        min-width: 1060px;
-    }
-    #app {
-      font-family: 'Avenir', Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-align: center;
-      color: #2c3e50;
-      height: 100%;
-    }
+html,
+body {
+    height: 100%;
+    width: 100%;
+    min-width: 1060px;
+}
+
+#app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    height: 100%;
+}
 </style>

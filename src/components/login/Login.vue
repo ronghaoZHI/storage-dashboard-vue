@@ -65,7 +65,7 @@ export default {
                         this.$store.dispatch('setUserInfo', res)
                         let redirect = this.$route.query.redirect //get redirect path
                         !!redirect ? this.$router.push(redirect) : this.$router.push('/')
-                    },err => {
+                    },error => {
                         this.$Message.error('Login fail')
                     })
                 } else {
