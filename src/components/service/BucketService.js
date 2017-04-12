@@ -16,6 +16,8 @@ const bytes = (bytes) => {
     return number + ' ' + units[exponent]
 }
 
+const keyFilter = (key, prefix) => key.slice(prefix.length)
+
 // shit 
 const convertPrefix2Router = (prefix) => {
     if (!!prefix) {
@@ -78,4 +80,4 @@ const fileHeaderSetting = [{
     }
 ]
 
-export { bytes, convertPrefix2Router, fileHeaderSetting }
+export { bytes, convertPrefix2Router, fileHeaderSetting, keyFilter }

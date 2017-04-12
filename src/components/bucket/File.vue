@@ -26,7 +26,7 @@
 </template>
 <script>
 import { handler } from '../service/Aws'
-import { bytes,convertPrefix2Router,fileHeaderSetting } from '../service/bucketService'
+import { bytes,keyFilter,convertPrefix2Router,fileHeaderSetting } from '../service/bucketService'
 import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 export default {
@@ -62,12 +62,12 @@ export default {
                 Prefix: this.prefix
             })
             this.contents = _.forEach(res.CommonPrefixes, (foler) => {
-                foler.Key = this.keyFilter(foler.Prefix)
+                foler.Key = keyFilter(foler.Prefix)
                 foler.Type = 'folder'
                 foler.LastModified = ''
                 foler.convertSize = ''
             }).concat(_.forEach(res.Contents, (item) => {
-                item.Key = this.keyFilter(item.Key)
+                item.Key = keyFilter(item.Key)
                 item.convertSize = bytes(item.Size)
                 item.Type = 'file'
                 item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
@@ -75,9 +75,6 @@ export default {
         },
         rowClick(item) {
             item.Type === 'folder' && this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
-        },
-        keyFilter(key) {
-            return key.slice(this.prefix.length)
         },
         getUrl(prefix) {
             return `#/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
