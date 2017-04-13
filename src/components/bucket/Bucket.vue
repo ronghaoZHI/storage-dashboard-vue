@@ -16,11 +16,11 @@
         <Modal v-model="createBucketModal"
                title="Add bucket"
                ok-text="OK"
-               @on-ok="addBucket()"
+               @on-ok="addBucket"
                @on-cancel="createBucketValue = ''"
                cancel-text="Cancel">
             <Input v-model="createBucketValue"
-                   @on-change="check()"
+                   @on-change="check"
                    placeholder="Please fill in the bucket name"
                    style="width: 300px"></Input>
             <span class="info-input-error"

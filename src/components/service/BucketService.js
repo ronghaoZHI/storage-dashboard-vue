@@ -39,45 +39,4 @@ const convertPrefix2Router = (prefix) => {
     }
 }
 
-const fileHeaderSetting = [{
-        type: 'selection',
-        width: 60,
-        align: 'center'
-    },
-    {
-        title: 'Key',
-        key: 'Key',
-        width: 240,
-        ellipsis: true,
-        sortable: true,
-        render(row, column, index) {
-            return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong>${row.Key}</strong>`;
-        }
-    }, {
-        title: 'Size',
-        width: 90,
-        align: 'right',
-        key: 'convertSize'
-    }, {
-        title: 'Create time',
-        key: 'LastModified',
-        align: 'right',
-        width: 140,
-        sortable: true
-    }, {
-        title: 'Actions',
-        key: 'actions',
-        width: 170,
-        align: 'right',
-        render(row, column, index) {
-            return row.Type === 'folder' ? `<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
-                `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
-                        <i-button size="small"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
-                        <i-button size="small"><Icon type="eye" :size="iconSize"></Icon></i-button>
-                        <i-button size="small"><Icon type="link" :size="iconSize"></Icon></i-button>
-                        <i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
-        }
-    }
-]
-
-export { bytes, convertPrefix2Router, fileHeaderSetting, keyFilter }
+export { bytes, convertPrefix2Router, keyFilter }

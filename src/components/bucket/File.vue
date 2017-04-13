@@ -2,7 +2,7 @@
     <div>
         <div class="layout-bsc-toolbar">
             <div>
-                <Button @click="upload()">Upload file</Button>
+                <Button @click="upload">Upload file</Button>
                 <Button>Create folder</Button>
                 <Button>Delete file</Button>
             </div>
@@ -26,7 +26,7 @@
 </template>
 <script>
 import { handler } from '../service/Aws'
-import { bytes,keyFilter,convertPrefix2Router,fileHeaderSetting } from '../service/bucketService'
+import { bytes,keyFilter,convertPrefix2Router } from '../service/bucketService'
 import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 export default {
@@ -55,6 +55,7 @@ export default {
     },
     methods: {
         async getData() {
+            let self = this
             let res = await handler('listObjects', {
                 Bucket: this.bucket,
                 Delimiter: '/',
@@ -62,12 +63,12 @@ export default {
                 Prefix: this.prefix
             })
             this.contents = _.forEach(res.CommonPrefixes, (foler) => {
-                foler.Key = keyFilter(foler.Prefix)
+                foler.Key = keyFilter(foler.Prefix,self.prefix)
                 foler.Type = 'folder'
                 foler.LastModified = ''
                 foler.convertSize = ''
             }).concat(_.forEach(res.Contents, (item) => {
-                item.Key = keyFilter(item.Key)
+                item.Key = keyFilter(item.Key,self.prefix)
                 item.convertSize = bytes(item.Size)
                 item.Type = 'file'
                 item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
@@ -90,6 +91,47 @@ export default {
         }
     }
 }
+
+const fileHeaderSetting = [{
+        type: 'selection',
+        width: 60,
+        align: 'center'
+    },
+    {
+        title: 'Key',
+        key: 'Key',
+        width: 240,
+        ellipsis: true,
+        sortable: true,
+        render(row, column, index) {
+            return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong>${row.Key}</strong>`;
+        }
+    }, {
+        title: 'Size',
+        width: 90,
+        align: 'right',
+        key: 'convertSize'
+    }, {
+        title: 'Create time',
+        key: 'LastModified',
+        align: 'right',
+        width: 140,
+        sortable: true
+    }, {
+        title: 'Actions',
+        key: 'actions',
+        width: 170,
+        align: 'right',
+        render(row, column, index) {
+            return row.Type === 'folder' ? `<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
+                `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
+                        <i-button size="small"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="eye" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="link" :size="iconSize"></Icon></i-button>
+                        <i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
+        }
+    }
+]
 
 </script>
 <style lang="less">
