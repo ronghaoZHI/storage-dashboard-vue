@@ -16,14 +16,15 @@
                 <p>Click or drag the file here to upload</p>
             </div>
         </div>
-        <div class="section-file-list">
-            <Table :context="self"
-                   :show-header="false"
-                   no-data-text="No data"
-                   :highlight-row="true"
-                   :columns="header"
-                   :data="fileList"></Table>
-        </div>
+       <ul class="section-file-list">
+            <li v-for="file in fileList" class="list-file">
+                <span class="span-name">{{file.name}}</span>
+                <span class="span-size">{{file.size}}</span>
+                <Progress :percent="file.progress">
+                    <Icon type="checkmark-circled"></Icon>
+                </Progress>
+            </li>
+        </ul>
     </div>
 </template>
 <script>
@@ -35,8 +36,6 @@ export default {
         return {
             fileList: [],
             self: this,
-            iconSize: 18,
-            header: headSetting
         }
     },
     directives: {
@@ -65,7 +64,8 @@ export default {
                             lastModifiedDate: moment(item.lastModifiedDate).format('YYYY-MM-DD HH:mm'),
                             size: bytes(item.size),
                             progress: 0,
-                            file: item
+                            file: item,
+                            isUpload: false
                         })
                     })
                 }
@@ -79,6 +79,10 @@ export default {
         back() {
             this.$router.push({ name: 'file', params: { bucket: this.$route.params.bucket, prefix: this.$route.params.prefix } })
         },
+        abort(file) {
+            console.log(file)
+            file.request.abort.bind(file.request)
+        },
         async uploadFile(item) {
             let file = item.file
             let params = {
@@ -88,11 +92,13 @@ export default {
                 Body: file
             }
             let aws = await getAWS(360000)
-            return aws.upload(params, {
+            let request = aws.upload(params, {
                 partSize: 10000 * 1024 * 1024
             }).on('httpUploadProgress', function (evt) {
                 item.progress = parseInt((evt.loaded * 100) / evt.total)
-            }).promise()
+                item.request = request
+            })
+            return request.promise()
         }
     },
     watch: {
@@ -100,52 +106,22 @@ export default {
             let self = this
             if (to.length > 0) {
                 to.forEach((file) => {
-                    self.uploadFile(file).then(res => self.$Message.success(`Upload ${file.name} success`),error => self.$Message.error(`Upload ${file.name} fail`,5))
+                    if(!file.isUpload){
+                        file.isUpload = true
+                        self.uploadFile(file).then(res => self.$Message.success(`Upload ${file.name} success`),error => self.$Message.error(`Upload ${file.name} fail`,5))
+                    }
                 })
             }
         }
     }
 }
 
-const headSetting = [
-    {
-        title: 'File name',
-        key: 'name'
-    }, {
-        title: 'LastModifiedDate',
-        width: 150,
-        key: 'lastModifiedDate'
-    }, {
-        title: 'Size',
-        align: 'right',
-        width: 150,
-        key: 'size'
-    },
-    {
-        title: 'Progress',
-        width: 350,
-        key: 'progress',
-        render(row, column, index) {
-            return `<Progress :percent="100"></Progress>`
-        }
-    }
-    , {
-        title: 'Actions',
-        key: 'actions',
-        width: 100,
-        align: 'left',
-        render(row, column, index) {
-            return `<i-button style="margin: 0 6px;" size="small" @click.stop="deleteFile(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
-        }
-    }
-]
-
 </script>
 <style lang="less" scoped>
 .section-file-upload {
     width: 100%;
     height: 200px;
-    border: 1px dashed #d7dde4;
+    border: 2px dashed #d7dde4;
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
@@ -157,12 +133,43 @@ const headSetting = [
         font-size: 16px;
     }
 }
-
 .section-file-list {
     margin-top: 5px;
 }
-
 .section-file-upload:hover {
-    border: 1px dashed #39f;
+    border: 2px dashed #39f;
+}
+.list-file{
+    width: 100%;
+    height: 50px;
+    background: #e9e9e9;
+    padding: 0 8px;
+    margin: 3px 0;
+    border-radius: 3px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .span-name{
+        flex: 5;
+    }
+    .span-size{
+        width: 60px;
+        text-align: right;
+        padding-right: 10px;
+    }
+    button {
+        width: 22px;
+        border: 0;
+        background: 0;
+        cursor: pointer;
+    }
+    button:focus {
+        background: #d9d9d9;
+        outline: 0
+    }
+    div{
+        flex: 6;
+    }
 }
 </style>
