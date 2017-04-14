@@ -69,9 +69,9 @@ export default {
         async deleteBucket(bucket){
             try {
                 let buckets = await handler('listObjects', { Bucket: bucket.Name })
-                await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
-                await handler('deleteBucket', { Bucket: bucket.Name })
-                this.getBucketList()
+                let response = await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
+                let del = await timeout(handler('deleteBucket', { Bucket: bucket.Name }), 500)
+                this.bucketList.splice(this.bucketList.indexOf(bucket),1) 
             } catch (error) {
                 console.log(error)
                 this.$Message.error(error.message)
@@ -100,6 +100,10 @@ export default {
             this.inputCheck = this.createBucketValue.length > 2 ? false : true
         }
     }
+}
+
+const timeout = (resolve,ms) => {
+    return Promise.resolve(setTimeout(() => resolve),ms)
 }
 
 const batchDeletion = (list, bucket) => {
