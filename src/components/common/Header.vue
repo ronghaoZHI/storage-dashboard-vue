@@ -49,14 +49,14 @@ export default {
     align-items: center;
     justify-content: space-between;
     height: 60px;
-    background: #fff;
+    background: #20a0ff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     .layout-header-right {
         margin-right: 16px;
     }
     .dropdown-link {
-        color: #657180;
-        font-size: 14px;
+        color: #fff;
+        font-size: 18px;
         font-weight: bolder;
     }
 }
@@ -66,8 +66,11 @@ export default {
         display: inline-flex;
         justify-content: center;
         align-items: center;
+        font-size: 18px;
+        font-weight: bolder;
         height: 60px;
-        width: 90px;
+        width: 140px;
+        color: #fff;
     }
 }
 </style>

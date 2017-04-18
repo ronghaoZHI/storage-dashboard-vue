@@ -46,7 +46,17 @@ export default {
 <style lang="less" scoped>
 .layout-menu {
     width: 200px;
-    background: #464c5b;
+    background: #2e373e;
+    .ivu-menu-dark {
+        background: #2e373e;
+    }
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu),
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):hover,
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu),
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover {
+        background: #3a434b;
+        color: #fff;
+    }
 }
 
 .layout-logo-left {

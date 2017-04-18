@@ -14,19 +14,34 @@
                                  :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Modal v-model="CopyModal">
+        <Modal v-model="copyModal">
             <div style="text-align:left">
-                Copy {{selectedFile.Key}} link?
+                Copy {{selectedFileKey}} link?
             </div>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="text" >
+                <Button type="text"  @click="copyModal = false">
                     <span>Cancle</span>
                 </Button>
-                <Button type="info" @click="CopyModal = false"
+                <Button type="info" @click="copyModal = false"
                         :data-clipboard-text="clipUrl"
                         v-clip>Copy!</Button>
             </div>
         </Modal>
+        <Modal
+            v-model="showImageModal"
+            :title="selectedFileKey || 'no title'"
+            width="900">
+            <div class="section-img">
+                <img :src="clipUrl"/>
+            </div>
+            <div slot="footer" class="copy-modal-footer">
+                <Button type="text"  @click="showImageModal = false">
+                    <span>Close</span>
+                </Button>
+                <Button type="info" @click="downloadFile">Download</Button>
+            </div>
+        </Modal>
+        <a :href="clipUrl" id="element-download" style="display:none"><span id="span-download"></span></a>
         <Table :show-header="showHeader"
                :stripe="true"
                :context="self"
@@ -47,8 +62,9 @@ export default {
     data() {
         return {
             clipUrl: '',
-            CopyModal: false,
-            selectedFile: {},
+            copyModal: false,
+            showImageModal: false,
+            selectedFileKey: '',
             fileList: [],
             self: this,
             showHeader: true,
@@ -88,14 +104,31 @@ export default {
                 item.Key = keyFilter(item.Key, self.prefix)
                 item.convertSize = bytes(item.Size)
                 item.Type = 'file'
+                item.isImage = isImage(item)
                 item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
             }))
         },
         async clipModal(file) {
             this.$Loading.start()
             this.clipUrl = await getURL(this.bucket, file)
-            this.selectedFile = file
-            this.CopyModal = true
+            this.selectedFileKey = file.Key
+            this.copyModal = true
+            this.$Loading.finish()
+        },
+        async downloadFile(file) {
+            console.log(file)
+            if(file) {
+                this.clipUrl = await getURL(this.bucket, file)
+            }
+            console.log(this.clipUrl)
+            console.log(document.querySelector("#span-download"))
+            document.querySelector("#span-download").click()
+        },
+        async imageModal(file) {
+            this.$Loading.start()
+            this.clipUrl = await getURL(this.bucket, file)
+            this.selectedFileKey = file.Key
+            this.showImageModal = true
             this.$Loading.finish()
         },
         deleteFileConfirm(file) {
@@ -135,6 +168,7 @@ export default {
     }
 }
 
+const isImage = (file) => /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key) ? true : false
 
 const getURL = async (bucket, file) => {
     try {
@@ -146,7 +180,6 @@ const getURL = async (bucket, file) => {
         return isAllUser ? url.split('?')[0] : url
     } catch (error) {
         console.log(error)
-        this.$Message.error(error.message)
     }
 }
 
@@ -183,8 +216,8 @@ const fileHeaderSetting = [{
     render(row, column, index) {
         return row.Type === 'folder' ? '<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>' :
             `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
-                        <i-button size="small"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
-                        <i-button size="small"><Icon type="eye" :size="iconSize"></Icon></i-button>
+                        <i-button size="small" @click="downloadFile(fileList[${index}])"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
+                        <i-button size="small" :disabled="!fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button>
                         <i-button size="small" @click="clipModal(fileList[${index}])"><Icon type="link" :size="iconSize"></Icon></i-button>
                         <i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
     }
@@ -193,12 +226,36 @@ const fileHeaderSetting = [{
 
 </script>
 <style lang="less">
+.section-img{
+    width: 100%;
+    text-align: center;
+    img{
+        max-width: 868px;
+        max-height: 600px;
+    }
+}
+
+
+.ivu-modal-content{
+    border-radius: 0 !important;
+}
 .layout-bsc-toolbar {
     button {
         margin-right: 8px;
     }
 }
-.copy-modal-footer{
-    border-top: 0
+.ivu-modal-close{
+    i{
+        color: #fff !important;
+    }
+}
+.ivu-modal-header{
+    background: #20a0ff;
+    div{
+        color: #fff;
+    }
+}
+.ivu-modal-footer{
+    border-top: 0 !important;
 }
 </style>
