@@ -16,6 +16,8 @@ const bytes = (bytes) => {
     return number + ' ' + units[exponent]
 }
 
+const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
+
 const keyFilter = (key, prefix) => key.slice(prefix.length)
 
 // shit 
@@ -39,4 +41,4 @@ const convertPrefix2Router = (prefix) => {
     }
 }
 
-export { bytes, convertPrefix2Router, keyFilter }
+export { bytes, convertPrefix2Router, keyFilter, removeItemFromArray }

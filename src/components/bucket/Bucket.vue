@@ -7,7 +7,7 @@
                 <Breadcrumb-item>Bucket list</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Table :show-header="showHeader"
+        <Table :show-header="false"
                :context="self"
                :columns="header"
                :data="bucketList"
@@ -21,7 +21,7 @@
                cancel-text="Cancel">
             <Input v-model="createBucketValue"
                    @on-change="check"
-                   placeholder="Please fill in the bucket name"
+                   placeholder="Requires bucket name"
                    style="width: 300px"></Input>
             <span class="info-input-error"
                   v-show="inputCheck">Requires 3 characters</span>
@@ -31,6 +31,7 @@
 </template>
 <script>
 import { handler } from '../service/Aws'
+import { removeItemFromArray } from '../service/bucketService'
 import moment from 'moment'
 export default {
     data() {
@@ -39,7 +40,6 @@ export default {
             createBucketModal: false,
             inputCheck: false,
             self: this,
-            showHeader: false,
             iconSize: 18,
             header: headSetting,
             bucketList: this.bucketList
@@ -58,9 +58,9 @@ export default {
         bucketSetting() {
 
         },
-        deleteBucketModal(item) {
+        deleteBucketConfirm(item) {
             this.$Modal.confirm({
-                content: 'test',
+                content: `Are you sure you want to delete [${item.Name}]?`,
                 okText: 'Submit',
                 cancelText: 'Cancle',
                 onOk: () => this.deleteBucket(this.bucketList[item])
@@ -70,8 +70,10 @@ export default {
             try {
                 let buckets = await handler('listObjects', { Bucket: bucket.Name })
                 let response = await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
+                // the bucket has cache when the objects just deleted
                 let del = await timeout(handler('deleteBucket', { Bucket: bucket.Name }), 500)
-                this.bucketList.splice(this.bucketList.indexOf(bucket),1) 
+                // the bucket list also has cache ...
+                removeItemFromArray(this.bucketList,bucket)
             } catch (error) {
                 console.log(error)
                 this.$Message.error(error.message)
@@ -131,7 +133,7 @@ const headSetting = [
         render(row, column, index) {
             return `<i-button style="margin: 0 6px;" size="small"><Icon type="document" :size="iconSize"></Icon></i-button>
                         <i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button>
-                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketModal(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
+                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
         }
     }
 ]

@@ -16,8 +16,9 @@
                 <p>Click or drag the file here to upload</p>
             </div>
         </div>
-       <ul class="section-file-list">
-            <li v-for="file in fileList" class="list-file">
+        <ul class="section-file-list">
+            <li v-for="file in fileList"
+                class="list-file">
                 <span class="span-name">{{file.name}}</span>
                 <span class="span-size">{{file.size}}</span>
                 <Progress :percent="file.progress">
@@ -45,15 +46,14 @@ export default {
                     e.preventDefault()
                     pushFile2Vue(e.dataTransfer.files)
                 },
-                el.onclick = (e) => {
-                    let fileInput = el.children[0]
-                    //click events bubble up the ancestry tree and the change event will trigge twice
-                    //how to change this listener function to arrow function ?
-                    fileInput.addEventListener("click", (e) => {e.stopPropagation()}, false)
-                    fileInput.onchange = (e) => {pushFile2Vue(e.target.files)}
-
-                    fileInput.click()
-                }
+                    el.onclick = (e) => {
+                        let fileInput = el.children[0]
+                        //click events bubble up the ancestry tree and the change event will trigge twice
+                        //fileInput.onclick((e,false) => e.stopPropagation()) not work ...
+                        fileInput.addEventListener("click", (e) => { e.stopPropagation() }, false)
+                        fileInput.onchange = (e) => { pushFile2Vue(e.target.files) }
+                        fileInput.click()
+                    }
                 const pushFile2Vue = (files) => {
                     console.log(files)
                     //binding.value => vue(this)
@@ -80,7 +80,6 @@ export default {
             this.$router.push({ name: 'file', params: { bucket: this.$route.params.bucket, prefix: this.$route.params.prefix } })
         },
         abort(file) {
-            console.log(file)
             file.request.abort.bind(file.request)
         },
         async uploadFile(item) {
@@ -92,9 +91,8 @@ export default {
                 Body: file
             }
             let aws = await getAWS(360000)
-            let request = aws.upload(params, {
-                partSize: 10000 * 1024 * 1024
-            }).on('httpUploadProgress', function (evt) {
+            let request = aws.upload(params, {partSize: 10000 * 1024 * 1024})
+            request.on('httpUploadProgress', function (evt) {
                 item.progress = parseInt((evt.loaded * 100) / evt.total)
                 item.request = request
             })
@@ -106,9 +104,9 @@ export default {
             let self = this
             if (to.length > 0) {
                 to.forEach((file) => {
-                    if(!file.isUpload){
+                    if (!file.isUpload) {
                         file.isUpload = true
-                        self.uploadFile(file).then(res => self.$Message.success(`Upload ${file.name} success`),error => self.$Message.error(`Upload ${file.name} fail`,5))
+                        self.uploadFile(file).then(res => self.$Message.success(`Upload ${file.name} success`), error => self.$Message.error(`Upload ${file.name} fail`, 5))
                     }
                 })
             }
@@ -133,13 +131,16 @@ export default {
         font-size: 16px;
     }
 }
+
 .section-file-list {
     margin-top: 5px;
 }
+
 .section-file-upload:hover {
     border: 2px dashed #39f;
 }
-.list-file{
+
+.list-file {
     width: 100%;
     height: 50px;
     background: #e9e9e9;
@@ -150,10 +151,10 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    .span-name{
+    .span-name {
         flex: 5;
     }
-    .span-size{
+    .span-size {
         width: 60px;
         text-align: right;
         padding-right: 10px;
@@ -168,7 +169,7 @@ export default {
         background: #d9d9d9;
         outline: 0
     }
-    div{
+    div {
         flex: 6;
     }
 }
