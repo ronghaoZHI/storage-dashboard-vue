@@ -155,7 +155,7 @@ export default {
             return `#/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
         },
         upload() {
-            this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
+            this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix }})
         }
     },
     directives: {
@@ -168,10 +168,7 @@ export default {
     watch: {
         // the fileList array need refresh when the $route value changed
         '$route'(to, from) {
-            if(to.path !== from.path){
-                this.fileList = []
-                this.getData()
-            }
+            to.path !== from.path && this.getData()
         }
     }
 }

@@ -39,6 +39,14 @@ export default {
             self: this,
         }
     },
+    computed: {
+        bucket: function () {
+            return this.$route.params.bucket
+        },
+        prefix: function () {
+            return this.$route.params.prefix === 'noprefix' ? '' : this.$route.params.prefix
+        }
+    },
     directives: {
         upload: {
             bind: function (el, binding) {
@@ -77,7 +85,7 @@ export default {
 
         },
         back() {
-            this.$router.push({ name: 'file', params: { bucket: this.$route.params.bucket, prefix: this.$route.params.prefix } })
+            this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
         },
         abort(file) {
             file.request.abort.bind(file.request)
@@ -85,8 +93,8 @@ export default {
         async uploadFile(item) {
             let file = item.file
             let params = {
-                Bucket: this.$route.params.bucket,
-                Key: file.name,
+                Bucket: this.bucket,
+                Key: this.prefix + file.name,
                 ContentType: file.type,
                 Body: file
             }
