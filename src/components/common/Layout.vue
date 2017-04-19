@@ -18,7 +18,6 @@
 import user from '../../store/modules/user'
 import headerTop from './Header'
 import menuLeft from './Menu'
-import {mapState, mapActions} from 'vuex'
 export default {
     data() {
         return {

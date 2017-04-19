@@ -80,6 +80,7 @@ export default {
             }
         },
         rowClick(item) {
+            console.log(this.$router)
             this.$store.dispatch('selectBucket', item)
             this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
         },

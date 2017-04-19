@@ -18,29 +18,35 @@
             <div style="text-align:left">
                 Copy {{selectedFileKey}} link?
             </div>
-            <div slot="footer" class="copy-modal-footer">
-                <Button type="text"  @click="copyModal = false">
+            <div slot="footer"
+                 class="copy-modal-footer">
+                <Button type="text"
+                        @click="copyModal = false">
                     <span>Cancle</span>
                 </Button>
-                <Button type="info" @click="copyModal = false"
+                <Button type="info"
+                        @click="copyModal = false"
                         :data-clipboard-text="clipUrl"
                         v-clip>Copy!</Button>
             </div>
         </Modal>
-        <Modal
-            v-model="showImageModal"
-            :title="selectedFileKey || 'no title'"
-            width="900">
+        <Modal v-model="showImageModal"
+               :title="selectedFileKey || 'no title'"
+               width="900">
             <div class="section-img">
-                <img :src="clipUrl"/>
+                <img :src="clipUrl" />
             </div>
-            <div slot="footer" class="copy-modal-footer">
-                <Button type="primary"  @click="showImageModal = false">
+            <div slot="footer"
+                 class="copy-modal-footer">
+                <Button type="primary"
+                        @click="showImageModal = false">
                     <span>Close</span>
                 </Button>
             </div>
         </Modal>
-        <a download id="element-download" style="display:none"><span id="span-download"></span></a>
+        <a download
+           id="element-download"
+           style="display:none"><span id="span-download"></span></a>
         <Table :show-header="showHeader"
                :stripe="true"
                :context="self"
@@ -106,10 +112,11 @@ export default {
                 item.isImage = isImage(item)
                 item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
             }))
+            console.log(this.fileList)
         },
         async clipModal(file) {
             this.$Loading.start()
-            this.clipUrl = await getURL(this.bucket, file,this.prefix)
+            this.clipUrl = await getURL(this.bucket, file, this.prefix)
             this.selectedFileKey = file.Key
             this.copyModal = true
             this.$Loading.finish()
@@ -119,12 +126,12 @@ export default {
             document.querySelector("#span-download").click()
         },
         async downloadFile(file) {
-            let url = await getURL(this.bucket, file,this.prefix)
+            let url = await getURL(this.bucket, file, this.prefix)
             this.download(url)
         },
         async imageModal(file) {
             this.$Loading.start()
-            this.clipUrl = await getURL(this.bucket, file,this.prefix)
+            this.clipUrl = await getURL(this.bucket, file, this.prefix)
             this.selectedFileKey = file.Key
             this.showImageModal = true
             this.$Loading.finish()
@@ -161,7 +168,10 @@ export default {
     watch: {
         // the fileList array need refresh when the $route value changed
         '$route'(to, from) {
-            to.path !== from.path && this.getData()
+            if(to.path !== from.path){
+                this.fileList = []
+                this.getData()
+            }
         }
     }
 }
@@ -170,7 +180,7 @@ const isImage = (file) => /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key) ? t
 
 const getURL = async (bucket, file, prefix) => {
     try {
-        let params = { Bucket: bucket, Key: prefix+file.Key}
+        let params = { Bucket: bucket, Key: prefix + file.Key }
         let s3 = await getAWS()
         let url = await s3.getSignedUrl('getObject', params)
         let acl = await handler('getObjectAcl', params)
@@ -215,7 +225,7 @@ const fileHeaderSetting = [{
         return row.Type === 'folder' ? '<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>' :
             `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
                         <i-button size="small" @click="downloadFile(fileList[${index}])"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
-                        <i-button size="small" :disabled="fileList[${index}].isImage && !fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button>
+                        <i-button size="small" :disabled="fileList[${index}] && !fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button>
                         <i-button size="small" @click="clipModal(fileList[${index}])"><Icon type="link" :size="iconSize"></Icon></i-button>
                         <i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
     }
@@ -224,36 +234,40 @@ const fileHeaderSetting = [{
 
 </script>
 <style lang="less">
-.section-img{
+.section-img {
     width: 100%;
     text-align: center;
-    img{
+    img {
         max-width: 868px;
         max-height: 600px;
     }
 }
 
 
-.ivu-modal-content{
+.ivu-modal-content {
     border-radius: 0 !important;
 }
+
 .layout-bsc-toolbar {
     button {
         margin-right: 8px;
     }
 }
-.ivu-modal-close{
-    i{
+
+.ivu-modal-close {
+    i {
         color: #fff !important;
     }
 }
-.ivu-modal-header{
+
+.ivu-modal-header {
     background: #20a0ff;
-    div{
+    div {
         color: #fff;
     }
 }
-.ivu-modal-footer{
+
+.ivu-modal-footer {
     border-top: 0 !important;
 }
 </style>

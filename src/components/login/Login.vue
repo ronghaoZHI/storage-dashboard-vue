@@ -62,7 +62,7 @@ export default {
             this.$refs[name].validate((valid) => {
                 if (valid) {
                     _this.$http.post(LOGIN, {..._this.formInline}).then(res => {
-                        this.$store.dispatch('setUserInfo', res)
+                        this.$store.dispatch('setUserInfo', res.data)
                         let redirect = this.$route.query.redirect //get redirect path
                         !!redirect ? this.$router.push(redirect) : this.$router.push('/')
                     },error => {
