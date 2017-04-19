@@ -1,5 +1,5 @@
 export const HOST = {
-    awsHost: '139.224.208.26',
-    apiHost: '139.224.208.26:9090',
+    awsHost: 's2.i.qingcdn.com',
+    apiHost: 'frontendapi-stats.bscstorage.com:9090',
     domain: 'www.bscstorage.com:8080'
 }

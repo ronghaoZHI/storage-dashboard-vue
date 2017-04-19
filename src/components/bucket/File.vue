@@ -35,13 +35,12 @@
                 <img :src="clipUrl"/>
             </div>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="text"  @click="showImageModal = false">
+                <Button type="primary"  @click="showImageModal = false">
                     <span>Close</span>
                 </Button>
-                <Button type="info" @click="downloadFile">Download</Button>
             </div>
         </Modal>
-        <a :href="clipUrl" id="element-download" style="display:none"><span id="span-download"></span></a>
+        <a download id="element-download" style="display:none"><span id="span-download"></span></a>
         <Table :show-header="showHeader"
                :stripe="true"
                :context="self"
@@ -110,23 +109,22 @@ export default {
         },
         async clipModal(file) {
             this.$Loading.start()
-            this.clipUrl = await getURL(this.bucket, file)
+            this.clipUrl = await getURL(this.bucket, file,this.prefix)
             this.selectedFileKey = file.Key
             this.copyModal = true
             this.$Loading.finish()
         },
-        async downloadFile(file) {
-            console.log(file)
-            if(file) {
-                this.clipUrl = await getURL(this.bucket, file)
-            }
-            console.log(this.clipUrl)
-            console.log(document.querySelector("#span-download"))
+        download(url) {
+            document.querySelector("#element-download").href = url
             document.querySelector("#span-download").click()
+        },
+        async downloadFile(file) {
+            let url = await getURL(this.bucket, file,this.prefix)
+            this.download(url)
         },
         async imageModal(file) {
             this.$Loading.start()
-            this.clipUrl = await getURL(this.bucket, file)
+            this.clipUrl = await getURL(this.bucket, file,this.prefix)
             this.selectedFileKey = file.Key
             this.showImageModal = true
             this.$Loading.finish()
@@ -170,9 +168,9 @@ export default {
 
 const isImage = (file) => /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key) ? true : false
 
-const getURL = async (bucket, file) => {
+const getURL = async (bucket, file, prefix) => {
     try {
-        let params = { Bucket: bucket, Key: file.Key || file.Prefix }
+        let params = { Bucket: bucket, Key: prefix+file.Key}
         let s3 = await getAWS()
         let url = await s3.getSignedUrl('getObject', params)
         let acl = await handler('getObjectAcl', params)
@@ -217,7 +215,7 @@ const fileHeaderSetting = [{
         return row.Type === 'folder' ? '<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>' :
             `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
                         <i-button size="small" @click="downloadFile(fileList[${index}])"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
-                        <i-button size="small" :disabled="!fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button>
+                        <i-button size="small" :disabled="fileList[${index}].isImage && !fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button>
                         <i-button size="small" @click="clipModal(fileList[${index}])"><Icon type="link" :size="iconSize"></Icon></i-button>
                         <i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
     }
