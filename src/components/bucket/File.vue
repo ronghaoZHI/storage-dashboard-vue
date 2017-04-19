@@ -3,8 +3,8 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button @click="upload">Upload file</Button>
-                <Button>Create folder</Button>
-                <Button>Delete file</Button>
+                <Button @click="createFolderModal = true">Create folder</Button>
+                <Button @click="batchDelete" :disabled="selectedFileList.length === 0">Delete file</Button>
             </div>
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
@@ -30,6 +30,19 @@
                         v-clip>Copy!</Button>
             </div>
         </Modal>
+        <Modal v-model="createFolderModal"
+               title="Add folder"
+               ok-text="OK"
+               @on-ok="addFolder"
+               @on-cancel="createFolderValue = ''"
+               cancel-text="Cancel">
+            <Input v-model="createFolderValue"
+                   @on-change="check"
+                   placeholder="Requires folder name"
+                   style="width: 300px"></Input>
+            <span class="info-input-error"
+                  v-show="inputCheck">Requires 1 characters</span>
+        </Modal>
         <Modal v-model="showImageModal"
                :title="selectedFileKey || 'no title'"
                width="900">
@@ -53,8 +66,8 @@
                :highlight-row="true"
                :columns="fileHeader"
                :data="fileList"
-               no-data-text="No data"
-               @on-row-click="rowClick"></Table>
+               @on-selection-change="select"
+               no-data-text="No data"></Table>
     </div>
 </template>
 <script>
@@ -69,7 +82,11 @@ export default {
             clipUrl: '',
             copyModal: false,
             showImageModal: false,
+            createFolderModal: false,
+            createFolderValue: '',
             selectedFileKey: '',
+            selectedFileList: [],
+            inputCheck: false,
             fileList: [],
             self: this,
             showHeader: true,
@@ -112,7 +129,16 @@ export default {
                 item.isImage = isImage(item)
                 item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
             }))
-            console.log(this.fileList)
+        },
+        async addFolder() {
+            if (!this.createFolderValue) return
+            try {
+                await handler('putObject', { Bucket: this.bucket, Key: this.prefix + this.createFolderValue + '/', Body: '' })
+                this.$Message.success('Create a folder successfully')
+                this.getData()
+            } catch (error) {
+                this.$Message.error('Create a folder fail')
+            }
         },
         async clipModal(file) {
             this.$Loading.start()
@@ -145,17 +171,41 @@ export default {
             })
         },
         async deleteFile(file) {
-            await handler('deleteObject', { Bucket: this.bucket, Key: file.Key })
-            removeItemFromArray(this.fileList, file)
+            try {
+                if (file.Type === 'file') {
+                    await handler('deleteObject', { Bucket: this.bucket, Key: file.Key })
+                } else {
+                    let res = await handler('listObjects', {
+                        Bucket: this.bucket,
+                        Prefix: this.prefix + file.Prefix
+                    })
+                    batchDeleteFileHandle(res.Contents,this.bucket,this.prefix)
+                }
+                removeItemFromArray(this.fileList, file)
+                this.$Message.success('Delete file successfully')
+            } catch (error) {
+                this.$Message.error('Delete file fail')
+            }
         },
-        rowClick(item) {
-            item.Type === 'folder' && this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
+        async batchDelete() {
+            let self = this
+            await Promise.all(Array.map(self.selectedFileList, (file) => self.deleteFile(file)))
+            self.getData()
+        },
+        openFolder(item) {
+            this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
         },
         getUrl(prefix) {
             return `#/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
         },
         upload() {
-            this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix }})
+            this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
+        },
+        check() {
+            this.inputCheck = this.createFolderValue.length > 0 ? false : true
+        },
+        select(selection) {
+            this.selectedFileList = selection
         }
     },
     directives: {
@@ -171,6 +221,10 @@ export default {
             to.path !== from.path && this.getData()
         }
     }
+}
+
+const batchDeleteFileHandle = async (list, bucket, prefix) => {
+    await Promise.all(Array.map(list, (file) => handler('deleteObject', {Bucket: bucket,Key: prefix + file.Key})))
 }
 
 const isImage = (file) => /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key) ? true : false
@@ -190,7 +244,7 @@ const getURL = async (bucket, file, prefix) => {
 
 const fileHeaderSetting = [{
     type: 'selection',
-    width: 60,
+    width: 40,
     align: 'center'
 },
 {
@@ -200,7 +254,7 @@ const fileHeaderSetting = [{
     ellipsis: true,
     sortable: true,
     render(row, column, index) {
-        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong>${row.Key}</strong>`;
+        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <span class="link-folder" @click="openFolder(fileList[${index}])">${row.Key}</span>`;
     }
 }, {
     title: 'Size',
@@ -219,7 +273,7 @@ const fileHeaderSetting = [{
     width: 170,
     align: 'right',
     render(row, column, index) {
-        return row.Type === 'folder' ? '<i-button size="small"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>' :
+        return row.Type === 'folder' ? `<i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
             `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
                         <i-button size="small" @click="downloadFile(fileList[${index}])"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
                         <i-button size="small" :disabled="fileList[${index}] && !fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button>
@@ -238,6 +292,12 @@ const fileHeaderSetting = [{
         max-width: 868px;
         max-height: 600px;
     }
+}
+
+.link-folder {
+    font-weight: bold;
+    color: #1088E9;
+    cursor: pointer;
 }
 
 

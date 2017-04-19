@@ -63,7 +63,6 @@ export default {
                         fileInput.click()
                     }
                 const pushFile2Vue = (files) => {
-                    console.log(files)
                     //binding.value => vue(this)
                     //but using dataset is best 
                     Array.from(files).forEach((item) => {

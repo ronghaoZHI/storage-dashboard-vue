@@ -26,7 +26,6 @@
             <span class="info-input-error"
                   v-show="inputCheck">Requires 3 characters</span>
         </Modal>
-
     </div>
 </template>
 <script>
@@ -80,7 +79,6 @@ export default {
             }
         },
         rowClick(item) {
-            console.log(this.$router)
             this.$store.dispatch('selectBucket', item)
             this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
         },
