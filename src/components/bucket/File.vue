@@ -290,12 +290,12 @@ const fileHeaderSetting = [{
     width: 170,
     align: 'right',
     render(row, column, index) {
-        return row.Type === 'folder' ? `<i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>` :
-            `<i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button> 
-                        <i-button size="small" @click="downloadFile(fileList[${index}])"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button>
-                        <i-button size="small" :disabled="fileList[${index}] && !fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button>
-                        <i-button size="small" @click="clipModal(fileList[${index}])"><Icon type="link" :size="iconSize"></Icon></i-button>
-                        <i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
+        return row.Type === 'folder' ? `<Tooltip content="Delete folder" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
+            `<Tooltip content="File setting" :delay="1000" placement="top"><i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Download file" :delay="1000" placement="top"><i-button size="small" @click="downloadFile(fileList[${index}])"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Image preview" :delay="1000" placement="top"><i-button size="small" :disabled="fileList[${index}] && !fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Copy file link" :delay="1000" placement="top"><i-button size="small" @click="clipModal(fileList[${index}])"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Delete file" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
     }
 }
 ]
@@ -316,7 +316,9 @@ const fileHeaderSetting = [{
     color: #1088E9;
     cursor: pointer;
 }
-
+.ivu-table-row:hover{
+    cursor: pointer;
+}
 
 .ivu-modal-content {
     border-radius: 0 !important;

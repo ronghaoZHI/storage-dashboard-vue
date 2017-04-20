@@ -132,9 +132,9 @@ const headSetting = [
         width: 200,
         align: 'center',
         render(row, column, index) {
-            return `<i-button style="margin: 0 6px;" size="small"><Icon type="document" :size="iconSize"></Icon></i-button>
-                        <i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button>
-                        <i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button>`;
+            return `<Tooltip content="File list" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small"><Icon type="ios-list" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Bucket setting" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Delete bucket" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
         }
     }
 ]
@@ -144,5 +144,8 @@ const headSetting = [
 .info-input-error {
     margin-left: 12px;
     color: red;
+}
+.ivu-table-row:hover{
+    cursor: pointer;
 }
 </style>

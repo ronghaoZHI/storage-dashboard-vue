@@ -23,6 +23,7 @@
 </template>
 <script>
 import { LOGOUT, REPASSWORD } from '../service/API'
+import { clear } from '../service/Aws'
 export default {
     data() {
         return {
@@ -34,7 +35,7 @@ export default {
         menuClick: function (name) {
             let self = this
             if (name === 'logout') {
-                self.$http.post(LOGOUT).then(res => {
+                clear() && self.$http.post(LOGOUT).then(res => {
                     self.$store.dispatch('logout').then(() => {
                         self.$router.push('/login')
                     })
@@ -56,7 +57,7 @@ export default {
     background: #20a0ff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     .layout-header-right {
-        margin-right: 24px;
+        margin-right: 16px;
     }
     .dropdown-link {
         color: #fff;

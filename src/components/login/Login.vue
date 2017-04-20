@@ -1,5 +1,5 @@
 <template>
-    <div class="section-login">
+    <div class="section-login" @keyup.enter="handleSubmit('formInline')">
         <div class="bg-login"></div>
         <img src="../../assets/logo.png" alt="logo" />
         <Form ref="formInline"

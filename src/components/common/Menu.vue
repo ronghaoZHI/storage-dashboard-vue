@@ -73,6 +73,7 @@ export default {
 }
 
 .ivu-menu-item {
+    border-left: 4px solid #2e373e;
     display: inline-flex;
     flex-direction: row;
     justify-content: left;
