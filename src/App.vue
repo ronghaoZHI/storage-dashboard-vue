@@ -28,7 +28,7 @@ export default {
 <style lang="less">
 html,
 body {
-    min-height: 100%;
+    height: 100%;
     width: 100%;
     min-width: 1060px;
 }
@@ -39,6 +39,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    min-height: 100%;
+    height: 100%;
 }
 </style>

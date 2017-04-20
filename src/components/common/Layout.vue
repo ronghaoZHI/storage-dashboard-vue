@@ -37,11 +37,11 @@ export default {
 .layout {
     position: relative;
     overflow: hidden;
-    min-height:100%;
+    height:100%;
 }
 
 .layout-row {
-    min-height:100%;
+    height:100%;
     display: inline-flex;
     flex-direction: column;
     .layout-container{
@@ -53,7 +53,7 @@ export default {
     display: flex;
     flex-direction: column;
     text-align: left;
-    min-height:100%;
+    height:100%;
 }
 
 .layout-bsc-toolbar {
@@ -66,9 +66,9 @@ export default {
 
 .layout-content {
     flex: 1;
-    min-height: 200px;
-    margin: 15px;
-    overflow: hidden;
+    height: 200px;
+    padding: 15px;
+    overflow-y: auto;
     background: #fff;
     border-radius: 4px;
 }
