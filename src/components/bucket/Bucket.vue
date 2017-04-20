@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket"
+            <Button class="button-bsc-add-bucket" type="primary"
                     @click="createBucketModal = true">Add bucket</Button>
             <Breadcrumb>
                 <Breadcrumb-item>Bucket list</Breadcrumb-item>
@@ -49,10 +49,12 @@ export default {
     },
     methods: {
         async getBucketList() {
+            this.$Loading.start()
             let res = await handler('listBuckets')
             this.bucketList = _.forEach(res.Buckets, (item) => {
                 return item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
             })
+            this.$Loading.finish()
         },
         bucketSetting() {
 

@@ -2,9 +2,9 @@
     <div>
         <div class="layout-bsc-toolbar">
             <div>
-                <Button @click="upload">Upload file</Button>
-                <Button @click="createFolderModal = true">Create folder</Button>
-                <Button @click="batchDelete" :disabled="selectedFileList.length === 0">Delete file</Button>
+                <Button type="primary" @click="upload">Upload file</Button>
+                <Button type="primary" @click="createFolderModal = true">Create folder</Button>
+                <Button type="warning" @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
             </div>
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
@@ -73,7 +73,6 @@
 <script>
 import { getAWS, handler } from '../service/Aws'
 import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '../service/bucketService'
-import { mapGetters, mapActions } from 'vuex'
 import Clipboard from 'clipboard'
 import moment from 'moment'
 export default {
@@ -110,25 +109,32 @@ export default {
     },
     methods: {
         async getData() {
-            let self = this
-            let res = await handler('listObjects', {
-                Bucket: this.bucket,
-                Delimiter: '/',
-                Marker: this.prefix,
-                Prefix: this.prefix
-            })
-            this.fileList = _.forEach(res.CommonPrefixes, (foler) => {
-                foler.Key = keyFilter(foler.Prefix, self.prefix)
-                foler.Type = 'folder'
-                foler.LastModified = ''
-                foler.convertSize = ''
-            }).concat(_.forEach(res.Contents, (item) => {
-                item.Key = keyFilter(item.Key, self.prefix)
-                item.convertSize = bytes(item.Size)
-                item.Type = 'file'
-                item.isImage = isImage(item)
-                item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
-            }))
+            this.setLoading(true)
+            try {
+                let self = this
+                let res = await handler('listObjects', {
+                    Bucket: this.bucket,
+                    Delimiter: '/',
+                    MaxKeys: 100,
+                    Marker: this.prefix,
+                    Prefix: this.prefix
+                })
+                this.fileList = await _.forEach(res.CommonPrefixes, (foler) => {
+                    foler.Key = keyFilter(foler.Prefix, self.prefix)
+                    foler.Type = 'folder'
+                    foler.LastModified = ''
+                    foler.convertSize = ''
+                }).concat(_.forEach(res.Contents, (item) => {
+                    item.Key = keyFilter(item.Key, self.prefix)
+                    item.convertSize = bytes(item.Size)
+                    item.Type = 'file'
+                    item.isImage = isImage(item)
+                    item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
+                }))
+            } catch(error) {
+                this.setLoading(false)
+            }
+            this.setLoading(false)
         },
         async addFolder() {
             if (!this.createFolderValue) return
@@ -162,10 +168,18 @@ export default {
             this.showImageModal = true
             this.$Loading.finish()
         },
+        batchDeleteFileConfirm() {
+            this.$Modal.confirm({
+                content: `Are you sure you want to delete the selected files?`,
+                okText: 'Yes',
+                cancelText: 'Cancle',
+                onOk: () => this.batchDelete(file)
+            })
+        },
         deleteFileConfirm(file) {
             this.$Modal.confirm({
                 content: `Are you sure you want to delete [${file.Key}]?`,
-                okText: 'Submit',
+                okText: 'Yes',
                 cancelText: 'Cancle',
                 onOk: () => this.deleteFile(file)
             })
@@ -206,6 +220,9 @@ export default {
         },
         select(selection) {
             this.selectedFileList = selection
+        },
+        setLoading(bol) {
+            this.$store.dispatch('setLoading', bol)
         }
     },
     directives: {

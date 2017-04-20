@@ -10,19 +10,15 @@
                      height="30px" />
             </div>
             <Menu-item name="bucket">
-                <Icon type="soup-can-outline"
-                      :size="iconSize"></Icon>
+                <img src="../../assets/icon-bucket.png" class="icon-menu" height="15px" />
                 <span class="layout-text">My Storage</span>
             </Menu-item>
             <Menu-item name="dashboard">
-                <Icon type="podium"
-                      :size="iconSize"></Icon>
+                <img src="../../assets/icon-dashboard.png" class="icon-menu" height="15px" />
                 <span class="layout-text">Dashboard</span>
             </Menu-item>
             <Menu-item name="keychain">
-                <Icon type="key"
-                      class="menu-icon-fix"
-                      :size="iconSize"></Icon>
+                <img src="../../assets/icon-key.png" class="icon-menu" height="15px" />
                 <span class="layout-text">Keychain</span>
             </Menu-item>
         </Menu>
@@ -54,6 +50,8 @@ export default {
     .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):hover,
     .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu),
     .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover {
+        border-left: 4px solid #39f;
+        border-right: 0;
         background: #3a434b;
         color: #fff;
     }
@@ -77,13 +75,14 @@ export default {
 .ivu-menu-item {
     display: inline-flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: left;
     width: 100%;
     span {
         margin-left: 5px;
     }
-    .menu-icon-fix {
-        width: 21px;
+    .icon-menu{
+        margin-top: 4px;
+        padding-right: 6px;
     }
 }
 </style>

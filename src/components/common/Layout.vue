@@ -37,11 +37,11 @@ export default {
 .layout {
     position: relative;
     overflow: hidden;
-    height: 100%;
+    min-height:100%;
 }
 
 .layout-row {
-    height: 100%;
+    min-height:100%;
     display: inline-flex;
     flex-direction: column;
     .layout-container{
@@ -53,7 +53,7 @@ export default {
     display: flex;
     flex-direction: column;
     text-align: left;
-    height: 100%;
+    min-height:100%;
 }
 
 .layout-bsc-toolbar {

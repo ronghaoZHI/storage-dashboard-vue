@@ -2,11 +2,14 @@
     <div id="app"
          v-drop>
         <router-view></router-view>
+        <loading></loading>
     </div>
 </template>
 <script>
+import loading from '@/components/common/Loading'
 export default {
     name: 'app',
+    components: {loading},
     directives: {
         //remove the default drop and drag actions 
         drop: {
@@ -25,7 +28,7 @@ export default {
 <style lang="less">
 html,
 body {
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     min-width: 1060px;
 }
@@ -36,6 +39,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    height: 100%;
+    min-height: 100%;
 }
 </style>

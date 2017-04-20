@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as types from './mutation-types'
 import * as actions from './actions'
 import * as getters from './getters'
 
@@ -15,8 +16,14 @@ const store = new Vuex.Store({
         bucket,
         user
     },
-    state: {},
-    mutations: {}
+    state: {
+        loading: false
+    },
+    mutations: {
+        [types.LOADING](state, bol) {
+            state.loading = bol
+        }
+    }
 })
 
 export default store

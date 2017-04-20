@@ -6,9 +6,9 @@ import axios from './axios-bsc'
 import store from '@/store'
 import router from '@/router'
 
-let key
+let key = {}
 
-export const clear = () => key = undefined
+export const clear = () => key = {}
 
 export const getKey = () => {
     return axios.get(ACCESSKEY).then(res => key = res.data[0], error => {
@@ -33,7 +33,7 @@ export const config = ({ accesskey, secretkey }, timeout = 10000, region = 'us-w
 }
 
 export const getAWS = async(timeout = 10000) => {
-    if (!key) {
+    if (!key.accesskey) {
         key = await getKey()
     }
     return config(key, timeout)
