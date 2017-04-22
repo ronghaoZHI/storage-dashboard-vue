@@ -4,7 +4,7 @@
             <div>
                 <Button type="primary" @click="upload">Upload file</Button>
                 <Button type="primary" @click="createFolderModal = true">Create folder</Button>
-                <Button type="warning" @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
+                <Button @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
             </div>
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
@@ -14,6 +14,17 @@
                                  :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
+        <Row class="toolbar-search">
+            <Col span="10">
+                <Input v-model="searchValue">
+                    <span slot="prepend">Search file: {{prefix}}</span>
+                    <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
+                </Input>
+            </Col>
+            <Col span="14" style="text-align:right">
+                <Button v-show="!!nextMarker" @click="getData(nextMarker,searchValue)" type="primary">Next page</Button>
+            </Col>
+        </Row>
         <Modal v-model="copyModal">
             <div style="text-align:left">
                 Copy {{selectedFileKey}} link?
@@ -79,7 +90,9 @@ export default {
     data() {
         return {
             clipUrl: '',
+            searchValue: '',
             copyModal: false,
+            nextMarker: '',
             showImageModal: false,
             createFolderModal: false,
             createFolderValue: '',
@@ -108,7 +121,7 @@ export default {
         this.getData()
     },
     methods: {
-        async getData() {
+        async getData(nextMarker,searchValue = '') {
             this.setLoading(true)
             try {
                 let self = this
@@ -116,9 +129,10 @@ export default {
                     Bucket: this.bucket,
                     Delimiter: '/',
                     MaxKeys: 100,
-                    Marker: this.prefix,
-                    Prefix: this.prefix
+                    Marker: nextMarker || this.prefix,
+                    Prefix: this.prefix + searchValue
                 })
+                this.nextMarker = res.NextMarker
                 this.fileList = await _.forEach(res.CommonPrefixes, (foler) => {
                     foler.Key = keyFilter(foler.Prefix, self.prefix)
                     foler.Type = 'folder'
@@ -135,6 +149,9 @@ export default {
                 this.setLoading(false)
             }
             this.setLoading(false)
+        },
+        searchFile(value) {
+            this.getData(this.prefix,value)
         },
         async addFolder() {
             if (!this.createFolderValue) return
@@ -309,6 +326,9 @@ const fileHeaderSetting = [{
         max-width: 868px;
         max-height: 600px;
     }
+}
+.toolbar-search{
+    margin-bottom: 4px;
 }
 
 .link-folder {
