@@ -13,10 +13,17 @@
                 <thead>
                     <tr>
                         <th> Group
-                            <span></span>
+                            <Tooltip placement="right">
+                                <span><Icon type="ios-help"></Icon></span>
+                                <div slot="content">
+                                    <p style="white-space: normal !important;">Top Left 文字提示 balabalabadfvdgdv sdvcsd sfds scfdf sfcfsdvc sfdfs sd fsflalba</p>
+                                </div>
+                            </Tooltip>
                         </th>
                         <th>Object Permissions
-                            <span></span>
+                            <Tooltip style="white-space: normal !important;" content="Top Left 文字提示 balabal balabalabadfvdgdv sdvcsd sfds scfdf abalalba" placement="top">
+                                <span><Icon type="ios-help"></Icon></span>
+                            </Tooltip>
                         </th>
                         <th>ACL Permissions
                             <span></span>
