@@ -9,6 +9,7 @@ import Upload from '@/components/bucket/Upload'
 import Dashboard from '@/components/dashboard/Dashboard'
 import Keychain from '@/components/keychain/Keychain'
 import Login from '@/components/login/Login'
+import Settings from '@/components/bucket/Settings'
 
 Vue.use(Router);
 
@@ -45,6 +46,11 @@ const router = new Router({
             name: 'keychain',
             meta: { title: 'Keychain', ali: 'keychain' },
             component: Keychain,
+        }, {
+            path: '/bucket/:bucket/bucketSettings',
+            name: 'bucketSettings',
+            meta: { title: 'Bucket Settings' },
+            component: Settings
         }]
     }, {
         path: '/login',

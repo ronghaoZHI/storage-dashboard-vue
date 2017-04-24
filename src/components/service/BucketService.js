@@ -1,3 +1,4 @@
+import Vue from 'vue'
 const bytes = (bytes) => {
     if (typeof bytes !== 'number') {
         bytes = parseFloat(bytes)
@@ -16,11 +17,23 @@ const bytes = (bytes) => {
     return number + ' ' + units[exponent]
 }
 
+
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
+
+Vue.filter('userType', (Grantee) => {
+    if (Grantee.URI && Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers') {
+        return 'All Users';
+    } else if (Grantee.URI && Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers') {
+        return 'Auth Users';
+    } else if (Grantee.ID) {
+        return Grantee.ID;
+    }
+})
+
 
 const keyFilter = (key, prefix) => key.slice(prefix.length)
 
-// shit 
+// shit
 const convertPrefix2Router = (prefix) => {
     if (!!prefix) {
         let prefixArray = prefix.split('/')
@@ -40,5 +53,6 @@ const convertPrefix2Router = (prefix) => {
         return []
     }
 }
+
 
 export { bytes, convertPrefix2Router, keyFilter, removeItemFromArray }

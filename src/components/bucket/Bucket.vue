@@ -55,9 +55,6 @@ export default {
             })
             this.$Loading.finish()
         },
-        bucketSetting() {
-
-        },
         deleteBucketConfirm(item) {
             this.$Modal.confirm({
                 content: `Are you sure you want to delete [${item.Name}]?`,
@@ -80,6 +77,11 @@ export default {
                 console.log(error)
                 this.$Message.error(error.message)
             }
+        },
+         goBucketSettings(item) {
+            const bucket = this.bucketList[item]
+            this.$store.dispatch('selectBucket', bucket)
+            this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name} })
         },
         rowClick(item) {
             this.$store.dispatch('selectBucket', item)
@@ -130,7 +132,7 @@ const headSetting = [
         align: 'center',
         render(row, column, index) {
             return `<Tooltip content="File list" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small"><Icon type="ios-list" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Bucket setting" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="bucketSetting(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Bucket setting" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="goBucketSettings(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip content="Delete bucket" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
         }
     }
@@ -143,7 +145,9 @@ const headSetting = [
     margin-top: 6px;
     color: red;
 }
+
 .ivu-table-row:hover{
     cursor: pointer;
 }
 </style>
+
