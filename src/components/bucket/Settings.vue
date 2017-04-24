@@ -222,7 +222,7 @@ export default {
                 WRITE: false,
                 READ_ACP: false,
                 WRITE_ACP: false
-            },
+            }
             this.ACLsubmitForm();
         },
         newUserItemInit(){
