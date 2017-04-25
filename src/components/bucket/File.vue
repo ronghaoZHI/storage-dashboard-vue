@@ -7,25 +7,24 @@
                 <Button @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
                 <Button @click="batchDownload" v-if="selectedFileList.length > 0">Download file</Button>
             </div>
-            <Breadcrumb>
-                <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
-                <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
-                <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
-            </Breadcrumb>
+            <div class="section-search">
+                <Input v-model="searchValue" style="width: 400px">
+                    <span slot="prepend">Search file: {{prefix}}</span>
+                    <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
+                </Input>
+                <Button class="button-reset" @click="searchValue = '';searchMode = false;getData()">Reset</Button>
+            </div>
         </div>
-        <Row class="toolbar-search">
+        <Row class="toolbar-nav">
             <Col span="10">
-            <Input v-model="searchValue">
-            <span slot="prepend">Search file: {{prefix}}</span>
-            <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
-            </Input>
-    
+                <Breadcrumb>
+                    <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
+                    <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
+                    <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
+                </Breadcrumb>
             </Col>
-            <Col span="4" style="text-align:left">
-            <Button v-show="searchMode" class="button-reset" @click="searchValue = '';searchMode = false;getData()">Reset</Button>
-            </Col>
-            <Col span="10" style="text-align:right">
-            <Button v-show="!!nextMarker" @click="getData(nextMarker,searchValue)" type="primary">Next page</Button>
+            <Col span=" 14" style="text-align:right">
+                <Button v-show="!!nextMarker" @click="getData(nextMarker,searchValue)" type="ghost" size="small">Next page</Button>
             </Col>
         </Row>
         <Modal v-model="copyModal">
@@ -99,7 +98,8 @@ export default {
     },
     methods: {
         async getData(nextMarker, searchValue = '') {
-            this.setLoading(true)
+            this.$Loading.start()
+            //this.setLoading(true)
             try {
                 let self = this
                 let res = await handler('listObjects', {
@@ -123,9 +123,8 @@ export default {
                     item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
                 }))
             } catch (error) {
-                this.setLoading(false)
             }
-            this.setLoading(false)
+            this.$Loading.finish()
         },
         searchFile(value) {
             this.searchMode = true
@@ -138,7 +137,7 @@ export default {
                 this.$Message.success('Create a folder successfully')
                 this.getData()
             } catch (error) {
-                this.$Message.error('Create a folder fail')
+                this.$Message.error('Create a folder failed')
             }
         },
         async clipModal(file) {
@@ -164,7 +163,7 @@ export default {
                     Delimiter: '/',
                     Marker: this.prefix + file.Prefix,
                 })
-                _.each(res.Contents,async file => {
+                _.each(res.Contents, async file => {
                     let url = await getURL(self.bucket, file, self.prefix)
                     self.download(url)
                 })
@@ -207,7 +206,7 @@ export default {
                 removeItemFromArray(this.fileList, file)
                 this.$Message.success('Delete file successfully')
             } catch (error) {
-                this.$Message.error('Delete file fail')
+                this.$Message.error('Delete file failed')
             }
         },
         async batchDelete() {
@@ -324,8 +323,19 @@ const fileHeaderSetting = [{
     }
 }
 
-.toolbar-search {
-    margin-bottom: 4px;
+.section-search {
+    width: 465px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    button{
+        margin-top: 2px;
+    }
+}
+
+.toolbar-nav {
+    margin-bottom: 8px;
 }
 
 .link-folder {

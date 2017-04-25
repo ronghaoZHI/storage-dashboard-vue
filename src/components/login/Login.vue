@@ -66,10 +66,10 @@ export default {
                         let redirect = this.$route.query.redirect //get redirect path
                         !!redirect ? this.$router.push(redirect) : this.$router.push('/')
                     },error => {
-                        this.$Message.error('Login fail')
+                        this.$Message.error('Login failed')
                     })
                 } else {
-                    this.$Message.error('Input validate fail')
+                    this.$Message.error('Input validate failed')
                 }
             })
         }

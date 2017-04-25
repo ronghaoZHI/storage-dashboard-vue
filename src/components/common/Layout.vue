@@ -94,4 +94,9 @@ export default {
 .ivu-table table {
     width: 100% !important;
 }
+
+.ivu-loading-bar-inner-color-primary {
+    height: 3px !important;
+    background-color: #fff !important;
+}
 </style>

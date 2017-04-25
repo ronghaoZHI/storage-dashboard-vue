@@ -19,11 +19,13 @@
         <ul class="section-file-list">
             <li v-for="file in fileList"
                 class="list-file">
-                <span class="span-name">{{file.name}}</span>
-                <span class="span-size">{{file.size}}</span>
+                <span class="upload-span-name">{{file.name}}</span>
+                <span class="upload-span-size">{{file.size}}</span>
                 <Progress :percent="file.progress">
                     <Icon type="checkmark-circled"></Icon>
                 </Progress>
+                <span class="upload-span-status">{{file.progress === 100 ? 'Success' : file.request.faileded ? 'failed' : 'Uploading'}}</span>
+                <Button type="text"><Icon type="close"></Icon></Button>
             </li>
         </ul>
     </div>
@@ -113,7 +115,7 @@ export default {
                 to.forEach((file) => {
                     if (!file.isUpload) {
                         file.isUpload = true
-                        self.uploadFile(file).then(res => self.$Message.success(`Upload ${file.name} success`), error => self.$Message.error(`Upload ${file.name} fail`, 5))
+                        self.uploadFile(file).then(res, error => self.$Message.error(`Upload ${file.name} failed`, 5))
                     }
                 })
             }
@@ -158,13 +160,16 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    .span-name {
+    .upload-span-name {
         flex: 5;
     }
-    .span-size {
+    .upload-span-size {
         width: 60px;
         text-align: right;
         padding-right: 10px;
+    }
+    .upload-span-status {
+        width: 100px;
     }
     button {
         width: 22px;

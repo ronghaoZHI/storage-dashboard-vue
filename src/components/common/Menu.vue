@@ -41,7 +41,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .layout-menu {
-    width: 200px;
+    width: 220px;
     background: #2e373e;
     .ivu-menu-dark {
         background: #2e373e;

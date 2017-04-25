@@ -3,7 +3,7 @@
         <div class="layout-header">
             <div class="layout-header-left">
                 <a>CDN-X</a>
-                <a>CWN-X</a>
+                <a class="active">CWN-X</a>
                 <a>CLN-X</a>
             </div>
             <div class="layout-header-right">
@@ -27,13 +27,13 @@
                @on-ok="changePassword"
                @on-cancel="rePasswordModal = false"
                cancel-text="Cancel">
-            <Form ref="formValidate"
-                  :model="formValidate"
+            <Form ref="rePasswordForm"
+                  :model="rePasswordForm"
                   :rules="ruleValidate"
                   :label-width="80">
                 <Form-item label="Password"
                            prop="password">
-                    <Input v-model="formValidate.password"
+                    <Input v-model="rePasswordForm.password"
                            placeholder="New password"></Input>
                 </Form-item>
             </Form>
@@ -48,7 +48,7 @@ export default {
     data() {
         return {
             rePasswordModal: false,
-            formValidate: {
+            rePasswordForm: {
                 password: ''
             },
             ruleValidate: {
@@ -65,34 +65,33 @@ export default {
                 try {
                     await this.$http.post(LOGOUT)
                     await this.$store.dispatch('logout')
-                    this.$router.push('/login')
+                    clear() && this.$router.push('/login')
                 } catch (error) {
                     console.log(error)
                     this.$router.push('/login')
-                    this.$Message.error('Logout fail,please login')
+                    this.$Message.error('Logout failed,please login')
                 }
             } else if (name === 'rePasssword') {
                 this.rePasswordModal = true
             }
         },
         async changePassword() {
-            if(this.formValidate.password.length < 6){
+            if(this.rePasswordForm.password.length < 6){
                 this.$Message.error('The password requires 6 charactors')
                 return false
             }
             try {
-                await this.$http.post(REPASSWORD,{email: user.state.email,password:this.formValidate.password})
+                await this.$http.post(REPASSWORD,{email: user.state.email,password:this.rePasswordForm.password})
                 await this.$http.post(LOGOUT)
                 await this.$store.dispatch('logout')
                 this.$router.push('/login')
             } catch (error) {
                 console.log(error)
-                this.$Message.error('Change password fail')
+                this.$Message.error('Change password failed')
             }
         }
     }
 }
-
 </script>
 <style lang="less" scoped>
 .layout-header {
@@ -123,6 +122,9 @@ export default {
         height: 60px;
         width: 140px;
         color: #fff;
+    }
+    .active{
+        background-color: #1d8ce0;
     }
 }
 .ivu-form-item{

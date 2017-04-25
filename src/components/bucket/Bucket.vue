@@ -17,14 +17,18 @@
                title="Add bucket"
                ok-text="OK"
                @on-ok="addBucket"
-               @on-cancel="createBucketValue = ''"
+               @on-cancel="createBucketForm.bucket = ''"
                cancel-text="Cancel">
-            <Input v-model="createBucketValue"
-                   @on-change="check"
-                   placeholder="Requires bucket name"
-                   style="width: 300px"></Input>
-            <span class="info-input-error"
-                  v-show="inputCheck">Requires 3 characters</span>
+            <Form ref="createBucketForm"
+                  :model="createBucketForm"
+                  :rules="ruleValidate"
+                  :label-width="60">
+                <Form-item label="Bucket"
+                           prop="bucket">
+                    <Input v-model="createBucketForm.bucket"
+                           placeholder="Requires bucket name"></Input>
+                </Form-item>
+            </Form>
         </Modal>
     </div>
 </template>
@@ -35,9 +39,15 @@ import moment from 'moment'
 export default {
     data() {
         return {
-            createBucketValue: '',
             createBucketModal: false,
-            inputCheck: false,
+            createBucketForm: {
+                bucket: ''
+            },
+            ruleValidate: {
+                bucket: [
+                    { required: true,len: 3, message: 'Requires 3 charactors', trigger: 'blur' }
+                ]
+            },
             self: this,
             iconSize: 18,
             header: headSetting,
@@ -87,11 +97,11 @@ export default {
         addBucket() {
             // the 'this' in arrow function is not point to vue
             let _this = this
-            if (this.createBucketValue.length > 2) {
-                handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
+            if (this.createBucketForm.bucket.length > 2) {
+                handler('createBucket', { Bucket: this.createBucketForm.bucket }).then(() => {
                     _this.$Message.success('Add bucket success')
                     _this.getBucketList()
-                    _this.createBucketValue = ''
+                    _this.createBucketForm.bucket = ''
                 }, error => {
                     _this.$Message.error(error.message)
                 })
@@ -100,7 +110,7 @@ export default {
             }
         },
         check() {
-            this.inputCheck = this.createBucketValue.length > 2 ? false : true
+            this.inputCheck = this.createBucketForm.bucket.length > 2 ? false : true
         }
     }
 }
