@@ -24,7 +24,7 @@
                             <Tooltip placement="right">
                                 <span><Icon type="ios-help"></Icon></span>
                                 <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
+                                    <p style="white-space: normal !important;">READ permission allows grantee to read the object data and metadata.</p>
                                 </div>
                             </Tooltip>
                         </th>
@@ -32,7 +32,7 @@
                             <Tooltip placement="right">
                                 <span><Icon type="ios-help"></Icon></span>
                                 <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
+                                    <p style="white-space: normal !important;">READ permission allows grantee to read the object ACLs;WRITE permission allows grantee to modify the object ACLs.</p>
                                 </div>
                             </Tooltip>
                         </th>
@@ -46,20 +46,12 @@
                         </td>
                         <td>
                             <Checkbox v-model="item.Permission.READ">Read{{item.Permission.READ}}</Checkbox>
-                            <Checkbox v-model="item.Permission.WRITE">Write{{item.Permission.WRITE}}</Checkbox>
                         </td>
                         <td>
                             <Checkbox v-model="item.Permission.READ_ACP">Read{{item.Permission.READ_ACP}}</Checkbox>
                             <Checkbox v-model="item.Permission.WRITE_ACP">Write{{item.Permission.WRITE_ACP}}</Checkbox>
                         </td>
-                        <td>
-                            <Button style="margin: 0 6px;visibility:hidden;" size="small">
-                                <Icon type="ios-plus" :size="iconSize"></Icon>
-                            </Button>
-                            <Button style="margin: 0 6px;visibility:hidden;" size="small">
-                                <Icon type="ios-minus" :size="iconSize"></Icon>
-                            </Button>
-                        </td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
@@ -78,7 +70,7 @@
                             <Tooltip placement="right">
                                 <span><Icon type="ios-help"></Icon></span>
                                 <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
+                                    <p style="white-space: normal !important;">READ permission allows grantee to read the object data and metadata.</p>
                                 </div>
                             </Tooltip>
                         </th>
@@ -86,7 +78,7 @@
                             <Tooltip placement="right">
                                 <span><Icon type="ios-help"></Icon></span>
                                 <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
+                                    <p style="white-space: normal !important;">READ permission allows grantee to read the object ACLs;WRITE permission allows grantee to modify the object ACLs.</p>
                                 </div>
                             </Tooltip>
                         </th>
@@ -100,9 +92,7 @@
                             <Button @click="isAdd = false" size="small">Cancle</Button>
                         </td>
                         <td>
-                            <Checkbox v-model="newUserItem.Permission.READ">Read{{newUserItem.Permission.READ}}</Checkbox>
-                            <Checkbox v-model="newUserItem.Permission.WRITE">Write{{newUserItem.Permission.WRITE}}</Checkbox>
-                        </td>
+                            <Checkbox v-model="newUserItem.Permission.READ">Read{{newUserItem.Permission.READ}}</Checkbox>                        </td>
                         <td>
                             <Checkbox v-model="newUserItem.Permission.READ_ACP">Read{{newUserItem.Permission.READ_ACP}}</Checkbox>
                             <Checkbox v-model="newUserItem.Permission.WRITE_ACP">Write{{newUserItem.Permission.WRITE_ACP}}</Checkbox>
@@ -116,8 +106,6 @@
                         <td>
                             <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">Read{{item.Permission.READ}}</Checkbox>
                             <Checkbox v-else disabled v-model="item.Permission.READ">Read{{item.Permission.READ}}</Checkbox>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE">Write{{item.Permission.WRITE}}</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.WRITE">Write{{item.Permission.WRITE}}</Checkbox>
                         </td>
                         <td>
                             <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">Read{{item.Permission.READ_ACP}}</Checkbox>
@@ -164,7 +152,6 @@ export default {
                 name: '',
                 Permission: {
                     READ: false,
-                    WRITE: false,
                     READ_ACP: false,
                     WRITE_ACP: false
                 }
@@ -177,10 +164,13 @@ export default {
         bucket() {
             return this.$route.params.bucket
         },
+        prefix() {
+            return this.$route.params.prefix === 'noprefix' ? this.$route.params.key : this.$route.params.prefix + this.$route.params.key
+        },
         isAddVerified() {
             let name = this.newUserItem.name;
-            let { READ, WRITE, READ_ACP, WRITE_ACP } = this.newUserItem.Permission;
-            return name && (READ || WRITE || READ_ACP || WRITE_ACP);
+            let { READ, READ_ACP, WRITE_ACP } = this.newUserItem.Permission;
+            return name && (READ || READ_ACP || WRITE_ACP);
         },
     },
     mounted() {
@@ -190,15 +180,16 @@ export default {
         async getACLList() {
             this.$Loading.start()
             try {
-                let res = await handler('getBucketAcl', {
-                    Bucket: this.bucket
+                let res = await handler('getObjectAcl', {
+                    Bucket: this.bucket,
+                    Key: this.prefix,
                 })
                 this.GroupACLList = convertGrants(res.Grants)[0]
                 this.UserACLList = convertGrants(res.Grants)[1]
                 this.Data = {
                     bucket: this.bucket,
                     grants: res.Grants,
-                    owner: res.Owner
+                    owner: res.Owner,
                 };
                 this.owner = res.Owner.ID;
             } catch (error) {
@@ -222,36 +213,31 @@ export default {
                 return false;
             }
             let params = {
-                Bucket: this.Data.bucket,
+                Bucket: this.bucket,
+                Key: this.prefix,
                 AccessControlPolicy: {
                     Grants: items,
                     Owner: this.Data.owner
                 }
             };
             try {
-                await handler('putBucketAcl', params)
+                await handler('putObjectAcl', params)
                 this.$Message.success('Permission changes successfully');
-                this.isAdd = false
+                this.isAdd = false;
             } catch (error) {
                 this.$Message.error("Save permission changes fail");
-            }
+             }
             this.getACLList()
             this.$Loading.finish()
         },
         deleteUser(item) {
             item.Permission = {
                 READ: false,
-                WRITE: false,
                 READ_ACP: false,
                 WRITE_ACP: false
-<<<<<<< HEAD
-            }
-            this.ACLsubmitForm();
-=======
             },
             this.deleteList.push(item);
             this.UserACLList = this.UserACLList.filter(val => val != item)
->>>>>>> improveACL
         },
         newUserItemInit(){
             this.newUserItem =  {
@@ -270,7 +256,6 @@ export default {
 
 const permissionFalse = {
     READ: false,
-    WRITE: false,
     READ_ACP: false,
     WRITE_ACP: false
 }
@@ -329,7 +314,6 @@ const convertPermission = (grant, permission) => {
     if (permission === 'FULL_CONTROL') {
         grant.Permission = {
             READ: true,
-            WRITE: true,
             READ_ACP: true,
             WRITE_ACP: true
         }

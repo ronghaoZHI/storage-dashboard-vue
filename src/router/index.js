@@ -10,6 +10,7 @@ import Dashboard from '@/components/dashboard/Dashboard'
 import Keychain from '@/components/keychain/Keychain'
 import Login from '@/components/login/Login'
 import Settings from '@/components/bucket/Settings'
+import FilePermissions from '@/components/bucket/FilePermissions'
 
 Vue.use(Router);
 
@@ -51,6 +52,11 @@ const router = new Router({
             name: 'bucketSettings',
             meta: { title: 'Bucket Settings' },
             component: Settings
+        }, {
+            path: '/bucket/:bucket/prefix/:prefix/key/:key/FilePermissions',
+            name: 'FilePermissions',
+            meta: { title: 'File Permissions' },
+            component: FilePermissions
         }]
     }, {
         path: '/login',
