@@ -384,4 +384,8 @@ const fileHeaderSetting = [{
     }
 }
 
+.ivu-modal-footer {
+    border-top: 0 !important;
+}
 </style>
+

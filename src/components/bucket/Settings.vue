@@ -248,8 +248,9 @@ export default {
                 READ_ACP: false,
                 WRITE_ACP: false
             },
-                this.deleteList.push(item);
+            this.deleteList.push(item);
             this.UserACLList = this.UserACLList.filter(val => val != item)
+            this.ACLsubmitForm();
         },
         newUserItemInit() {
             this.newUserItem = {
