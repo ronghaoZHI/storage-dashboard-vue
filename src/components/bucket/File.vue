@@ -1,84 +1,60 @@
 <template>
-    <div>
+    <div @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
             <div>
                 <Button type="primary" @click="upload">Upload file</Button>
                 <Button type="primary" @click="createFolderModal = true">Create folder</Button>
                 <Button @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
+                <Button @click="batchDownload" v-if="selectedFileList.length > 0">Download file</Button>
             </div>
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
                 <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
-                <Breadcrumb-item v-for="bc in breadcrumb"
-                                 :href="getUrl(bc.prefix)"
-                                 :key="bc.text">{{bc.text}}</Breadcrumb-item>
+                <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <Row class="toolbar-search">
             <Col span="10">
-                <Input v-model="searchValue">
-                    <span slot="prepend">Search file: {{prefix}}</span>
-                    <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
-                </Input>
+            <Input v-model="searchValue">
+            <span slot="prepend">Search file: {{prefix}}</span>
+            <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
+            </Input>
+    
             </Col>
-            <Col span="14" style="text-align:right">
-                <Button v-show="!!nextMarker" @click="getData(nextMarker,searchValue)" type="primary">Next page</Button>
+            <Col span="4" style="text-align:left">
+            <Button v-show="searchMode" class="button-reset" @click="searchValue = '';searchMode = false;getData()">Reset</Button>
+            </Col>
+            <Col span="10" style="text-align:right">
+            <Button v-show="!!nextMarker" @click="getData(nextMarker,searchValue)" type="primary">Next page</Button>
             </Col>
         </Row>
         <Modal v-model="copyModal">
             <div style="text-align:left">
                 Copy {{selectedFileKey}} link?
             </div>
-            <div slot="footer"
-                 class="copy-modal-footer">
-                <Button type="text"
-                        @click="copyModal = false">
+            <div slot="footer" class="copy-modal-footer">
+                <Button type="text" @click="copyModal = false">
                     <span>Cancle</span>
                 </Button>
-                <Button type="info"
-                        @click="copyModal = false"
-                        :data-clipboard-text="clipUrl"
-                        v-clip>Copy!</Button>
+                <Button type="info" @click="copyModal = false" :data-clipboard-text="clipUrl" v-clip>Copy!</Button>
             </div>
         </Modal>
-        <Modal v-model="createFolderModal"
-               title="Add folder"
-               ok-text="OK"
-               @on-ok="addFolder"
-               @on-cancel="createFolderValue = ''"
-               cancel-text="Cancel">
-            <Input v-model="createFolderValue"
-                   @on-change="check"
-                   placeholder="Requires folder name"
-                   style="width: 300px"></Input>
-            <span class="info-input-error"
-                  v-show="inputCheck">Requires 1 characters</span>
+        <Modal v-model="createFolderModal" title="Add folder" ok-text="OK" @on-ok="addFolder" @on-cancel="createFolderValue = ''" cancel-text="Cancel">
+            <Input v-model="createFolderValue" @on-change="check" placeholder="Requires folder name" style="width: 300px"></Input>
+            <span class="info-input-error" v-show="inputCheck">Requires 1 characters</span>
         </Modal>
-        <Modal v-model="showImageModal"
-               :title="selectedFileKey || 'no title'"
-               width="900">
+        <Modal v-model="showImageModal" :title="selectedFileKey || 'no title'" width="900">
             <div class="section-img">
                 <img :src="clipUrl" />
             </div>
-            <div slot="footer"
-                 class="copy-modal-footer">
-                <Button type="primary"
-                        @click="showImageModal = false">
+            <div slot="footer" class="copy-modal-footer">
+                <Button type="primary" @click="showImageModal = false">
                     <span>Close</span>
                 </Button>
             </div>
         </Modal>
-        <a download
-           id="element-download"
-           style="display:none"><span id="span-download"></span></a>
-        <Table :show-header="showHeader"
-               :stripe="true"
-               :context="self"
-               :highlight-row="true"
-               :columns="fileHeader"
-               :data="fileList"
-               @on-selection-change="select"
-               no-data-text="No data"></Table>
+        <a download id="element-download" style="display:none"><span id="span-download"></span></a>
+        <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" no-data-text="No data"></Table>
     </div>
 </template>
 <script>
@@ -95,6 +71,7 @@ export default {
             nextMarker: '',
             showImageModal: false,
             createFolderModal: false,
+            searchMode: false,
             createFolderValue: '',
             selectedFileKey: '',
             selectedFileList: [],
@@ -121,7 +98,7 @@ export default {
         this.getData()
     },
     methods: {
-        async getData(nextMarker,searchValue = '') {
+        async getData(nextMarker, searchValue = '') {
             this.setLoading(true)
             try {
                 let self = this
@@ -145,13 +122,14 @@ export default {
                     item.isImage = isImage(item)
                     item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
                 }))
-            } catch(error) {
+            } catch (error) {
                 this.setLoading(false)
             }
             this.setLoading(false)
         },
         searchFile(value) {
-            this.getData(this.prefix,value)
+            this.searchMode = true
+            this.getData(this.prefix, value)
         },
         async addFolder() {
             if (!this.createFolderValue) return
@@ -175,8 +153,22 @@ export default {
             document.querySelector("#span-download").click()
         },
         async downloadFile(file) {
-            let url = await getURL(this.bucket, file, this.prefix)
-            this.download(url)
+            let self = this
+            if (file.Type === 'file') {
+                let url = await getURL(this.bucket, file, this.prefix)
+                this.download(url)
+            } else {
+                let res = await handler('listObjects', {
+                    Bucket: this.bucket,
+                    Prefix: this.prefix + file.Prefix,
+                    Delimiter: '/',
+                    Marker: this.prefix + file.Prefix,
+                })
+                _.each(res.Contents,async file => {
+                    let url = await getURL(self.bucket, file, self.prefix)
+                    self.download(url)
+                })
+            }
         },
         async imageModal(file) {
             this.$Loading.start()
@@ -210,7 +202,7 @@ export default {
                         Bucket: this.bucket,
                         Prefix: this.prefix + file.Prefix
                     })
-                    batchDeleteFileHandle(res.Contents,this.bucket,this.prefix)
+                    batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
                 }
                 removeItemFromArray(this.fileList, file)
                 this.$Message.success('Delete file successfully')
@@ -222,6 +214,10 @@ export default {
             let self = this
             await Promise.all(Array.map(self.selectedFileList, (file) => self.deleteFile(file)))
             self.getData()
+        },
+        async batchDownload() {
+            let self = this
+            await Promise.all(Array.map(self.selectedFileList, (file) => self.downloadFile(file)))
         },
         openFolder(item) {
             this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
@@ -258,7 +254,7 @@ export default {
 }
 
 const batchDeleteFileHandle = async (list, bucket, prefix) => {
-    await Promise.all(Array.map(list, (file) => handler('deleteObject', {Bucket: bucket,Key: prefix + file.Key})))
+    await Promise.all(Array.map(list, (file) => handler('deleteObject', { Bucket: bucket, Key: prefix + file.Key })))
 }
 
 const isImage = (file) => /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key) ? true : false
@@ -327,7 +323,8 @@ const fileHeaderSetting = [{
         max-height: 600px;
     }
 }
-.toolbar-search{
+
+.toolbar-search {
     margin-bottom: 4px;
 }
 
@@ -336,7 +333,19 @@ const fileHeaderSetting = [{
     color: #1088E9;
     cursor: pointer;
 }
-.ivu-table-row:hover{
+
+.button-reset {
+    margin-top: 1px;
+    background-color: #eee !important;
+    border-radius: 0 !important;
+}
+
+.ivu-input-group-append,
+.ivu-input-group-prepend {
+    border-radius: 0 !important;
+}
+
+.ivu-table-row:hover {
     cursor: pointer;
 }
 
@@ -346,7 +355,7 @@ const fileHeaderSetting = [{
 
 .layout-bsc-toolbar {
     button {
-        margin-right: 8px;
+        margin-right: 1px;
     }
 }
 
