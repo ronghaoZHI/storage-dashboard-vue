@@ -38,8 +38,12 @@
                             <Checkbox v-model="item.Permission.WRITE_ACP">Write{{item.Permission.WRITE_ACP}}</Checkbox>
                         </td>
                         <td>
-                            <Button style="margin: 0 6px;visibility:hidden;" size="small"><Icon type="ios-plus" :size="iconSize"></Icon></Button>
-                            <Button style="margin: 0 6px;visibility:hidden;" size="small"><Icon type="ios-minus" :size="iconSize"></Icon></Button>
+                            <Button style="margin: 0 6px;visibility:hidden;" size="small">
+                                <Icon type="ios-plus" :size="iconSize"></Icon>
+                            </Button>
+                            <Button style="margin: 0 6px;visibility:hidden;" size="small">
+                                <Icon type="ios-minus" :size="iconSize"></Icon>
+                            </Button>
                         </td>
                     </tr>
                 </tbody>
@@ -94,10 +98,18 @@
                             <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">Write{{item.Permission.WRITE_ACP}}</Checkbox>
                         </td>
                         <td>
-                            <Button v-if="index == 0" title="Add User" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true"><Icon type="ios-plus" :size="iconSize"></Icon></Button>
-                            <Button v-else style="margin: 0 6px;visibility:hidden;" size="small"><Icon type="ios-plus" :size="iconSize"></Icon></Button>
-                            <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUserConfirm(item)"><Icon type="ios-minus" :size="iconSize"></Icon></Button>
-                            <Button v-else disabled style="margin: 0 6px;" size="small" ><Icon type="ios-minus" :size="iconSize"></Icon></Button>
+                            <Button v-if="index == 0" title="Add User" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
+                                <Icon type="ios-plus" :size="iconSize"></Icon>
+                            </Button>
+                            <Button v-else style="margin: 0 6px;visibility:hidden;" size="small">
+                                <Icon type="ios-plus" :size="iconSize"></Icon>
+                            </Button>
+                            <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUserConfirm(item)">
+                                <Icon type="ios-minus" :size="iconSize"></Icon>
+                            </Button>
+                            <Button v-else disabled style="margin: 0 6px;" size="small">
+                                <Icon type="ios-minus" :size="iconSize"></Icon>
+                            </Button>
                         </td>
                     </tr>
                 </tbody>
@@ -111,7 +123,7 @@
 </template>
 
 <script>
-import {handler} from '../service/Aws'
+import { handler } from '../service/Aws'
 export default {
     data() {
         return {
@@ -121,13 +133,13 @@ export default {
             isAdd: false,
             owner: this.owner,
             newUserItem: {
-              name: '',
-              Permission: {
-                READ: false,
-                WRITE: false,
-                READ_ACP: false,
-                WRITE_ACP: false
-              }
+                name: '',
+                Permission: {
+                    READ: false,
+                    WRITE: false,
+                    READ_ACP: false,
+                    WRITE_ACP: false
+                }
             },
             iconSize: 16,
         }
@@ -138,7 +150,7 @@ export default {
         },
         isAddVerified() {
             let name = this.newUserItem.name;
-            let {READ,WRITE,READ_ACP,WRITE_ACP} = this.newUserItem.Permission;
+            let { READ, WRITE, READ_ACP, WRITE_ACP } = this.newUserItem.Permission;
             return name && (READ || WRITE || READ_ACP || WRITE_ACP);
         },
     },
@@ -157,7 +169,7 @@ export default {
                 grants: res.Grants,
                 owner: res.Owner
             };
-            this.owner =  res.Owner.ID;
+            this.owner = res.Owner.ID;
         },
         async ACLsubmitForm(isAdd) {
             let items = [...this.GroupACLList, ...this.UserACLList];
@@ -170,7 +182,7 @@ export default {
                 return value.Permission.length > 0;
             });
             if (items.length === 0) {
-                this.$Message.error("ACL can not be empty!");
+                this.$Message.error("Permission can not be empty!");
                 return false;
             }
             let params = {
@@ -184,7 +196,9 @@ export default {
                 await handler('putBucketAcl', params)
                 this.$Message.success('Permission changes successfully');
                 this.isAdd = false;
-            } catch (e) {}
+            } catch (error) {
+                this.$Message.error("Save permission changes fail");
+             }
             this.getACLList();
         },
         deleteUserConfirm(item) {
@@ -204,91 +218,83 @@ export default {
             };
             this.ACLsubmitForm();
         },
-        newUserItemInit(){
-            this.newUserItem =  {
-              name: '',
-              Permission: {
-                READ: false,
-                WRITE: false,
-                READ_ACP: false,
-                WRITE_ACP: false
-              }
+        newUserItemInit() {
+            this.newUserItem = {
+                name: '',
+                Permission: {
+                    READ: false,
+                    WRITE: false,
+                    READ_ACP: false,
+                    WRITE_ACP: false
+                }
             }
         },
     },
     watch: {
         // the contents array need refresh when the $route value changed
-        '$route' (to, from) {
+        '$route'(to, from) {
             to.path !== from.path && this.getData()
         },
     }
 }
 
-const gropItemsDefaultInit = () => {
-    const gropItemsDefault = [{
-        Grantee: {
-            URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
-            Type: 'Group'
-        },
-        Permission: {
-            READ: false,
-            WRITE: false,
-            READ_ACP: false,
-            WRITE_ACP: false
-        },
-    }, {
-        Grantee: {
-            URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
-            Type: 'Group'
-        },
-        Permission: {
-            READ: false,
-            WRITE: false,
-            READ_ACP: false,
-            WRITE_ACP: false
-        },
-    }];
-    return gropItemsDefault;
-}
+const gropItemsDefault = [{
+    Grantee: {
+        URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
+        Type: 'Group'
+    },
+    Permission: {
+        READ: false,
+        WRITE: false,
+        READ_ACP: false,
+        WRITE_ACP: false
+    },
+}, {
+    Grantee: {
+        URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
+        Type: 'Group'
+    },
+    Permission: {
+        READ: false,
+        WRITE: false,
+        READ_ACP: false,
+        WRITE_ACP: false
+    },
+}]
 
-const userItemsDefaultInit = () => {
-    let userACLItemsDefault = {
-        Grantee: {},
-        Permission: {
-            READ: false,
-            WRITE: false,
-            READ_ACP: false,
-            WRITE_ACP: false
-        },
-    };
-    return userACLItemsDefault;
+const userItemsDefault = {
+    Grantee: {},
+    Permission: {
+        READ: false,
+        WRITE: false,
+        READ_ACP: false,
+        WRITE_ACP: false
+    }
 }
 const convertGrants = grants => {
-    let [aclitems, userACLItems, IDArry] = [[],[],[]];
+    let [aclitems, userACLItems, IDArry] = [[], [], []]
     if (grants.length) {
-        let IDArry = [];
-        var gropItemsDefault = gropItemsDefaultInit();
+        let IDArry = []
         _.each(grants, grant => {
             if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers') {
-                convertPermission(gropItemsDefault[0], grant.Permission);
+                convertPermission(gropItemsDefault[0], grant.Permission)
             } else if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers') {
-                convertPermission(gropItemsDefault[1], grant.Permission);
+                convertPermission(gropItemsDefault[1], grant.Permission)
             } else if (grant.Grantee.ID) {
-                let id = grant.Grantee.ID;
-                let ObjIndex = IDArry.findIndex(val => val == id);
+                let id = grant.Grantee.ID
+                let ObjIndex = IDArry.findIndex(val => val === id)
                 if (IDArry.includes(id)) {
-                    convertPermission(userACLItems[ObjIndex], grant.Permission);
+                    convertPermission(userACLItems[ObjIndex], grant.Permission)
                 } else {
-                    let userItemsDefault = userItemsDefaultInit();
-                    userItemsDefault.Grantee = grant.Grantee;
-                    convertPermission(userItemsDefault, grant.Permission);
-                    userACLItems.push(userItemsDefault);
-                    IDArry.push(id);
+                    userItemsDefault.Grantee = grant.Grantee
+                    convertPermission(userItemsDefault, grant.Permission)
+                    userACLItems.push(userItemsDefault)
+                    IDArry.push(id)
                 }
             }
-        });
+        })
     }
-    return [gropItemsDefault, userACLItems];
+    return [gropItemsDefault, userACLItems]
 }
 const convertPermission = (grant, permission) => {
     if (permission === 'FULL_CONTROL') {
@@ -297,85 +303,73 @@ const convertPermission = (grant, permission) => {
             WRITE: true,
             READ_ACP: true,
             WRITE_ACP: true
-        };
+        }
     } else {
-        grant.Permission[permission] = true;
+        grant.Permission[permission] = true
     }
 }
 const convertObject2String = (object) => {
     let truePermission = {}
-    _.each(object, function(value, key) {
-        if (value) {
-            truePermission[key] = true;
-        }
+    _.each(object, function (value, key) {
+        if (value) { truePermission[key] = true }
     })
-    return _.keys(truePermission).toString();
+    return _.keys(truePermission).toString()
 }
 const convertNewUserItem = item => {
     let newItem = {}
-    Object.assign(newItem, item);
-    if (item.name.includes('@')) {
-        newItem.Grantee = {
-            Type: 'AmazonCustomerByEmail',
-            EmailAddress: item.name
-        };
-    } else {
-        newItem.Grantee = {
-            Type: 'CanonicalUser',
-            ID: item.name
-        };
-    }
-    delete newItem.name;
-    return newItem;
+    Object.assign(newItem, item)
+    newItem.Grantee = item.name.includes('@') ? { Type: 'AmazonCustomerByEmail', EmailAddress: item.name } : { Type: 'CanonicalUser', ID: item.name }
+    delete newItem.name
+    return newItem
 }
 </script>
 
 <style lang="less">
-    .my-table-view {
-        width: 100%;
-        margin-bottom: 20px;
-        color: #657180;
-        font-size: 12px;
-        background-color: #fff;
-        border: 1px solid #d7dde4;
-        border-collapse: collapse;
-    }
+.my-table-view {
+    width: 100%;
+    margin-bottom: 20px;
+    color: #657180;
+    font-size: 12px;
+    background-color: #fff;
+    border: 1px solid #d7dde4;
+    border-collapse: collapse;
+}
 
-    .my-table-view th {
-        white-space: nowrap;
-        overflow: hidden;
-        background-color: #f5f7f9;
-    }
+.my-table-view th {
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: #f5f7f9;
+}
 
-    .my-table-view tr {
-        border-bottom: 1px solid #d7dde4;
-    }
+.my-table-view tr {
+    border-bottom: 1px solid #d7dde4;
+}
 
-    .my-table-view tbody tr:nth-last-child(1) {
-        border-bottom: none;
-    }
+.my-table-view tbody tr:nth-last-child(1) {
+    border-bottom: none;
+}
 
-    .my-table-view td,
-    .my-table-view th {
-        min-width: 0;
-        height: 48px;
-        text-align: left;
-        text-overflow: ellipsis;
-        vertical-align: middle;
-        padding-left: 18px;
-        padding-right: 18px;
-        overflow: hidden;
-        white-space: normal;
-        word-break: break-all;
-        word-wrap: normal;
-        border-bottom: none;
-    }
+.my-table-view td,
+.my-table-view th {
+    min-width: 0;
+    height: 48px;
+    text-align: left;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    padding-left: 18px;
+    padding-right: 18px;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: normal;
+    border-bottom: none;
+}
 
-    .card-footer {
-        border-top: 1px solid #e3e8ee;
-        line-height: 1;
-        padding: 18px 18px 0;
-        text-align: center;
-        margin: 0 -18px;
-    }
+.card-footer {
+    border-top: 1px solid #e3e8ee;
+    line-height: 1;
+    padding: 18px 18px 0;
+    text-align: center;
+    margin: 0 -18px;
+}
 </style>
