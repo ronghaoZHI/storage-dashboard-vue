@@ -12,7 +12,7 @@
             <table class="my-table-view">
                 <thead>
                     <tr>
-                        <th> Group
+                        <th> Group 111111
                             <Tooltip placement="right">
                                 <span><Icon type="ios-help"></Icon></span>
                                 <div slot="content">
@@ -222,18 +222,13 @@ export default {
                 WRITE: false,
                 READ_ACP: false,
                 WRITE_ACP: false
-            };
+            },
             this.ACLsubmitForm();
         },
-        newUserItemInit() {
-            this.newUserItem = {
+        newUserItemInit(){
+            this.newUserItem =  {
+                Permission: {...permissionFalse},
                 name: '',
-                Permission: {
-                    READ: false,
-                    WRITE: false,
-                    READ_ACP: false,
-                    WRITE_ACP: false
-                }
             }
         },
     },
@@ -245,43 +240,41 @@ export default {
     }
 }
 
-const gropItemsDefault = [{
-    Grantee: {
-        URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
-        Type: 'Group'
-    },
-    Permission: {
-        READ: false,
-        WRITE: false,
-        READ_ACP: false,
-        WRITE_ACP: false
-    },
-}, {
-    Grantee: {
-        URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
-        Type: 'Group'
-    },
-    Permission: {
-        READ: false,
-        WRITE: false,
-        READ_ACP: false,
-        WRITE_ACP: false
-    },
-}]
+const permissionFalse = {
+    READ: false,
+    WRITE: false,
+    READ_ACP: false,
+    WRITE_ACP: false
+}
+const gropItemsDefaultInit = () => {
+    const gropItemsDefault = [{
+        Permission: {...permissionFalse},
+        Grantee: {
+            URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
+            Type: 'Group'
+        },
+    }, {
+        Permission: {...permissionFalse},
+        Grantee: {
+            URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
+            Type: 'Group'
+        },
+    }];
+    return gropItemsDefault;
+}
 
-const userItemsDefault = {
-    Grantee: {},
-    Permission: {
-        READ: false,
-        WRITE: false,
-        READ_ACP: false,
-        WRITE_ACP: false
-    }
+const userItemsDefaultInit = () => {
+    let userACLItemsDefault = {
+        Permission: {...permissionFalse},
+        Grantee: {},
+    };
+    return userACLItemsDefault;
 }
 const convertGrants = grants => {
     let [aclitems, userACLItems, IDArry] = [[], [], []]
     if (grants.length) {
         let IDArry = []
+        var gropItemsDefault = gropItemsDefaultInit()
         _.each(grants, grant => {
             if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers') {
                 convertPermission(gropItemsDefault[0], grant.Permission)
@@ -293,6 +286,7 @@ const convertGrants = grants => {
                 if (IDArry.includes(id)) {
                     convertPermission(userACLItems[ObjIndex], grant.Permission)
                 } else {
+                    let userItemsDefault = userItemsDefaultInit()
                     userItemsDefault.Grantee = grant.Grantee
                     convertPermission(userItemsDefault, grant.Permission)
                     userACLItems.push(userItemsDefault)
@@ -323,11 +317,10 @@ const convertObject2String = (object) => {
     return _.keys(truePermission).toString()
 }
 const convertNewUserItem = item => {
-    let newItem = {}
-    Object.assign(newItem, item)
+    let newItem = { ...item }
     newItem.Grantee = item.name.includes('@') ? { Type: 'AmazonCustomerByEmail', EmailAddress: item.name } : { Type: 'CanonicalUser', ID: item.name }
-    delete newItem.name
-    return newItem
+    delete newItem.name;
+    return newItem;
 }
 </script>
 
