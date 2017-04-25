@@ -45,6 +45,7 @@ export default {
     display: inline-flex;
     flex-direction: column;
     .layout-container{
+        height: 100%;
         flex: 1;
     }
 }
@@ -53,7 +54,7 @@ export default {
     display: flex;
     flex-direction: column;
     text-align: left;
-    height:100%;
+    height: 100%;
 }
 
 .layout-bsc-toolbar {
