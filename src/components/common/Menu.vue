@@ -1,6 +1,6 @@
 <template>
     <div class="layout-menu">
-        <Menu active-name="bucket"
+        <Menu :active-name="activeName"
               theme="dark"
               width="auto"
               @on-select="goRouter">
@@ -25,10 +25,12 @@
     </div>
 </template>
 <script>
+
 export default {
     data() {
         return {
-            iconSize: 24
+            iconSize: 24,
+            activeName: this.$route.name
         }
     },
     methods: {
