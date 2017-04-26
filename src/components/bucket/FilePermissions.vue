@@ -6,6 +6,13 @@
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
                 <Breadcrumb-item>Bucket Settings</Breadcrumb-item>
             </Breadcrumb>
+            <Breadcrumb>
+                <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
+                <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
+                <Breadcrumb-item v-for="bc in breadcrumb"
+                                 :href="getUrl(bc.prefix)"
+                                 :key="bc.text">{{bc.text}}</Breadcrumb-item>
+            </Breadcrumb>
         </div>
         <Card dis-hover>
             <p slot="title">Permissions</p>
@@ -140,6 +147,7 @@
 
 <script>
 import { handler } from '../service/Aws'
+import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '../service/bucketService'
 export default {
     data() {
         return {
@@ -172,6 +180,9 @@ export default {
             let { READ, READ_ACP, WRITE_ACP } = this.newUserItem.Permission;
             return name && (READ || READ_ACP || WRITE_ACP);
         },
+        breadcrumb() {
+            return convertPrefix2Router(this.prefix)
+        }
     },
     mounted() {
         this.getACLList()
@@ -244,6 +255,9 @@ export default {
                 Permission: {...permissionFalse},
                 name: '',
             }
+        },
+        getUrl(prefix) {
+            return `#/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
         },
     },
     watch: {

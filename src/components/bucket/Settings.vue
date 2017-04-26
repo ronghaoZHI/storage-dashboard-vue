@@ -4,7 +4,7 @@
             <div></div>
             <Breadcrumb>
                 <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
-                <Breadcrumb-item>Bucket Settings</Breadcrumb-item>
+                <Breadcrumb-item>Bucket Settings  ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <Card dis-hover>
@@ -244,14 +244,9 @@ export default {
                 WRITE: false,
                 READ_ACP: false,
                 WRITE_ACP: false
-<<<<<<< HEAD
-            }
-            this.ACLsubmitForm();
-=======
             },
             this.deleteList.push(item);
             this.UserACLList = this.UserACLList.filter(val => val != item)
->>>>>>> improveACL
         },
         newUserItemInit(){
             this.newUserItem =  {
