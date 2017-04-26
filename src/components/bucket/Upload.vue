@@ -24,8 +24,8 @@
                 <Progress :percent="file.progress">
                     <Icon type="checkmark-circled"></Icon>
                 </Progress>
-                <span class="upload-span-status">{{file.progress === 100 ? 'Success' : file.request.faileded ? 'failed' : 'Uploading'}}</span>
-                <Button type="text"><Icon type="close"></Icon></Button>
+                <span class="upload-span-status">{{file.progress === 100 ? 'Success' : file.request && file.request.faileded ? 'failed' : 'Uploading'}}</span>
+                <Button type="text" style="width:48px"><Icon type="close"></Icon></Button>
             </li>
         </ul>
     </div>
@@ -55,15 +55,15 @@ export default {
                 el.ondrop = (e) => {
                     e.preventDefault()
                     pushFile2Vue(e.dataTransfer.files)
-                },
-                    el.onclick = (e) => {
-                        let fileInput = el.children[0]
-                        //click events bubble up the ancestry tree and the change event will trigge twice
-                        //fileInput.onclick((e,false) => e.stopPropagation()) not work ...
-                        fileInput.addEventListener("click", (e) => { e.stopPropagation() }, false)
-                        fileInput.onchange = (e) => { pushFile2Vue(e.target.files) }
-                        fileInput.click()
-                    }
+                }
+                el.onclick = (e) => {
+                    let fileInput = el.children[0]
+                    //click events bubble up the ancestry tree and the change event will trigge twice
+                    //fileInput.onclick((e,false) => e.stopPropagation()) not work ...
+                    fileInput.addEventListener("click", (e) => { e.stopPropagation() }, false)
+                    fileInput.onchange = (e) => { pushFile2Vue(e.target.files) }
+                    fileInput.click()
+                }
                 const pushFile2Vue = (files) => {
                     //binding.value => vue(this)
                     //but using dataset is best 
@@ -109,13 +109,13 @@ export default {
         }
     },
     watch: {
-        'fileList'(to, from) {
+        'fileList' (to, from) {
             let self = this
             if (to.length > 0) {
                 to.forEach((file) => {
                     if (!file.isUpload) {
                         file.isUpload = true
-                        self.uploadFile(file).then(res, error => self.$Message.error(`Upload ${file.name} failed`, 5))
+                        self.uploadFile(file).then(res => res, error => self.$Message.error(`Upload ${file.name} failed`, 5))
                     }
                 })
             }
@@ -146,6 +146,10 @@ export default {
 }
 
 .section-file-upload:hover {
+    border: 2px dashed #39f;
+}
+
+.upload-hover{
     border: 2px dashed #39f;
 }
 

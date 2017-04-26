@@ -17,18 +17,13 @@
                title="Add bucket"
                ok-text="OK"
                @on-ok="addBucket"
-               @on-cancel="createBucketForm.bucket = ''"
+               @on-cancel="createBucketValue = ''"
                cancel-text="Cancel">
-            <Form ref="createBucketForm"
-                  :model="createBucketForm"
-                  :rules="ruleValidate"
-                  :label-width="60">
-                <Form-item label="Bucket"
-                           prop="bucket">
-                    <Input v-model="createBucketForm.bucket"
-                           placeholder="Requires bucket name"></Input>
-                </Form-item>
-            </Form>
+            <Input v-model="createBucketValue"
+                   @on-change="check"
+                   placeholder="Requires bucket name">
+            </Input>
+            <span class="info-input-error">{{inputCheck ? 'Requires 3 characters' : ''}}</span>
         </Modal>
     </div>
 </template>
@@ -39,15 +34,9 @@ import moment from 'moment'
 export default {
     data() {
         return {
+            createBucketValue: '',
             createBucketModal: false,
-            createBucketForm: {
-                bucket: ''
-            },
-            ruleValidate: {
-                bucket: [
-                    { required: true,len: 3, message: 'Requires 3 charactors', trigger: 'blur' }
-                ]
-            },
+            inputCheck: false,
             self: this,
             iconSize: 18,
             header: headSetting,
@@ -82,7 +71,9 @@ export default {
                 let buckets = await handler('listObjects', { Bucket: bucket.Name })
                 let response = await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
                 // the bucket has cache when the objects just deleted
-                let del = await timeout(handler('deleteBucket', { Bucket: bucket.Name }), 500)
+                response.then(res => {
+                    setTimeout(() => {handler('deleteBucket', { Bucket: bucket.Name })},1000)
+                })
                 // the bucket list also has cache ...
                 removeItemFromArray(this.bucketList,bucket)
             } catch (error) {
@@ -97,11 +88,11 @@ export default {
         addBucket() {
             // the 'this' in arrow function is not point to vue
             let _this = this
-            if (this.createBucketForm.bucket.length > 2) {
-                handler('createBucket', { Bucket: this.createBucketForm.bucket }).then(() => {
+           if (this.createBucketValue.length > 2) {
+                handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
                     _this.$Message.success('Add bucket success')
                     _this.getBucketList()
-                    _this.createBucketForm.bucket = ''
+                    _this.createBucketValue = ''
                 }, error => {
                     _this.$Message.error(error.message)
                 })
@@ -110,13 +101,9 @@ export default {
             }
         },
         check() {
-            this.inputCheck = this.createBucketForm.bucket.length > 2 ? false : true
+            this.inputCheck = this.createBucketValue.length > 2 ? false : true
         }
     }
-}
-
-const timeout = (resolve,ms) => {
-    return Promise.resolve(setTimeout(() => resolve),ms)
 }
 
 const batchDeletion = (list, bucket) => {
@@ -152,7 +139,8 @@ const headSetting = [
 </script>
 <style lang="less" scoped>
 .info-input-error {
-    margin-left: 12px;
+    display: block;
+    margin-top: 6px;
     color: red;
 }
 .ivu-table-row:hover{

@@ -1,30 +1,30 @@
 <template>
     <div @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
-            <div>
-                <Button type="primary" @click="upload">Upload file</Button>
-                <Button type="primary" @click="createFolderModal = true">Create folder</Button>
-                <Button @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
-                <Button @click="batchDownload" v-if="selectedFileList.length > 0">Download file</Button>
-            </div>
-            <div class="section-search">
-                <Input v-model="searchValue" style="width: 400px">
-                    <span slot="prepend">Search file: {{prefix}}</span>
-                    <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
-                </Input>
-                <Button class="button-reset" @click="searchValue = '';searchMode = false;getData()">Reset</Button>
-            </div>
+            <Breadcrumb>
+                <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
+                <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
+                <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
+            </Breadcrumb>
         </div>
         <Row class="toolbar-nav">
             <Col span="10">
-                <Breadcrumb>
-                    <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
-                    <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
-                    <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
-                </Breadcrumb>
+                <div>
+                    <Button type="primary" @click="upload">Upload file</Button>
+                    <Button type="primary" @click="createFolderModal = true">Create folder</Button>
+                    <Button @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
+                    <Button @click="batchDownload" v-if="selectedFileList.length > 0">Download file</Button>
+                </div>
             </Col>
             <Col span=" 14" style="text-align:right">
-                <Button v-show="!!nextMarker" @click="getData(nextMarker,searchValue)" type="ghost" size="small">Next page</Button>
+                <div class="section-search">
+                    <Input v-model="searchValue" style="width: 400px">
+                        <span slot="prepend">Search file: {{prefix}}</span>
+                        <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
+                    </Input>
+                    <Button class="button-reset" @click="searchValue = '';searchMode = false;getData()">Reset</Button>
+                </div>
+                
             </Col>
         </Row>
         <Modal v-model="copyModal">
@@ -35,7 +35,7 @@
                 <Button type="text" @click="copyModal = false">
                     <span>Cancle</span>
                 </Button>
-                <Button type="info" @click="copyModal = false" :data-clipboard-text="clipUrl" v-clip>Copy!</Button>
+                <Button type="info" @click="copyModal = false;$Message.success('Copied')" :data-clipboard-text="clipUrl" v-clip>Copy!</Button>
             </div>
         </Modal>
         <Modal v-model="createFolderModal" title="Add folder" ok-text="OK" @on-ok="addFolder" @on-cancel="createFolderValue = ''" cancel-text="Cancel">
@@ -47,13 +47,18 @@
                 <img :src="clipUrl" />
             </div>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="showImageModal = false">
+                <Button type="primary" @click="showImageModal = false;clipUrl = ''">
                     <span>Close</span>
                 </Button>
             </div>
         </Modal>
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
         <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" no-data-text="No data"></Table>
+        <div class="section-paging">
+            <Tooltip content="Home page" placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
+            <Tooltip content="Previous page" placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
+            <Tooltip content="Next page" placement="top"><Button v-show="nextMarker" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+        </div>
     </div>
 </template>
 <script>
@@ -68,6 +73,7 @@ export default {
             searchValue: '',
             copyModal: false,
             nextMarker: '',
+            makerArray: [],
             showImageModal: false,
             createFolderModal: false,
             searchMode: false,
@@ -123,8 +129,18 @@ export default {
                     item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
                 }))
             } catch (error) {
+                console.log(error)
             }
             this.$Loading.finish()
+        },
+        previousPage() {
+            let maker = this.makerArray[this.makerArray.length - 2]
+            this.makerArray.pop()
+            this.getData(maker,this.searchValue)
+        },
+        nextPage() {
+            this.nextMarker && this.makerArray.push(this.nextMarker)
+            this.getData(this.nextMarker,this.searchValue)
         },
         searchFile(value) {
             this.searchMode = true
@@ -350,6 +366,19 @@ const fileHeaderSetting = [{
     border-radius: 0 !important;
 }
 
+.section-paging {
+    height: 40px;
+    width: 100%;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    button {
+        width: 70px;
+        margin-left: 6px;
+    }
+}
+
 .ivu-input-group-append,
 .ivu-input-group-prepend {
     border-radius: 0 !important;
@@ -364,25 +393,39 @@ const fileHeaderSetting = [{
 }
 
 .layout-bsc-toolbar {
+    padding-bottom: 3px;
+    border-bottom: 1px solid #f2f1f6;
     button {
         margin-right: 1px;
+    }
+}
+.ivu-modal-content {
+    .ivu-modal-close {
+        right: 20px !important;
+        top: 4px !important;
     }
 }
 
 .ivu-modal-close {
     i {
+        font-weight: bolder !important;
         color: #fff !important;
     }
 }
 
 .ivu-modal-header {
+    height: 40px;
     background: #20a0ff;
+    padding: 10px 20px !important;
     div {
         color: #fff;
     }
 }
-
+.ivu-modal-body{
+    padding:8px !important;
+}
 .ivu-modal-footer {
+    background-color: #f9fafc !important;
     border-top: 0 !important;
 }
 </style>
