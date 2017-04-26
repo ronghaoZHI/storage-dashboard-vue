@@ -52,11 +52,11 @@
                             {{item.Grantee | userType}}
                         </td>
                         <td>
-                            <Checkbox v-model="item.Permission.READ">Read{{item.Permission.READ}}</Checkbox>
+                            <Checkbox v-model="item.Permission.READ">Read</Checkbox>
                         </td>
                         <td>
-                            <Checkbox v-model="item.Permission.READ_ACP">Read{{item.Permission.READ_ACP}}</Checkbox>
-                            <Checkbox v-model="item.Permission.WRITE_ACP">Write{{item.Permission.WRITE_ACP}}</Checkbox>
+                            <Checkbox v-model="item.Permission.READ_ACP">Read</Checkbox>
+                            <Checkbox v-model="item.Permission.WRITE_ACP">Write</Checkbox>
                         </td>
                         <td></td>
                     </tr>
@@ -99,10 +99,10 @@
                             <Button @click="isAdd = false" size="small">Cancle</Button>
                         </td>
                         <td>
-                            <Checkbox v-model="newUserItem.Permission.READ">Read{{newUserItem.Permission.READ}}</Checkbox>                        </td>
+                            <Checkbox v-model="newUserItem.Permission.READ">Read</Checkbox>                        </td>
                         <td>
-                            <Checkbox v-model="newUserItem.Permission.READ_ACP">Read{{newUserItem.Permission.READ_ACP}}</Checkbox>
-                            <Checkbox v-model="newUserItem.Permission.WRITE_ACP">Write{{newUserItem.Permission.WRITE_ACP}}</Checkbox>
+                            <Checkbox v-model="newUserItem.Permission.READ_ACP">Read</Checkbox>
+                            <Checkbox v-model="newUserItem.Permission.WRITE_ACP">Write</Checkbox>
                         </td>
                         <td></td>
                     </tr>
@@ -111,14 +111,14 @@
                             {{item.Grantee | userType}}
                         </td>
                         <td>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">Read{{item.Permission.READ}}</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.READ">Read{{item.Permission.READ}}</Checkbox>
+                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">Read</Checkbox>
+                            <Checkbox v-else disabled v-model="item.Permission.READ">Read</Checkbox>
                         </td>
                         <td>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">Read{{item.Permission.READ_ACP}}</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.READ_ACP">Read{{item.Permission.READ_ACP}}</Checkbox>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">Write{{item.Permission.WRITE_ACP}}</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">Write{{item.Permission.WRITE_ACP}}</Checkbox>
+                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">Read</Checkbox>
+                            <Checkbox v-else disabled v-model="item.Permission.READ_ACP">Read</Checkbox>
+                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                            <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">Write</Checkbox>
                         </td>
                         <td>
                             <Button v-if="index == 0" title="Add User" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
@@ -147,7 +147,7 @@
 
 <script>
 import { handler } from '../service/Aws'
-import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '../service/bucketService'
+import { convertPrefix2Router} from '../service/bucketService'
 export default {
     data() {
         return {
@@ -210,7 +210,8 @@ export default {
         },
         async ACLsubmitForm() {
             this.$Loading.start()
-            let items = [...this.GroupACLList, ...this.UserACLList,...this.deleteList];
+            let originItems = [...this.GroupACLList, ...this.UserACLList,...this.deleteList];
+            let items = _.cloneDeep(originItems)
             if (this.isAdd) {
                 this.newUserItemPut = convertNewUserItem(this.newUserItem);
                 items = items.concat(this.newUserItemPut)
@@ -235,10 +236,10 @@ export default {
                 await handler('putObjectAcl', params)
                 this.$Message.success('Permission changes successfully');
                 this.isAdd = false;
+                this.getACLList()
             } catch (error) {
                 this.$Message.error("Save permission changes fail");
              }
-            this.getACLList()
             this.$Loading.finish()
         },
         deleteUser(item) {
