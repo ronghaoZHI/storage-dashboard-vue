@@ -251,6 +251,9 @@ export default {
         },
         setLoading(bol) {
             this.$store.dispatch('setLoading', bol)
+        },
+        goFilePermissions(item){
+            this.$router.push({ name: 'FilePermissions', params: { bucket: this.bucket, prefix: this.$route.params.prefix, key: item.Key} })
         }
     },
     directives: {
@@ -319,7 +322,7 @@ const fileHeaderSetting = [{
     align: 'right',
     render(row, column, index) {
         return row.Type === 'folder' ? `<Tooltip content="Delete folder" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
-            `<Tooltip content="File setting" :delay="1000" placement="top"><i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+            `<Tooltip content="File setting" :delay="1000" placement="top"><i-button @click="goFilePermissions(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip content="Download file" :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip content="Image preview" :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip content="Copy file link" :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
