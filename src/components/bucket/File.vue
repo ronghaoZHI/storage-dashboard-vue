@@ -2,7 +2,7 @@
     <div @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
+                <Breadcrumb-item href="/">Bucket list</Breadcrumb-item>
                 <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
                 <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
@@ -219,7 +219,7 @@ export default {
                     })
                     batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
                 }
-                removeItemFromArray(this.fileList, file)
+                this.fileList.splice(file._index, 1)
                 this.$Message.success('Delete file successfully')
             } catch (error) {
                 this.$Message.error('Delete file failed')
@@ -238,7 +238,7 @@ export default {
             this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
         },
         getUrl(prefix) {
-            return `#/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
+            return `/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
         },
         upload() {
             this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
@@ -299,7 +299,7 @@ const fileHeaderSetting = [{
     ellipsis: true,
     sortable: true,
     render(row, column, index) {
-        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <span class="link-folder" @click="openFolder(fileList[${index}])">${row.Key}</span>`;
+        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <span class="link-folder" @click="openFolder(row)">${row.Key}</span>`;
     }
 }, {
     title: 'Size',
@@ -318,12 +318,12 @@ const fileHeaderSetting = [{
     width: 170,
     align: 'right',
     render(row, column, index) {
-        return row.Type === 'folder' ? `<Tooltip content="Delete folder" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
+        return row.Type === 'folder' ? `<Tooltip content="Delete folder" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
             `<Tooltip content="File setting" :delay="1000" placement="top"><i-button size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Download file" :delay="1000" placement="top"><i-button size="small" @click="downloadFile(fileList[${index}])"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Image preview" :delay="1000" placement="top"><i-button size="small" :disabled="fileList[${index}] && !fileList[${index}].isImage" @click="imageModal(fileList[${index}])"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Copy file link" :delay="1000" placement="top"><i-button size="small" @click="clipModal(fileList[${index}])"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Delete file" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(fileList[${index}])"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
+                        <Tooltip content="Download file" :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Image preview" :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Copy file link" :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip content="Delete file" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
     }
 }
 ]
