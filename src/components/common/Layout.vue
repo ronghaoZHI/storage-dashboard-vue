@@ -35,17 +35,14 @@ export default {
 
 <style lang="less">
 .layout {
-    position: relative;
-    overflow: hidden;
     height:100%;
 }
 
 .layout-row {
-    height:100%;
+    min-height:100%;
     display: inline-flex;
     flex-direction: column;
     .layout-container{
-        height: 100%;
         flex: 1;
     }
 }
@@ -54,7 +51,6 @@ export default {
     display: flex;
     flex-direction: column;
     text-align: left;
-    height: 100%;
 }
 
 .layout-bsc-toolbar {
@@ -67,9 +63,7 @@ export default {
 
 .layout-content {
     flex: 1;
-    height: 200px;
     padding: 15px;
-    overflow-y: auto;
     background: #fff;
     border-radius: 4px;
 }

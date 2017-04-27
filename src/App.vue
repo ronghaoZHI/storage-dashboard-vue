@@ -31,6 +31,7 @@ body {
     height: 100%;
     width: 100%;
     min-width: 1060px;
+    overflow: inherit;
 }
 
 #app {
@@ -40,5 +41,6 @@ body {
     text-align: center;
     color: #2c3e50;
     height: 100%;
+    overflow-y: auto;
 }
 </style>

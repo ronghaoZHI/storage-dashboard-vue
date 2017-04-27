@@ -23,27 +23,27 @@ const router = new Router({
         }, {
             path: '/bucket',
             name: 'bucket',
-            meta: { title: 'My storage' },
+            meta: { title: 'My storage', ali: 'bucket' },
             component: Bucket
         }, {
             path: '/bucket/:bucket/prefix/:prefix',
             name: 'file',
-            meta: { title: 'My storage' },
+            meta: { title: 'My storage', ali: 'bucket' },
             component: File
         }, {
             path: '/upload/:bucket/prefix/:prefix',
             name: 'upload',
-            meta: { title: 'My storage' },
+            meta: { title: 'My storage', ali: 'bucket' },
             component: Upload,
         }, {
             path: '/dashboard',
             name: 'dashboard',
-            meta: { title: 'Dashboard' },
+            meta: { title: 'Dashboard', ali: 'dashboard' },
             component: Dashboard,
         }, {
             path: '/keychain',
             name: 'keychain',
-            meta: { title: 'Keychain' },
+            meta: { title: 'Keychain', ali: 'keychain' },
             component: Keychain,
         }]
     }, {

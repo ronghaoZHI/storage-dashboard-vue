@@ -16,7 +16,7 @@
                     <Button @click="batchDownload" v-if="selectedFileList.length > 0">Download file</Button>
                 </div>
             </Col>
-            <Col span=" 14" style="text-align:right">
+            <Col span="14" style="text-align:right">
                 <div class="section-search">
                     <Input v-model="searchValue" style="width: 400px">
                         <span slot="prepend">Search file: {{prefix}}</span>
@@ -24,7 +24,6 @@
                     </Input>
                     <Button class="button-reset" @click="searchValue = '';searchMode = false;getData()">Reset</Button>
                 </div>
-                
             </Col>
         </Row>
         <Modal v-model="copyModal">
@@ -39,8 +38,8 @@
             </div>
         </Modal>
         <Modal v-model="createFolderModal" title="Add folder" ok-text="OK" @on-ok="addFolder" @on-cancel="createFolderValue = ''" cancel-text="Cancel">
-            <Input v-model="createFolderValue" @on-change="check" placeholder="Requires folder name" style="width: 300px"></Input>
-            <span class="info-input-error" v-show="inputCheck">Requires 1 characters</span>
+            <Input v-model="createFolderValue" @on-change="check" placeholder="Requires folder name"></Input>
+            <span class="info-input-error">{{inputCheck ? 'Requires 1 characters' : ''}}</span>
         </Modal>
         <Modal v-model="showImageModal" :title="selectedFileKey || 'no title'" width="900">
             <div class="section-img">
@@ -128,6 +127,7 @@ export default {
                     item.isImage = isImage(item)
                     item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
                 }))
+                document.querySelector("#app").scrollTop = 0;
             } catch (error) {
                 console.log(error)
             }
@@ -338,7 +338,12 @@ const fileHeaderSetting = [{
         max-height: 600px;
     }
 }
-
+.info-input-error {
+    height: 18px;
+    display: block;
+    margin-top: 6px;
+    color: red;
+}
 .section-search {
     width: 465px;
     display: inline-flex;
@@ -425,7 +430,6 @@ const fileHeaderSetting = [{
     padding:8px !important;
 }
 .ivu-modal-footer {
-    background-color: #f9fafc !important;
     border-top: 0 !important;
 }
 </style>

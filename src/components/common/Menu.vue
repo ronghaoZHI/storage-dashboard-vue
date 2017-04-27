@@ -30,7 +30,7 @@ export default {
     data() {
         return {
             iconSize: 24,
-            activeName: this.$route.name
+            activeName: this.$route.meta.ali
         }
     },
     methods: {
