@@ -110,7 +110,7 @@ export default {
                 let res = await handler('listObjects', {
                     Bucket: this.bucket,
                     Delimiter: '/',
-                    MaxKeys: 100,
+                    MaxKeys: 50,
                     Marker: nextMarker || this.prefix,
                     Prefix: this.prefix + searchValue
                 })
