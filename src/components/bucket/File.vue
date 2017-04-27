@@ -329,7 +329,7 @@ const fileHeaderSetting = [{
 ]
 
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .section-img {
     width: 100%;
     text-align: center;
@@ -338,12 +338,7 @@ const fileHeaderSetting = [{
         max-height: 600px;
     }
 }
-.info-input-error {
-    height: 18px;
-    display: block;
-    margin-top: 6px;
-    color: red;
-}
+
 .section-search {
     width: 465px;
     display: inline-flex;
@@ -351,12 +346,7 @@ const fileHeaderSetting = [{
     justify-content: space-between;
     align-items: center;
     button{
-        margin-top: 2px;
     }
-}
-
-.toolbar-nav {
-    margin-bottom: 8px;
 }
 
 .link-folder {
@@ -366,9 +356,17 @@ const fileHeaderSetting = [{
 }
 
 .button-reset {
-    margin-top: 1px;
+    margin-top: 2px;
     background-color: #eee !important;
     border-radius: 0 !important;
+}
+
+.layout-bsc-toolbar {
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f2f1f6;
+    button {
+        margin-right: 1px;
+    }
 }
 
 .section-paging {
@@ -384,52 +382,4 @@ const fileHeaderSetting = [{
     }
 }
 
-.ivu-input-group-append,
-.ivu-input-group-prepend {
-    border-radius: 0 !important;
-}
-
-.ivu-table-row:hover {
-    cursor: pointer;
-}
-
-.ivu-modal-content {
-    border-radius: 0 !important;
-}
-
-.layout-bsc-toolbar {
-    padding-bottom: 3px;
-    border-bottom: 1px solid #f2f1f6;
-    button {
-        margin-right: 1px;
-    }
-}
-.ivu-modal-content {
-    .ivu-modal-close {
-        right: 20px !important;
-        top: 4px !important;
-    }
-}
-
-.ivu-modal-close {
-    i {
-        font-weight: bolder !important;
-        color: #fff !important;
-    }
-}
-
-.ivu-modal-header {
-    height: 40px;
-    background: #20a0ff;
-    padding: 10px 20px !important;
-    div {
-        color: #fff;
-    }
-}
-.ivu-modal-body{
-    padding:8px !important;
-}
-.ivu-modal-footer {
-    border-top: 0 !important;
-}
 </style>

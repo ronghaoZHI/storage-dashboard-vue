@@ -83,6 +83,17 @@ export default {
     line-height: 24px
 }
 
+.toolbar-nav {
+    margin-bottom: 8px;
+}
+
+.info-input-error {
+    height: 18px;
+    display: block;
+    margin-top: 6px;
+    color: red;
+}
+
 /* fix table width bug when toggle menu */
 
 .ivu-table table {
@@ -92,5 +103,47 @@ export default {
 .ivu-loading-bar-inner-color-primary {
     height: 3px !important;
     background-color: #fff !important;
+}
+
+.ivu-input-group-append,
+.ivu-input-group-prepend {
+    border-radius: 0 !important;
+}
+
+.ivu-table-row:hover {
+    cursor: pointer;
+}
+
+.ivu-modal-content {
+    border-radius: 0 !important;
+}
+
+.ivu-modal-content {
+    .ivu-modal-close {
+        right: 20px !important;
+        top: 4px !important;
+    }
+}
+
+.ivu-modal-close {
+    i {
+        font-weight: bolder !important;
+        color: #fff !important;
+    }
+}
+
+.ivu-modal-header {
+    height: 40px;
+    background: #20a0ff;
+    padding: 10px 20px !important;
+    div {
+        color: #fff;
+    }
+}
+.ivu-modal-body{
+    padding:8px !important;
+}
+.ivu-modal-footer {
+    border-top: 0 !important;
 }
 </style>
