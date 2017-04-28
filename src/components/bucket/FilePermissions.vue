@@ -8,7 +8,7 @@
             </Breadcrumb>
             <div></div>
         </div>
-        <table class="my-table-view">
+        <table class="table-permission">
             <thead>
                 <tr>
                     <th> Group
@@ -54,7 +54,7 @@
                 </tr>
             </tbody>
         </table>
-        <table class="my-table-view">
+        <table class="table-permission">
             <thead>
                 <tr>
                     <th> User
@@ -341,52 +341,5 @@ const convertNewUserItem = item => {
 }
 </script>
 
-<style lang="less">
-.my-table-view {
-    width: 100%;
-    margin-bottom: 20px;
-    color: #657180;
-    font-size: 12px;
-    background-color: #fff;
-    border: 1px solid #d7dde4;
-    border-collapse: collapse;
-}
-
-.my-table-view th {
-    white-space: nowrap;
-    overflow: hidden;
-    background-color: #f5f7f9;
-}
-
-.my-table-view tr {
-    border-bottom: 1px solid #d7dde4;
-}
-
-.my-table-view tbody tr:nth-last-child(1) {
-    border-bottom: none;
-}
-
-.my-table-view td,
-.my-table-view th {
-    min-width: 0;
-    height: 48px;
-    text-align: left;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-    padding-left: 18px;
-    padding-right: 18px;
-    overflow: hidden;
-    white-space: normal;
-    word-break: break-all;
-    word-wrap: normal;
-    border-bottom: none;
-}
-
-.card-footer {
-    border-top: 1px solid #e3e8ee;
-    line-height: 1;
-    padding: 18px 18px 0;
-    text-align: center;
-    margin: 0 -18px;
-}
+<style lang="less" scoped>
 </style>

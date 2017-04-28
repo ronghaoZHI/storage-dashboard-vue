@@ -48,12 +48,17 @@ export default {
     },
     methods: {
         async getBucketList() {
-            this.$Loading.start()
-            let res = await handler('listBuckets')
-            this.bucketList = _.forEach(res.Buckets, (item) => {
-                return item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-            })
-            this.$Loading.finish()
+            try {
+                this.$Loading.start()
+                let res = await handler('listBuckets')
+                this.bucketList = _.forEach(res.Buckets, (item) => {
+                    return item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                })
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+                console.log(error)
+            }
         },
         deleteBucketConfirm(item) {
             this.$Modal.confirm({

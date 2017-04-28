@@ -52,7 +52,7 @@
             </div>
         </Modal>
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
-        <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" no-data-text="No data"></Table>
+        <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" no-data-text="No file"></Table>
         <div class="section-paging">
             <Tooltip content="Home page" placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
             <Tooltip content="Previous page" placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
@@ -128,10 +128,11 @@ export default {
                     item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
                 }))
                 document.querySelector("#app").scrollTop = 0;
+                this.$Loading.finish()
             } catch (error) {
+                this.$Loading.error()
                 console.log(error)
             }
-            this.$Loading.finish()
         },
         previousPage() {
             let maker = this.makerArray[this.makerArray.length - 2]

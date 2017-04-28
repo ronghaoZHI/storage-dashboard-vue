@@ -1,24 +1,48 @@
-<template>    
-    <div>Keychain</div>
+<template>
+    <div>
+        <Table :columns="columns" :data="data"></Table>
+    </div>
 </template>
 <script>
-import { handler } from '../service/Aws'
+import { ACCESSKEY } from '../service/API'
 import moment from 'moment'
 export default {
     data() {
-        return{
-            
+        return {
+            columns: [
+                {
+                    title: 'Accesskey',
+                    key: 'accesskey'
+                },
+                {
+                    title: 'Secretkey',
+                    key: 'secretkey'
+                },
+                {
+                    title: 'Create time',
+                    key: 'ts'
+                }
+            ],
+            data: []
         }
     },
-    mounted(){
-        
+    mounted() {
+        this.getKeychainList()
     },
-    components:{
-        
-    },
-
     methods: {
-        
+        async getKeychainList() {
+            this.$Loading.start()
+            try {
+                const res = await this.$http.get(ACCESSKEY)
+                this.data = await _.forEach(res.data,(item) => {
+                    item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
+                })
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+                console.log(error)
+            }
+        }
     }
 }
 

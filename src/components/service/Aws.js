@@ -41,7 +41,7 @@ export const getAWS = async(timeout = 10000) => {
 
 export const handler = async(method, params = '') => {
     try {
-        let s3 = await getAWS()
+        const s3 = await getAWS()
         return await new Promise((resolve, reject) => s3[method](params, (error, data) => {
             error && iView.Message.error(error.message, 5)
             return error ? reject(error) : resolve(data)

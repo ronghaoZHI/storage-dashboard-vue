@@ -10,9 +10,9 @@ const bytes = (bytes) => {
         return '-'
     }
 
-    let units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-    let exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
-    let number = (bytes / Math.pow(1024, Math.floor(exponent))).toFixed(1)
+    const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
+    const number = (bytes / Math.pow(1024, Math.floor(exponent))).toFixed(1)
 
     return number + ' ' + units[exponent]
 }
