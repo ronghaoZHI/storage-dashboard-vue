@@ -1,27 +1,23 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket" type="primary"
-                    @click="createBucketModal = true">Add bucket</Button>
+            <div>
+                <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">Add bucket</Button>
+                <Button class="button-bsc-add-bucket" v-show="!!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button>
+                <Button class="button-bsc-add-bucket" v-show="!!selectedBucket.Name" type="primary" @click="deleteBucketConfirm()">Delete bucket</Button>
+            </div>
             <Breadcrumb>
                 <Breadcrumb-item>Bucket list</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Table :show-header="false"
-               :context="self"
-               :columns="header"
-               :data="bucketList"
-               @on-row-click="rowClick"
-               no-data-text="Please create your first bucket"></Table>
-        <Modal v-model="createBucketModal"
-               title="Add bucket"
-               ok-text="OK"
-               @on-ok="addBucket"
-               @on-cancel="createBucketValue = ''"
-               cancel-text="Cancel">
-            <Input v-model="createBucketValue"
-                   @on-change="check"
-                   placeholder="Requires bucket name">
+        <div class="section-iconmode">
+            <div class="bucket" v-for="bucket in bucketList" @click="rowClick(bucket)">
+                <Button v-on:click.stop="selectedBucket = bucket" v-cbutton class="button-check" type="text" shape="circle" icon="checkmark-circled"></Button>
+                <span class="span-filename">{{bucket.Name}}</span>
+            </div>
+        </div>
+        <Modal v-model="createBucketModal" title="Add bucket" ok-text="OK" @on-ok="addBucket" @on-cancel="createBucketValue = ''" cancel-text="Cancel">
+            <Input v-model="createBucketValue" @on-change="check" placeholder="Requires bucket name">
             </Input>
             <span class="info-input-error">{{inputCheck ? 'Requires 3 characters' : ''}}</span>
         </Modal>
@@ -36,6 +32,7 @@ export default {
         return {
             createBucketValue: '',
             createBucketModal: false,
+            selectedBucket: {},
             inputCheck: false,
             self: this,
             iconSize: 18,
@@ -46,12 +43,23 @@ export default {
     mounted() {
         this.getBucketList()
     },
+    directives: {
+        cbutton: {
+            bind: function(el){
+                el.onclick = (e) => {
+                    _.each(el.parentNode.parentNode.childNodes,(node) => node.classList.remove("bucket-selected"))
+                    el.parentNode.classList.add("bucket-selected")
+                }
+            }
+        }
+    },
     methods: {
         async getBucketList() {
             try {
                 this.$Loading.start()
                 let res = await handler('listBuckets')
                 this.bucketList = _.forEach(res.Buckets, (item) => {
+                    item.selected = false
                     return item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
                 })
                 this.$Loading.finish()
@@ -60,7 +68,8 @@ export default {
                 console.log(error)
             }
         },
-        deleteBucketConfirm(item) {
+        deleteBucketConfirm() {
+            const item = this.selectedBucket
             this.$Modal.confirm({
                 content: `Are you sure you want to delete [${item.Name}]?`,
                 okText: 'Submit',
@@ -68,25 +77,25 @@ export default {
                 onOk: () => this.deleteBucket(this.bucketList[item])
             })
         },
-        async deleteBucket(bucket){
+        async deleteBucket(bucket) {
             try {
                 let buckets = await handler('listObjects', { Bucket: bucket.Name })
                 let response = await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
                 // the bucket has cache when the objects just deleted
                 response.then(res => {
-                    setTimeout(() => {handler('deleteBucket', { Bucket: bucket.Name })},1000)
+                    setTimeout(() => { handler('deleteBucket', { Bucket: bucket.Name }) }, 1000)
                 })
                 // the bucket list also has cache ...
-                removeItemFromArray(this.bucketList,bucket)
+                removeItemFromArray(this.bucketList, bucket)
             } catch (error) {
                 console.log(error)
                 this.$Message.error(error.message)
             }
         },
-         goBucketSettings(item) {
-            const bucket = this.bucketList[item]
+        goBucketSettings() {
+            const bucket = this.selectedBucket
             this.$store.dispatch('selectBucket', bucket)
-            this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name} })
+            this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name } })
         },
         rowClick(item) {
             this.$store.dispatch('selectBucket', item)
@@ -95,7 +104,7 @@ export default {
         addBucket() {
             // the 'this' in arrow function is not point to vue
             let _this = this
-           if (this.createBucketValue.length > 2) {
+            if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
                     _this.$Message.success('Add bucket success')
                     _this.getBucketList()
@@ -145,13 +154,70 @@ const headSetting = [
 
 </script>
 <style lang="less" scoped>
+.section-iconmode {
+    min-height: 100%;
+    width: 100%;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.bucket {
+    width: 120px;
+    height: 120px;
+    font-size: 14px;
+    border-radius: 5px;
+    margin: 4px;
+    padding: 5px;
+    background: url('../../assets/folder.png') no-repeat center;
+    .button-check {
+        display: none;
+        position: relative;
+    }
+    .span-filename {
+        display: inline-block;
+        position: relative;
+        text-align: center;
+        font-family: Ionicons;
+        color: #657180;
+        font-style: normal;
+        font-weight: 400;
+        top: 80px;
+        left: 0;
+        width: 100%;
+    }
+}
+
+.bucket:hover{
+    background-color: #f5f5f5;
+    .button-check{
+        display: block;
+    }
+    .span-filename {
+        top: 48px;
+    }
+}
+
+.bucket-selected{
+    background-color: #f5f5f5;
+    .button-check{
+        display: block;
+        color: #108EE9;
+    }
+    .span-filename {
+        top: 48px;
+    }
+}
+
 .info-input-error {
     display: block;
     margin-top: 6px;
     color: red;
 }
 
-.ivu-table-row:hover{
+.ivu-table-row:hover {
     cursor: pointer;
 }
 </style>
