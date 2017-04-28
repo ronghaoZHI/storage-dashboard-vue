@@ -1,152 +1,155 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <div></div>
             <Breadcrumb>
-                <Breadcrumb-item href="#">Bucket list</Breadcrumb-item>
-                <Breadcrumb-item>Bucket Settings  ({{bucket}})</Breadcrumb-item>
+                <Breadcrumb-item href="/">Bucket list</Breadcrumb-item>
+                <Breadcrumb-item>Bucket Settings ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
+            <div></div>
         </div>
-        <Card dis-hover>
-            <p slot="title">Permissions</p>
-            <table class="my-table-view">
-                <thead>
-                    <tr>
-                        <th> Group
-                            <Tooltip placement="right">
-                                <span><Icon type="ios-help"></Icon></span>
-                                <div slot="content">
-                                    <p style="white-space: normal !important;">CWN-X has a set of predefined groups.Giving access to these groups will allow public access to the resource.</p>
-                                </div>
-                            </Tooltip>
-                        </th>
-                        <th>Object Permissions
-                            <Tooltip placement="right">
-                                <span><Icon type="ios-help"></Icon></span>
-                                <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
-                                </div>
-                            </Tooltip>
-                        </th>
-                        <th>ACL Permissions
-                            <Tooltip placement="right">
-                                <span><Icon type="ios-help"></Icon></span>
-                                <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
-                                </div>
-                            </Tooltip>
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in GroupACLList">
-                        <td>
-                            {{item.Grantee | userType}}
-                        </td>
-                        <td>
-                            <Checkbox v-model="item.Permission.READ">Read</Checkbox>
-                            <Checkbox v-model="item.Permission.WRITE">Write</Checkbox>
-                        </td>
-                        <td>
-                            <Checkbox v-model="item.Permission.READ_ACP">Read</Checkbox>
-                            <Checkbox v-model="item.Permission.WRITE_ACP">Write</Checkbox>
-                        </td>
-                        <td>
-                            <Button style="margin: 0 6px;visibility:hidden;" size="small">
-                                <Icon type="ios-plus" :size="iconSize"></Icon>
-                            </Button>
-                            <Button style="margin: 0 6px;visibility:hidden;" size="small">
-                                <Icon type="ios-minus" :size="iconSize"></Icon>
-                            </Button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="my-table-view">
-                <thead>
-                    <tr>
-                        <th> User
-                            <Tooltip placement="right">
-                                <span><Icon type="ios-help"></Icon></span>
-                                <div slot="content">
-                                    <p style="white-space: normal !important;">You can grant permission to an Baishancloud user by the email address or the canonical user ID</p>
-                                </div>
-                            </Tooltip>
-                        </th>
-                        <th>Object Permissions
-                            <Tooltip placement="right">
-                                <span><Icon type="ios-help"></Icon></span>
-                                <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
-                                </div>
-                            </Tooltip>
-                        </th>
-                        <th>ACL Permissions
-                            <Tooltip placement="right">
-                                <span><Icon type="ios-help"></Icon></span>
-                                <div slot="content">
-                                    <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
-                                </div>
-                            </Tooltip>
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-if="isAdd">
-                        <td>
-                            <input v-model="newUserItem.name">
-                            <Button @click="isAdd = false" size="small">Cancle</Button>
-                        </td>
-                        <td>
-                            <Checkbox v-model="newUserItem.Permission.READ">Read{{newUserItem.Permission.READ}}</Checkbox>
-                            <Checkbox v-model="newUserItem.Permission.WRITE">Write{{newUserItem.Permission.WRITE}}</Checkbox>
-                        </td>
-                        <td>
-                            <Checkbox v-model="newUserItem.Permission.READ_ACP">Read{{newUserItem.Permission.READ_ACP}}</Checkbox>
-                            <Checkbox v-model="newUserItem.Permission.WRITE_ACP">Write{{newUserItem.Permission.WRITE_ACP}}</Checkbox>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr v-for="(item,index) in UserACLList">
-                        <td>
-                            {{item.Grantee | userType}}
-                        </td>
-                        <td>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">Read</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.READ">Read</Checkbox>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE">Write</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.WRITE">Write</Checkbox>
-                        </td>
-                        <td>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">Read</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.READ_ACP">Read</Checkbox>
-                            <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">Write</Checkbox>
-                            <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">Write</Checkbox>
-                        </td>
-                        <td>
-                            <Button v-if="index == 0" title="Add User" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
-                                <Icon type="ios-plus" :size="iconSize"></Icon>
-                            </Button>
-                            <Button v-else style="margin: 0 6px;visibility:hidden;" size="small">
-                                <Icon type="ios-plus" :size="iconSize"></Icon>
-                            </Button>
-                            <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
-                                <Icon type="ios-minus" :size="iconSize"></Icon>
-                            </Button>
-                            <Button v-else disabled style="margin: 0 6px;" size="small">
-                                <Icon type="ios-minus" :size="iconSize"></Icon>
-                            </Button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="card-footer">
-                <Button v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">Submit</Button>
-                <Button v-else disabled title="Invalid new user">Submit</Button>
-            </div>
-        </Card>
+    
+        <Tabs size="small">
+            <Tab-pane label="Permissions">
+                <table class="my-table-view">
+                    <thead>
+                        <tr>
+                            <th> Group
+                                <Tooltip placement="right">
+                                    <span><Icon type="ios-help"></Icon></span>
+                                    <div slot="content">
+                                        <p style="white-space: normal !important;">CWN-X has a set of predefined groups.Giving access to these groups will allow public access to the resource.</p>
+                                    </div>
+                                </Tooltip>
+                            </th>
+                            <th>Object Permissions
+                                <Tooltip placement="right">
+                                    <span><Icon type="ios-help"></Icon></span>
+                                    <div slot="content">
+                                        <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
+                                    </div>
+                                </Tooltip>
+                            </th>
+                            <th>ACL Permissions
+                                <Tooltip placement="right">
+                                    <span><Icon type="ios-help"></Icon></span>
+                                    <div slot="content">
+                                        <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
+                                    </div>
+                                </Tooltip>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in GroupACLList">
+                            <td>
+                                {{item.Grantee | userType}}
+                            </td>
+                            <td>
+                                <Checkbox v-model="item.Permission.READ">Read</Checkbox>
+                                <Checkbox v-model="item.Permission.WRITE">Write</Checkbox>
+                            </td>
+                            <td>
+                                <Checkbox v-model="item.Permission.READ_ACP">Read</Checkbox>
+                                <Checkbox v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                            </td>
+                            <td>
+                                <Button style="margin: 0 6px;visibility:hidden;" size="small">
+                                    <Icon type="ios-plus" :size="iconSize"></Icon>
+                                </Button>
+                                <Button style="margin: 0 6px;visibility:hidden;" size="small">
+                                    <Icon type="ios-minus" :size="iconSize"></Icon>
+                                </Button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="my-table-view">
+                    <thead>
+                        <tr>
+                            <th> User
+                                <Tooltip placement="right">
+                                    <span><Icon type="ios-help"></Icon></span>
+                                    <div slot="content">
+                                        <p style="white-space: normal !important;">You can grant permission to an Baishancloud user by the email address or the canonical user ID</p>
+                                    </div>
+                                </Tooltip>
+                            </th>
+                            <th>Object Permissions
+                                <Tooltip placement="right">
+                                    <span><Icon type="ios-help"></Icon></span>
+                                    <div slot="content">
+                                        <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
+                                    </div>
+                                </Tooltip>
+                            </th>
+                            <th>ACL Permissions
+                                <Tooltip placement="right">
+                                    <span><Icon type="ios-help"></Icon></span>
+                                    <div slot="content">
+                                        <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
+                                    </div>
+                                </Tooltip>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="isAdd">
+                            <td>
+                                <input v-model="newUserItem.name">
+                                <Button @click="isAdd = false" size="small">Cancle</Button>
+                            </td>
+                            <td>
+                                <Checkbox v-model="newUserItem.Permission.READ">Read</Checkbox>
+                                <Checkbox v-model="newUserItem.Permission.WRITE">Write</Checkbox>
+                            </td>
+                            <td>
+                                <Checkbox v-model="newUserItem.Permission.READ_ACP">Read</Checkbox>
+                                <Checkbox v-model="newUserItem.Permission.WRITE_ACP">Write</Checkbox>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr v-for="(item,index) in UserACLList">
+                            <td>
+                                {{item.Grantee | userType}}
+                            </td>
+                            <td>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">Read</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.READ">Read</Checkbox>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE">Write</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.WRITE">Write</Checkbox>
+                            </td>
+                            <td>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">Read</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.READ_ACP">Read</Checkbox>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                            </td>
+                            <td>
+                                <Button v-if="index == 0" title="Add User" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
+                                    <Icon type="ios-plus" :size="iconSize"></Icon>
+                                </Button>
+                                <Button v-else style="margin: 0 6px;visibility:hidden;" size="small">
+                                    <Icon type="ios-plus" :size="iconSize"></Icon>
+                                </Button>
+                                <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
+                                    <Icon type="ios-minus" :size="iconSize"></Icon>
+                                </Button>
+                                <Button v-else disabled style="margin: 0 6px;" size="small">
+                                    <Icon type="ios-minus" :size="iconSize"></Icon>
+                                </Button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">Save permissions changes</Button>
+                <Button type="primary" v-else disabled title="Invalid new user">Save permissions changes</Button>
+            </Tab-pane>
+            <Tab-pane label="Link conversion">
+                We've got somethings special for you 
+            </Tab-pane>
+        </Tabs>
     </div>
 </template>
 
@@ -208,7 +211,7 @@ export default {
         },
         async ACLsubmitForm() {
             this.$Loading.start()
-            let originItems = [...this.GroupACLList, ...this.UserACLList,...this.deleteList];
+            let originItems = [...this.GroupACLList, ...this.UserACLList, ...this.deleteList];
             let items = _.cloneDeep(originItems)
             if (this.isAdd) {
                 this.newUserItemPut = convertNewUserItem(this.newUserItem);
@@ -245,12 +248,12 @@ export default {
                 READ_ACP: false,
                 WRITE_ACP: false
             },
-            this.deleteList.push(item);
+                this.deleteList.push(item);
             this.UserACLList = this.UserACLList.filter(val => val != item)
         },
-        newUserItemInit(){
-            this.newUserItem =  {
-                Permission: {...permissionFalse},
+        newUserItemInit() {
+            this.newUserItem = {
+                Permission: { ...permissionFalse },
                 name: '',
             }
         },
@@ -271,13 +274,13 @@ const permissionFalse = {
 }
 const gropItemsDefaultInit = () => {
     const gropItemsDefault = [{
-        Permission: {...permissionFalse},
+        Permission: { ...permissionFalse },
         Grantee: {
             URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
             Type: 'Group'
         },
     }, {
-        Permission: {...permissionFalse},
+        Permission: { ...permissionFalse },
         Grantee: {
             URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
             Type: 'Group'
@@ -288,7 +291,7 @@ const gropItemsDefaultInit = () => {
 
 const userItemsDefaultInit = () => {
     let userACLItemsDefault = {
-        Permission: {...permissionFalse},
+        Permission: { ...permissionFalse },
         Grantee: {},
     };
     return userACLItemsDefault;
@@ -348,6 +351,10 @@ const convertNewUserItem = item => {
 </script>
 
 <style lang="less">
+.layout-bsc-toolbar {
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f2f1f6;
+}
 .my-table-view {
     width: 100%;
     margin-bottom: 20px;

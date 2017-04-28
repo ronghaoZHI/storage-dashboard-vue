@@ -348,8 +348,6 @@ const fileHeaderSetting = [{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    button{
-    }
 }
 
 .link-folder {

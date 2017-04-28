@@ -25,7 +25,7 @@ const router = new Router({
         }, {
             path: '/bucket',
             name: 'bucket',
-            meta: { title: 'My storage', ali: 'bucket' },
+            meta: { title: 'My storage', ali: 'bucket' }, //'ali' => Menu.vue
             component: Bucket
         }, {
             path: '/bucket/:bucket/prefix/:prefix',
@@ -50,12 +50,12 @@ const router = new Router({
         }, {
             path: '/bucket/:bucket/bucketSettings',
             name: 'bucketSettings',
-            meta: { title: 'Bucket Settings' },
+            meta: { title: 'Bucket Settings', ali: 'bucket' },
             component: Settings
         }, {
             path: '/bucket/:bucket/prefix/:prefix/key/:key/FilePermissions',
             name: 'FilePermissions',
-            meta: { title: 'File Permissions' },
+            meta: { title: 'File Permissions', ali: 'bucket' },
             component: FilePermissions
         }]
     }, {
