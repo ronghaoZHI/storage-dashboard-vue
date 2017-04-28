@@ -16,6 +16,16 @@ const bytes = (bytes) => {
 
     return number + ' ' + units[exponent]
 }
+const times = (times) => {
+    times = typeof(times) == 'string' ? times : times.toString()
+    let len = times.length
+    if (len < 3) return
+    let result = len % 3 == 0 ? times.substr(0, len % 3) : times.substr(0, len % 3) + ','
+    for (var i = len % 3; i < len - 1; i += 3) {
+        result += i == len - 3 ? times.substr(i, 3) : (times.substr(i, 3) + ',')
+    }
+    return result
+}
 
 
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
@@ -55,4 +65,4 @@ const convertPrefix2Router = (prefix) => {
 }
 
 
-export { bytes, convertPrefix2Router, keyFilter, removeItemFromArray }
+export { bytes, times, convertPrefix2Router, keyFilter, removeItemFromArray }
