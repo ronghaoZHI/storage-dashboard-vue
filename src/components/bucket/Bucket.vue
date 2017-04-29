@@ -12,7 +12,7 @@
         </div>
         <div class="section-iconmode">
             <div class="bucket" v-for="bucket in bucketList" @click="rowClick(bucket)">
-                <Button v-on:click.stop="selectedBucket = bucket" v-cbutton class="button-check" type="text" shape="circle" icon="checkmark-circled"></Button>
+                <Button v-on:click.stop="selectedBucket === bucket ? selectedBucket = {} :  selectedBucket = bucket" v-cbutton class="button-check" type="text" shape="circle" icon="checkmark-circled"></Button>
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
         </div>
@@ -45,10 +45,12 @@ export default {
     },
     directives: {
         cbutton: {
-            bind: function(el){
+            bind: function(el,binding){
                 el.onclick = (e) => {
-                    _.each(el.parentNode.parentNode.childNodes,(node) => node.classList.remove("bucket-selected"))
-                    el.parentNode.classList.add("bucket-selected")
+                    el.parentNode.classList.toggle("bucket-selected")
+                    _.each(el.parentNode.parentNode.childNodes,(node) => {
+                        node !== el.parentNode && node.classList.remove("bucket-selected")
+                    })
                 }
             }
         }
