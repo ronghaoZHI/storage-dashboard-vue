@@ -192,6 +192,15 @@ const headSetting = [
     }
 }
 
+.layout-bsc-toolbar {
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f2f1f6;
+    margin-bottom: 0; 
+    button {
+        margin-right: 1px;
+    }
+}
+
 .bucket:hover{
     background-color: #f5f5f5;
     .button-check{

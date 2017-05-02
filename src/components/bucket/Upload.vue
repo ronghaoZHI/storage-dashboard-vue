@@ -25,7 +25,7 @@
                     <Icon type="checkmark-circled"></Icon>
                 </Progress>
                 <span class="upload-span-status">{{file.progress === 100 ? 'Success' : file.request && file.request.faileded ? 'failed' : 'Uploading'}}</span>
-                <Button type="text" style="width:48px"><Icon type="close"></Icon></Button>
+                <Button @click="deleteFile(file)" type="text" style="width:48px"><Icon type="close"></Icon></Button>
             </li>
         </ul>
     </div>
@@ -54,7 +54,10 @@ export default {
             bind: function (el, binding) {
                 el.ondrop = (e) => {
                     e.preventDefault()
-                    pushFile2Vue(e.dataTransfer.files)
+                    Array.from(e.dataTransfer.items).forEach((item) => {
+                        let entry = item.webkitGetAsEntry()
+                        entry && traverseFileTree(entry)
+                    })
                 }
                 el.onclick = (e) => {
                     let fileInput = el.children[0]
@@ -64,10 +67,25 @@ export default {
                     fileInput.onchange = (e) => { pushFile2Vue(e.target.files) }
                     fileInput.click()
                 }
-                const pushFile2Vue = (files) => {
+
+                const traverseFileTree = (item, path = '') => {
+                    if (item.isFile && item.name !== '.DS_Store') {
+                        pushFile2Vue(item, path)
+                    } else if (item.isDirectory) {
+                        // get folder contents
+                        let dirReader = item.createReader()
+                        dirReader.readEntries((entries) => {
+                            Array.from(entries).forEach((file) => traverseFileTree(file, path + item.name + "/"))
+                        })
+                    }
+                }
+
+                const pushFile2Vue = (target, path) => {
                     //binding.value => vue(this)
                     //but using dataset is best 
-                    Array.from(files).forEach((item) => {
+
+                    //when file upload by drag, we must get file itself by file.file()
+                    !target.isFile ? Array.from(target).forEach((item) => {
                         binding.value.fileList.push({
                             name: item.name,
                             lastModifiedDate: moment(item.lastModifiedDate).format('YYYY-MM-DD HH:mm'),
@@ -76,26 +94,36 @@ export default {
                             file: item,
                             isUpload: false
                         })
+                    }) : target.file((item) => {
+                        binding.value.fileList.push({
+                            name: path + item.name,
+                            lastModifiedDate: moment(item.lastModifiedDate).format('YYYY-MM-DD HH:mm'),
+                            size: bytes(item.size),
+                            progress: 0,
+                            file: item,
+                            isUpload: false
+                        })
+                    },(error) => {
+                        console.log(error)
                     })
                 }
             }
         }
     },
     methods: {
-        deleteFile() {
-
+        deleteFile(file) {
+            this.$Message.error('Sorry, we will provide this functionality in the next version')
+            //file.request.abort()
         },
         back() {
             this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
         },
-        abort(file) {
-            file.request.abort.bind(file.request)
-        },
         async uploadFile(item) {
+            console.log(item)
             let file = item.file
             let params = {
                 Bucket: this.bucket,
-                Key: this.prefix + file.name,
+                Key: this.prefix + item.name,
                 ContentType: file.type,
                 Body: file
             }
@@ -170,7 +198,7 @@ export default {
     .upload-span-size {
         width: 60px;
         text-align: right;
-        padding-right: 10px;
+        margin-right: 40px;
     }
     .upload-span-status {
         width: 100px;

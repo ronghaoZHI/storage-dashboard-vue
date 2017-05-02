@@ -181,9 +181,16 @@ export default {
     }
 }
 .ivu-modal-body{
-    padding:8px !important;
+    padding: 20px 20px 8px 20px !important;
 }
 .ivu-modal-footer {
     border-top: 0 !important;
+    padding: 6px 18px 12px 18px !important;
+    button{
+        min-width: 58px;
+        padding: 2px 7px !important;
+        font-size: 12px !important;
+        border-radius: 3px !important;
+    }
 }
 </style>

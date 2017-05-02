@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Table :columns="columns" :data="data"></Table>
+        <Table :columns="columns" :data="data" no-data-text="No data"></Table>
     </div>
 </template>
 <script>
@@ -40,7 +40,11 @@ export default {
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                console.log(error)
+                this.$Message.warning('Need to login again')
+                this.$router.push({
+                    path: '/login',
+                    query: { redirect: '/keychain' }
+                })
             }
         }
     }

@@ -198,7 +198,7 @@ export default {
                 content: `Are you sure you want to delete the selected files?`,
                 okText: 'Yes',
                 cancelText: 'Cancle',
-                onOk: () => this.batchDelete(file)
+                onOk: () => this.batchDelete()
             })
         },
         deleteFileConfirm(file) {
@@ -212,11 +212,11 @@ export default {
         async deleteFile(file) {
             try {
                 if (file.Type === 'file') {
-                    await handler('deleteObject', { Bucket: this.bucket, Key: file.Key })
+                    await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + file.Key })
                 } else {
                     let res = await handler('listObjects', {
                         Bucket: this.bucket,
-                        Prefix: this.prefix + file.Prefix
+                        Prefix: file.Prefix
                     })
                     batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
                 }
@@ -273,7 +273,7 @@ export default {
 }
 
 const batchDeleteFileHandle = async (list, bucket, prefix) => {
-    await Promise.all(Array.map(list, (file) => handler('deleteObject', { Bucket: bucket, Key: prefix + file.Key })))
+    await Promise.all(Array.map(list, (file) => handler('deleteObject', { Bucket: bucket, Key: file.Key })))
 }
 
 const isImage = (file) => /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key) ? true : false
@@ -338,7 +338,7 @@ const fileHeaderSetting = [{
     width: 100%;
     text-align: center;
     img {
-        max-width: 868px;
+        max-width: 844px;
         max-height: 600px;
     }
 }
