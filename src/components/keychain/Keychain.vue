@@ -20,6 +20,7 @@ export default {
                 },
                 {
                     title: 'Create time',
+                    width: 140,
                     key: 'ts'
                 }
             ],
