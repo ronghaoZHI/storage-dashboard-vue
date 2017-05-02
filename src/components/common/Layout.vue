@@ -139,6 +139,9 @@ export default {
 .ivu-table table {
     width: 100% !important;
 }
+.ivu-checkbox-wrapper{
+    margin-right: 0 !important;
+}
 
 .ivu-loading-bar-inner-color-primary {
     height: 3px !important;

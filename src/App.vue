@@ -30,7 +30,7 @@ html,
 body {
     height: 100%;
     width: 100%;
-    min-width: 1060px;
+    min-width: 1210px;
     overflow: inherit;
 }
 
