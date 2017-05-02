@@ -12,8 +12,8 @@
                 <div>
                     <Button type="primary" @click="upload">Upload file</Button>
                     <Button type="primary" @click="createFolderModal = true">Create folder</Button>
-                    <Button @click="batchDeleteFileConfirm" v-if="selectedFileList.length > 0">Delete file</Button>
-                    <Button @click="batchDownload" v-if="selectedFileList.length > 0">Download file</Button>
+                    <Button @click="batchDeleteFileConfirm" :disabled="!selectedFileList.length > 0"  type="warning">Delete file</Button>
+                    <Button @click="batchDownload" :disabled="!selectedFileList.length > 0"  type="warning">Download file</Button>
                 </div>
             </Col>
             <Col span="14" style="text-align:right">

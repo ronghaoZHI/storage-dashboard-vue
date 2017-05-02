@@ -3,8 +3,8 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">Add bucket</Button>
-                <Button class="button-bsc-add-bucket" v-show="!!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button>
-                <Button class="button-bsc-add-bucket" v-show="!!selectedBucket.Name" type="primary" @click="deleteBucketConfirm()">Delete bucket</Button>
+                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="warning" @click="goBucketSettings()">Bucket settings</Button>
+                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="warning" @click="deleteBucketConfirm()">Delete bucket</Button>
             </div>
             <Breadcrumb>
                 <Breadcrumb-item>Bucket list</Breadcrumb-item>
