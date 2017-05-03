@@ -22,7 +22,7 @@
         </div>
         <div class="section-overview">
             <div>
-                <p><span class="big-blue">{{ originOverview.capacity && convertData(originOverview.capacity) }}</span></p>
+                <p><span class="big-blue">{{convertData(originOverview.capacity ) }}</span></p>
                 <p class="info"><span>Total capacity</span>
                     <Tooltip placement="right">
                         <span><Icon type="ios-help"></Icon></span>
@@ -33,7 +33,7 @@
                 </p>
             </div>
             <div>
-                <p><span class="big-blue">{{ originOverview.capacity && convertData(originOverview.upload_space)}}</span></p>
+                <p><span class="big-blue">{{convertData(originOverview.upload_space)}}</span></p>
                 <p class="info"><span>Total upload traffic</span>
                     <Tooltip placement="bottom">
                         <span><Icon type="ios-help"></Icon></span>
@@ -44,7 +44,7 @@
                 </p>
             </div>
             <div>
-                <p><span class="big-blue">{{ originOverview.capacity && convertData(originOverview.download_space)}}</span></p>
+                <p><span class="big-blue">{{convertData(originOverview.download_space)}}</span></p>
                 <p class="info"><span>Total download traffic</span>
                     <Tooltip placement="bottom">
                         <span><Icon type="ios-help"></Icon></span>
@@ -55,7 +55,7 @@
                 </p>
             </div>
             <div>
-                <p><span class="big-blue">{{originOverview.capacity && convertData(originOverview.download_count)}}</span></p>
+                <p><span class="big-blue">{{convertData(originOverview.download_count)}}</span></p>
                 <p class="info"><span>Total Downloads</span>
                     <Tooltip placement="bottom">
                         <span><Icon type="ios-help"></Icon></span>
@@ -66,7 +66,7 @@
                 </p>
             </div>
             <div>
-                <p><span class="big-blue">{{originOverview.capacity && convertData(originOverview.upload_count)}}</span></p>
+                <p><span class="big-blue">{{convertData(originOverview.upload_count)}}</span></p>
                 <p class="info"><span>Total Uploads</span>
                     <Tooltip placement="left">
                         <span><Icon type="ios-help"></Icon></span>
@@ -77,29 +77,24 @@
                 </p>
             </div>
         </div>
+        <div class="section-chart-tab">
+            <button v-bind:class="{buttonFocus: showChart === 0}" @click="showChart = 0">Capacity</button>
+            <button v-bind:class="{buttonFocus: showChart === 1}" @click="showChart = 1">Upload traffic</button>
+            <button v-bind:class="{buttonFocus: showChart === 2}" @click="showChart = 2">Download traffic</button>
+        </div>
         <div class="section-chart">
-            <Row>
-                <Col span="12" class="col-chart">
-                    <div class="card-chart">
-                        <span>Capacity</span>
-                        <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
-                    </div>
-                </Col>
-                <Col span="12" class="col-chart">
-                    <div class="card-chart">
-                        <span>Upload traffic</span>
-                        <chart :options="uploadTrafficOptions" auto-resize ref="uploadTrafficLine"></chart>
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col span="12" class="col-chart">
-                    <div class="card-chart">
-                        <span>Download traffic</span>
-                        <chart :options="downloadTrafficOptions" auto-resize ref="downloadTrafficLine"></chart>
-                    </div>
-                </Col>
-            </Row>
+            <div class="card-chart" v-show="showChart === 0">
+                <span>Capacity</span>
+                <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
+            </div>
+            <div class="card-chart" v-show="showChart === 1">
+                <span>Upload traffic</span>
+                <chart :options="uploadTrafficOptions" auto-resize ref="uploadTrafficLine"></chart>
+            </div>
+            <div class="card-chart" v-show="showChart === 2">
+                <span>Download traffic</span>
+                <chart :options="downloadTrafficOptions" auto-resize ref="downloadTrafficLine"></chart>
+            </div>
         </div>
     </div>
 </template>
@@ -116,6 +111,7 @@ import { bytes, times, date } from '../service/bucketService'
 export default {
     data() {
         return {
+            showChart: 0,
             bucketList: this.bucketList,
             bucket: 'All Buckets',
             dateDefault: {
@@ -197,6 +193,9 @@ export default {
             })
         },
         convertData(item) {
+            if (!item) {
+                return '000'
+            }
             return item.unit == 'byte' ? bytes(item.value) : times(item.value)
         },
         getApiURL(operation) {
@@ -372,26 +371,65 @@ const chartReload = (data, chart) => {
     }
 }
 
-.col-chart{
-    padding: 4px;
+.section-chart-tab {
+    width: 100%;
+    height: 60px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    button {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        font-size: 18px;
+        font-weight: bold;
+        transform: translateZ(0);
+        transition: color .2s linear,background-color .2s linear,border .2s linear;
+        color: #657180;
+        background-color: #fff;
+        border-color: #d7dde4;
+    }
+    button:focus,
+    .buttonFocus {
+        outline: 0;
+        background: #20a0ff;
+        border-color: #20a0ff;
+        color: #fff;
+    }
 }
 
 .card-chart {
     width: 100%;
     padding: 4px;
     border: 1px solid #d7dde4;
+    margin-bottom: 16px;
     border-color: #e3e8ee;
     transition: all .2s ease-in-out;
     span {
         display: inline-block;
         margin-top: 10px;
         margin-left: 10px;
-        font-size: 16px;
+        font-size: 20px;
+    }
+    .echarts {
+        margin-left: 8px;
     }
 }
 
 .card-chart:hover {
-    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
     border-color: #eee;
 }
 </style>
