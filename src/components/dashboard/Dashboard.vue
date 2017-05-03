@@ -370,7 +370,7 @@ const chartReload = (data, chart) => {
 
 .section-chart-tab {
     width: 100%;
-    height: 60px;
+    height: 40px;
     display: inline-flex;
     flex-direction: row;
     justify-content: space-around;
@@ -390,7 +390,7 @@ const chartReload = (data, chart) => {
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         transform: translateZ(0);
         transition: color .2s linear,background-color .2s linear,border .2s linear;
