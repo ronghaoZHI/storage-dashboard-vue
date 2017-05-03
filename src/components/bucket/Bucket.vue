@@ -217,7 +217,7 @@ const headSetting = [
         color: #108EE9;
     }
     .span-filename {
-        top: 48px;
+        top: 53px;
     }
 }
 
