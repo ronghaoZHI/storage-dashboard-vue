@@ -1,58 +1,28 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Col span="12">
-            <Select v-model="bucket"
-                    style="width:50%;float:left;"
-                    @on-change="getInitData">
-                <Option v-for="item in bucketList"
-                        :value="item.Name"
-                        :key="item.Name">{{ item.Name }}</Option>
-            </Select>
-            <Date-picker v-model="dateSelect"
-                         format="yyyy/MM/dd"
-                         type="daterange"
-                         placement="bottom-end"
-                         placeholder="Select time"
-                         :options="dateOptions"
-                         style="width: 50%;float:left;"></Date-picker>
-            </Col>
-            <Col span="12">
-            <div class="pull-right">
+            <div class="button-datepicker">
+                <Select v-model="bucket" style="width:50%;float:left;" @on-change="getInitData">
+                    <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
+                </Select>
+                <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 50%;float:left;"></Date-picker>
+            </div>
+    
+            <div class="button-daterange">
                 <Button-group>
-                    <Button v-if="dateSelect == dateDefault.seven_days"
-                            type="primary"
-                            style="margin:0;"
-                            @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
-                    <Button v-else
-                            style="margin:0;"
-                            @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
-                    <Button type="primary"
-                            style="margin:0;"
-                            v-if="isFristDay"
-                            @click="dateSelect = dateDefault.this_month"
-                            disabled>This month</Button>
-                    <Button v-else-if="dateSelect == dateDefault.this_month"
-                            type="primary"
-                            style="margin:0;"
-                            @click="dateSelect = dateDefault.this_month">This month</Button>
-                    <Button v-else
-                            style="margin:0;"
-                            @click="dateSelect = dateDefault.this_month">This month</Button>
-                    <Button v-if="dateSelect == dateDefault.thirty_days"
-                            type="primary"
-                            style="margin:0;"
-                            @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
-                    <Button v-else
-                            style="margin:0;"
-                            @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
+                    <Button v-if="dateSelect == dateDefault.seven_days" type="primary" @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
+                    <Button v-else @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
+                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" type="primary" disabled>This month</Button>
+                    <Button v-else-if="dateSelect == dateDefault.this_month" type="primary" @click="dateSelect = dateDefault.this_month">This month</Button>
+                    <Button v-else @click="dateSelect = dateDefault.this_month">This month</Button>
+                    <Button v-if="dateSelect == dateDefault.thirty_days" type="primary" @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
+                    <Button v-else @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
                 </Button-group>
             </div>
-            </Col>
         </div>
-        <div class="flex border-top-bottom padding15">
-            <div class="grow1 center border-right padding15">
-                <p><span class="big-blue">{{overview.capacity.value}}</span></p>
+        <div class="section-overview">
+            <div>
+                <p><span class="big-blue">{{ originOverview.capacity && convertData(originOverview.capacity) }}</span></p>
                 <p class="info"><span>Total capacity</span>
                     <Tooltip placement="right">
                         <span><Icon type="ios-help"></Icon></span>
@@ -62,8 +32,8 @@
                     </Tooltip>
                 </p>
             </div>
-            <div class="grow1 center border-right padding15">
-                <p><span class="big-blue">{{overview.upload_space.value}}</span></p>
+            <div>
+                <p><span class="big-blue">{{ originOverview.capacity && convertData(originOverview.upload_space)}}</span></p>
                 <p class="info"><span>Total upload traffic</span>
                     <Tooltip placement="bottom">
                         <span><Icon type="ios-help"></Icon></span>
@@ -73,8 +43,8 @@
                     </Tooltip>
                 </p>
             </div>
-            <div class="grow1 center border-right padding15">
-                <p><span class="big-blue">{{overview.download_space.value}}</span></p>
+            <div>
+                <p><span class="big-blue">{{ originOverview.capacity && convertData(originOverview.download_space)}}</span></p>
                 <p class="info"><span>Total download traffic</span>
                     <Tooltip placement="bottom">
                         <span><Icon type="ios-help"></Icon></span>
@@ -84,8 +54,8 @@
                     </Tooltip>
                 </p>
             </div>
-            <div class="grow1 center border-right padding15">
-                <p><span class="big-blue">{{overview.download_count.value}}</span></p>
+            <div>
+                <p><span class="big-blue">{{originOverview.capacity && convertData(originOverview.download_count)}}</span></p>
                 <p class="info"><span>Total Downloads</span>
                     <Tooltip placement="bottom">
                         <span><Icon type="ios-help"></Icon></span>
@@ -95,8 +65,8 @@
                     </Tooltip>
                 </p>
             </div>
-            <div class="grow1 center padding15">
-                <p><span class="big-blue">{{overview.upload_count.value}}</span></p>
+            <div>
+                <p><span class="big-blue">{{originOverview.capacity && convertData(originOverview.upload_count)}}</span></p>
                 <p class="info"><span>Total Uploads</span>
                     <Tooltip placement="left">
                         <span><Icon type="ios-help"></Icon></span>
@@ -107,42 +77,41 @@
                 </p>
             </div>
         </div>
-        <Col span="12"
-             class="dashboard-tabs demo-tabs-style2"
-             style="margin-top:20px;">
-        <Tabs size="small">
-            <Tab-pane label="Capacity"
-                      name="capacity">
-                <chart :options="capacityOptions"
-                       ref="capacityLine"></chart>
-            </Tab-pane>
-            <Tab-pane label="Upload traffic"
-                      name="uploadTraffic">
-                <chart :options="uploadTrafficOptions"
-                       ref="uploadTrafficLine"></chart>
-            </Tab-pane>
-            <Tab-pane label="Download traffic"
-                      name="downloadTraffic">
-                <chart :options="downloadTrafficOptions"
-                       ref="downloadTrafficLine"></chart>
-            </Tab-pane>
-            <Tab-pane label="Downloads"
-                      name="downloads">
-                <!--<chart :options="downloadsOptions"
-                           ref="downloadsLine"></chart>-->
-            </Tab-pane>
-            <Tab-pane label="Uploads"
-                      name="uploads">
-                <!--<chart :options="uploadsOptions"
-                           ref="uploadsLine"></chart>-->
-            </Tab-pane>
-        </Tabs>
-        </Col>
+        <div class="section-chart">
+            <Row>
+                <Col span="12" class="col-chart">
+                    <div class="card-chart">
+                        <span>Capacity</span>
+                        <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
+                    </div>
+                </Col>
+                <Col span="12" class="col-chart">
+                    <div class="card-chart">
+                        <span>Upload traffic</span>
+                        <chart :options="uploadTrafficOptions" auto-resize ref="uploadTrafficLine"></chart>
+                    </div>
+                </Col>
+            </Row>
+            <Row>
+                <Col span="12" class="col-chart">
+                    <div class="card-chart">
+                        <span>Download traffic</span>
+                        <chart :options="downloadTrafficOptions" auto-resize ref="downloadTrafficLine"></chart>
+                    </div>
+                </Col>
+            </Row>
+        </div>
     </div>
 </template>
 <script>
+import ECharts from 'vue-echarts/components/ECharts.vue'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/chart/map'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/legend'
+import 'echarts/lib/component/title'
 import { handler } from '../service/Aws'
-import { HOST } from '../service/HOST'
+import { getAnalysisUrl } from '../service/API'
 import { bytes, times, date } from '../service/bucketService'
 export default {
     data() {
@@ -170,8 +139,11 @@ export default {
             uploadTrafficOptions: _.cloneDeep(lineOptions),
             downloadTrafficOptions: _.cloneDeep(lineOptions),
             downloadsOptions: lineOptions,
-            uploadsOptions: lineOptions,
+            uploadsOptions: lineOptions
         }
+    },
+    components: {
+        chart: ECharts
     },
     computed: {
         dateRange() {
@@ -179,13 +151,7 @@ export default {
         },
         isFristDay() {
             return new Date().getDate == 1
-        },
-        overview() {
-            _.forIn(this.originOverview, item => {
-                item.value = item.unit == 'byte' ? bytes(item.value) : times(item.value)
-            })
-            return this.originOverview
-        },
+        }
     },
     mounted() {
         this.dateSelect = this.dateDefault.seven_days
@@ -202,86 +168,64 @@ export default {
             };
         },
         async getInitData() {
-            let _this = this
+            let self = this
             Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
-                _this.originOverview = res.data.data.data
+                self.originOverview = res.data.data.data
             }), this.$http.get((this.getApiURL('capacity'))).then(res => {
-                _this.capacityData = res.data.data
-                _this.capacityOptions = InitOptions(_this.capacityData)
+                self.capacityData = res.data.data
+                self.capacityOptions = InitOptions(self.capacityData)
             }), this.$http.get((this.getApiURL('upload_space'))).then(res => {
-                _this.uploadSpaceData = res.data.data
-                _this.uploadTrafficOptions = InitOptions(_this.uploadSpaceData)
+                self.uploadSpaceData = res.data.data
+                self.uploadTrafficOptions = InitOptions(self.uploadSpaceData)
             }), this.$http.get((this.getApiURL('download_space'))).then(res => {
-                _this.downloadSpaceData = res.data.data
-                _this.downloadTrafficOptions = InitOptions(_this.downloadSpaceData)
+                self.downloadSpaceData = res.data.data
+                self.downloadTrafficOptions = InitOptions(self.downloadSpaceData)
             }), this.$http.get((this.getApiURL('download_count'))).then(res => {
-                _this.downloadCountData = res.data.data
-                _this.downloadsOptions = InitOptions(_this.downloadCountData)
+                self.downloadCountData = res.data.data
+                self.downloadsOptions = InitOptions(self.downloadCountData)
             }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
-                _this.uploadCountData = res.data.data
-                _this.uploadsOptions = InitOptions(_this.uploadCountData)
-            })]);
+                self.uploadCountData = res.data.data
+                self.uploadsOptions = InitOptions(self.uploadCountData)
+            })]).then(res => { }, error => {
+                if (error.message === 'Request failed with status code 401') {
+                    self.$Message.warning('Need to login again')
+                    self.$router.push({
+                        path: '/login',
+                        query: { redirect: '/dashboard' }
+                    })
+                }
+            })
+        },
+        convertData(item) {
+            return item.unit == 'byte' ? bytes(item.value) : times(item.value)
         },
         getApiURL(operation) {
-            var path = '/v1/analysis/' + operation;
+            let path = operation
             if (this.bucket && this.bucket !== 'All Buckets') {
-                path += '/' + this.bucket;
+                path += '/' + this.bucket
             }
-            return 'http://' + HOST.apiHost + path + '?custom_range=' + this.dateRange
+            return getAnalysisUrl(path + '?custom_range=' + this.dateRange)
         },
     },
     watch: {
-        // the contents array need refresh when the $route value changed
-        '$route'(to, from) {
-            to.path !== from.path && this.getData()
-        },
         'dateSelect'(to, from) {
             this.getInitData()
         },
         'capacityData'(to, from) {
-            let newOption = {
-                series: [{
-                    data: to.data
-                }]
-            }
-            let line = this.$refs.capacityLine
-            line.mergeOptions(newOption)
+            chartReload(to.data, this.$refs.capacityLine)
         },
         'uploadSpaceData'(to, from) {
-            let newOption = {
-                series: [{
-                    data: to.data
-                }]
-            }
-            let line = this.$refs.uploadTrafficLine
-            line.mergeOptions(newOption)
+            chartReload(to.data, this.$refs.uploadTrafficLine)
         },
         'downloadSpaceData'(to, from) {
-            let newOption = {
-                series: [{
-                    data: to.data
-                }]
-            }
-            let line = this.$refs.downloadTrafficLine
-            line.mergeOptions(newOption)
-        }, 'downloadCountData'(to, from) {
-            let newOption = {
-                series: [{
-                    data: to.data
-                }]
-            }
-            let line = this.$refs.uploadTrafficLine
-            line.mergeOptions(newOption)
+            chartReload(to.data, this.$refs.downloadTrafficLine)
+        },
+        'downloadCountData'(to, from) {
+            chartReload(to.data, this.$refs.uploadTrafficLine)
         },
         'uploadCountData'(to, from) {
-            let newOption = {
-                series: [{
-                    data: to.data
-                }]
-            }
-            let line = this.$refs.downloadTrafficLine
-            line.mergeOptions(newOption)
-        },
+            chartReload(to.data, this.$refs.downloadTrafficLine)
+        }
     }
 }
 
@@ -363,7 +307,7 @@ const InitOptions = data => {
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                var res = date(params[0].value[0])
+                let res = date(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/>' + item.seriesName + ' : '
                     res += data.unit == 'byte' ? bytes(item.value[1]) : times(item.value[1])
@@ -382,65 +326,72 @@ const InitOptions = data => {
     newOptions.title = data.unit == 'byte' ? {} : { subtext: "Unit:times", padding: [-28, 0, 0, 0], }
     return newOptions
 }
+
+const chartReload = (data, chart) => {
+    chart && chart.mergeOptions({ series: [{ ...data }] })
+    chart && chart.resize({ width: document.querySelector('.card-chart').clientWidth - 16 })
+}
 </script>
 <style lang="less" scoped>
-.flex {
+.layout-bsc-toolbar {
+    .button-datepicker {
+        width: 50%;
+    }
+    .button-daterange {
+        button {
+            margin: 0;
+        }
+    }
+}
+
+.section-overview {
     width: 100%;
     display: -webkit-flex;
     display: flex;
-}
-
-.grow1 {
-    flex-grow: 1;
-}
-
-.border-top-bottom {
+    padding: 35px 15px;
     border-top: 1px solid #d3dce6;
     border-bottom: 1px solid #d3dce6;
-}
-
-.center {
-    text-align: center;
-}
-
-.padding15 {
-    padding: 15px;
-}
-
-.border-right {
-    border-right: 1px solid #d3dce6;
-}
-
-.big-blue {
-    font-size: 30px;
-    color: #20a0ff;
-    font-family: Arial, Helvetica, sans-serif
-}
-
-.info {
-    font-size: 12px;
-    color: #99a9bf;
-}
-
-.pull-right {
-    float: right;
-}
-
-.echarts {
-    width: 300px;
-    height: 300px;
-}
-
-.dashboard-tabs>.ivu-tabs-nav .ivu-tabs-tab {
-    margin-right: 0 !important;
-    border: 0 !important;
-    border-right: 1px solid #d7dde4 !important;
-    border-radius: none !important;
-    background: #f5f7f9;
-}
-.demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content {
-        height: 120px;
-        margin-top: -16px;
+    margin: 16px 0;
+    &>div {
+        flex-grow: 1;
+        text-align: center;
+        border-right: 1px solid #d3dce6;
+        padding: 15px;
     }
+    &>div:nth-last-child(1) {
+        border-right: 0;
+    }
+    .big-blue {
+        font-size: 36px;
+        color: #20a0ff;
+        font-family: Arial, Helvetica, sans-serif
+    }
+    .info {
+        font-size: 12px;
+        color: #99a9bf;
+    }
+}
 
+.col-chart{
+    padding: 4px;
+}
+
+.card-chart {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #d7dde4;
+    border-color: #e3e8ee;
+    transition: all .2s ease-in-out;
+    span {
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 10px;
+        font-size: 16px;
+    }
+}
+
+.card-chart:hover {
+    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    border-color: #eee;
+}
 </style>
