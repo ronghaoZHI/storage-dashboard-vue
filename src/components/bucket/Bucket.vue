@@ -171,7 +171,8 @@ const headSetting = [
     border-radius: 5px;
     margin: 4px;
     padding: 5px;
-    background: url('../../assets/folder.png') no-repeat center;
+    background: url('../../assets/Bucket_folder.png') no-repeat center;
+    background-size:  66px 66px;
     .button-check {
         display: none;
         position: relative;
@@ -184,7 +185,7 @@ const headSetting = [
         color: #657180;
         font-style: normal;
         font-weight: 400;
-        top: 80px;
+        top: 85px;
         left: 0;
         width: 100%;
     }
@@ -205,7 +206,7 @@ const headSetting = [
         display: block;
     }
     .span-filename {
-        top: 48px;
+        top: 53px;
     }
 }
 
