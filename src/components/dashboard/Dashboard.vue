@@ -2,7 +2,7 @@
     <div>
         <div class="layout-bsc-toolbar">
             <div class="button-datepicker">
-                <Select v-model="bucket" style="width:50%;float:left;" @on-change="getInitData">
+                <Select v-model="bucket" style="width:40%;float:left;margin-right:16px;" @on-change="getInitData">
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
                 <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 50%;float:left;"></Date-picker>
@@ -84,15 +84,12 @@
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
-                <span>Capacity</span>
                 <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 1">
-                <span>Upload traffic</span>
                 <chart :options="uploadTrafficOptions" auto-resize ref="uploadTrafficLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 2">
-                <span>Download traffic</span>
                 <chart :options="downloadTrafficOptions" auto-resize ref="downloadTrafficLine"></chart>
             </div>
         </div>
@@ -426,10 +423,5 @@ const chartReload = (data, chart) => {
     .echarts {
         margin-left: 8px;
     }
-}
-
-.card-chart:hover {
-    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
-    border-color: #eee;
 }
 </style>

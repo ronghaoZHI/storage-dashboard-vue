@@ -3,8 +3,8 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">Add bucket</Button>
-                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="warning" @click="goBucketSettings()">Bucket settings</Button>
-                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="warning" @click="deleteBucketConfirm()">Delete bucket</Button>
+                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button>
+                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button>
             </div>
             
         </div>
@@ -74,7 +74,7 @@ export default {
                 content: `Are you sure you want to delete [${item.Name}]?`,
                 okText: 'Submit',
                 cancelText: 'Cancle',
-                onOk: () => this.deleteBucket(this.bucketList[item])
+                onOk: () => this.deleteBucket(item)
             })
         },
         async deleteBucket(bucket) {
@@ -87,6 +87,11 @@ export default {
                 })
                 // the bucket list also has cache ...
                 removeItemFromArray(this.bucketList, bucket)
+
+                this.selectedBucket = {}
+                _.each(document.querySelector('.section-iconmode').childNodes,(node) => {
+                    node.classList.remove("bucket-selected")
+                })
             } catch (error) {
                 console.log(error)
                 this.$Message.error(error.message)
