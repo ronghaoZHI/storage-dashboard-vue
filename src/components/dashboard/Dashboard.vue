@@ -20,7 +20,11 @@
             <Col span="12">
             <div class="pull-right">
                 <Button-group>
-                    <Button type="primary"
+                    <Button v-if="dateSelect == dateDefault.seven_days"
+                            type="primary"
+                            style="margin:0;"
+                            @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
+                    <Button v-else
                             style="margin:0;"
                             @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
                     <Button type="primary"
@@ -28,10 +32,18 @@
                             v-if="isFristDay"
                             @click="dateSelect = dateDefault.this_month"
                             disabled>This month</Button>
-                    <Button type="primary"
+                    <Button v-else-if="dateSelect == dateDefault.this_month"
+                            type="primary"
                             style="margin:0;"
                             @click="dateSelect = dateDefault.this_month">This month</Button>
-                    <Button type="primary"
+                    <Button v-else
+                            style="margin:0;"
+                            @click="dateSelect = dateDefault.this_month">This month</Button>
+                    <Button v-if="dateSelect == dateDefault.thirty_days"
+                            type="primary"
+                            style="margin:0;"
+                            @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
+                    <Button v-else
                             style="margin:0;"
                             @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
                 </Button-group>
@@ -96,7 +108,8 @@
             </div>
         </div>
         <Col span="12"
-             class="dashboard-tabs demo-tabs-style2" style="margin-top:20px;">
+             class="dashboard-tabs demo-tabs-style2"
+             style="margin-top:20px;">
         <Tabs size="small">
             <Tab-pane label="Capacity"
                       name="capacity">
@@ -116,12 +129,12 @@
             <Tab-pane label="Downloads"
                       name="downloads">
                 <!--<chart :options="downloadsOptions"
-                       ref="downloadsLine"></chart>-->
+                           ref="downloadsLine"></chart>-->
             </Tab-pane>
             <Tab-pane label="Uploads"
                       name="uploads">
                 <!--<chart :options="uploadsOptions"
-                       ref="uploadsLine"></chart>-->
+                           ref="uploadsLine"></chart>-->
             </Tab-pane>
         </Tabs>
         </Col>
@@ -141,7 +154,7 @@ export default {
                 this_month: [new Date(new Date().setDate(1)), lastNDays(1)],
                 thirty_days: [lastNDays(30), lastNDays(1)],
             },
-            dateSelect: [lastNDays(7), lastNDays(1)],
+            dateSelect: this.dateSelect,
             originOverview: {},
             dateOptions: {
                 disabledDate(date) {
@@ -175,6 +188,7 @@ export default {
         },
     },
     mounted() {
+        this.dateSelect = this.dateDefault.seven_days
         this.getBucketList()
         this.getInitData()
     },
@@ -417,45 +431,16 @@ const InitOptions = data => {
     height: 300px;
 }
 
-// .dashboard-tabs>.ivu-tabs-nav .ivu-tabs-tab {
-//     margin-right: 0 !important;
-//     border: 0 !important;
-//     border-right: 1px solid #d7dde4 !important;
-//     border-radius: none !important;
-//     background: #f5f7f9;
-// }
-// .demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content {
-//         height: 120px;
-//         margin-top: -16px;
-//     }
-
-    .demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content > .ivu-tabs-tabpane {
-        background: #fff;
-        padding: 16px;
+.dashboard-tabs>.ivu-tabs-nav .ivu-tabs-tab {
+    margin-right: 0 !important;
+    border: 0 !important;
+    border-right: 1px solid #d7dde4 !important;
+    border-radius: none !important;
+    background: #f5f7f9;
+}
+.demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content {
+        height: 120px;
+        margin-top: -16px;
     }
 
-    .demo-tabs-style1 > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
-        border-color: transparent;
-    }
-
-    .demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
-        border-color: #fff;
-    }
-    .demo-tabs-style2 > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
-        border-radius: 0;
-        background: #fff;
-    }
-    .demo-tabs-style2 > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active{
-        border-top: 1px solid #3399ff;
-    }
-    .demo-tabs-style2 > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active:before{
-        content: '';
-        display: block;
-        width: 100%;
-        height: 1px;
-        background: #3399ff;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
 </style>
