@@ -13,10 +13,6 @@
                 <img src="../../assets/icon-bucket.png" class="icon-menu" height="15px" />
                 <span class="layout-text">My Storage</span>
             </Menu-item>
-            <Menu-item name="dashboard">
-                <img src="../../assets/icon-dashboard.png" class="icon-menu" height="15px" />
-                <span class="layout-text">Dashboard</span>
-            </Menu-item>
             <Menu-item name="keychain">
                 <img src="../../assets/icon-key.png" class="icon-menu" height="15px" />
                 <span class="layout-text">Keychain</span>
