@@ -9,9 +9,6 @@ var chalk = require('chalk')
 var webpack = require('webpack')
 var config = require('../config')
 var webpackConfig = require('./webpack.prod.conf')
-var ECharts = require('vue-echarts')
-import 'echarts/lib/chart/bar'
-import 'echarts/lib/component/tooltip'
 var spinner = ora('building for production...')
 spinner.start()
 
