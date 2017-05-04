@@ -88,7 +88,7 @@ export default {
     }
     .form-login {
         position: absolute;
-        margin: 350px auto auto auto;
+        margin: 300px auto auto auto;
         top: 0;
         left: 0;
         bottom: 0;
@@ -100,7 +100,7 @@ export default {
     }
     img {
         position: absolute;
-        margin: 285px auto auto auto;
+        margin: 235px auto auto auto;
         top: 0;
         left: 0;
         bottom: 0;
