@@ -21,14 +21,14 @@ const times = (times) => {
     let len = times.length
     if (len < 3) return times
     let result = len % 3 == 0 ? times.substr(0, len % 3) : times.substr(0, len % 3) + ','
-    for (var i = len % 3; i < len - 1; i += 3) {
+    for (let i = len % 3; i < len - 1; i += 3) {
         result += i == len - 3 ? times.substr(i, 3) : (times.substr(i, 3) + ',')
     }
     return result
 }
 const date = (value) => {
-    var date = new Date(value);
-    var texts = [date.getFullYear(), (date.getMonth() + 1), date.getDate()];
+    let date = new Date(value);
+    let texts = [date.getFullYear(), (date.getMonth() + 1), date.getDate()];
     return texts.join('/');
 }
 
