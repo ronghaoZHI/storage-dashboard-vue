@@ -162,6 +162,7 @@ export default {
         },
         async getInitData() {
             let self = this
+            self.showChart = 0
             Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
                 self.originOverview = res.data.data.data
             }), this.$http.get((this.getApiURL('capacity'))).then(res => {
@@ -179,7 +180,7 @@ export default {
             }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
                 self.uploadCountData = res.data.data
                 self.uploadsOptions = InitOptions(self.uploadCountData)
-            })]).then(res => { }, error => {
+            })]).then(res => {}, error => {
                 if (error.message === 'Request failed with status code 401') {
                     self.$Message.warning('Need to login again')
                     self.$router.push({
@@ -344,7 +345,7 @@ const chartReload = (data, chart) => {
     width: 100%;
     display: -webkit-flex;
     display: flex;
-    padding: 35px 15px;
+    padding: 20px 15px;
     border-top: 1px solid #d3dce6;
     border-bottom: 1px solid #d3dce6;
     margin: 16px 0;
