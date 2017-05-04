@@ -192,7 +192,10 @@ const headSetting = [
         font-weight: 400;
         top: 85px;
         left: 0;
-        width: 100%;
+        width: 110px;
+        overflow:hidden; 
+        white-space:nowrap; 
+        text-overflow:ellipsis
     }
 }
 
