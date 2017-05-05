@@ -8,7 +8,9 @@
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
-                    <Icon type="help-circled" :size="18"></Icon>
+                    <Tooltip content="Documentation" placement="bottom">
+                        <Icon type="help-circled" :size="18"></Icon>
+                    </Tooltip>
                 </div>
                 <Dropdown style="margin-left: 3px"
                           @on-click="menuClick"
