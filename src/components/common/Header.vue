@@ -7,7 +7,10 @@
                 <a>CLN-X</a>
             </div>
             <div class="layout-header-right">
-                <Dropdown style="margin-left: 20px"
+                <div class="button-document" @click="openDoc">
+                    <Icon type="help-circled" :size="18"></Icon>
+                </div>
+                <Dropdown style="margin-left: 3px"
                           @on-click="menuClick"
                           placement="bottom-end">
                     <a class="dropdown-link"
@@ -89,6 +92,9 @@ export default {
                 console.log(error)
                 this.$Message.error('Change password failed')
             }
+        },
+        openDoc() {
+            window.open('http://doc.bscstorage.com')
         }
     }
 }
@@ -104,11 +110,29 @@ export default {
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     .layout-header-right {
         margin-right: 16px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
     }
     .dropdown-link {
         color: #fff;
         font-size: 18px;
         font-weight: bolder;
+    }
+}
+
+.button-document {
+    font-size: 18px;
+    color: #fff;
+    font-weight: bolder;
+    padding-right: 10px;
+    margin-right: 10px;
+    border-right: 1px solid #1b8de2;
+    cursor: pointer;
+    i {
+        position: relative;
+        top: 1px;
+        left: -4px;
     }
 }
 

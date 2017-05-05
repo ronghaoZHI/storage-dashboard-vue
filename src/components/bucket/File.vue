@@ -303,7 +303,7 @@ const fileHeaderSetting = [{
     ellipsis: true,
     sortable: true,
     render(row, column, index) {
-        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <span class="link-folder" @click="openFolder(row)">${row.Key}</span>`;
+        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`;
     }
 }, {
     title: 'Size',
