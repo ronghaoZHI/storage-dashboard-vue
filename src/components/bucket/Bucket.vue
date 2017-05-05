@@ -186,7 +186,6 @@ const headSetting = [
         display: inline-block;
         position: relative;
         text-align: center;
-        font-family: Ionicons;
         color: #657180;
         font-style: normal;
         font-weight: 400;
