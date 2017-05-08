@@ -105,7 +105,7 @@
              <div class="card-chart" v-show="showChart === 3">
                 <chart :options="downloadsOptions" auto-resize ref="downloadsLine"></chart>
             </div>
-             <div class="card-chart" v-show="showChart === 4">
+            <div class="card-chart" v-show="showChart === 4">
                 <chart :options="uploadsOptions" auto-resize ref="uploadsLine"></chart>
             </div>
         </div>
@@ -144,9 +144,9 @@ export default {
             downloadSpaceData: this.downloadSpaceData,
             downloadCountData: this.downloadCountData,
             uploadCountData: this.uploadCountData,
-            capacityOptions: _.cloneDeep(lineOptions),
-            uploadTrafficOptions: _.cloneDeep(lineOptions),
-            downloadTrafficOptions: _.cloneDeep(lineOptions),
+            capacityOptions: lineOptions,
+            uploadTrafficOptions: lineOptions,
+            downloadTrafficOptions: lineOptions,
             downloadsOptions: lineOptions,
             uploadsOptions: lineOptions
         }
@@ -239,10 +239,10 @@ export default {
             chartReload(to.data, this.$refs.downloadTrafficLine)
         },
         'downloadCountData'(to, from) {
-            chartReload(to.data, this.$refs.uploadTrafficLine)
+            chartReload(to.data, this.$refs.downloadsLine)
         },
         'uploadCountData'(to, from) {
-            chartReload(to.data, this.$refs.downloadTrafficLine)
+            chartReload(to.data, this.$refs.uploadsLine)
         }
     }
 }
