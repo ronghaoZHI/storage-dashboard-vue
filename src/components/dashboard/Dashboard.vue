@@ -86,8 +86,8 @@
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">Capacity</button>
             <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'uploadTrafficLine')">Upload traffic</button>
             <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">Download traffic</button>
-            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">Downloads</button>
-            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">Uploads</button>
+            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">Upload traffic</button>
+            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">Download traffic</button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
@@ -102,7 +102,7 @@
              <div class="card-chart" v-show="showChart === 3">
                 <chart :options="downloadsOptions" auto-resize ref="downloadsLine"></chart>
             </div>
-            <div class="card-chart" v-show="showChart === 4">
+             <div class="card-chart" v-show="showChart === 4">
                 <chart :options="uploadsOptions" auto-resize ref="uploadsLine"></chart>
             </div>
         </div>
@@ -347,13 +347,6 @@ const chartReload = (data, chart) => {
 }
 </script>
 <style lang="less" scoped>
-button:focus,
-    .buttonFocus {
-        outline: 0;
-        background: #20a0ff !important;
-        border-color: #20a0ff !important;
-        color: #fff !important;
-    }
 .layout-bsc-toolbar {
     .button-datepicker {
         width: 50%;
@@ -363,6 +356,13 @@ button:focus,
             margin: 0;
         }
     }
+    button:focus,
+    .buttonFocus {
+        outline: 0;
+        background: #20a0ff;
+        border-color: #20a0ff;
+        color: #fff;
+    }
 }
 
 .section-overview {
@@ -370,13 +370,13 @@ button:focus,
     display: -webkit-flex;
     display: flex;
     padding: 20px 15px;
-    border-top: 1px solid #d3dce6;
-    border-bottom: 1px solid #d3dce6;
-    margin: 6px 0 8px 0;
+    border-top: 1px solid #e5e9f2;
+    border-bottom: 1px solid #e5e9f2;
+    margin: 16px 0;
     &>div {
         flex-grow: 1;
         text-align: center;
-        border-right: 1px solid #d3dce6;
+        border-right: 1px solid #e5e9f2;
         padding: 15px;
     }
     &>div:nth-last-child(1) {
@@ -401,6 +401,8 @@ button:focus,
     justify-content: space-around;
     align-items: center;
     margin-top: 6px;
+    border: 1px solid #d3dce6;
+    border-bottom:0;
     button {
         width: 100%;
         height: 100%;
@@ -410,28 +412,38 @@ button:focus,
         touch-action: manipulation;
         cursor: pointer;
         background-image: none;
-        border: 1px solid transparent;
+        border:none;
+        border-right: 1px solid #d3dce6;
+        border-bottom: 1px solid #d3dce6;
         white-space: nowrap;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        font-size: 15px;
-        font-weight: bold;
+        font-size: 14px;
         transform: translateZ(0);
         transition: color .2s linear,background-color .2s linear,border .2s linear;
-        color: #657180;
-        background-color: #fff;
-        border-color: #d7dde4;
+        color: #8492a6;
+        background-color: #eff2f7;
+    }
+    &>button:nth-last-child(1) {
+        border-right: 0;
+    }
+    button:focus,
+    .buttonFocus {
+        outline: 0;
+        background: #fff;
+        border-bottom: 0;
+        color: #475669;
     }
 }
 
 .card-chart {
     width: 100%;
-    padding: 4px;
-    border: 1px solid #d7dde4;
+    padding: 4px 4px 10px;
+    border: 1px solid #d3dce6;
+    border-top:0;
     margin-bottom: 16px;
-    border-color: #e3e8ee;
     transition: all .2s ease-in-out;
     span {
         display: inline-block;
