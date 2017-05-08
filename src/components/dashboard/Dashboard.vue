@@ -20,6 +20,10 @@
                 </Button-group>
             </div>
         </div>
+        <div class="section-separator">
+            <span class="separator-icon"></span>
+            <span class="separator-info">Overview</span>
+        </div>
         <div class="section-overview">
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.capacity ) }}</span></p>
@@ -77,10 +81,16 @@
                 </p>
             </div>
         </div>
+        <div class="section-separator">
+            <span class="separator-icon"></span>
+            <span class="separator-info">Data charts</span>
+        </div>
         <div class="section-chart-tab">
-            <button v-bind:class="{buttonFocus: showChart === 0}" @click="showChart = 0">Capacity</button>
-            <button v-bind:class="{buttonFocus: showChart === 1}" @click="showChart = 1">Upload traffic</button>
-            <button v-bind:class="{buttonFocus: showChart === 2}" @click="showChart = 2">Download traffic</button>
+            <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">Capacity</button>
+            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'uploadTrafficLine')">Upload traffic</button>
+            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">Download traffic</button>
+            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">Upload traffic</button>
+            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">Download traffic</button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
@@ -91,6 +101,12 @@
             </div>
             <div class="card-chart" v-show="showChart === 2">
                 <chart :options="downloadTrafficOptions" auto-resize ref="downloadTrafficLine"></chart>
+            </div>
+             <div class="card-chart" v-show="showChart === 3">
+                <chart :options="downloadsOptions" auto-resize ref="downloadsLine"></chart>
+            </div>
+             <div class="card-chart" v-show="showChart === 4">
+                <chart :options="uploadsOptions" auto-resize ref="uploadsLine"></chart>
             </div>
         </div>
     </div>
@@ -203,6 +219,11 @@ export default {
             }
             return getAnalysisUrl(path + '?custom_range=' + this.dateRange)
         },
+        tabToggle(index,ref) {
+            let vm = this
+            vm.showChart = index
+            setTimeout(() => { vm.$refs[ref].resize() },100)
+        }
     },
     watch: {
         'dateSelect'(to, from) {
@@ -326,7 +347,6 @@ const InitOptions = data => {
 
 const chartReload = (data, chart) => {
     chart && chart.mergeOptions({ series: [{ ...data }] })
-    chart && chart.resize({ width: document.querySelector('.card-chart').clientWidth - 16 })
 }
 </script>
 <style lang="less" scoped>
@@ -348,7 +368,7 @@ const chartReload = (data, chart) => {
     padding: 20px 15px;
     border-top: 1px solid #d3dce6;
     border-bottom: 1px solid #d3dce6;
-    margin: 16px 0;
+    margin: 6px 0 8px 0;
     &>div {
         flex-grow: 1;
         text-align: center;
@@ -376,6 +396,7 @@ const chartReload = (data, chart) => {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    margin-top: 6px;
     button {
         width: 100%;
         height: 100%;
@@ -391,7 +412,7 @@ const chartReload = (data, chart) => {
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
         transform: translateZ(0);
         transition: color .2s linear,background-color .2s linear,border .2s linear;
@@ -422,6 +443,7 @@ const chartReload = (data, chart) => {
         font-size: 20px;
     }
     .echarts {
+        width: initial;
         margin-left: 8px;
     }
 }

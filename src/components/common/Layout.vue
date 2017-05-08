@@ -87,6 +87,25 @@ export default {
     margin-bottom: 8px;
 }
 
+.section-separator{
+    height: 30px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    .separator-icon {
+        display: inline-block;
+        width: 3px;
+        height: 100%;
+        background: #20a0ff;
+        margin-right: 8px;
+    }
+    .separator-info{
+        font-size: 16px;
+        font-weight: bold;
+        color: #657180;
+    }
+}
+
 .info-input-error {
     height: 18px;
     display: block;
