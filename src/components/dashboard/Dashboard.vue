@@ -10,13 +10,10 @@
     
             <div class="button-daterange">
                 <Button-group>
-                    <Button v-if="dateSelect == dateDefault.seven_days" type="primary" @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
-                    <Button v-else @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
-                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" type="primary" disabled>This month</Button>
-                    <Button v-else-if="dateSelect == dateDefault.this_month" type="primary" @click="dateSelect = dateDefault.this_month">This month</Button>
-                    <Button v-else @click="dateSelect = dateDefault.this_month">This month</Button>
-                    <Button v-if="dateSelect == dateDefault.thirty_days" type="primary" @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
-                    <Button v-else @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
+                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" disabled>This month</Button>
+                    <Button v-else v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month">This month</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.thirty_days}" @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
                 </Button-group>
             </div>
         </div>
@@ -350,6 +347,13 @@ const chartReload = (data, chart) => {
 }
 </script>
 <style lang="less" scoped>
+button:focus,
+    .buttonFocus {
+        outline: 0;
+        background: #20a0ff !important;
+        border-color: #20a0ff !important;
+        color: #fff !important;
+    }
 .layout-bsc-toolbar {
     .button-datepicker {
         width: 50%;
@@ -419,13 +423,6 @@ const chartReload = (data, chart) => {
         color: #657180;
         background-color: #fff;
         border-color: #d7dde4;
-    }
-    button:focus,
-    .buttonFocus {
-        outline: 0;
-        background: #20a0ff;
-        border-color: #20a0ff;
-        color: #fff;
     }
 }
 
