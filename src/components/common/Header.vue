@@ -2,9 +2,6 @@
     <div>
         <div class="layout-header">
             <div class="layout-header-left">
-                <a>CDN-X</a>
-                <a class="active">CWN-X</a>
-                <a>CLN-X</a>
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
