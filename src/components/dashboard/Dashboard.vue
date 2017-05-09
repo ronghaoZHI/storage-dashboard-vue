@@ -357,14 +357,19 @@ const chartReload = (data, chart) => {
     .button-daterange {
         button {
             margin: 0;
+            font-size:14px;
+            color:#475669;
+            width:112px;
+            height:40px;
+            background: #fff;
         }
     }
     button:focus,
     .buttonFocus {
         outline: 0;
-        background: #20a0ff;
+        background: #20a0ff !important;
         border-color: #20a0ff;
-        color: #fff;
+        color: #fff !important;
     }
 }
 

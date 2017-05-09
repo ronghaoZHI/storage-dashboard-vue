@@ -63,7 +63,7 @@ export default {
 
 .layout-content {
     flex: 1;
-    padding: 15px;
+    padding: 20px;
     background: #fff;
     border-radius: 4px;
 }
