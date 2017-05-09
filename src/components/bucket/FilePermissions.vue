@@ -1,10 +1,12 @@
-<template>
+<template >
     <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/">Bucket list</Breadcrumb-item>
                 <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
-                <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
+                <Breadcrumb-item v-for="bc in breadcrumb"
+                                 :href="getUrl(bc.prefix)"
+                                 :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
             <div></div>
         </div>
@@ -88,7 +90,8 @@
                 <tr v-if="isAdd">
                     <td>
                         <input v-model="newUserItem.name">
-                        <Button @click="isAdd = false" size="small">Cancle</Button>
+                        <Button @click="isAdd = false"
+                                size="small">Cancle</Button>
                     </td>
                     <td>
                         <Checkbox v-model="newUserItem.Permission.READ">Read</Checkbox>
@@ -104,37 +107,68 @@
                         {{item.Grantee | userType}}
                     </td>
                     <td>
-                        <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">Read</Checkbox>
-                        <Checkbox v-else disabled v-model="item.Permission.READ">Read</Checkbox>
+                        <Checkbox v-if="owner != item.Grantee.ID"
+                                  v-model="item.Permission.READ">Read</Checkbox>
+                        <Checkbox v-else
+                                  disabled
+                                  v-model="item.Permission.READ">Read</Checkbox>
                     </td>
                     <td>
-                        <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">Read</Checkbox>
-                        <Checkbox v-else disabled v-model="item.Permission.READ_ACP">Read</Checkbox>
-                        <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">Write</Checkbox>
-                        <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                        <Checkbox v-if="owner != item.Grantee.ID"
+                                  v-model="item.Permission.READ_ACP">Read</Checkbox>
+                        <Checkbox v-else
+                                  disabled
+                                  v-model="item.Permission.READ_ACP">Read</Checkbox>
+                        <Checkbox v-if="owner != item.Grantee.ID"
+                                  v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                        <Checkbox v-else
+                                  disabled
+                                  v-model="item.Permission.WRITE_ACP">Write</Checkbox>
                     </td>
                     <td>
-                        <Button v-if="index == 0" title="Add User" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
-                            <Icon type="ios-plus" :size="iconSize"></Icon>
+                        <Button v-if="index == 0"
+                                title="Add User"
+                                style="margin: 0 6px;"
+                                size="small"
+                                @click="newUserItemInit();isAdd = true">
+                            <Icon type="ios-plus"
+                                  :size="iconSize"></Icon>
                         </Button>
-                        <Button v-else style="margin: 0 6px;visibility:hidden;" size="small">
-                            <Icon type="ios-plus" :size="iconSize"></Icon>
+                        <Button v-else
+                                style="margin: 0 6px;visibility:hidden;"
+                                size="small">
+                            <Icon type="ios-plus"
+                                  :size="iconSize"></Icon>
                         </Button>
-                        <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
-                            <Icon type="ios-minus" :size="iconSize"></Icon>
+                        <Button v-if="owner != item.Grantee.ID"
+                                title="Delete User"
+                                style="margin: 0 6px;"
+                                size="small"
+                                @click="deleteUser(item)">
+                            <Icon type="ios-minus"
+                                  :size="iconSize"></Icon>
                         </Button>
-                        <Button v-else disabled style="margin: 0 6px;" size="small">
-                            <Icon type="ios-minus" :size="iconSize"></Icon>
+                        <Button v-else
+                                disabled
+                                style="margin: 0 6px;"
+                                size="small">
+                            <Icon type="ios-minus"
+                                  :size="iconSize"></Icon>
                         </Button>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">Save permissions changes</Button>
-        <Button type="primary" v-else disabled title="Invalid new user">Save permissions changes</Button>
+        <Button class="pull-right"
+                type="primary"
+                v-if="!isAdd || isAdd && isAddVerified"
+                @click="ACLsubmitForm()">Save permissions changes</Button>
+        <Tooltip v-else content="Invalid new user" placement="top" class="pull-right">
+            <Button type="primary"
+                disabled>Save permissions changes</Button>
+        </Tooltip>
     </div>
-</template>
-
+</template> 
 <script>
 import { handler } from '../service/Aws'
 import { convertPrefix2Router } from '../service/bucketService'
@@ -158,12 +192,10 @@ export default {
             deleteList: [],
         }
     },
+    props: ['bucket', 'filePrefix', 'itemKey'],
     computed: {
-        bucket() {
-            return this.$route.params.bucket
-        },
         prefix() {
-            return this.$route.params.prefix === 'noprefix' ? this.$route.params.key : this.$route.params.prefix + this.$route.params.key
+            return this.filePrefix + this.itemKey
         },
         isAddVerified() {
             let name = this.newUserItem.name;
@@ -175,7 +207,7 @@ export default {
         }
     },
     mounted() {
-        this.getACLList()
+            this.getACLList()
     },
     methods: {
         async getACLList() {
@@ -227,6 +259,7 @@ export default {
                 this.$Message.success('Permission changes successfully');
                 this.isAdd = false;
                 this.getACLList()
+                this.$emit('permissionSuccess')
             } catch (error) {
                 this.$Message.error("Save permission changes fail");
             }
@@ -249,12 +282,6 @@ export default {
         },
         getUrl(prefix) {
             return `/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
-        },
-    },
-    watch: {
-        // the contents array need refresh when the $route value changed
-        '$route'(to, from) {
-            to.path !== from.path && this.getData()
         },
     }
 }
@@ -289,7 +316,11 @@ const userItemsDefaultInit = () => {
     return userACLItemsDefault;
 }
 const convertGrants = grants => {
-    let [aclitems, userACLItems, IDArry] = [[], [], []]
+    let [aclitems, userACLItems, IDArry] = [
+        [],
+        [],
+        []
+    ]
     if (grants.length) {
         let IDArry = []
         var gropItemsDefault = gropItemsDefaultInit()
@@ -338,8 +369,10 @@ const convertNewUserItem = item => {
     newItem.Grantee = item.name.includes('@') ? { Type: 'AmazonCustomerByEmail', EmailAddress: item.name } : { Type: 'CanonicalUser', ID: item.name }
     delete newItem.name;
     return newItem;
-}
+} 
 </script>
-
-<style lang="less" scoped>
+<style type="less">
+.pull-right{
+    float:right;
+}
 </style>

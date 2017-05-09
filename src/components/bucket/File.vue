@@ -51,6 +51,13 @@
                 </Button>
             </div>
         </Modal>
+        <Modal v-model="showPermissonModal" :title="'File Permissions'" width="900">
+            <file-permission v-if="showPermissonModal" v-on:permissionSuccess="showPermissonModal = false" :bucket="bucket" :filePrefix="prefix" :itemKey="permissionKey" :show-modal="showPermissonModal"></file-permission>
+            <div slot="footer" class="copy-modal-footer">
+                 <Button style="visibility:hidden"
+                    type="primary">Save permissions changes</Button>
+            </div>
+        </Modal>
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
         <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" no-data-text="No file"></Table>
         <div class="section-paging">
@@ -65,6 +72,7 @@ import { getAWS, handler } from '../service/Aws'
 import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '../service/bucketService'
 import Clipboard from 'clipboard'
 import moment from 'moment'
+import filePermission from './FilePermissions'
 export default {
     data() {
         return {
@@ -74,6 +82,7 @@ export default {
             nextMarker: '',
             makerArray: [],
             showImageModal: false,
+            showPermissonModal: false,
             createFolderModal: false,
             searchMode: false,
             createFolderValue: '',
@@ -84,9 +93,11 @@ export default {
             self: this,
             showHeader: true,
             iconSize: 18,
-            fileHeader: fileHeaderSetting
+            fileHeader: fileHeaderSetting,
+            permissionKey: ''
         }
     },
+    components: {filePermission},
     computed: {
         bucket: function () {
             return this.$route.params.bucket
@@ -193,6 +204,10 @@ export default {
             this.showImageModal = true
             this.$Loading.finish()
         },
+        async permissionModal(file) {
+            this.permissionKey = file.Key
+            this.showPermissonModal = true
+        },
         batchDeleteFileConfirm() {
             this.$Modal.confirm({
                 content: `Are you sure you want to delete the selected files?`,
@@ -253,9 +268,6 @@ export default {
         setLoading(bol) {
             this.$store.dispatch('setLoading', bol)
         },
-        goFilePermissions(item){
-            this.$router.push({ name: 'FilePermissions', params: { bucket: this.bucket, prefix: this.$route.params.prefix, key: item.Key} })
-        }
     },
     directives: {
         clip: {
@@ -323,7 +335,7 @@ const fileHeaderSetting = [{
     align: 'right',
     render(row, column, index) {
         return row.Type === 'folder' ? `<Tooltip content="Delete folder" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
-            `<Tooltip content="File permissions" :delay="1000" placement="top"><i-button @click="goFilePermissions(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+            `<Tooltip content="File permissions" :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip content="Download file" :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip content="Image preview" :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip content="Copy file link" :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
