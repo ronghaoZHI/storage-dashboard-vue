@@ -174,6 +174,9 @@ export default {
             };
         },
         async getInitData() {
+            if(!this.dateSelect){
+                return
+            }
             let self = this
             self.showChart = 0
             Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
@@ -224,7 +227,7 @@ export default {
     },
     watch: {
         'dateSelect'(to, from) {
-            this.getInitData()
+            to[0] && this.getInitData()
         },
         'capacityData'(to, from) {
             chartReload(to.data, this.$refs.capacityLine)
@@ -245,7 +248,7 @@ export default {
 }
 
 const fixDate = n => n < 10 ? "0" + n : "" + n
-const formatDate = date => date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
+const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
 const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
 const lineOptions = {
     tooltip: {
@@ -322,7 +325,7 @@ const InitOptions = data => {
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = date(params[0].value[0])
+                let res = '时间 : ' + date(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/>' + item.seriesName + ' : '
                     res += data.unit == 'byte' ? bytes(item.value[1]) : times(item.value[1])
@@ -369,27 +372,29 @@ const chartReload = (data, chart) => {
     width: 100%;
     display: -webkit-flex;
     display: flex;
-    padding: 20px 15px;
+    padding: 23px 15px;
     border-top: 1px solid #e5e9f2;
     border-bottom: 1px solid #e5e9f2;
-    margin: 16px 0;
+    margin: 20px 0;
+    height:140px;
     &>div {
         flex-grow: 1;
         text-align: center;
         border-right: 1px solid #e5e9f2;
-        padding: 15px;
+        padding: 5px;
+        height:92px;
     }
     &>div:nth-last-child(1) {
         border-right: 0;
     }
     .big-blue {
-        font-size: 36px;
+        font-size: 30px;
         color: #20a0ff;
         font-family: Arial, Helvetica, sans-serif
     }
     .info {
-        font-size: 12px;
-        color: #99a9bf;
+        font-size: 14px;
+        color: #8492a6;
     }
 }
 
@@ -423,8 +428,8 @@ const chartReload = (data, chart) => {
         font-size: 14px;
         transform: translateZ(0);
         transition: color .2s linear,background-color .2s linear,border .2s linear;
-        color: #8492a6;
-        background-color: #eff2f7;
+        color: #475669;
+        background-color: #f9fafc;
     }
     &>button:nth-last-child(1) {
         border-right: 0;
