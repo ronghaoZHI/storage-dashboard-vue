@@ -9,28 +9,24 @@
                      src="../../assets/logo.png"
                      height="30px" />
             </div>
-            <Menu-item name="bucket">
-                <img src="../../assets/icon-bucket.png" class="icon-menu" height="15px" />
-                <span class="layout-text">My Storage</span>
-            </Menu-item>
-            <Menu-item name="dashboard">
-                <img src="../../assets/icon-dashboard.png" class="icon-menu" height="15px" />
-                <span class="layout-text">Dashboard</span>
-            </Menu-item>
-            <Menu-item name="keychain">
-                <img src="../../assets/icon-key.png" class="icon-menu" height="15px" />
-                <span class="layout-text">Keychain</span>
+            <Menu-item v-for="item in menuList" :name="item.name" :key="item.index">
+                <img v-bind:src="item.icon" class="icon-menu" height="15px" />
+                <span class="layout-text">{{item.text}}</span>
             </Menu-item>
         </Menu>
     </div>
 </template>
 <script>
-
+import iconBucket from '../../assets/icon-bucket.png'
+import iconDashboard from '../../assets/icon-dashboard.png'
+import iconKey from '../../assets/icon-key.png'
+import user from '@/store/modules/user'
 export default {
     data() {
         return {
             iconSize: 24,
-            activeName: this.$route.meta.ali
+            activeName: this.$route.meta.ali,
+            menuList: user.state.type === 'normal' ? ONLINE_USER : ONLINE_ADMIN
         }
     },
     methods: {
@@ -40,10 +36,49 @@ export default {
     }
 }
 
+const bucket = {
+    index: 1,
+    name: 'bucket',
+    text: 'My Storage',
+    icon: iconBucket
+}
+
+const dashboard = {
+    index: 2,
+    name: 'dashboard',
+    text: 'Dashboard',
+    icon: iconDashboard
+}
+
+const keychain = {
+    index: 3,
+    name: 'keychain',
+    text: 'Keychain',
+    icon: iconKey
+}
+
+const machine = {
+    index: 4,
+    name: 'machine',
+    text: 'Machine',
+    icon: iconBucket
+}
+
+const partition = {
+    index: 5,
+    name: 'partition',
+    text: 'Partition',
+    icon: iconBucket
+}
+
+const ONLINE_USER = [bucket, dashboard, keychain]
+const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
+const OFFLINE_USER = [bucket, keychain]
+
 </script>
 <style lang="less" scoped>
 .layout-menu {
-    width: 220px;
+    width: 200px;
     background: #2e373e;
     .ivu-menu-dark {
         background: #2e373e;
