@@ -243,8 +243,11 @@ export default {
             try {
                 await handler('putBucketAcl', params)
                 this.$Message.success('Permission changes successfully');
-                this.isAdd = false
-                this.getACLList()
+                this.deleteList = []
+                if(this.isAdd){
+                    this.UserACLList = this.UserACLList.concat(convertNewUserItem(this.newUserItem))
+                    this.isAdd = false
+                }
             } catch (error) {
             }
             this.$Loading.finish()
@@ -258,7 +261,6 @@ export default {
             },
             this.deleteList.push(item);
             this.UserACLList = this.UserACLList.filter(val => val != item)
-            this.ACLsubmitForm();
         },
         newUserItemInit() {
             this.newUserItem = {

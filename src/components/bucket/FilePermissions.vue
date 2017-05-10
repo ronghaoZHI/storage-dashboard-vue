@@ -255,8 +255,11 @@ export default {
             try {
                 await handler('putObjectAcl', params)
                 this.$Message.success('Permission changes successfully');
-                this.isAdd = false;
-                this.getACLList()
+                this.deleteList = []
+                if(this.isAdd){
+                    this.UserACLList = this.UserACLList.concat(convertNewUserItem(this.newUserItem))
+                    this.isAdd = false
+                }
                 this.$emit('permissionSuccess')
             } catch (error) {
                 this.$Message.error("Save permission changes fail");
@@ -269,7 +272,7 @@ export default {
                 READ_ACP: false,
                 WRITE_ACP: false
             },
-                this.deleteList.push(item);
+            this.deleteList.push(item);
             this.UserACLList = this.UserACLList.filter(val => val != item)
         },
         newUserItemInit() {
