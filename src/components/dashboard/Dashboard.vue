@@ -378,8 +378,9 @@ const chartReload = (data, chart) => {
             font-size:14px;
             color:#475669;
             width:112px;
-            height:40px;
+            height:30px;
             background: #fff;
+            line-height: 16px;
         }
     }
     button:focus,
