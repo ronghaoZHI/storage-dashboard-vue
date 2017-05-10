@@ -10,9 +10,9 @@
     
             <div class="button-daterange">
                 <Button-group>
-                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
-                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" disabled>This month</Button>
-                    <Button v-else v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month">This month</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days" style="border-right:none;">Last 7 days</Button>
+                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" disabled style="border-right:none;">This month</Button>
+                    <Button v-else v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month" style="border-right:none;">This month</Button>
                     <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.thirty_days}" @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
                 </Button-group>
             </div>
