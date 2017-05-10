@@ -451,7 +451,7 @@ const chartReload = (data, chart) => {
         user-select: none;
         font-size: 14px;
         transform: translateZ(0);
-        transition: color .2s linear,background-color .2s linear,border .2s linear;
+        transition: color .2s linear,background-color .2s linear;
         color: #a1acb5;
         background-color: #f9fafc;
     }
