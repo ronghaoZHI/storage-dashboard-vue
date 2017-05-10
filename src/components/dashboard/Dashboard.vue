@@ -86,8 +86,8 @@
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">Capacity</button>
             <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'uploadTrafficLine')">Upload traffic</button>
             <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">Download traffic</button>
-            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">Upload traffic</button>
-            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">Download traffic</button>
+            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">Downloads</button>
+            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">Uploads</button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
@@ -253,19 +253,34 @@ const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
 const lineOptions = {
     tooltip: {
         trigger: "axis",
+        textStyle:{
+            color: '#fff',
+            fontSize:16,
+        },
+        padding:16,
     },
     grid: {
-        top: "30",
-        left: "0",
+        top: "45",
+        left: "30",
         right: "40",
-        bottom: "10",
+        bottom: "30",
         containLabel: true
     },
     xAxis: {
         type: 'time',
+        offset:20,
+        axisLine:{
+            lineStyle:{
+                color:"#8492a6"
+            }
+        },
+        axisTick:{
+            show: false,
+        },
         axisLabel: {
             textStyle: {
-                color: '#5c6076'
+                fontSize: 14,
+                color: "#8492a6"
             },
             formatter: function (value) {
                 return date(value)
@@ -275,21 +290,24 @@ const lineOptions = {
     yAxis: {
         type: "value",
         min: 0,
+        offset:20,
         nameTextStyle: {
             color: "#333"
         },
-        ayisLine: {
-            show: false
+        axisLine: {
+            show: false,
+            lineStyle:{
+                color:"#8492a6"
+            }
+        },
+        axisTick:{
+            show: false,
         },
         axisLabel: {
             textStyle: {
-                color: '#5c6076'
+                fontSize: 14,
+                color: "#8492a6"
             },
-        },
-        axisLine: {
-            lineStyle: {
-                color: '#384157'
-            }
         },
     },
     series: [{
@@ -341,7 +359,7 @@ const InitOptions = data => {
             },
         },
     })
-    newOptions.title = data.unit == 'byte' ? {} : { subtext: "Unit:times", padding: [-28, 0, 0, 0], }
+    newOptions.title = data.unit == 'byte' ? {} : { textStyle:{fontSize:14,color:'#8492a6',fontWeight:'normal',},text: "Unit : times"}
     return newOptions
 }
 
@@ -433,7 +451,7 @@ const chartReload = (data, chart) => {
         font-size: 14px;
         transform: translateZ(0);
         transition: color .2s linear,background-color .2s linear,border .2s linear;
-        color: #475669;
+        color: #a1acb5;
         background-color: #f9fafc;
     }
     &>button:nth-last-child(1) {

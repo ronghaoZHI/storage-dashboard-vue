@@ -29,7 +29,7 @@ const times = (times) => {
 const date = (value) => {
     let date = new Date(value);
     let texts = [date.getFullYear(), (date.getMonth() + 1), date.getDate()];
-    return texts.join('/');
+    return texts.join('-');
 }
 
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
