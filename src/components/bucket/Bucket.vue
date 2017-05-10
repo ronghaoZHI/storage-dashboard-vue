@@ -3,8 +3,8 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">Add bucket</Button>
-                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button>
-                <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button></Tooltip>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button></Tooltip>
             </div>
             
         </div>
@@ -181,6 +181,7 @@ const headSetting = [
     .button-check {
         display: none;
         position: relative;
+        font-size: 20px;
     }
     .span-filename {
         display: inline-block;
