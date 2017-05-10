@@ -20,6 +20,8 @@
 import iconBucket from '../../assets/icon-bucket.png'
 import iconDashboard from '../../assets/icon-dashboard.png'
 import iconKey from '../../assets/icon-key.png'
+import iconMachine from '../../assets/icon-machine.png'
+import iconPartition from '../../assets/icon-partition.png'
 import user from '@/store/modules/user'
 export default {
     data() {
@@ -61,14 +63,14 @@ const machine = {
     index: 4,
     name: 'machine',
     text: 'Machine',
-    icon: iconBucket
+    icon: iconMachine
 }
 
 const partition = {
     index: 5,
     name: 'partition',
     text: 'Partition',
-    icon: iconBucket
+    icon: iconPartition
 }
 
 const ONLINE_USER = [bucket, dashboard, keychain]
