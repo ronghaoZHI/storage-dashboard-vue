@@ -1,15 +1,5 @@
 <template >
     <div>
-        <div class="layout-bsc-toolbar">
-            <Breadcrumb>
-                <Breadcrumb-item href="/">Bucket list</Breadcrumb-item>
-                <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
-                <Breadcrumb-item v-for="bc in breadcrumb"
-                                 :href="getUrl(bc.prefix)"
-                                 :key="bc.text">{{bc.text}}</Breadcrumb-item>
-            </Breadcrumb>
-            <div></div>
-        </div>
         <table class="table-permission">
             <thead>
                 <tr>
