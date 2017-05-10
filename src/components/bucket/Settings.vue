@@ -17,7 +17,7 @@
                 <table class="table-permission">
                     <thead>
                         <tr>
-                            <th> Group
+                            <th class="percent20"> Group
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -25,7 +25,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th>Object Permissions
+                            <th class="percent30">Object Permissions
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -33,7 +33,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th>ACL Permissions
+                            <th class="percent30">ACL Permissions
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -41,7 +41,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th></th>
+                            <th class="percent20"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +75,7 @@
                 <table class="table-permission">
                     <thead>
                         <tr>
-                            <th> User
+                            <th class="percent20"> User
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -83,7 +83,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th>Object Permissions
+                            <th class="percent30">Object Permissions
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -91,7 +91,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th>ACL Permissions
+                            <th class="percent30">ACL Permissions
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -105,8 +105,8 @@
                     <tbody>
                         <tr v-if="isAdd">
                             <td>
-                                <input v-model="newUserItem.name">
-                                <Button @click="isAdd = false" size="small">Cancle</Button>
+                                <input class="new-user-input" v-model="newUserItem.name">
+                                <Button class="new-user-button" @click="isAdd = false" size="small">Cancle</Button>
                             </td>
                             <td>
                                 <Checkbox v-model="newUserItem.Permission.READ">Read</Checkbox>
@@ -365,5 +365,20 @@ const convertNewUserItem = item => {
 .layout-bsc-toolbar {
     padding-bottom: 8px;
     border-bottom: 1px solid #f2f1f6;
+}
+.new-user-input{
+    width:70%;
+    max-width:150px;
+    margin-right:5%;
+}
+.new-user-button{
+    width:25%;
+    max-width:50px;
+}
+.table-permission th.percent20 {
+    width:20%;
+}
+.table-permission th.percent30 {
+    width:30%;
 }
 </style>

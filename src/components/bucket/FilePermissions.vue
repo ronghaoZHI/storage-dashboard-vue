@@ -7,7 +7,7 @@
         <table class="table-permission">
             <thead>
                 <tr>
-                    <th> Group
+                    <th class="percent20"> Group
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -15,7 +15,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th>Object Permissions
+                    <th class="percent30">Object Permissions
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -23,7 +23,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th>ACL Permissions
+                    <th class="percent30">ACL Permissions
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -31,7 +31,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th></th>
+                    <th class="percent20"></th>
                 </tr>
             </thead>
             <tbody>
@@ -46,7 +46,14 @@
                         <Checkbox v-model="item.Permission.READ_ACP">Read</Checkbox>
                         <Checkbox v-model="item.Permission.WRITE_ACP">Write</Checkbox>
                     </td>
-                    <td></td>
+                    <td>
+                        <Button style="margin: 0 6px;visibility:hidden;" size="small">
+                            <Icon type="ios-plus" :size="iconSize"></Icon>
+                        </Button>
+                        <Button style="margin: 0 6px;visibility:hidden;" size="small">
+                            <Icon type="ios-minus" :size="iconSize"></Icon>
+                        </Button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -57,7 +64,7 @@
         <table class="table-permission">
             <thead>
                 <tr>
-                    <th> User
+                    <th class="percent20"> User
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -65,7 +72,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th>Object Permissions
+                    <th class="percent30">Object Permissions
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -73,7 +80,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th>ACL Permissions
+                    <th class="percent30">ACL Permissions
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -81,14 +88,14 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th></th>
+                    <th class="percent20"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="isAdd">
                     <td>
-                        <input v-model="newUserItem.name">
-                        <Button @click="isAdd = false"
+                        <input class="new-user-input" v-model="newUserItem.name">
+                        <Button class="new-user-button" @click="isAdd = false"
                                 size="small">Cancle</Button>
                     </td>
                     <td>
@@ -375,5 +382,18 @@ const convertNewUserItem = item => {
 <style type="less">
 .pull-right{
     float:right;
+}
+.new-user-input{
+    width:60%;
+    margin-right:5%;
+}
+.new-user-button{
+    width:30%;
+}
+.table-permission th.percent20 {
+    width:20%;
+}
+.table-permission th.percent30 {
+    width:30%;
 }
 </style>
