@@ -115,22 +115,23 @@ export default {
 
 .table-permission {
     width: 100%;
-    margin-bottom: 20px;
-    color: #657180;
-    font-size: 12px;
+    margin-bottom: 64px;
+    color: #475669;
+    font-size: 14px;
     background-color: #fff;
-    border: 1px solid #d7dde4;
+    border: 1px solid #e5e9f2;
     border-collapse: collapse;
 }
 
 .table-permission th {
     white-space: nowrap;
     overflow: hidden;
-    background-color: #f5f7f9;
+    background-color: #eff2f7;
+    font-weight: normal
 }
 
 .table-permission tr {
-    border-bottom: 1px solid #d7dde4;
+    border-bottom: 1px solid #e5e9f2;
 }
 
 .table-permission tbody tr:nth-last-child(1) {
@@ -140,12 +141,11 @@ export default {
 .table-permission td,
 .table-permission th {
     min-width: 0;
-    height: 48px;
+    height: 40px;
     text-align: left;
     text-overflow: ellipsis;
     vertical-align: middle;
-    padding-left: 18px;
-    padding-right: 18px;
+    padding-left: 10px;
     overflow: hidden;
     white-space: normal;
     word-break: break-all;

@@ -10,6 +10,10 @@
     
         <Tabs size="small">
             <Tab-pane label="Permissions">
+                <div class="section-separator">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">Group</span>
+                </div>
                 <table class="table-permission">
                     <thead>
                         <tr>
@@ -64,6 +68,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="section-separator">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">User</span>
+                </div>
                 <table class="table-permission">
                     <thead>
                         <tr>
@@ -355,44 +363,5 @@ const convertNewUserItem = item => {
 .layout-bsc-toolbar {
     padding-bottom: 8px;
     border-bottom: 1px solid #f2f1f6;
-}
-.table-permission {
-    width: 100%;
-    margin-bottom: 20px;
-    color: #657180;
-    font-size: 12px;
-    background-color: #fff;
-    border: 1px solid #d7dde4;
-    border-collapse: collapse;
-}
-
-.table-permission th {
-    white-space: nowrap;
-    overflow: hidden;
-    background-color: #f5f7f9;
-}
-
-.table-permission tr {
-    border-bottom: 1px solid #d7dde4;
-}
-
-.table-permission tbody tr:nth-last-child(1) {
-    border-bottom: none;
-}
-
-.table-permission td,
-.table-permission th {
-    min-width: 0;
-    height: 48px;
-    text-align: left;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-    padding-left: 18px;
-    padding-right: 18px;
-    overflow: hidden;
-    white-space: normal;
-    word-break: break-all;
-    word-wrap: normal;
-    border-bottom: none;
 }
 </style>

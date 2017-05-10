@@ -1,5 +1,9 @@
 <template >
     <div>
+        <div class="section-separator">
+            <span class="separator-icon"></span>
+            <span class="separator-info">Group</span>
+        </div>
         <table class="table-permission">
             <thead>
                 <tr>
@@ -46,6 +50,10 @@
                 </tr>
             </tbody>
         </table>
+        <div class="section-separator">
+            <span class="separator-icon"></span>
+            <span class="separator-info">User</span>
+        </div>
         <table class="table-permission">
             <thead>
                 <tr>
