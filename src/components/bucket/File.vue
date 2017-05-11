@@ -18,11 +18,11 @@
             </Col>
             <Col span="14" style="text-align:right">
                 <div class="section-search">
-                    <Input v-model="searchValue" style="width: 400px">
-                        <span slot="prepend">Search file: {{prefix}}</span>
-                        <Button @click="searchFile(searchValue)" :disabled="searchValue === ''" slot="append" icon="ios-search"></Button>
-                    </Input>
-                    <Button class="button-reset" @click="searchValue = '';searchMode = false;getData()">Reset</Button>
+                    <span class="bsc-input">
+                        <span class="input-append-before">Search file: {{prefix}}</span>
+                        <input type="text" @focus="searchInputFocus = true" v-model="searchValue" />
+                        <Button type="text" size="small" @click="searchFile(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
+                    </span>
                 </div>
             </Col>
         </Row>
@@ -94,10 +94,13 @@ export default {
             showHeader: true,
             iconSize: 18,
             fileHeader: fileHeaderSetting,
-            permissionKey: ''
+            permissionKey: '',
+            searchInputFocus: false
         }
     },
-    components: {filePermission},
+    components: { 
+        filePermission
+    },
     computed: {
         bucket: function () {
             return this.$route.params.bucket
@@ -346,6 +349,45 @@ const fileHeaderSetting = [{
 
 </script>
 <style lang="less" scoped>
+.bsc-input {
+    height: 30px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 400px;
+    position: relative;
+    vertical-align: middle;
+    border: 1px solid #d7dde4;
+    padding: 4px 0 4px 7px;
+    border-radius: 4px;
+    input {
+        height: 22px;
+        line-height: 1.5;
+        font-size: 12px;
+        padding: 0 4px;
+        flex: 1;
+        border: 0;
+        color: #657180;
+        background-image: none;
+        position: relative;
+        cursor: text;
+        transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+    }
+    input:focus {
+        outline: 0;
+    }
+    .input-append-before {
+        flex: none;
+        padding-right: 4px;
+        border-right: 1px solid #d7dde4;
+    }
+}
+.bsc-input-focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(51,153,255,.2);
+}
+
 .section-img {
     width: 100%;
     text-align: center;
@@ -356,7 +398,6 @@ const fileHeaderSetting = [{
 }
 
 .section-search {
-    width: 465px;
     display: inline-flex;
     flex-direction: row;
     justify-content: space-between;
