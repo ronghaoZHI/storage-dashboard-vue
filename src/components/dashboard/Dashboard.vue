@@ -24,9 +24,11 @@
         <div class="section-overview">
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.capacity ) }}</span></p>
-                <p class="info"><span>Total capacity</span>
-                    <Tooltip placement="right">
-                        <span><Icon type="ios-help"></Icon></span>
+                <p class="info">
+                    <span>Total capacity</span>
+                    <span><Icon type="ios-help"></Icon></span>
+                    <Tooltip placement="right" class="relative-tooltip">
+                        <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
                             <p style="white-space: normal !important;">The bytes stored until the last selected date.</p>
                         </div>
@@ -35,9 +37,11 @@
             </div>
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.upload_space)}}</span></p>
-                <p class="info"><span>Total upload traffic</span>
-                    <Tooltip placement="bottom">
-                        <span><Icon type="ios-help"></Icon></span>
+                <p class="info">
+                    <span>Total upload traffic</span>
+                    <span><Icon type="ios-help"></Icon></span>
+                    <Tooltip placement="bottom" class="relative-tooltip">
+                        <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
                             <p style="white-space: normal !important;">The bytes uploaded within selected date range.</p>
                         </div>
@@ -46,9 +50,11 @@
             </div>
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.download_space)}}</span></p>
-                <p class="info"><span>Total download traffic</span>
-                    <Tooltip placement="bottom">
-                        <span><Icon type="ios-help"></Icon></span>
+                <p class="info">
+                    <span>Total download traffic</span>
+                    <span><Icon type="ios-help"></Icon></span>
+                    <Tooltip placement="bottom" class="relative-tooltip">
+                        <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
                             <p style="white-space: normal !important;">The bytes downloaded traffic within selected date range.</p>
                         </div>
@@ -57,9 +63,11 @@
             </div>
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.download_count)}}</span></p>
-                <p class="info"><span>Total Downloads</span>
-                    <Tooltip placement="bottom">
-                        <span><Icon type="ios-help"></Icon></span>
+                <p class="info">
+                    <span>Total Downloads</span>
+                    <span><Icon type="ios-help"></Icon></span>
+                    <Tooltip placement="bottom" class="relative-tooltip">
+                        <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
                             <p style="white-space: normal !important;">The number of download requests within selected date range.</p>
                         </div>
@@ -68,9 +76,11 @@
             </div>
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.upload_count)}}</span></p>
-                <p class="info"><span>Total Uploads</span>
-                    <Tooltip placement="left">
-                        <span><Icon type="ios-help"></Icon></span>
+                <p class="info">
+                    <span>Total Uploads</span>
+                    <span><Icon type="ios-help"></Icon></span>
+                    <Tooltip placement="left" class="relative-tooltip">
+                        <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
                             <p style="white-space: normal !important;">The number of upload requests within selected date range.</p>
                         </div>
@@ -255,9 +265,9 @@ const lineOptions = {
         trigger: "axis",
         textStyle:{
             color: '#fff',
-            fontSize:16,
+            fontSize:14,
         },
-        padding:16,
+        padding:10,
     },
     grid: {
         top: "45",
@@ -489,5 +499,11 @@ const chartReload = (data, chart) => {
         width: initial;
         margin-left: 8px;
     }
+}
+.relative-tooltip{
+    margin-left:-15px;
+}
+.hidden{
+    visibility:hidden;
 }
 </style>
