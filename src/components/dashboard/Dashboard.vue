@@ -404,7 +404,7 @@ const chartReload = (data, chart) => {
     padding: 23px 15px;
     border-top: 1px solid #e5e9f2;
     border-bottom: 1px solid #e5e9f2;
-    margin: 20px 0;
+    margin: 10px 0 15px 0;
     height:140px;
     &>div {
         flex-grow: 1;
