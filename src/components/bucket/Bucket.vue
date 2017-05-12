@@ -3,6 +3,8 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">Add bucket</Button>
+                <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode">Add user</Button>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode">Authorization</Button></Tooltip>
                 <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button></Tooltip>
                 <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button></Tooltip>
             </div>
@@ -25,9 +27,11 @@
 import { handler } from '../service/Aws'
 import { removeItemFromArray } from '../service/bucketService'
 import moment from 'moment'
+import user from '@/store/modules/user'
 export default {
     data() {
         return {
+            adminMode: user.state.type === 'admin',
             createBucketValue: '',
             createBucketModal: false,
             selectedBucket: {},

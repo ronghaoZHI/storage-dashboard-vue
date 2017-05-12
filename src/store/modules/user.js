@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import * as types from '../mutation-types'
-import axios from '../../components/service/axios-bsc'
-import { USERINFO } from '../../components/service/API'
-import { HOST } from '../../components/service/HOST'
 
 const state = JSON.parse(sessionStorage.getItem('user')) || {}
 
