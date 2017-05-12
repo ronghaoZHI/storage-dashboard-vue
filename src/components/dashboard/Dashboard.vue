@@ -263,14 +263,14 @@ const lineOptions = {
     },
     grid: {
         top: "45",
-        left: "30",
+        left: "10",
         right: "40",
-        bottom: "30",
+        bottom: "10",
         containLabel: true
     },
     xAxis: {
         type: 'time',
-        offset:20,
+        offset:5,
         axisLine:{
             lineStyle:{
                 color:"#8492a6"
@@ -281,7 +281,6 @@ const lineOptions = {
         },
         axisLabel: {
             textStyle: {
-                fontSize: 14,
                 color: "#8492a6"
             },
             formatter: function (value) {
@@ -292,7 +291,7 @@ const lineOptions = {
     yAxis: {
         type: "value",
         min: 0,
-        offset:20,
+        offset:5,
         nameTextStyle: {
             color: "#333"
         },
@@ -307,7 +306,6 @@ const lineOptions = {
         },
         axisLabel: {
             textStyle: {
-                fontSize: 14,
                 color: "#8492a6"
             },
         },
@@ -361,7 +359,7 @@ const InitOptions = data => {
             },
         },
     })
-    newOptions.title = data.unit == 'byte' ? {} : { textStyle:{fontSize:14,color:'#8492a6',fontWeight:'normal',},text: "Unit : times"}
+    newOptions.title = data.unit == 'byte' ? {} : { textStyle:{fontSize:12,color:'#8492a6',fontWeight:'normal',},text: "Unit : times", padding: [10, 0, 0, 5],}
     return newOptions
 }
 
