@@ -3,12 +3,18 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">Add bucket</Button>
-                <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode">Add user</Button>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode">Authorization</Button></Tooltip>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button></Tooltip>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button></Tooltip>
+                <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode" @click="createUserModal = true">Add user</Button>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
+                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode" @click="redirectBucketModal = true">Authorization</Button>
+                </Tooltip>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
+                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button>
+                </Tooltip>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
+                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button>
+                </Tooltip>
             </div>
-            
+    
         </div>
         <div class="section-iconmode">
             <div class="bucket" v-for="bucket in bucketList" @click="rowClick(bucket)">
@@ -21,10 +27,34 @@
             </Input>
             <span class="info-input-error">{{inputCheck ? 'Requires 3 characters' : ''}}</span>
         </Modal>
+        <Modal v-model="createUserModal" title="Add user" @on-ok="createUser" @on-cancel="createBucketValue = ''">
+            <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
+                <Form-item label="User name" prop="username">
+                    <Input v-model="createUserForm.username" placeholder="User name"></Input>
+                </Form-item>
+                <Form-item label="Email" prop="email">
+                    <Input v-model="createUserForm.email" placeholder="Email"></Input>
+                </Form-item>
+                <Form-item label="Password" prop="password">
+                    <Input v-model="createUserForm.password" placeholder="Password"></Input>
+                </Form-item>
+            </Form>
+        </Modal>
+        <Modal v-model="redirectBucketModal" title="Add a redirect bucket and authorize it to the user" @on-ok="createRedirectBucket" @on-cancel="redirectBucketModal = ''">
+            <Form ref="redirectBucketForm" :model="redirectBucketForm" :rules="redirectBucketRuleValidate" :label-width="90">
+                <Form-item label="Bucket alias" prop="redirect">
+                    <Input v-model="redirectBucketForm.redirect" placeholder="Bucket alias"></Input>
+                </Form-item>
+                <Form-item label="User email" prop="email">
+                    <Input v-model="redirectBucketForm.email" placeholder="User email"></Input>
+                </Form-item>
+            </Form>
+        </Modal>
     </div>
 </template>
 <script>
 import { handler } from '../service/Aws'
+import { CREATE_USER,REDIRECT_BUCKET } from '../service/API'
 import { removeItemFromArray } from '../service/bucketService'
 import moment from 'moment'
 import user from '@/store/modules/user'
@@ -34,12 +64,45 @@ export default {
             adminMode: user.state.type === 'admin',
             createBucketValue: '',
             createBucketModal: false,
+            redirectBucketModal: false,
+            createUserModal: false,
             selectedBucket: {},
             inputCheck: false,
             self: this,
             iconSize: 18,
             header: headSetting,
-            bucketList: this.bucketList
+            bucketList: this.bucketList,
+            createUserForm: {
+                username: '',
+                email: '',
+                password: ''
+            },
+            userRuleValidate: {
+                username: [
+                    { required: true, message: 'Requires user name', trigger: 'blur' }
+                ],
+                email: [
+                    { required: true, message: 'Requires email', trigger: 'blur' },
+                    { type: 'email', message: 'Email format is incorrect', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: 'Requires password', trigger: 'blur' },
+                    { type: 'string', min: 6, message: 'Requires 6 characters', trigger: 'blur' }
+                ]
+            },
+            redirectBucketForm: {
+                redirect: '',
+                email: ''
+            },
+            redirectBucketRuleValidate: {
+                redirect: [
+                    { required: true, message: 'Requires bucket alias', trigger: 'blur' }
+                ],
+                email: [
+                    { required: true, message: 'Requires user email', trigger: 'blur' },
+                    { type: 'email', message: 'Email format is incorrect', trigger: 'blur' }
+                ]
+            }
         }
     },
     mounted() {
@@ -47,10 +110,10 @@ export default {
     },
     directives: {
         cbutton: {
-            bind: function(el,binding){
+            bind: function (el, binding) {
                 el.onclick = (e) => {
                     el.parentNode.classList.toggle("bucket-selected")
-                    _.each(el.parentNode.parentNode.childNodes,(node) => {
+                    _.each(el.parentNode.parentNode.childNodes, (node) => {
                         node !== el.parentNode && node.classList.remove("bucket-selected")
                     })
                 }
@@ -93,13 +156,43 @@ export default {
                 removeItemFromArray(this.bucketList, bucket)
 
                 this.selectedBucket = {}
-                _.each(document.querySelector('.section-iconmode').childNodes,(node) => {
+                _.each(document.querySelector('.section-iconmode').childNodes, (node) => {
                     node.classList.remove("bucket-selected")
                 })
             } catch (error) {
                 console.log(error)
                 this.$Message.error(error.message)
             }
+        },
+        createUser() {
+            let self = this
+            this.$refs['createUserForm'].validate((valid) => {
+                if (valid) {
+                    self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
+                        self.createUserForm = { username: '',email: '',password: '' }
+                        this.$Message.success('Create user success')
+                    },error => {
+                        this.$Message.error(error)
+                    })
+                } else {
+                    this.$Message.error('Input validate failed')
+                }
+            })
+        },
+        createRedirectBucket() {
+            let self = this
+            this.$refs['redirectBucketForm'].validate((valid) => {
+                if (valid) {
+                    self.$http.post(REDIRECT_BUCKET, {...self.redirectBucketForm,original: self.selectedBucket.Name}).then(res => {
+                        self.redirectBucketForm = { redirect: '',email: '' }
+                        this.$Message.success('Create bucket alias success')
+                    },error => {
+                        this.$Message.error(error)
+                    })
+                } else {
+                    this.$Message.error('Input validate failed')
+                }
+            })
         },
         goBucketSettings() {
             const bucket = this.selectedBucket
@@ -112,14 +205,14 @@ export default {
         },
         addBucket() {
             // the 'this' in arrow function is not point to vue
-            let _this = this
+            let self = this
             if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
-                    _this.$Message.success('Add bucket success')
-                    _this.getBucketList()
-                    _this.createBucketValue = ''
+                    self.$Message.success('Add bucket success')
+                    self.getBucketList()
+                    self.createBucketValue = ''
                 }, error => {
-                    _this.$Message.error(error.message)
+                    self.$Message.error(error.message)
                 })
             } else {
                 this.$Message.warning('Requires 3 characters')
@@ -181,7 +274,7 @@ const headSetting = [
     margin: 4px;
     padding: 5px;
     background: url('../../assets/Bucket_folder.png') no-repeat center;
-    background-size:  66px 66px;
+    background-size: 66px 66px;
     .button-check {
         display: none;
         position: relative;
@@ -197,24 +290,24 @@ const headSetting = [
         top: 85px;
         left: 0;
         width: 110px;
-        overflow:hidden; 
-        white-space:nowrap; 
-        text-overflow:ellipsis
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis
     }
 }
 
 .layout-bsc-toolbar {
     padding-bottom: 14px;
     border-bottom: 1px solid #f2f1f6;
-    margin-bottom: 0; 
+    margin-bottom: 0;
     button {
         margin-right: 1px;
     }
 }
 
-.bucket:hover{
+.bucket:hover {
     background-color: #f5f5f5;
-    .button-check{
+    .button-check {
         display: block;
     }
     .span-filename {
@@ -222,9 +315,9 @@ const headSetting = [
     }
 }
 
-.bucket-selected{
+.bucket-selected {
     background-color: #f5f5f5;
-    .button-check{
+    .button-check {
         display: block;
         color: #108EE9;
     }

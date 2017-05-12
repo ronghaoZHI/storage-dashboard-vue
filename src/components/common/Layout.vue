@@ -187,6 +187,7 @@ export default {
     }
 }
 
+
 .ivu-modal-close {
     i {
         font-weight: bolder !important;

@@ -71,7 +71,7 @@ export default {
                 } catch (error) {
                     console.log(error)
                     this.$router.push('/login')
-                    this.$Message.error('Logout failed,please login')
+                    this.$Message.error(error)
                 }
             } else if (name === 'rePasssword') {
                 this.rePasswordModal = true

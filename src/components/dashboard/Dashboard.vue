@@ -199,13 +199,11 @@ export default {
                 self.uploadCountData = res.data.data
                 self.uploadsOptions = InitOptions(self.uploadCountData)
             })]).then(res => {}, error => {
-                if (error.message === 'Request failed with status code 401') {
-                    self.$Message.warning('Need to login again')
-                    self.$router.push({
-                        path: '/login',
-                        query: { redirect: '/dashboard' }
-                    })
-                }
+                self.$Message.warning(error)
+                self.$router.push({
+                    path: '/login',
+                    query: { redirect: '/dashboard' }
+                })
             })
         },
         convertData(item) {
