@@ -17,10 +17,6 @@
                 </Button-group>
             </div>
         </div>
-        <div class="section-separator">
-            <span class="separator-icon"></span>
-            <span class="separator-info">Overview</span>
-        </div>
         <div class="section-overview">
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.capacity ) }}</span></p>
@@ -87,10 +83,6 @@
                     </Tooltip>
                 </p>
             </div>
-        </div>
-        <div class="section-separator">
-            <span class="separator-icon"></span>
-            <span class="separator-info">Data charts</span>
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">Capacity</button>
