@@ -10,10 +10,10 @@
     
             <div class="button-daterange">
                 <Button-group>
-                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">Last 7 days</Button>
-                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" disabled style="border-right:none;">This month</Button>
-                    <Button v-else v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month">This month</Button>
-                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.thirty_days}" @click="dateSelect = dateDefault.thirty_days">Last 30 days</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">{{ $t("DASHBOARD.SEVEN_DAYS")}}</Button>
+                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" disabled style="border-right:none;">{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
+                    <Button v-else v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month">{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.thirty_days}" @click="dateSelect = dateDefault.thirty_days">{{ $t("DASHBOARD.THIRTY_DAYS")}}</Button>
                 </Button-group>
             </div>
         </div>
@@ -21,12 +21,12 @@
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.capacity ) }}</span></p>
                 <p class="info">
-                    <span>Total capacity</span>
+                    <span>{{ $t("DASHBOARD.CAPACITY_ALL")}}</span>
                     <span><Icon type="ios-help"></Icon></span>
                     <Tooltip placement="right" class="relative-tooltip">
                         <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
-                            <p style="white-space: normal !important;">The bytes stored until the last selected date.</p>
+                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.CAPACITY_ALL_INFO")}}</p>
                         </div>
                     </Tooltip>
                 </p>
@@ -34,12 +34,12 @@
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.upload_space)}}</span></p>
                 <p class="info">
-                    <span>Total upload traffic</span>
+                    <span>{{ $t("DASHBOARD.UPLOAD_SPACE_ALL")}}</span>
                     <span><Icon type="ios-help"></Icon></span>
                     <Tooltip placement="bottom" class="relative-tooltip">
                         <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
-                            <p style="white-space: normal !important;">The bytes uploaded within selected date range.</p>
+                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.UPLOAD_SPACE_ALL_INFO")}}</p>
                         </div>
                     </Tooltip>
                 </p>
@@ -47,12 +47,12 @@
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.download_space)}}</span></p>
                 <p class="info">
-                    <span>Total download traffic</span>
+                    <span>{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL")}}</span>
                     <span><Icon type="ios-help"></Icon></span>
                     <Tooltip placement="bottom" class="relative-tooltip">
                         <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
-                            <p style="white-space: normal !important;">The bytes downloaded traffic within selected date range.</p>
+                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL_INFO")}}</p>
                         </div>
                     </Tooltip>
                 </p>
@@ -60,12 +60,12 @@
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.download_count)}}</span></p>
                 <p class="info">
-                    <span>Total Downloads</span>
+                    <span>{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL")}}</span>
                     <span><Icon type="ios-help"></Icon></span>
                     <Tooltip placement="bottom" class="relative-tooltip">
                         <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
-                            <p style="white-space: normal !important;">The number of download requests within selected date range.</p>
+                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL_INFO")}}</p>
                         </div>
                     </Tooltip>
                 </p>
@@ -73,23 +73,23 @@
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.upload_count)}}</span></p>
                 <p class="info">
-                    <span>Total Uploads</span>
+                    <span>{{ $t("DASHBOARD.UPLOAD_COUNT_ALL")}}</span>
                     <span><Icon type="ios-help"></Icon></span>
                     <Tooltip placement="left" class="relative-tooltip">
                         <span class="hidden"><Icon type="ios-help"></Icon></span>
                         <div slot="content">
-                            <p style="white-space: normal !important;">The number of upload requests within selected date range.</p>
+                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.UPLOAD_COUNT_ALL_INFO")}}</p>
                         </div>
                     </Tooltip>
                 </p>
             </div>
         </div>
         <div class="section-chart-tab">
-            <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">Capacity</button>
-            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'uploadTrafficLine')">Upload traffic</button>
-            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">Download traffic</button>
-            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">Downloads</button>
-            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">Uploads</button>
+            <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">{{ $t("DASHBOARD.CAPACITY")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'uploadTrafficLine')">{{ $t("DASHBOARD.UPLOAD_SPACE")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">{{ $t("DASHBOARD.DOWNLOAD_SPACE")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">{{ $t("DASHBOARD.DOWNLOAD_COUNT")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">{{ $t("DASHBOARD.UPLOAD_COUNT")}}</button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
@@ -375,7 +375,6 @@ const chartReload = (data, chart) => {
             margin: 0;
             font-size:14px;
             color:#475669;
-            width:112px;
             height:30px;
             background: #fff;
             line-height: 16px;

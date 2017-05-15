@@ -3,7 +3,7 @@
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/">Bucket list</Breadcrumb-item>
-                <Breadcrumb-item>Bucket Settings ({{bucket}})</Breadcrumb-item>
+                <Breadcrumb-item>{{$t("STORAGE.BUCKET_SETTING")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
             <div></div>
         </div>
@@ -12,32 +12,32 @@
             <Tab-pane label="Permissions">
                 <div class="section-separator">
                     <span class="separator-icon"></span>
-                    <span class="separator-info">Group</span>
+                    <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
                 </div>
                 <table class="table-permission">
                     <thead>
                         <tr>
-                            <th class="percent20"> Group
+                            <th class="percent20">{{$t("STORAGE.ACL_GROUP")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
-                                        <p style="white-space: normal !important;">CWN-X has a set of predefined groups.Giving access to these groups will allow public access to the resource.</p>
+                                        <p style="white-space: normal !important;">{{$t("STORAGE.ACL_GROUP_INFO")}}</p>
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th class="percent30">Object Permissions
+                            <th class="percent30">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
-                                        <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
+                                        <p style="white-space: normal !important;">{{$t("STORAGE.BUCKET_OBJECT_PERMISSIONS_INFO")}}</p>
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th class="percent30">ACL Permissions
+                            <th class="percent30">{{$t("STORAGE.ACL_PERMISSIONS")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
-                                        <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
+                                        <p style="white-space: normal !important;">{{$t("STORAGE.BUCKET_ACL_PERMISSIONS_INFO")}}</p>
                                     </div>
                                 </Tooltip>
                             </th>
@@ -50,12 +50,12 @@
                                 {{item.Grantee | userType}}
                             </td>
                             <td>
-                                <Checkbox v-model="item.Permission.READ">Read</Checkbox>
-                                <Checkbox v-model="item.Permission.WRITE">Write</Checkbox>
+                                <Checkbox v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-model="item.Permission.WRITE">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
-                                <Checkbox v-model="item.Permission.READ_ACP">Read</Checkbox>
-                                <Checkbox v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                                <Checkbox v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
                                 <Button style="margin: 0 6px;visibility:hidden;" size="small">
@@ -70,32 +70,32 @@
                 </table>
                 <div class="section-separator">
                     <span class="separator-icon"></span>
-                    <span class="separator-info">User</span>
+                    <span class="separator-info">{{$t("STORAGE.ACL_USER")}}</span>
                 </div>
                 <table class="table-permission">
                     <thead>
                         <tr>
-                            <th class="percent20"> User
+                            <th class="percent20"> {{$t("STORAGE.USER")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
-                                        <p style="white-space: normal !important;">You can grant permission to an Baishancloud user by the email address or the canonical user ID</p>
+                                        <p style="white-space: normal !important;">{{$t("STORAGE.ACL_USER_INFO")}}</p>
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th class="percent30">Object Permissions
+                            <th class="percent30">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
-                                        <p style="white-space: normal !important;">READ permission allows grantee to list objects in a bucket;WRITE permission allows grantee to create, overwrite and delete any object in a bucket.</p>
+                                        <p style="white-space: normal !important;">{{$t("STORAGE.BUCKET_OBJECT_PERMISSIONS_INFO")}}</p>
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th class="percent30">ACL Permissions
+                            <th class="percent30">{{$t("STORAGE.ACL_PERMISSIONS")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
-                                        <p style="white-space: normal !important;">READ permission allows grantee to read the bucekt ACLs;WRITE permission allows grantee to modify the bucket ACLs.</p>
+                                        <p style="white-space: normal !important;">{{$t("STORAGE.BUCKET_ACL_PERMISSIONS_INFO")}}</p>
                                     </div>
                                 </Tooltip>
                             </th>
@@ -106,15 +106,15 @@
                         <tr v-if="isAdd">
                             <td>
                                 <input class="new-user-input" v-model="newUserItem.name">
-                                <Button class="new-user-button" @click="isAdd = false" size="small">Cancle</Button>
+                                <Button class="new-user-button" @click="isAdd = false" size="small">{{$t("PUBLIC.CANCLE")}}</Button>
                             </td>
                             <td>
-                                <Checkbox v-model="newUserItem.Permission.READ">Read</Checkbox>
-                                <Checkbox v-model="newUserItem.Permission.WRITE">Write</Checkbox>
+                                <Checkbox v-model="newUserItem.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-model="newUserItem.Permission.WRITE">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
-                                <Checkbox v-model="newUserItem.Permission.READ_ACP">Read</Checkbox>
-                                <Checkbox v-model="newUserItem.Permission.WRITE_ACP">Write</Checkbox>
+                                <Checkbox v-model="newUserItem.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-model="newUserItem.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td></td>
                         </tr>
@@ -123,36 +123,46 @@
                                 {{item.Grantee | userType}}
                             </td>
                             <td>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">Read</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.READ">Read</Checkbox>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE">Write</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.WRITE">Write</Checkbox>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE">{{$t("STORAGE.WRITE")}}</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.WRITE">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">Read</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.READ_ACP">Read</Checkbox>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">Write</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">Write</Checkbox>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
+                                <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
-                                <Button v-if="index == 0" title="Add User" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
-                                    <Icon type="ios-plus" :size="iconSize"></Icon>
-                                </Button>
-                                <Button v-else style="margin: 0 6px;visibility:hidden;" size="small">
-                                    <Icon type="ios-plus" :size="iconSize"></Icon>
-                                </Button>
-                                <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
+                                <Tooltip placement="bottom">
+                                    <Button v-if="index == 0" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
+                                        <Icon type="ios-plus" :size="iconSize"></Icon>
+                                    </Button>
+                                    <Button v-else style="margin: 0 6px;visibility:hidden;" size="small">
+                                        <Icon type="ios-plus" :size="iconSize"></Icon>
+                                    </Button>
+                                    <div slot="content">
+                                        <p>{{$t("STORAGE.ADD_USER")}}</p>
+                                    </div>
+                                </Tooltip>
+                                <Tooltip placement="bottom">
+                                    <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
                                     <Icon type="ios-minus" :size="iconSize"></Icon>
                                 </Button>
                                 <Button v-else disabled style="margin: 0 6px;" size="small">
                                     <Icon type="ios-minus" :size="iconSize"></Icon>
                                 </Button>
+                                    <div slot="content">
+                                        <p>{{$t("STORAGE.DELETE_USER")}}</p>
+                                    </div>
+                                </Tooltip>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">Save permissions changes</Button>
-                <Button type="primary" v-else disabled title="Invalid new user">Save permissions changes</Button>
+                <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
+                <Button type="primary" v-else disabled title="Invalid new user">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
             </Tab-pane>
             <Tab-pane label="Link conversion">
                 We've got somethings special for you 
