@@ -2,7 +2,7 @@
     <div @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/">Bucket list</Breadcrumb-item>
+                <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
                 <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
                 <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
             </Breadcrumb>
@@ -10,16 +10,16 @@
         <Row class="toolbar-nav">
             <Col span="10">
                 <div>
-                    <Button type="primary" @click="upload">Upload file</Button>
-                    <Button type="primary" @click="createFolderModal = true">Create folder</Button>
-                    <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">Download file</Button>
-                    <Button @click="batchDeleteFileConfirm" :disabled="!selectedFileList.length > 0">Delete file</Button>
+                    <Button type="primary" @click="upload">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
+                    <Button type="primary" @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
+                    <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
+                    <Button @click="batchDeleteFileConfirm" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
                 </div>
             </Col>
             <Col span="14" style="text-align:right">
                 <div class="section-search">
                     <span class="bsc-input">
-                        <span class="input-append-before">Search file: {{prefix}}</span>
+                        <span class="input-append-before">{{$t("STORAGE.SEARCH_FILE")}}: {{prefix}}</span>
                         <input type="text" @focus="searchInputFocus = true" v-model="searchValue" />
                         <Button type="text" size="small" @click="searchFile(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
                     </span>
@@ -32,9 +32,9 @@
             </div>
             <div slot="footer" class="copy-modal-footer">
                 <Button type="text" @click="copyModal = false">
-                    <span>Cancle</span>
+                    <span>{{$t("PUBLIC.CANCLE")}}</span>
                 </Button>
-                <Button type="info" @click="copyModal = false;$Message.success('Copied')" :data-clipboard-text="clipUrl" v-clip>Copy!</Button>
+                <Button type="info" @click="copyModal = false;$Message.success('Copied')" :data-clipboard-text="clipUrl" v-clip>{{$t("PUBLIC.COPY")}}!</Button>
             </div>
         </Modal>
         <Modal v-model="createFolderModal" title="Add folder" ok-text="OK" @on-ok="addFolder" @on-cancel="createFolderValue = ''" cancel-text="Cancel">
@@ -209,17 +209,17 @@ export default {
         },
         batchDeleteFileConfirm() {
             this.$Modal.confirm({
-                content: `Are you sure you want to delete the selected files?`,
-                okText: 'Yes',
-                cancelText: 'Cancle',
+                content: this.$t("STORAGE.DELETE_FILES_CONFIRMED"),
+                okText: this.$t("PUBLIC.CONFIRMED"),
+                cancelText: this.$t("PUBLIC.CANCLE"),
                 onOk: () => this.batchDelete()
             })
         },
         deleteFileConfirm(file) {
             this.$Modal.confirm({
-                content: `Are you sure you want to delete [${file.Key}]?`,
-                okText: 'Yes',
-                cancelText: 'Cancle',
+                content: this.$t("STORAGE.DELETE_CONFIRMED",{fileName:file.Key}),
+                okText: this.$t("PUBLIC.CONFIRMED"),
+                cancelText: this.$t("PUBLIC.CANCLE"),
                 onOk: () => this.deleteFile(file)
             })
         },

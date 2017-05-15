@@ -147,7 +147,7 @@
                                     </div>
                                 </Tooltip>
                                 <Tooltip placement="bottom">
-                                    <Button v-if="owner != item.Grantee.ID" title="Delete User" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
+                                    <Button v-if="owner != item.Grantee.ID" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
                                     <Icon type="ios-minus" :size="iconSize"></Icon>
                                 </Button>
                                 <Button v-else disabled style="margin: 0 6px;" size="small">

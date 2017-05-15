@@ -5,7 +5,7 @@
             <Spin fix>
                 <Icon type="load-c" class="spin-icon-load"
                       size=60></Icon>
-                <div>Loading</div>
+                <div>{{$t("PUBLIC.LOADING")}}</div>
             </Spin>
         </div>
     </div>

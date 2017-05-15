@@ -7,7 +7,10 @@ export const messages = {
             CANCLE: 'Cancle',
             CLOSE: 'Close',
             BACK: 'Back',
-            ACL: 'Permissions'
+            ACL: 'Permissions',
+            RESET: 'Reset',
+            COPY: 'Copy',
+            LOADING: 'Loading...',
         },
         LOGIN: {
             TITLE: 'LOGIN',
@@ -21,12 +24,15 @@ export const messages = {
         },
         NAV: {
             DOC: 'Documentation',
-            LOGOUT: 'Logout'
+            LOGOUT: 'Logout',
+            CHANGE_PASSWORD: 'Change password',
         },
         SIDEBAR: {
             STORAGE: 'My Storage',
             DASHBOARD: 'Dashboard',
-            ACCESSKEY: 'Keychain'
+            ACCESSKEY: 'Keychain',
+            MACHINE: 'Machine',
+            PARTITION: 'Partition'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
@@ -37,9 +43,10 @@ export const messages = {
             ADD_BUCKET: 'Add bucket',
             BUCKET_KEY: 'Please fill in the bucket name',
             FILE_MAN: 'File Management',
-            UPLOAD_FILE: 'Upload File',
-            CREATE_FOLDER: 'Create Folder',
-            DOWNLOAD: 'Download',
+            UPLOAD_FILE: 'Upload file',
+            CREATE_FOLDER: 'Create folder',
+            DOWNLOAD_FILES: 'Download files',
+            DELETE_FILES: 'Delete files',
             PREVIEW: 'Preview',
             GET_URL: 'Get Link',
             NEED_NAME: 'Need Key',
@@ -68,9 +75,12 @@ export const messages = {
             READ: 'Read',
             WRITE: 'Write',
             SAVE_PERMISSIONS: 'Save permissions changes',
+            SEARCH_FILE: 'Search file',
+            DELETE_CONFIRMED: 'Are you sure you want to delete [{fileName}] ？',
+            DELETE_FILES_CONFIRMED: 'Are you sure you want to delete the selected files?',
 
             TITLE: 'My Storage',
-            FILE_UPLOAD_LIM: 'Drag your files to upload to your bucket. Do not support the folder upload and limited to the network, more than 500M file recommended SDK upload.',
+            FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
             FOLDER_KEY: 'Folder name',
             NEXT_PAGE: 'Next page'
         },
@@ -216,7 +226,10 @@ export const messages = {
             CLOSE: '关闭',
             DELETE: '删除',
             BACK: '后退',
-            ACL: '权限控制'
+            ACL: '权限控制',
+            RESET: '重置',
+            COPY: '复制',
+            LOADING: '加载中...',
         },
         LOGIN: {
             TITLE: '登 录',
@@ -230,12 +243,15 @@ export const messages = {
         },
         NAV: {
             DOC: '帮助文档',
-            LOGOUT: '退出登录'
+            LOGOUT: '退出登录',
+            CHANGE_PASSWORD: '修改密码'
         },
         SIDEBAR: {
             STORAGE: '我的存储',
             DASHBOARD: '统计分析',
-            ACCESSKEY: '密钥管理'
+            ACCESSKEY: '密钥管理',
+            MACHINE: '机器信息',
+            PARTITION: '磁盘分区'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',
@@ -244,11 +260,13 @@ export const messages = {
             TABLE_SIZE: '占用空间',
             TABLE_ACTION: '操作',
             ADD_BUCKET: '新建 Bucket',
+            DELETE_BUCKET: '删除 Bucket',
             BUCKET_KEY: '请填写Bucket名称',
             FILE_MAN: '文件管理',
             UPLOAD_FILE: '上传文件',
             CREATE_FOLDER: '创建文件夹',
-            DOWNLOAD: '下载',
+            DOWNLOAD_FILES: '下载文件',
+            DELETE_FILES: '删除文件',
             PREVIEW: '预览',
             GET_URL: '获取地址',
             NEED_NAME: '名称必填',
@@ -277,9 +295,12 @@ export const messages = {
             READ: '读取',
             WRITE: '写入',
             SAVE_PERMISSIONS: '确认修改',
+            SEARCH_FILE: '查找文件',
+            DELETE_CONFIRMED: '确定要删除 [{fileName}] 吗？',
+            DELETE_FILES_CONFIRMED: '确定删除选中的文件吗？',
 
             TITLE: '我的存储',
-            FILE_UPLOAD_LIM: '支持拖拽上传;暂不支持文件夹上传;受限于网络,大于500M的文件建议使用SDK上传',
+            FILE_UPLOAD_LIM: '点击或拖拽上传',
             FOLDER_KEY: 'Folder 名称',
             NEXT_PAGE: '下一页'
         },

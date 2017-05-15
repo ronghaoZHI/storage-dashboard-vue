@@ -2,16 +2,16 @@
     <div>
         <div class="layout-bsc-toolbar">
             <div>
-                <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">Add bucket</Button>
+                <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">{{$t("STORAGE.ADD_BUCKET")}}</Button>
                 <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode" @click="createUserModal = true">Add user</Button>
                 <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
                     <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode" @click="redirectBucketModal = true">Authorization</Button>
                 </Tooltip>
                 <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
-                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">Bucket settings</Button>
+                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button>
                 </Tooltip>
                 <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
-                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button>
+                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button>
                 </Tooltip>
             </div>
         </div>
@@ -136,9 +136,9 @@ export default {
         deleteBucketConfirm() {
             const item = this.selectedBucket
             this.$Modal.confirm({
-                content: `Are you sure you want to delete [${item.Name}]?`,
-                okText: 'Submit',
-                cancelText: 'Cancle',
+                content: this.$t("STORAGE.DELETE_CONFIRMED",{fileName:item.Name}),
+                okText: this.$t("PUBLIC.CONFIRMED"),
+                cancelText: this.$t("PUBLIC.CANCLE"),
                 onOk: () => this.deleteBucket(item)
             })
         },

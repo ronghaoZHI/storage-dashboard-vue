@@ -17,8 +17,8 @@
                     <Icon type="chevron-down"
                           class="icon-top-down"></Icon>
                     <Dropdown-menu slot="list">
-                        <Dropdown-item name="rePasssword">Change password</Dropdown-item>
-                        <Dropdown-item name="logout">Logout</Dropdown-item>
+                        <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
+                        <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
                     </Dropdown-menu>
                 </Dropdown>
             </div>

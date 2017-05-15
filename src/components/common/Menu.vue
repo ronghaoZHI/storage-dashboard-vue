@@ -28,8 +28,48 @@ export default {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            menuList: ONLINE_USER
+            menuList: [],
         }
+    },
+    mounted(){
+        const bucket = {
+            index: 1,
+            name: 'bucket',
+            text: this.$t("SIDEBAR.STORAGE"),
+            icon: iconBucket
+        }
+
+        const dashboard = {
+            index: 2,
+            name: 'dashboard',
+            text: this.$t("SIDEBAR.DASHBOARD"),
+            icon: iconDashboard
+        }
+
+        const keychain = {
+            index: 3,
+            name: 'keychain',
+            text: this.$t("SIDEBAR.ACCESSKEY"),
+            icon: iconKey
+        }
+
+        const machine = {
+            index: 4,
+            name: 'machine',
+            text: this.$t("SIDEBAR.MACHINE"),
+            icon: iconMachine
+        }
+
+        const partition = {
+            index: 5,
+            name: 'partition',
+            text: this.$t("SIDEBAR.PARTITION"),
+            icon: iconPartition
+        }
+        const ONLINE_USER = [bucket, dashboard, keychain]
+        const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
+        const OFFLINE_USER = [bucket, keychain]
+        this.menuList = user.state.type === 'normal' ? ONLINE_USER : ONLINE_ADMIN
     },
     methods: {
         goRouter(link) {
@@ -37,45 +77,6 @@ export default {
         },
     }
 }
-
-const bucket = {
-    index: 1,
-    name: 'bucket',
-    text: 'My Storage',
-    icon: iconBucket
-}
-
-const dashboard = {
-    index: 2,
-    name: 'dashboard',
-    text: 'Dashboard',
-    icon: iconDashboard
-}
-
-const keychain = {
-    index: 3,
-    name: 'keychain',
-    text: 'Keychain',
-    icon: iconKey
-}
-
-const machine = {
-    index: 4,
-    name: 'machine',
-    text: 'Machine',
-    icon: iconMachine
-}
-
-const partition = {
-    index: 5,
-    name: 'partition',
-    text: 'Partition',
-    icon: iconPartition
-}
-
-const ONLINE_USER = [bucket, dashboard, keychain]
-const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
-const OFFLINE_USER = [bucket, keychain]
 
 </script>
 <style lang="less" scoped>

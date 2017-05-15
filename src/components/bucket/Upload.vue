@@ -2,7 +2,7 @@
     <div>
         <div class="layout-bsc-toolbar">
             <div>
-                <Button @click="back">Back</Button>
+                <Button @click="back">{{$t("PUBLIC.BACK")}}</Button>
             </div>
         </div>
         <div class="section-file-upload"
@@ -13,7 +13,7 @@
                    class="ivu-upload-input">
             <div style="padding: 50px 0px;"><i class="ivu-icon ivu-icon-ios-cloud-upload"
                    style="font-size: 52px; color: rgb(51, 153, 255);"></i>
-                <p>Click or drag the file here to upload</p>
+                <p>{{$t("STORAGE.FILE_UPLOAD_LIM")}}</p>
             </div>
         </div>
         <ul class="section-file-list">
