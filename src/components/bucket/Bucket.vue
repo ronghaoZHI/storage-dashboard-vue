@@ -14,11 +14,10 @@
                     <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">Delete bucket</Button>
                 </Tooltip>
             </div>
-    
         </div>
         <div class="section-iconmode">
-            <div class="bucket" v-for="bucket in bucketList" @click="rowClick(bucket)">
-                <Button v-on:click.stop="selectedBucket === bucket ? selectedBucket = {} :  selectedBucket = bucket" v-cbutton class="button-check" type="text" shape="circle" icon="checkmark-circled"></Button>
+            <div class="bucket" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
+                <Icon class="icon-check" type="checkmark-circled"></Icon>
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
         </div>
@@ -112,9 +111,9 @@ export default {
         cbutton: {
             bind: function (el, binding) {
                 el.onclick = (e) => {
-                    el.parentNode.classList.toggle("bucket-selected")
-                    _.each(el.parentNode.parentNode.childNodes, (node) => {
-                        node !== el.parentNode && node.classList.remove("bucket-selected")
+                    el.classList.toggle("bucket-selected")
+                    _.each(el.parentNode.childNodes, (node) => {
+                        node !== el && node.classList.remove("bucket-selected")
                     })
                 }
             }
@@ -200,8 +199,7 @@ export default {
             this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name } })
         },
         rowClick(item) {
-            this.$store.dispatch('selectBucket', item)
-            this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
+            this.selectedBucket = this.selectedBucket === item ? {} : item
         },
         addBucket() {
             // the 'this' in arrow function is not point to vue
@@ -220,6 +218,9 @@ export default {
         },
         check() {
             this.inputCheck = this.createBucketValue.length > 2 ? false : true
+        },
+        dbClick(item) {
+            this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
         }
     }
 }
@@ -275,9 +276,11 @@ const headSetting = [
     padding: 5px;
     background: url('../../assets/Bucket_folder.png') no-repeat center;
     background-size: 66px 66px;
-    .button-check {
+    .icon-check {
         display: none;
         position: relative;
+        top: 5px;
+        left: 5px;
         font-size: 20px;
     }
     .span-filename {
@@ -307,22 +310,22 @@ const headSetting = [
 
 .bucket:hover {
     background-color: #f5f5f5;
-    .button-check {
+    .icon-check {
         display: block;
     }
     .span-filename {
-        top: 53px;
+        top: 65px;
     }
 }
 
 .bucket-selected {
     background-color: #f5f5f5;
-    .button-check {
+    .icon-check {
         display: block;
         color: #108EE9;
     }
     .span-filename {
-        top: 53px;
+        top: 65px;
     }
 }
 
