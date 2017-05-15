@@ -3,20 +3,15 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">{{$t("STORAGE.ADD_BUCKET")}}</Button>
-                <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode" @click="createUserModal = true">Add user</Button>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
-                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode" @click="redirectBucketModal = true">Authorization</Button>
-                </Tooltip>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
-                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button>
-                </Tooltip>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top">
-                    <Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button>
-                </Tooltip>
+                <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode">Add user</Button>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode">Authorization</Button></Tooltip>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button></Tooltip>
+                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button></Tooltip>
             </div>
         </div>
         <div class="section-iconmode">
             <div class="bucket" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
+                <Icon class="icon-check" type="checkmark-circled"></Icon>
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
         </div>
@@ -59,7 +54,7 @@ import user from '@/store/modules/user'
 export default {
     data() {
         return {
-            adminMode: false,
+            adminMode: user.state.type === 'admin',
             createBucketValue: '',
             createBucketModal: false,
             redirectBucketModal: false,
@@ -205,9 +200,9 @@ export default {
             let self = this
             if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
-                    self.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
-                    self.getBucketList()
-                    self.createBucketValue = ''
+                    _this.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
+                    _this.getBucketList()
+                    _this.createBucketValue = ''
                 }, error => {
                     self.$Message.error(error.message)
                 })
@@ -275,6 +270,13 @@ const headSetting = [
     padding: 5px;
     background: url('../../assets/Bucket_folder.png') no-repeat center;
     background-size: 66px 66px;
+    .icon-check {
+        display: none;
+        position: relative;
+        top: 5px;
+        left: 5px;
+        font-size: 20px;
+    }
     .span-filename {
         display: inline-block;
         position: relative;
@@ -302,10 +304,23 @@ const headSetting = [
 
 .bucket:hover {
     background-color: #f5f5f5;
+    .icon-check {
+        display: block;
+    }
+    .span-filename {
+        top: 65px;
+    }
 }
 
 .bucket-selected {
     background-color: #f5f5f5;
+    .icon-check {
+        display: block;
+        color: #108EE9;
+    }
+    .span-filename {
+        top: 65px;
+    }
 }
 
 .info-input-error {
