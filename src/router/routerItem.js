@@ -3,6 +3,7 @@ import Bucket from '@/components/bucket/Bucket'
 import File from '@/components/bucket/File'
 import Upload from '@/components/bucket/Upload'
 import Dashboard from '@/components/dashboard/Dashboard'
+import Machine from '@/components/machine/Machine'
 import Keychain from '@/components/keychain/Keychain'
 import Login from '@/components/login/Login'
 import Settings from '@/components/bucket/Settings'
@@ -50,7 +51,7 @@ const layoutChild = [{
     path: '/machine',
     name: 'machine',
     meta: { title: 'Machine', ali: 'machine' },
-    component: Dashboard,
+    component: Machine,
 }, {
     path: '/partition',
     name: 'partition',

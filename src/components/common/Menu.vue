@@ -28,7 +28,7 @@ export default {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            menuList: user.state.type === 'normal' ? ONLINE_USER : ONLINE_ADMIN
+            menuList: ONLINE_USER
         }
     },
     methods: {
