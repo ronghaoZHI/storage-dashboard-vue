@@ -48,6 +48,7 @@ export const messages = {
             TABLE_UPDATE_TIME: 'Update Time',
             TABLE_ACTION: 'Actions',
             ADD_BUCKET: 'Add bucket',
+            DELETE_BUCKET: 'Delete bucket',
             BUCKET_KEY: 'Please fill in the bucket name',
             FILE_MAN: 'File Management',
             UPLOAD_FILE: 'Upload file',
