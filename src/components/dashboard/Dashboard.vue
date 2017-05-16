@@ -172,7 +172,7 @@ export default {
                 let res = await handler('listBuckets')
                 this.bucketList = [...res.Buckets, { Name: 'All Buckets' }]
             } catch (error) {
-                this.$Message.error("Get bucket list fail")
+                this.$Message.error(this.$t("DASHBOARD.GET_BUCKET_FAILED"))
             };
         },
         async getInitData() {

@@ -41,7 +41,7 @@ export default {
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.warning('Need to login again')
+                this.$Message.warning(this.$t("LOGIN.LOGIN_AGAIN"))
                 this.$router.push({
                     path: '/login',
                     query: { redirect: '/keychain' }

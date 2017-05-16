@@ -24,19 +24,17 @@
             </div>
         </div>
         <Modal v-model="rePasswordModal"
-               title="Change password"
-               ok-text="OK"
+               :title='$t("NAV.CHANGE_PASSWORD")'
                @on-ok="changePassword"
-               @on-cancel="rePasswordModal = false"
-               cancel-text="Cancel">
+               @on-cancel="rePasswordModal = false">
             <Form ref="rePasswordForm"
                   :model="rePasswordForm"
                   :rules="ruleValidate"
                   :label-width="80">
-                <Form-item label="Password"
+                <Form-item :label='$t("LOGIN.KEY")'
                            prop="password">
                     <Input v-model="rePasswordForm.password"
-                           placeholder="New password"></Input>
+                           :placeholder='$t("NAV.NEW_PASSWORD")'></Input>
                 </Form-item>
             </Form>
         </Modal>
@@ -79,7 +77,7 @@ export default {
         },
         async changePassword() {
             if(this.rePasswordForm.password.length < 6){
-                this.$Message.error('The password requires 6 charactors')
+                this.$Message.error(this.$t("NAV.PASSWORD_CHECK"))
                 return false
             }
             try {
@@ -89,7 +87,7 @@ export default {
                 this.$router.push('/login')
             } catch (error) {
                 console.log(error)
-                this.$Message.error('Change password failed')
+                this.$Message.error(this.$t("NAV.CHANGE_PASSWORD_FAILED"))
             }
         },
         openDoc() {

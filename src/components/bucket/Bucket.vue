@@ -20,10 +20,10 @@
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
         </div>
-        <Modal v-model="createBucketModal" title="Add bucket" ok-text="OK" @on-ok="addBucket" @on-cancel="createBucketValue = ''" cancel-text="Cancel">
-            <Input v-model="createBucketValue" @on-change="check" placeholder="Requires bucket name">
+        <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="createBucketValue = ''">
+            <Input v-model="createBucketValue" @on-change="check" :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")'>
             </Input>
-            <span class="info-input-error">{{inputCheck ? 'Requires 3 characters' : ''}}</span>
+            <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
         </Modal>
         <Modal v-model="createUserModal" title="Add user" @on-ok="createUser" @on-cancel="createBucketValue = ''">
             <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
@@ -205,14 +205,14 @@ export default {
             let self = this
             if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
-                    self.$Message.success('Add bucket success')
+                    self.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
                     self.getBucketList()
                     self.createBucketValue = ''
                 }, error => {
                     self.$Message.error(error.message)
                 })
             } else {
-                this.$Message.warning('Requires 3 characters')
+                this.$Message.warning(this.$t("STORAGE.ADD_BUCKET_CHECK"))
             }
         },
         check() {

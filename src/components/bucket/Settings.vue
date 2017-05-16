@@ -2,14 +2,14 @@
     <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/">Bucket list</Breadcrumb-item>
+                <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
                 <Breadcrumb-item>{{$t("STORAGE.BUCKET_SETTING")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
             <div></div>
         </div>
     
         <Tabs size="small">
-            <Tab-pane label="Permissions">
+            <Tab-pane :label='$t("PUBLIC.ACL")'>
                 <div class="section-separator">
                     <span class="separator-icon"></span>
                     <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
@@ -162,9 +162,9 @@
                     </tbody>
                 </table>
                 <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
-                <Button type="primary" v-else disabled title="Invalid new user">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
+                <Button type="primary" v-else disabled :title='$t("STORAGE.INVALID_NEW_USER")'>{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
             </Tab-pane>
-            <Tab-pane label="Link conversion">
+            <Tab-pane :label='$t("PUBLIC.LINK_CONVERSION")'>
                 We've got somethings special for you 
             </Tab-pane>
         </Tabs>
@@ -223,7 +223,7 @@ export default {
                 };
                 this.owner = res.Owner.ID;
             } catch (error) {
-                this.$Message.error("Get permission list fail");
+                this.$Message.error(this.$t("STORAGE.GET_PERMISSION_FAILED"));
             }
             this.$Loading.finish()
         },
@@ -240,7 +240,7 @@ export default {
                 return value.Permission.length > 0;
             });
             if (items.length === 0) {
-                this.$Message.error("Permission can not be empty!");
+                this.$Message.error(this.$t("STORAGE.PERMISSION_EMPTY"));
                 return false;
             }
             let params = {
@@ -252,7 +252,7 @@ export default {
             };
             try {
                 await handler('putBucketAcl', params)
-                this.$Message.success('Permission changes successfully');
+                this.$Message.success(this.$t("STORAGE.PERMISSION_SUCCESS"));
                 this.deleteList = []
                 if(this.isAdd){
                     this.UserACLList = this.UserACLList.concat(convertNewUserItem(this.newUserItem))

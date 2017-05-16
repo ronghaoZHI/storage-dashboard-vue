@@ -143,7 +143,7 @@ export default {
                 to.forEach((file) => {
                     if (!file.isUpload) {
                         file.isUpload = true
-                        self.uploadFile(file).then(res => res, error => self.$Message.error(`Upload ${file.name} failed`, 5))
+                        self.uploadFile(file).then(res => res, error => self.$Message.error($t("STORAGE.UPLOAD_FAILED",{fileName:file.name}), 5))
                     }
                 })
             }

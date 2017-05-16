@@ -133,7 +133,6 @@
                     <td>
                         <Tooltip placement="bottom">
                             <Button v-if="index == 0"
-                                title="Add User"
                                 style="margin: 0 6px;"
                                 size="small"
                                 @click="newUserItemInit();isAdd = true">
@@ -152,7 +151,6 @@
                         </Tooltip>
                         <Tooltip placement="bottom">
                             <Button v-if="owner != item.Grantee.ID"
-                                title="Delete User"
                                 style="margin: 0 6px;"
                                 size="small"
                                 @click="deleteUser(item)">
@@ -239,7 +237,7 @@ export default {
                 };
                 this.owner = res.Owner.ID;
             } catch (error) {
-                this.$Message.error("Get permission list fail");
+                this.$Message.error(this.$t("STORAGE.GET_PERMISSION_FAILED"));
             }
             this.$Loading.finish()
         },
@@ -256,7 +254,7 @@ export default {
                 return value.Permission.length > 0;
             });
             if (items.length === 0) {
-                this.$Message.error("Permission can not be empty!");
+                this.$Message.error(this.$t("STORAGE.PERMISSION_EMPTY"));
                 return false;
             }
             let params = {
@@ -269,7 +267,7 @@ export default {
             };
             try {
                 await handler('putObjectAcl', params)
-                this.$Message.success('Permission changes successfully');
+                this.$Message.success(this.$t("STORAGE.PERMISSION_SUCCESS"));
                 this.deleteList = []
                 if(this.isAdd){
                     this.UserACLList = this.UserACLList.concat(convertNewUserItem(this.newUserItem))
@@ -277,7 +275,7 @@ export default {
                 }
                 this.$emit('permissionSuccess')
             } catch (error) {
-                this.$Message.error("Save permission changes fail");
+                this.$Message.error(this.$t("STORAGE.PERMISSION_FAILED"));
             }
             this.$Loading.finish()
         },

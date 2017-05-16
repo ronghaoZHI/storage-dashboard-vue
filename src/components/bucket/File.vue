@@ -28,34 +28,34 @@
         </Row>
         <Modal v-model="copyModal">
             <div style="text-align:left">
-                Copy {{selectedFileKey}} link?
+                {{$t("STORAGE.COPY_LINK_CONFIRM",{selectedFileKey})}}
             </div>
             <div slot="footer" class="copy-modal-footer">
                 <Button type="text" @click="copyModal = false">
                     <span>{{$t("PUBLIC.CANCLE")}}</span>
                 </Button>
-                <Button type="info" @click="copyModal = false;$Message.success('Copied')" :data-clipboard-text="clipUrl" v-clip>{{$t("PUBLIC.COPY")}}!</Button>
+                <Button type="info" @click='copyModal = false;$Message.success($t("STORAGE.COPIED"))' :data-clipboard-text="clipUrl" v-clip>{{$t("PUBLIC.COPY")}}</Button>
             </div>
         </Modal>
-        <Modal v-model="createFolderModal" title="Add folder" ok-text="OK" @on-ok="addFolder" @on-cancel="createFolderValue = ''" cancel-text="Cancel">
-            <Input v-model="createFolderValue" @on-change="check" placeholder="Requires folder name"></Input>
-            <span class="info-input-error">{{inputCheck ? 'Requires 1 characters' : ''}}</span>
+        <Modal v-model="createFolderModal" :title='$t("STORAGE.ADD_FOLDER")' @on-ok="addFolder" @on-cancel="createFolderValue = ''">
+            <Input v-model="createFolderValue" @on-change="check" :placeholder='$t("STORAGE.FOLDER_PLACEHOLDER")'></Input>
+            <span class="info-input-error">{{inputCheck ? $t("STORAGE.FOLDER_CHECKINFO") : ''}}</span>
         </Modal>
-        <Modal v-model="showImageModal" :title="selectedFileKey || 'no title'"  width="800">
+        <Modal v-model="showImageModal" :title='selectedFileKey || $t("STORAGE.NO_TITLE")'  width="800">
             <div class="section-img">
                 <img :src="clipUrl" />
             </div>
             <div slot="footer"></div>
         </Modal>
-        <Modal v-model="showPermissonModal" :title="'File Permissions'" width="900">
+        <Modal v-model="showPermissonModal" :title='$t("STORAGE.FILE_PERMISSIONS")' width="900">
             <file-permission v-if="showPermissonModal" v-on:permissionSuccess="showPermissonModal = false" :bucket="bucket" :filePrefix="prefix" :itemKey="permissionKey" :show-modal="showPermissonModal"></file-permission>
             <div slot="footer" class="copy-modal-footer">
                  <Button style="visibility:hidden"
-                    type="primary">Save permissions changes</Button>
+                    type="primary">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
             </div>
         </Modal>
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
-        <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" no-data-text="No file"></Table>
+        <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
         <div class="section-paging">
             <Tooltip content="Home page" placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
             <Tooltip content="Previous page" placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
@@ -161,10 +161,10 @@ export default {
             if (!this.createFolderValue) return
             try {
                 await handler('putObject', { Bucket: this.bucket, Key: this.prefix + this.createFolderValue + '/', Body: '' })
-                this.$Message.success('Create a folder successfully')
+                this.$Message.success(this.$t("STORAGE.ADD_FOLDER_SUCCESS"))
                 this.getData()
             } catch (error) {
-                this.$Message.error('Create a folder failed')
+                this.$Message.error(this.$t("STORAGE.ADD_FOLDER_FAILED"))
             }
         },
         async clipModal(file) {
@@ -235,9 +235,9 @@ export default {
                     batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
                 }
                 this.fileList.splice(file._index, 1)
-                this.$Message.success('Delete file successfully')
+                this.$Message.success(this.$t("STORAGE.DELETE_FILES_SUCCESS"))
             } catch (error) {
-                this.$Message.error('Delete file failed')
+                this.$Message.error(this.$t("STORAGE.DELETE_FILES_FAILED"))
             }
         },
         async batchDelete() {

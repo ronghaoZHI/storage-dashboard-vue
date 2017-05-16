@@ -24,7 +24,7 @@
             </Form-item>
             <Form-item>
                 <Button type="primary"
-                        @click="handleSubmit('formInline')">Login</Button>
+                        @click="handleSubmit('formInline')">{{$t("LOGIN.BUTTON_LOGIN")}}</Button>
             </Form-item>
         </Form>
     </div>
@@ -69,7 +69,7 @@ export default {
                         this.$Message.error(error)
                     })
                 } else {
-                    this.$Message.error('Input validate failed')
+                    this.$Message.error(this.$t("LOGIN.VALIDATE_FAILED"))
                 }
             })
         }
