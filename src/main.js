@@ -19,7 +19,6 @@ Vue.use(Vuex)
 Vue.use(iView)
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
-Vue.config.lang = 'cn'
 Object.keys(messages).forEach(function(lang) {
     Vue.locale(lang, messages[lang])
 })

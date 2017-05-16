@@ -22,6 +22,12 @@
                       slot="prepend"></Icon>
                 </Input>
             </Form-item>
+            <Form-item class="lang-group">
+                <Radio-group v-model="lang" @on-change="changeLang" size="large">
+                <Radio label="cn">中文</Radio>
+                <Radio label="en">English</Radio>
+            </Radio-group>
+            </Form-item>
             <Form-item>
                 <Button type="primary"
                         @click="handleSubmit('formInline')">{{$t("LOGIN.BUTTON_LOGIN")}}</Button>
@@ -31,6 +37,7 @@
 </template>
 <script>
 import { LOGIN, USERINFO } from '../service/API'
+import Vue from 'vue'
 export default {
     data() {
         return {
@@ -46,7 +53,8 @@ export default {
                     { required: true, message: 'Need password', trigger: 'blur' },
                     { type: 'string', min: 6, message: 'Requires 6 charactors', trigger: 'blur' }
                 ]
-            }
+            },
+            lang: 'cn',
         }
     },
     mounted() {
@@ -65,6 +73,7 @@ export default {
                         this.$store.dispatch('setUserInfo', res.data)
                         let redirect = this.$route.query.redirect //get redirect path
                         !!redirect ? this.$router.push(redirect) : this.$router.push('/')
+                        Vue.config.lang = this.lang
                     },error => {
                         this.$Message.error(error)
                     })
@@ -72,6 +81,9 @@ export default {
                     this.$Message.error(this.$t("LOGIN.VALIDATE_FAILED"))
                 }
             })
+        },
+        changeLang(){
+            Vue.config.lang = this.lang
         }
     }
 }
@@ -106,6 +118,11 @@ export default {
         bottom: 0;
         right: 0;
         width: 250px;
+    }
+    .lang-group{
+        text-align: left;
+        margin-bottom:10px;
+        font-size:16px;
     }
 }
 </style>
