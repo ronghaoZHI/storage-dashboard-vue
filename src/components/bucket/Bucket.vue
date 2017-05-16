@@ -54,7 +54,7 @@ import user from '@/store/modules/user'
 export default {
     data() {
         return {
-            adminMode: user.state.type === 'admin',
+            adminMode: false,
             createBucketValue: '',
             createBucketModal: false,
             redirectBucketModal: false,
