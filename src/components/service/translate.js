@@ -107,6 +107,9 @@ export const messages = {
             PERMISSION_FAILED: 'Save permission changes failed',
             UPLOAD_FAILED: 'Upload {file.name} failed',
             INVALID_NEW_USER: 'Invalid new user',
+            PIC_IDEN: 'adault content detection',
+            POLOCY_SUCCESS: 'Detection changes successfully',
+            POLOCY_FAILED: 'Detection changes failed',
 
             TITLE: 'My Storage',
             FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
@@ -356,6 +359,9 @@ export const messages = {
             PERMISSION_FAILED: '修改失败',
             UPLOAD_FAILED: '{file.name} 上传失败',
             INVALID_NEW_USER: '不合法的新用户',
+            PIC_IDEN: '图片鉴黄',
+            POLOCY_SUCCESS: '设置成功',
+            POLOCY_FAILED: '设置失败',
 
             TITLE: '我的存储',
             FILE_UPLOAD_LIM: '点击或拖拽上传',

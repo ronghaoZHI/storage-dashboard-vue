@@ -164,8 +164,8 @@
                 <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
                 <Button type="primary" v-else disabled :title='$t("STORAGE.INVALID_NEW_USER")'>{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
             </Tab-pane>
-            <Tab-pane :label='$t("PUBLIC.LINK_CONVERSION")'>
-                We've got somethings special for you 
+            <Tab-pane :label='$t("STORAGE.PIC_IDEN")'>
+                <pic-detection :bucket="bucket"></pic-detection>
             </Tab-pane>
         </Tabs>
     </div>
@@ -173,6 +173,7 @@
 
 <script>
 import { handler } from '../service/Aws'
+import picDetection from './picDetection'
 export default {
     data() {
         return {
@@ -194,6 +195,7 @@ export default {
             deleteList: [],
         }
     },
+    components: {picDetection},
     computed: {
         bucket() {
             return this.$route.params.bucket
