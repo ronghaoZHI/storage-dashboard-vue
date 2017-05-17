@@ -1,17 +1,12 @@
 <template>
     <div class="layout-menu">
-        <Menu :active-name="activeName"
-              theme="dark"
-              width="auto"
-              @on-select="goRouter">
+        <Menu :active-name="activeName" theme="dark" width="auto" @on-select="goRouter">
             <div class="layout-logo-left">
-                <img class="logo-big"
-                     src="../../assets/logo.png"
-                     height="30px" />
+                <img class="logo-big" src="../../assets/logo.png" height="30px" />
             </div>
             <Menu-item v-for="item in menuList" :name="item.name" :key="item.index">
                 <img v-bind:src="item.icon" class="icon-menu" height="15px" />
-                <span class="layout-text">{{item.text}}</span>
+                <span class="layout-text">{{$t("SIDEBAR."+ item.name.toUpperCase())}}</span>
             </Menu-item>
         </Menu>
     </div>
@@ -28,48 +23,8 @@ export default {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            menuList: [],
+            menuList: user.state.type === 'normal' ? ONLINE_USER : ONLINE_ADMIN,
         }
-    },
-    mounted(){
-        const bucket = {
-            index: 1,
-            name: 'bucket',
-            text: this.$t("SIDEBAR.STORAGE"),
-            icon: iconBucket
-        }
-
-        const dashboard = {
-            index: 2,
-            name: 'dashboard',
-            text: this.$t("SIDEBAR.DASHBOARD"),
-            icon: iconDashboard
-        }
-
-        const keychain = {
-            index: 3,
-            name: 'keychain',
-            text: this.$t("SIDEBAR.ACCESSKEY"),
-            icon: iconKey
-        }
-
-        const machine = {
-            index: 4,
-            name: 'machine',
-            text: this.$t("SIDEBAR.MACHINE"),
-            icon: iconMachine
-        }
-
-        const partition = {
-            index: 5,
-            name: 'partition',
-            text: this.$t("SIDEBAR.PARTITION"),
-            icon: iconPartition
-        }
-        const ONLINE_USER = [bucket, dashboard, keychain]
-        const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
-        const OFFLINE_USER = [bucket, keychain]
-        this.menuList = user.state.type === 'normal' ? ONLINE_USER : ONLINE_ADMIN
     },
     methods: {
         goRouter(link) {
@@ -78,6 +33,38 @@ export default {
     }
 }
 
+const bucket = {
+    index: 1,
+    name: 'bucket',
+    icon: iconBucket
+}
+
+const dashboard = {
+    index: 2,
+    name: 'dashboard',
+    icon: iconDashboard
+}
+
+const keychain = {
+    index: 3,
+    name: 'keychain',
+    icon: iconKey
+}
+
+const machine = {
+    index: 4,
+    name: 'machine',
+    icon: iconMachine
+}
+
+const partition = {
+    index: 5,
+    name: 'partition',
+    icon: iconPartition
+}
+const ONLINE_USER = [bucket, dashboard, keychain]
+const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
+const OFFLINE_USER = [bucket, keychain]
 </script>
 <style lang="less" scoped>
 .layout-menu {
@@ -121,7 +108,7 @@ export default {
     span {
         margin-left: 5px;
     }
-    .icon-menu{
+    .icon-menu {
         margin-top: 4px;
         padding-right: 6px;
     }

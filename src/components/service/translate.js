@@ -35,9 +35,9 @@ export const messages = {
             PASSWORD_CHECK: 'The password requires 6 charactors',
         },
         SIDEBAR: {
-            STORAGE: 'My Storage',
+            BUCKET: 'My Storage',
             DASHBOARD: 'Dashboard',
-            ACCESSKEY: 'Keychain',
+            KEYCHAIN: 'Keychain',
             MACHINE: 'Machine',
             PARTITION: 'Partition'
         },
@@ -287,9 +287,9 @@ export const messages = {
             PASSWORD_CHECK: '密码不能少于6个字符',
         },
         SIDEBAR: {
-            STORAGE: '我的存储',
+            BUCKET: '我的存储',
             DASHBOARD: '统计分析',
-            ACCESSKEY: '密钥管理',
+            KEYCHAIN: '密钥管理',
             MACHINE: '机器信息',
             PARTITION: '磁盘分区'
         },
