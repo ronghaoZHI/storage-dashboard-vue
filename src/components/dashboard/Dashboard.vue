@@ -11,8 +11,7 @@
             <div class="button-daterange">
                 <Button-group>
                     <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">{{ $t("DASHBOARD.SEVEN_DAYS")}}</Button>
-                    <Button v-if="isFristDay" @click="dateSelect = dateDefault.this_month" disabled style="border-right:none;">{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
-                    <Button v-else v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month">{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
+                    <Button :disabled="isFristDay" v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month" >{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
                     <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.thirty_days}" @click="dateSelect = dateDefault.thirty_days">{{ $t("DASHBOARD.THIRTY_DAYS")}}</Button>
                 </Button-group>
             </div>

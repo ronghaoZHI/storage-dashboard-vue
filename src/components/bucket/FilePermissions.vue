@@ -112,22 +112,13 @@
                         {{item.Grantee | userType}}
                     </td>
                     <td>
-                        <Checkbox v-if="owner != item.Grantee.ID"
-                                  v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
-                        <Checkbox v-else
-                                  disabled
+                        <Checkbox :disabled="owner == item.Grantee.ID"
                                   v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
                     </td>
                     <td>
-                        <Checkbox v-if="owner != item.Grantee.ID"
+                        <Checkbox :disabled="owner == item.Grantee.ID"
                                   v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
-                        <Checkbox v-else
-                                  disabled
-                                  v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
-                        <Checkbox v-if="owner != item.Grantee.ID"
-                                  v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
-                        <Checkbox v-else
-                                  disabled
+                        <Checkbox :disabled="owner == item.Grantee.ID"
                                   v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
                     </td>
                     <td>
@@ -150,17 +141,10 @@
                             </div>
                         </Tooltip>
                         <Tooltip placement="bottom">
-                            <Button v-if="owner != item.Grantee.ID"
+                            <Button :disabled="owner == item.Grantee.ID"
                                 style="margin: 0 6px;"
                                 size="small"
                                 @click="deleteUser(item)">
-                                <Icon type="ios-minus"
-                                    :size="iconSize"></Icon>
-                            </Button>
-                            <Button v-else
-                                    disabled
-                                    style="margin: 0 6px;"
-                                    size="small">
                                 <Icon type="ios-minus"
                                     :size="iconSize"></Icon>
                             </Button>

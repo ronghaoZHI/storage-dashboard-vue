@@ -123,16 +123,12 @@
                                 {{item.Grantee | userType}}
                             </td>
                             <td>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE">{{$t("STORAGE.WRITE")}}</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.WRITE">{{$t("STORAGE.WRITE")}}</Checkbox>
+                                <Checkbox :disabled="owner == item.Grantee.ID" v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox :disabled="owner == item.Grantee.ID" v-model="item.Permission.WRITE">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox v-if="owner != item.Grantee.ID" v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
-                                <Checkbox v-else disabled v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
+                                <Checkbox :disabled="owner == item.Grantee.ID" v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox :disabled="owner == item.Grantee.ID" v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
                                 <Tooltip placement="bottom">
@@ -147,12 +143,9 @@
                                     </div>
                                 </Tooltip>
                                 <Tooltip placement="bottom">
-                                    <Button v-if="owner != item.Grantee.ID" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
-                                    <Icon type="ios-minus" :size="iconSize"></Icon>
-                                </Button>
-                                <Button v-else disabled style="margin: 0 6px;" size="small">
-                                    <Icon type="ios-minus" :size="iconSize"></Icon>
-                                </Button>
+                                    <Button :disabled="owner == item.Grantee.ID" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
+                                        <Icon type="ios-minus" :size="iconSize"></Icon>
+                                    </Button>
                                     <div slot="content">
                                         <p>{{$t("STORAGE.DELETE_USER")}}</p>
                                     </div>
