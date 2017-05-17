@@ -1,20 +1,21 @@
 <template >
     <div>
         <div class="setting-box">
-            <span>是否开启： </span>
+            <span>是否开启：</span>
             <i-switch size="large" v-model="isOpen" @on-change="putBucketPolicy('isOpen')">
                 <span slot="open">开启</span>
                 <span slot="close">关闭</span>
             </i-switch>
         </div>
         <div class="setting-box">
-            <span>黄图存放： </span>
-            <Select v-model="storeBucket" @on-change="putBucketPolicy('storeBucket')">
+            <span>黄图存放：</span>
+            <Select v-model="storeBucket" @on-change="putBucketPolicy('storeBucket')" class="my-select"style="">
                 <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
             </Select>
+            <p class="tips">如果没有专门存放鉴别后黄图的Bucket，您需要先<a href="/">创建一个Bucket</a></p>
         </div>
         <div class="setting-box">
-            <span>黄图处理规则： </span>
+            <span class="last-title">黄图处理规则：</span>
             <Radio-group v-model="isSave" vertical @on-change="putBucketPolicy('isSave')">
                 <Radio label="reserve">
                     <span>保留原Bucket里的黄图并复制到黄图存放Bucket</span>
@@ -89,6 +90,18 @@ export default {
     span{
         font-size:14px;
     } 
-    
+    p.tips{
+        padding-left:77px;
+        color:#8492a6;
+        font-size:14px;
+        padding-top:10px;
+    }
+    span.last-title{
+        vertical-align:top;
+        line-height:30px;
+    }
+    .my-select{
+        width:400px
+    }
 }
 </style>

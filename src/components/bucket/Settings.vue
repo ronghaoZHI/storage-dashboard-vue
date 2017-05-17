@@ -8,8 +8,8 @@
             <div></div>
         </div>
     
-        <Tabs size="small">
-            <Tab-pane :label='$t("PUBLIC.ACL")'>
+        <Tabs size="small" v-model="tabName">
+            <Tab-pane :label='$t("PUBLIC.ACL")' name="permission">
                 <div class="section-separator">
                     <span class="separator-icon"></span>
                     <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
@@ -164,8 +164,9 @@
                 <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
                 <Button type="primary" v-else disabled :title='$t("STORAGE.INVALID_NEW_USER")'>{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
             </Tab-pane>
-            <Tab-pane :label='$t("STORAGE.PIC_IDEN")'>
-                <pic-detection :bucket="bucket"></pic-detection>
+            <Tab-pane :label='$t("STORAGE.PIC_IDEN")' name="pic">
+                We've got somethings special for you
+                <!--<pic-detection v-if="tabName == 'pic'" :bucket="bucket"></pic-detection>-->
             </Tab-pane>
         </Tabs>
     </div>
@@ -193,6 +194,7 @@ export default {
             },
             iconSize: 16,
             deleteList: [],
+            tabName: 'permission'
         }
     },
     components: {picDetection},
