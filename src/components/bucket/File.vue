@@ -350,7 +350,7 @@ const fileHeaderSetting = [{
 </script>
 <style lang="less" scoped>
 .bsc-input {
-    height: 30px;
+    height: 32px;
     display: inline-flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -359,7 +359,7 @@ const fileHeaderSetting = [{
     position: relative;
     vertical-align: middle;
     border: 1px solid #d7dde4;
-    padding: 4px 0 4px 7px;
+    padding: 5px 0 5px 7px;
     border-radius: 4px;
     input {
         height: 22px;
