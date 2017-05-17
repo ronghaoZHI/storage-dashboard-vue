@@ -1,7 +1,6 @@
 <template>
     <div class="layout">
-        <Row type="flex"
-             class="layout-row">
+        <Row type="flex" class="layout-row">
             <menu-left></menu-left>
             <div class="layout-container">
                 <div class="flex-box">
@@ -21,12 +20,12 @@ import menuLeft from './Menu'
 export default {
     data() {
         return {
-            
+
         }
     },
-    components: {headerTop,menuLeft},
+    components: { headerTop, menuLeft },
     computed: {
-        username () {
+        username() {
             return user.state.username
         }
     },
@@ -35,14 +34,14 @@ export default {
 
 <style lang="less">
 .layout {
-    height:100%;
+    height: 100%;
 }
 
 .layout-row {
-    min-height:100%;
+    min-height: 100%;
     display: inline-flex;
     flex-direction: column;
-    .layout-container{
+    .layout-container {
         flex: 1;
     }
 }
@@ -87,8 +86,8 @@ export default {
     margin-bottom: 8px;
 }
 
-.section-separator{
-    height: 30px;
+.section-separator {
+    height: 22px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -99,7 +98,7 @@ export default {
         background: #20a0ff;
         margin-right: 8px;
     }
-    .separator-info{
+    .separator-info {
         font-size: 16px;
         font-weight: bold;
         color: #657180;
@@ -153,12 +152,38 @@ export default {
     border-bottom: none;
 }
 
+
 /* fix table width bug when toggle menu */
+
+.ivu-btn-primary {
+    background-color: #20a0ff !important;
+    border-color: #20a0ff !important;
+}
+
+.ivu-btn-primary.disabled,
+.ivu-btn-primary.disabled.active,
+.ivu-btn-primary.disabled:active,
+.ivu-btn-primary.disabled:focus,
+.ivu-btn-primary.disabled:hover,
+.ivu-btn-primary[disabled],
+.ivu-btn-primary[disabled].active,
+.ivu-btn-primary[disabled]:active,
+.ivu-btn-primary[disabled]:focus,
+.ivu-btn-primary[disabled]:hover,
+fieldset[disabled] .ivu-btn-primary,
+fieldset[disabled] .ivu-btn-primary.active,
+fieldset[disabled] .ivu-btn-primary:active,
+fieldset[disabled] .ivu-btn-primary:focus,
+fieldset[disabled] .ivu-btn-primary:hover {
+    background-color: #f7f7f7 !important;
+    border-color: #d7dde4 !important;
+}
 
 .ivu-table table {
     width: 100% !important;
 }
-.ivu-checkbox-wrapper{
+
+.ivu-checkbox-wrapper {
     margin-right: 0 !important;
 }
 
@@ -203,13 +228,15 @@ export default {
         color: #fff;
     }
 }
-.ivu-modal-body{
+
+.ivu-modal-body {
     padding: 20px 20px 8px 20px !important;
 }
+
 .ivu-modal-footer {
     border-top: 0 !important;
     padding: 6px 18px 12px 18px !important;
-    button{
+    button {
         min-width: 58px;
         padding: 2px 7px !important;
         font-size: 12px !important;

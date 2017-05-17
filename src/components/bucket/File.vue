@@ -41,15 +41,11 @@
             <Input v-model="createFolderValue" @on-change="check" placeholder="Requires folder name"></Input>
             <span class="info-input-error">{{inputCheck ? 'Requires 1 characters' : ''}}</span>
         </Modal>
-        <Modal v-model="showImageModal" :title="selectedFileKey || 'no title'" width="900">
+        <Modal v-model="showImageModal" :title="selectedFileKey || 'no title'"  width="800">
             <div class="section-img">
                 <img :src="clipUrl" />
             </div>
-            <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="showImageModal = false;clipUrl = ''">
-                    <span>Close</span>
-                </Button>
-            </div>
+            <div slot="footer"></div>
         </Modal>
         <Modal v-model="showPermissonModal" :title="'File Permissions'" width="900">
             <file-permission v-if="showPermissonModal" v-on:permissionSuccess="showPermissonModal = false" :bucket="bucket" :filePrefix="prefix" :itemKey="permissionKey" :show-modal="showPermissonModal"></file-permission>

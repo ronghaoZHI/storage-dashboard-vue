@@ -164,13 +164,11 @@
                 </tr>
             </tbody>
         </table>
-        <Button class="pull-right"
-                type="primary"
-                v-if="!isAdd || isAdd && isAddVerified"
-                @click="ACLsubmitForm()">Save permissions changes</Button>
-        <Tooltip v-else content="Invalid new user" placement="top" class="pull-right">
-            <Button type="primary"
-                disabled>Save permissions changes</Button>
+        <Tooltip content="Invalid new user" :disabled="isAdd && !!isAddVerified" placement="top" class="pull-right">
+            <Button class="pull-right"
+                    type="primary"
+                    :disabled="isAdd && !isAddVerified"
+                    @click="ACLsubmitForm()">Save permissions changes</Button>
         </Tooltip>
     </div>
 </template> 
@@ -203,9 +201,9 @@ export default {
             return this.filePrefix + this.itemKey
         },
         isAddVerified() {
-            let name = this.newUserItem.name;
-            let { READ, READ_ACP, WRITE_ACP } = this.newUserItem.Permission;
-            return name && (READ || READ_ACP || WRITE_ACP);
+            let name = this.newUserItem.name
+            let { READ, READ_ACP, WRITE_ACP } = this.newUserItem.Permission
+            return name && (READ || READ_ACP || WRITE_ACP)
         },
         breadcrumb() {
             return convertPrefix2Router(this.prefix)
