@@ -22,6 +22,7 @@ Vue.prototype.$http = axios
 Object.keys(messages).forEach(function(lang) {
     Vue.locale(lang, messages[lang])
 })
+Vue.config.lang = sessionStorage.getItem("lang") ? sessionStorage.getItem("lang") : 'cn'
 new Vue({
     el: '#app',
     store,

@@ -84,6 +84,8 @@ export default {
         },
         changeLang(){
             Vue.config.lang = this.lang
+            sessionStorage.removeItem('lang')
+            sessionStorage.setItem('lang', this.lang)
         }
     }
 }
