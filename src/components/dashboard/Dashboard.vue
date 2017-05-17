@@ -397,11 +397,11 @@ const chartReload = (data, chart) => {
     width: 100%;
     display: -webkit-flex;
     display: flex;
-    padding: 23px 15px;
+    padding: 15px 15px;
     border-top: 1px solid #e5e9f2;
     border-bottom: 1px solid #e5e9f2;
-    margin: 10px 0 15px 0;
-    height:140px;
+    margin: 20px 0 15px 0;
+    height:120px;
     &>div {
         flex-grow: 1;
         text-align: center;

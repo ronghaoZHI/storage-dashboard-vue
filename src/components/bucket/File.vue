@@ -19,7 +19,7 @@
             <Col span="14" style="text-align:right">
                 <div class="section-search">
                     <span class="bsc-input">
-                        <span class="input-append-before">{{$t("STORAGE.SEARCH_FILE")}}: {{prefix}}</span>
+                        <span class="input-append-before">{{prefix}}</span>
                         <input type="text" @focus="searchInputFocus = true" v-model="searchValue" />
                         <Button type="text" size="small" @click="searchFile(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
                     </span>
@@ -375,8 +375,8 @@ const fileHeaderSetting = [{
     }
     .input-append-before {
         flex: none;
-        padding-right: 4px;
-        border-right: 1px solid #d7dde4;
+        background: #f5f7f9;
+        border-radius: 2px;
     }
 }
 .bsc-input-focus {

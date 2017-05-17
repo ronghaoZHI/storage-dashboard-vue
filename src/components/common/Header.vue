@@ -114,7 +114,6 @@ export default {
     .dropdown-link {
         color: #fff;
         font-size: 18px;
-        font-weight: bolder;
     }
 }
 

@@ -11,7 +11,6 @@
         </div>
         <div class="section-iconmode">
             <div class="bucket" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
-                <Icon class="icon-check" type="checkmark-circled"></Icon>
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
         </div>
@@ -270,13 +269,6 @@ const headSetting = [
     padding: 5px;
     background: url('../../assets/Bucket_folder.png') no-repeat center;
     background-size: 66px 66px;
-    .icon-check {
-        display: none;
-        position: relative;
-        top: 5px;
-        left: 5px;
-        font-size: 20px;
-    }
     .span-filename {
         display: inline-block;
         position: relative;
@@ -302,25 +294,9 @@ const headSetting = [
     }
 }
 
-.bucket:hover {
-    background-color: #f5f5f5;
-    .icon-check {
-        display: block;
-    }
-    .span-filename {
-        top: 65px;
-    }
-}
-
+.bucket:hover,
 .bucket-selected {
     background-color: #f5f5f5;
-    .icon-check {
-        display: block;
-        color: #108EE9;
-    }
-    .span-filename {
-        top: 65px;
-    }
 }
 
 .info-input-error {
