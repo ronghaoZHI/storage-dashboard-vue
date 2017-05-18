@@ -199,9 +199,9 @@ export default {
             let self = this
             if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
-                    _this.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
-                    _this.getBucketList()
-                    _this.createBucketValue = ''
+                    self.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
+                    self.getBucketList()
+                    self.createBucketValue = ''
                 }, error => {
                     self.$Message.error(error.message)
                 })
