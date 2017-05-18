@@ -304,7 +304,7 @@ const getURL = async (bucket, file, prefix) => {
 
 const fileHeaderSetting = [{
     type: 'selection',
-    width: 40,
+    width: 30,
     align: 'center'
 },
 {
@@ -314,7 +314,7 @@ const fileHeaderSetting = [{
     ellipsis: true,
     sortable: true,
     render(row, column, index) {
-        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`;
+        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder" size="16"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`;
     }
 }, {
     title: 'Size',

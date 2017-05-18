@@ -160,7 +160,7 @@
             <Button class="pull-right"
                     type="primary"
                     :disabled="isAdd && !isAddVerified"
-                    @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}s</Button>
+                    @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
         </Tooltip>
     </div>
 </template> 

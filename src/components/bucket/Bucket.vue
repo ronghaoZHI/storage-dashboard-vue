@@ -286,7 +286,7 @@ const headSetting = [
 }
 
 .layout-bsc-toolbar {
-    padding-bottom: 14px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #f2f1f6;
     margin-bottom: 0;
     button {

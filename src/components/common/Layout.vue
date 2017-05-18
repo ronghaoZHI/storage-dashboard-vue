@@ -57,7 +57,7 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .layout-content {
@@ -83,7 +83,7 @@ export default {
 }
 
 .toolbar-nav {
-    margin-bottom: 8px;
+    margin-bottom: 14px;
 }
 
 .section-separator {
@@ -153,6 +153,7 @@ export default {
 }
 
 
+
 /* fix table width bug when toggle menu */
 
 .ivu-btn-primary {
@@ -183,6 +184,11 @@ fieldset[disabled] .ivu-btn-primary:hover {
     width: 100% !important;
 }
 
+.ivu-table td,
+.ivu-table th {
+    height: 40px !important;
+}
+
 .ivu-checkbox-wrapper {
     margin-right: 0 !important;
 }
@@ -208,7 +214,7 @@ fieldset[disabled] .ivu-btn-primary:hover {
 .ivu-modal-content {
     .ivu-modal-close {
         right: 20px !important;
-        top: 4px !important;
+        top: 0 !important;
     }
 }
 
@@ -221,9 +227,9 @@ fieldset[disabled] .ivu-btn-primary:hover {
 }
 
 .ivu-modal-header {
-    height: 40px;
+    height: 32px;
     background: #20a0ff;
-    padding: 10px 20px !important;
+    padding: 6px 20px !important;
     div {
         color: #fff;
     }
@@ -234,13 +240,21 @@ fieldset[disabled] .ivu-btn-primary:hover {
 }
 
 .ivu-modal-footer {
+    background: #f9fafc;
     border-top: 0 !important;
-    padding: 6px 18px 12px 18px !important;
+    padding: 6px 18px 6px 18px !important;
     button {
         min-width: 58px;
-        padding: 2px 7px !important;
+        padding: 4px 7px !important;
         font-size: 12px !important;
         border-radius: 3px !important;
     }
+}
+
+.ivu-modal-confirm-footer {
+    min-width: 58px;
+    padding: 4px 7px !important;
+    font-size: 12px !important;
+    border-radius: 3px !important;
 }
 </style>
