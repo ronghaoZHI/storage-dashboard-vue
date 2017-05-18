@@ -4,9 +4,9 @@
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">{{$t("STORAGE.ADD_BUCKET")}}</Button>
                 <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode">Add user</Button>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode">Authorization</Button></Tooltip>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button></Tooltip>
-                <Tooltip content="Click the checkbox on the folder" :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button></Tooltip>
+                <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode">{{$t("STORAGE.AUTHORIZATION")}}Authorization</Button></Tooltip>
+                <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button></Tooltip>
+                <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button></Tooltip>
             </div>
         </div>
         <div class="section-iconmode">
@@ -241,9 +241,9 @@ const headSetting = [
         width: 200,
         align: 'center',
         render(row, column, index) {
-            return `<Tooltip content="File list" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small"><Icon type="ios-list" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Bucket setting" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="goBucketSettings(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Delete bucket" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
+            return `<Tooltip :content='$t("STORAGE.FILE_LIST")' :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small"><Icon type="ios-list" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip :content='$t("STORAGE.BUCKET_SETTING")' :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="goBucketSettings(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip :content='$t("STORAGE.DELETE_BUCKET")' content="Delete bucket" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
         }
     }
 ]

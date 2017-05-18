@@ -57,9 +57,9 @@
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
         <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
         <div class="section-paging">
-            <Tooltip content="Home page" placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
-            <Tooltip content="Previous page" placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
-            <Tooltip content="Next page" placement="top"><Button v-show="nextMarker" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="nextMarker" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
         </div>
     </div>
 </template>
@@ -333,12 +333,12 @@ const fileHeaderSetting = [{
     width: 170,
     align: 'right',
     render(row, column, index) {
-        return row.Type === 'folder' ? `<Tooltip content="Delete folder" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
-            `<Tooltip content="File permissions" :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Download file" :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Image preview" :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Copy file link" :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip content="Delete file" :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
+        return row.Type === 'folder' ? `<Tooltip :content='$t("STORAGE.DELETE_FOLDER")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
+            `<Tooltip :content='$t("STORAGE.FILE_PERMISSIONS")' :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip :content='$t("STORAGE.DOWNLOAD_FILE")' :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip :content='$t("STORAGE.IMG_PREVIEW")' :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip :content='$t("STORAGE.COPY_FILE_LINK")' :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
+                        <Tooltip :content='$t("STORAGE.DELETE_FILE")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
     }
 }
 ]
