@@ -122,6 +122,8 @@ export const messages = {
             COPY_FILE_LINK: ' Copy file link',
             DELETE_FILE: 'Delete file',
             DOCUMENTATION: 'Documentation',
+            GET_ADULT_FAILED: 'Get settings failed',
+            ADULT_OPEN_INFO: 'Plese choose Bucket to store',
 
             TITLE: 'My Storage',
             FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
@@ -386,6 +388,8 @@ export const messages = {
             COPY_FILE_LINK: '复制链接',
             DELETE_FILE: '删除文件',
             DOCUMENTATION: '帮助文档',
+            GET_ADULT_FAILED: '获取鉴黄设置失败',
+            ADULT_OPEN_INFO: '请选择黄图存放Bucket',
 
             TITLE: '我的存储',
             FILE_UPLOAD_LIM: '点击或拖拽上传',

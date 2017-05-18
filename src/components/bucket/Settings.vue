@@ -158,8 +158,7 @@
                 <Button type="primary" v-else disabled :title='$t("STORAGE.INVALID_NEW_USER")'>{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
             </Tab-pane>
             <Tab-pane :label='$t("STORAGE.PIC_IDEN")' name="pic">
-                We've got somethings special for you
-                <!--<pic-detection v-if="tabName == 'pic'" :bucket="bucket"></pic-detection>-->
+                <pic-detection v-if="tabName == 'pic'" :bucket="bucket"></pic-detection>
             </Tab-pane>
         </Tabs>
     </div>
