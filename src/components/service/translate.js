@@ -378,6 +378,7 @@ export const messages = {
             FOLDER_INFO: '单击选中文件夹',
             AUTHORIZATION: '授权',
             FILE_LIST: '文件列表',
+            HOME_PAGE: '首页',
             PRE_PAGE: '上一页',
             FILE_PERMISSIONS: '权限设置',
             DOWNLOAD_FILE: '下载文件',
