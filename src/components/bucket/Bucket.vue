@@ -129,11 +129,20 @@ export default {
         },
         deleteBucketConfirm() {
             const item = this.selectedBucket
-            this.$Modal.confirm({
-                content: this.$t("STORAGE.DELETE_CONFIRMED",{fileName:item.Name}),
-                okText: this.$t("PUBLIC.CONFIRMED"),
-                cancelText: this.$t("PUBLIC.CANCLE"),
-                onOk: () => this.deleteBucket(item)
+            this.getBucketPolify().then(bucketPolify=> {
+                if (bucketPolify.union && bucketPolify.union.picAdult) {
+                this.$Modal.warning({
+                    content: this.$t("STORAGE.DELETE_BUCKET_INFO",{fileName:item.Name,unionName:bucketPolify.union.picAdult}),
+                    okText: this.$t("PUBLIC.CONFIRMED")
+                })
+            } else {
+                this.$Modal.confirm({
+                    content: this.$t("STORAGE.DELETE_CONFIRMED",{fileName:item.Name}),
+                    okText: this.$t("PUBLIC.CONFIRMED"),
+                    cancelText: this.$t("PUBLIC.CANCLE"),
+                    onOk: () => this.deleteBucket(item)
+                })
+            }
             })
         },
         async deleteBucket(bucket) {
@@ -214,6 +223,17 @@ export default {
         },
         dbClick(item) {
             this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
+        },
+        async getBucketPolify(){
+            try {
+                let res = await handler('getBucketPolicy', {
+                    Bucket: this.selectedBucket.Name,
+                })
+                var polify = JSON.parse(res.Policy)
+            } catch (error) {
+                this.$Message.error(this.$t("STORAGE.GET_ADULT_FAILED"))
+            }
+            return polify
         }
     }
 }

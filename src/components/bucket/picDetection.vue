@@ -2,8 +2,8 @@
     <div>
         <div class="setting-box">
             <span>是否开启：</span>
-            <Tooltip placement="bottom" :content='$t("STORAGE.ADULT_OPEN_INFO")' :disabled="!(!adultPolify.enabled && !adultPolify.isolate_bucket)">
-                <i-switch size="large" :disabled='!adultPolify.enabled && !adultPolify.isolate_bucket' v-model="adultPolify.enabled">
+            <Tooltip placement="bottom" :content='$t("STORAGE.ADULT_OPEN_INFO")' :disabled="!enabledVertify">
+                <i-switch size="large" :disabled='enabledVertify' v-model="adultPolify.enabled">
                     <span slot="open">开启</span>
                     <span slot="close">关闭</span>
                 </i-switch>
@@ -51,7 +51,9 @@ export default {
     },
     props: ['bucket'],
     computed: {
-
+        enabledVertify(){
+            return _.findKey(this.bucketList , ['Name', this.adultPolify.isolate_bucket]) === undefined
+        }
     },
     mounted() {
         this.getBucketList()
@@ -112,11 +114,33 @@ export default {
         check() {
             this.inputCheck = this.createBucketValue.length > 2 ? false : true
         },
+        async putUnionPolicy(unionBucket) {
+            if(this.enabledVertify){
+                return
+            }
+            let union = {
+                union:{
+                    'picAdult':unionBucket
+                }
+            }
+            try {
+                await handler('putBucketPolicy', {
+                    Bucket: this.adultPolify.isolate_bucket,
+                    Policy: JSON.stringify(union)
+                })
+            } catch (error) {
+                console.error("putUnionPolicy",error)
+            };
+        },
     },
     watch: {
+        //arrow function can not be used in watcher
         'adultPolify': {
             handler: function(to, from){ from.enabled ===undefined ? '': this.putBucketPolicy()},
             deep: true
+        },
+        'adultPolify.enabled'(to,from){
+            to ? this.putUnionPolicy(this.bucket):this.putUnionPolicy('')
         }
     }
 }

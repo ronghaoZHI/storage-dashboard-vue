@@ -124,6 +124,7 @@ export const messages = {
             DOCUMENTATION: 'Documentation',
             GET_ADULT_FAILED: 'Get settings failed',
             ADULT_OPEN_INFO: 'Plese choose Bucket to store',
+            DELETE_BUCKET_INFO: 'This bucket is a designated bucket to store yellow pictures for [{unionName}]. Please change the bucket or close the function first.',
 
             TITLE: 'My Storage',
             FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
@@ -390,6 +391,7 @@ export const messages = {
             DOCUMENTATION: '帮助文档',
             GET_ADULT_FAILED: '获取鉴黄设置失败',
             ADULT_OPEN_INFO: '请选择黄图存放Bucket',
+            DELETE_BUCKET_INFO: '[{fileName}]是[{unionName}]指定的黄图存放Bucket，请先更改[{unionName}]的黄图存放Bucket或关闭图片鉴黄功能',
 
             TITLE: '我的存储',
             FILE_UPLOAD_LIM: '点击或拖拽上传',
