@@ -436,9 +436,5 @@ const fileHeaderSetting = [{
 .ivu-modal-footer {
     border-top: 0 !important;
 }
-
-.icon-filetype-reset {
-    padding: 2px 6px 0 0;
-}
 </style>
 
