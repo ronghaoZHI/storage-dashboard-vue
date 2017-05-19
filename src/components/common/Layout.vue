@@ -114,7 +114,7 @@ export default {
 
 .table-permission {
     width: 100%;
-    margin-bottom: 64px;
+    margin-bottom: 34px;
     color: #475669;
     font-size: 14px;
     background-color: #fff;

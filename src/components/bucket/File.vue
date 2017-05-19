@@ -47,7 +47,7 @@
             </div>
             <div slot="footer"></div>
         </Modal>
-        <Modal v-model="showPermissonModal" :title='$t("STORAGE.FILE_PERMISSIONS")' width="900">
+        <Modal v-model="showPermissonModal" :title='$t("STORAGE.FILE_PERMISSIONS")' width="700">
             <file-permission v-if="showPermissonModal" v-on:permissionSuccess="showPermissonModal = false" :bucket="bucket" :filePrefix="prefix" :itemKey="permissionKey" :show-modal="showPermissonModal"></file-permission>
             <div slot="footer" class="copy-modal-footer">
                  <Button style="visibility:hidden"

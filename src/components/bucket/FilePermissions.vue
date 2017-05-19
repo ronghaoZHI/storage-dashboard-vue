@@ -157,7 +157,7 @@
             </tbody>
         </table>
         <Tooltip content="Invalid new user" :disabled="isAdd && !!isAddVerified" placement="top" class="pull-right">
-            <Button class="pull-right"
+            <Button class="pull-right button-reset"
                     type="primary"
                     :disabled="isAdd && !isAddVerified"
                     @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
@@ -370,14 +370,18 @@ const convertNewUserItem = item => {
 } 
 </script>
 <style type="less">
-.pull-right{
+.pull-right {
     float:right;
 }
-.new-user-input{
+.button-reset {
+    margin-top: 14px;
+    padding: 4px 15px !important;
+}
+.new-user-input {
     width:60%;
     margin-right:5%;
 }
-.new-user-button{
+.new-user-button {
     width:30%;
 }
 .table-permission th.percent20 {
