@@ -70,6 +70,8 @@ const OFFLINE_USER = [bucket, keychain]
 .layout-menu {
     width: 200px;
     background: #2e373e;
+    position: fixed;
+    height: 100%;
     .ivu-menu-dark {
         background: #2e373e;
     }

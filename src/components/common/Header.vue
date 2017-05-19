@@ -105,6 +105,9 @@ export default {
     width: 100%;
     background: #20a0ff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+    position: fixed;
+    z-index: 1000;
+    padding-right: 200px;
     .layout-header-right {
         margin-right: 16px;
         display: inline-flex;

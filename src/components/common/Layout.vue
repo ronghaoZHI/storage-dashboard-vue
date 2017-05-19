@@ -43,6 +43,7 @@ export default {
     flex-direction: column;
     .layout-container {
         flex: 1;
+        margin-left: 200px;
     }
 }
 
@@ -65,6 +66,7 @@ export default {
     padding: 20px;
     background: #fff;
     border-radius: 4px;
+    margin-top: 60px;
 }
 
 .layout-content-main {
