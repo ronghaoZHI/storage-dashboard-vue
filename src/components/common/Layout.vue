@@ -87,10 +87,11 @@ export default {
 }
 
 .section-separator {
-    height: 22px;
+    height: 16px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 10px;
     .separator-icon {
         display: inline-block;
         width: 3px;
@@ -100,7 +101,6 @@ export default {
     }
     .separator-info {
         font-size: 16px;
-        font-weight: bold;
         color: #657180;
     }
 }
