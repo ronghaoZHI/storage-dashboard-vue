@@ -15,7 +15,7 @@
                 <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
             </Select>
             <p class="tips">如果没有专门存放鉴别后黄图的Bucket，您需要先
-                <a href="/">创建一个Bucket</a>
+                <span @click="createBucketModal = true" class="creat-bucket">创建一个Bucket</span>
             </p>
         </div>
         <div class="setting-box">
@@ -29,6 +29,11 @@
                 </Radio>
             </Radio-group>
         </div>
+        <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="createBucketValue = ''">
+            <Input v-model="createBucketValue" @on-change="check" :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")'>
+            </Input>
+            <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
+        </Modal>
     </div>
 </template>
 
@@ -39,7 +44,9 @@ export default {
         return {
             bucketList: this.bucketList,
             adultPolify: {},
-
+            createBucketModal: false,
+            inputCheck: false,
+            createBucketValue: '',
         }
     },
     props: ['bucket'],
@@ -87,7 +94,25 @@ export default {
                 this.getBucketPolicy()
                 this.$Message.error(this.$t("STORAGE.POLOCY_FAILED"))
             };
-        }
+        },
+        addBucket() {
+            // the 'this' in arrow function is not point to vue
+            let self = this
+            if (this.createBucketValue.length > 2) {
+                handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
+                    self.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
+                    self.getBucketList()
+                    self.createBucketValue = ''
+                }, error => {
+                    self.$Message.error(error.message)
+                })
+            } else {
+                this.$Message.warning(this.$t("STORAGE.ADD_BUCKET_CHECK"))
+            }
+        },
+        check() {
+            this.inputCheck = this.createBucketValue.length > 2 ? false : true
+        },
     },
     watch: {
         'adultPolify': {
@@ -131,6 +156,10 @@ const convertPolify2String = (polify) => {
         color: #8492a6;
         font-size: 14px;
         padding-top: 10px;
+        .creat-bucket{
+            color:#39f;
+            cursor:pointer;
+        }
     }
     span.last-title {
         vertical-align: top;
