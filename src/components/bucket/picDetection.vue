@@ -96,7 +96,6 @@ export default {
             };
         },
         addBucket() {
-            // the 'this' in arrow function is not point to vue
             let self = this
             if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
