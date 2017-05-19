@@ -41,7 +41,7 @@
             <Input v-model="createFolderValue" @on-change="check" :placeholder='$t("STORAGE.FOLDER_PLACEHOLDER")'></Input>
             <span class="info-input-error">{{inputCheck ? $t("STORAGE.FOLDER_CHECKINFO") : ''}}</span>
         </Modal>
-        <Modal v-model="showImageModal" :title='selectedFileKey || $t("STORAGE.NO_TITLE")'  width="800">
+        <Modal v-model="showImageModal" :title='selectedFileKey || $t("STORAGE.NO_TITLE")'  width="900">
             <div class="section-img">
                 <img :src="clipUrl" />
             </div>
@@ -314,7 +314,7 @@ const fileHeaderSetting = [{
     ellipsis: true,
     sortable: true,
     render(row, column, index) {
-        return row.Type === 'file' ? `<Icon type="document"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder" size="16"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`;
+        return row.Type === 'file' ? `<Icon type="document" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`;
     }
 }, {
     title: 'Size',
@@ -435,6 +435,10 @@ const fileHeaderSetting = [{
 
 .ivu-modal-footer {
     border-top: 0 !important;
+}
+
+.icon-filetype-reset {
+    padding: 2px 6px 0 0;
 }
 </style>
 
