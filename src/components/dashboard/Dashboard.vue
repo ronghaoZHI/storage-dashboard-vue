@@ -16,6 +16,10 @@
                 </Button-group>
             </div>
         </div>
+        <div class="section-separator visible-dashboard-separator">
+            <span class="separator-icon"></span>
+            <span class="separator-info">Overview</span>
+        </div>
         <div class="section-overview">
             <div>
                 <p><span class="big-blue">{{convertData(originOverview.capacity ) }}</span></p>
@@ -82,6 +86,10 @@
                     </Tooltip>
                 </p>
             </div>
+        </div>
+        <div class="section-separator visible-dashboard-separator">
+            <span class="separator-icon"></span>
+            <span class="separator-info">Data charts</span>
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">{{ $t("DASHBOARD.CAPACITY")}}</button>
@@ -366,6 +374,7 @@ const chartReload = (data, chart) => {
 </script>
 <style lang="less" scoped>
 .layout-bsc-toolbar {
+    margin-bottom:20px;
     .button-datepicker {
         width: 50%;
     }
@@ -400,7 +409,7 @@ const chartReload = (data, chart) => {
     padding: 15px 15px;
     border-top: 1px solid #e5e9f2;
     border-bottom: 1px solid #e5e9f2;
-    margin: 20px 0 15px 0;
+    margin: 10px 0 20px 0;
     height:120px;
     &>div {
         flex-grow: 1;
@@ -430,7 +439,7 @@ const chartReload = (data, chart) => {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    margin-top: 6px;
+    margin-top: 10px;
     border: 1px solid #d3dce6;
     border-bottom:0;
     button {
@@ -491,5 +500,10 @@ const chartReload = (data, chart) => {
 }
 .hidden{
     visibility:hidden;
+}
+@media(max-height:840px){
+    .visible-dashboard-separator{
+        display:none;
+    }
 }
 </style>
