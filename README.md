@@ -20,27 +20,39 @@
 
     $ npm run dev
 
-###本地构建
+###本地构建并推送到release分支
 
-	$ npm run build
+	$ sh build_release.sh
+	$ git checkout release
+	$ git push
 
 ###上线测试
 
 ####测试地址：http://139.224.208.26:8080/
 
-登录测试机，并获取需要上线代码，代码需 merge 到 master 分支
-
+本地构建后,登录测试机，并获取需要上线代码，代码需 merge 到 master 分支
 
     $ ssh root@139.224.208.26
 	$ cd s2-init/source-code/storage-dashboard-vue/
-	$ git fetch
-	$ git merge --ff-only your git rep
+	$ git checkout release & git pull
+	$ cd /root/s2-init
 
 ####部署代码
 
-    $ sh init.sh -i /root/install/inventory.py -b playbooks/install-dashboard-only_web.yaml
+    $ sh init.sh -i /root/install/inventory.py -b playbooks/dashboard.yaml
 
 关于S2部署以及配置，请查看s2-init
+
+### 上线生产环境
+本地构建后,使用跳板机(ps: 申请跳板机联系林飞)，使用ip登录线上标注为[`ansible-server`](https://coding.net/t/baishancloud/p/s2-init/git/blob/master/inventories/all-node.md)的机器。以3copy为例
+
+    $ ssh root@222.222.12.247
+    $ sudo -s
+    $ cd /root/baishan/s2-init/source-code/storage-dashboard-vue
+    $ git fetch
+    $ git merge --ff-only origin release
+    $ cd /root/baishan/s2-init
+    $ sh init.sh -i inventories/baishan-3copy/inventory.py -b playbooks/dashboard.yaml
 
 ###项目结构
 ####主要框架
