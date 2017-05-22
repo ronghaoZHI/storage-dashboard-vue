@@ -126,7 +126,7 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { handler } from '../service/Aws'
 import { getAnalysisUrl } from '../service/API'
-import { bytes, times, date } from '../service/bucketService'
+import { bytes, times, timesK,date } from '../service/bucketService'
 export default {
     data() {
         return {
@@ -267,7 +267,7 @@ const lineOptions = {
         padding:10,
     },
     grid: {
-        top: "45",
+        top: "20",
         left: "10",
         right: "40",
         bottom: "10",
@@ -359,12 +359,11 @@ const InitOptions = data => {
         yAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return data.unit == 'byte' ? bytes(value) : times(value)
+                    return data.unit == 'byte' ? bytes(value) : timesK(value)+' times'
                 }
             },
         },
     })
-    newOptions.title = data.unit == 'byte' ? {} : { textStyle:{fontSize:12,color:'#8492a6',fontWeight:'normal',},text: "Unit : times", padding: [10, 0, 0, 5],}
     return newOptions
 }
 

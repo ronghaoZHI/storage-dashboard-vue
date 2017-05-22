@@ -26,6 +26,18 @@ const times = (times) => {
     }
     return result
 }
+const timesK = (times) => {
+    if (typeof times !== 'number') {
+        times = parseFloat(times)
+    }
+    if (times < 1000) {
+        return times
+    } else if (isNaN(times) || !isFinite(times)) {
+        return '-'
+    } else {
+        return (times / 1000).toFixed(1) + 'K'
+    }
+}
 const date = (value) => {
     let date = new Date(value);
     let texts = [date.getFullYear(), (date.getMonth() + 1), date.getDate()];
@@ -69,4 +81,4 @@ const convertPrefix2Router = (prefix) => {
 }
 
 
-export { bytes, times, date, convertPrefix2Router, keyFilter, removeItemFromArray }
+export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray }
