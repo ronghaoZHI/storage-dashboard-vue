@@ -1,4 +1,4 @@
-import Layout from '@/components/common/Layout'
+import Layout from '@/components/common/layout'
 import Bucket from '@/components/bucket/Bucket'
 import File from '@/components/bucket/File'
 import Upload from '@/components/bucket/Upload'

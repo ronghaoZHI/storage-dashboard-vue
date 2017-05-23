@@ -1,11 +1,11 @@
 <template>
     <div @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
-            <Breadcrumb>
-                <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
-                <Breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</Breadcrumb-item>
-                <Breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</Breadcrumb-item>
-            </Breadcrumb>
+            <bsc-breadcrumb>
+                <bsc-breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
+                <bsc-breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</bsc-breadcrumb-item>
+                <bsc-breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</bsc-breadcrumb-item>
+            </bsc-breadcrumb>
         </div>
         <Row class="toolbar-nav">
             <Col span="10">
@@ -66,6 +66,7 @@
 <script>
 import { getAWS, handler } from '../service/Aws'
 import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '../service/bucketService'
+import bscBreadcrumb from '../common/breadcrumb'
 import Clipboard from 'clipboard'
 import moment from 'moment'
 import filePermission from './FilePermissions'
@@ -95,7 +96,7 @@ export default {
         }
     },
     components: { 
-        filePermission
+        filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item
     },
     computed: {
         bucket: function () {

@@ -2,7 +2,7 @@
     <div class="layout-menu">
         <Menu :active-name="activeName" theme="dark" width="auto" @on-select="goRouter">
             <div class="layout-logo-left">
-                <img class="logo-big" src="../../assets/logo.png" height="30px" />
+                <img class="logo-big" src="../../../assets/logo.png" height="30px" />
             </div>
             <Menu-item v-for="item in menuList" :name="item.name" :key="item.index">
                 <img v-bind:src="item.icon" class="icon-menu" height="15px" />
@@ -12,11 +12,11 @@
     </div>
 </template>
 <script>
-import iconBucket from '../../assets/icon-bucket.png'
-import iconDashboard from '../../assets/icon-dashboard.png'
-import iconKey from '../../assets/icon-key.png'
-import iconMachine from '../../assets/icon-machine.png'
-import iconPartition from '../../assets/icon-partition.png'
+import iconBucket from '../../../assets/icon-bucket.png'
+import iconDashboard from '../../../assets/icon-dashboard.png'
+import iconKey from '../../../assets/icon-key.png'
+import iconMachine from '../../../assets/icon-machine.png'
+import iconPartition from '../../../assets/icon-partition.png'
 import user from '@/store/modules/user'
 export default {
     data() {

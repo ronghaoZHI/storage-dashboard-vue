@@ -14,9 +14,9 @@
     </div>
 </template>
 <script>
-import user from '../../store/modules/user'
-import headerTop from './Header'
-import menuLeft from './Menu'
+import user from '@/store/modules/user'
+import headerTop from '../header'
+import menuLeft from '../menu'
 export default {
     data() {
         return {

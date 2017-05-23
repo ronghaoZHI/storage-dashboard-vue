@@ -41,9 +41,9 @@
     </div>
 </template>
 <script>
-import { LOGOUT, REPASSWORD } from '../service/API'
-import { clear } from '../service/Aws'
-import user from '../../store/modules/user'
+import { LOGOUT, REPASSWORD } from '../../service/API'
+import { clear } from '../../service/Aws'
+import user from '@/store/modules/user'
 export default {
     data() {
         return {
