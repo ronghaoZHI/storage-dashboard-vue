@@ -9,8 +9,8 @@ import iView from 'iview'
 import Bluebird from 'bluebird'
 import 'iview/dist/styles/iview.css'
 import _ from 'lodash'
-import axios from './components/service/axios-bsc'
-import { messages } from './components/service/translate'
+import axios from '@/service/axios-bsc'
+import { messages } from '@/service/translate'
 
 window._ = _
 window.Promise = Bluebird

@@ -165,8 +165,8 @@
     </div>
 </template> 
 <script>
-import { handler } from '../service/Aws'
-import { convertPrefix2Router } from '../service/bucketService'
+import { handler } from '@/service/Aws'
+import { convertPrefix2Router } from '@/service/bucketService'
 export default {
     data() {
         return {

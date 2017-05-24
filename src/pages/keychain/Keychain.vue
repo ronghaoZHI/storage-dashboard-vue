@@ -4,50 +4,44 @@
     </div>
 </template>
 <script>
-import { NODE } from '../service/API'
+import { ACCESSKEY } from '@/service/API'
 import moment from 'moment'
 export default {
     data() {
         return {
             columns: [
                 {
-                    title: 'Hostname',
-                    key: 'hostname'
+                    title: 'Accesskey',
+                    key: 'accesskey'
                 },
                 {
-                    title: 'Public ips',
-                    key: 'pub_ips'
+                    title: 'Secretkey',
+                    key: 'secretkey'
                 },
                 {
-                    title: 'Inner ips',
-                    key: 'inn_ips'
-                },
-                {
-                    title: 'Inner ips',
-                    key: 'status'
-                },
-                {
-                    title: 'CPU load',
-                    key: 'cpu.load'
+                    title: 'Create time',
+                    width: 140,
+                    key: 'ts'
                 }
             ],
             data: []
         }
     },
     mounted() {
-        //this.getMachineList()
+        this.getKeychainList()
     },
     methods: {
-        async getMachineList() {
+        async getKeychainList() {
             this.$Loading.start()
             try {
-                const res = await this.$http.get(NODE)
-                this.data = res.data
-                console.log(res)
+                const res = await this.$http.get(ACCESSKEY)
+                this.data = await _.forEach(res.data,(item) => {
+                    item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
+                })
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.warning('Need to login again')
+                this.$Message.warning(this.$t("LOGIN.LOGIN_AGAIN"))
                 this.$router.push({
                     path: '/login',
                     query: { redirect: '/keychain' }

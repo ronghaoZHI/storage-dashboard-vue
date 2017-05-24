@@ -64,9 +64,9 @@
     </div>
 </template>
 <script>
-import { getAWS, handler } from '../service/Aws'
-import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '../service/bucketService'
-import bscBreadcrumb from '../common/breadcrumb'
+import { getAWS, handler } from '@/service/Aws'
+import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '@/service/bucketService'
+import bscBreadcrumb from '@/components/breadcrumb'
 import Clipboard from 'clipboard'
 import moment from 'moment'
 import filePermission from './FilePermissions'

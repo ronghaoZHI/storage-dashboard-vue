@@ -1,13 +1,13 @@
-import Layout from '@/components/common/layout'
-import Bucket from '@/components/bucket/Bucket'
-import File from '@/components/bucket/File'
-import Upload from '@/components/bucket/Upload'
-import Dashboard from '@/components/dashboard/Dashboard'
-import Machine from '@/components/machine/Machine'
-import Keychain from '@/components/keychain/Keychain'
-import Login from '@/components/login/Login'
-import Settings from '@/components/bucket/Settings'
-import FilePermissions from '@/components/bucket/FilePermissions'
+import Layout from '@/components/layout'
+import Bucket from '@/pages/bucket/Bucket'
+import File from '@/pages/bucket/File'
+import Upload from '@/pages/bucket/Upload'
+import Dashboard from '@/pages/dashboard/Dashboard'
+import Machine from '@/pages/machine/Machine'
+import Keychain from '@/pages/keychain/Keychain'
+import Login from '@/pages/login/Login'
+import Settings from '@/pages/bucket/Settings'
+import FilePermissions from '@/pages/bucket/FilePermissions'
 
 const layoutChild = [{
     path: '',

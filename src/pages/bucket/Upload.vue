@@ -31,9 +31,9 @@
     </div>
 </template>
 <script>
-import { getAWS } from '../service/Aws'
+import { getAWS } from '@/service/Aws'
 import moment from 'moment'
-import { bytes } from '../service/bucketService'
+import { bytes } from '@/service/bucketService'
 export default {
     data() {
         return {

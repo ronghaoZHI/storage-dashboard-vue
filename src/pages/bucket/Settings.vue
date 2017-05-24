@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { handler } from '../service/Aws'
+import { handler } from '@/service/Aws'
 import picDetection from './picDetection'
 export default {
     data() {

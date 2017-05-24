@@ -124,9 +124,9 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
-import { handler } from '../service/Aws'
-import { getAnalysisUrl } from '../service/API'
-import { bytes, times, timesK,date } from '../service/bucketService'
+import { handler } from '@/service/Aws'
+import { getAnalysisUrl } from '@/service/API'
+import { bytes, times, timesK,date } from '@/service/bucketService'
 export default {
     data() {
         return {

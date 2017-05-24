@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { handler } from '../service/Aws'
+import { handler } from '@/service/Aws'
 export default {
     data() {
         return {

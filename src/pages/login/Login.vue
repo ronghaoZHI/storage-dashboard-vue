@@ -36,7 +36,7 @@
     </div>
 </template>
 <script>
-import { LOGIN, USERINFO } from '../service/API'
+import { LOGIN, USERINFO } from '@/service/API'
 import Vue from 'vue'
 export default {
     data() {

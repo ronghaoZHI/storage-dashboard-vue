@@ -45,9 +45,9 @@
     </div>
 </template>
 <script>
-import { handler } from '../service/Aws'
-import { CREATE_USER,REDIRECT_BUCKET } from '../service/API'
-import { removeItemFromArray } from '../service/bucketService'
+import { handler } from '@/service/Aws'
+import { CREATE_USER,REDIRECT_BUCKET } from '@/service/API'
+import { removeItemFromArray } from '@/service/bucketService'
 import moment from 'moment'
 import user from '@/store/modules/user'
 export default {
