@@ -1,16 +1,7 @@
 import axios from 'axios'
-//for cros cookie
+// for cros cookie
 axios.defaults.withCredentials = true
-axios.interceptors.request.use(function(config) {
-    return config
-}, function(error) {
-    return Promise.reject(error);
-});
-
-axios.interceptors.response.use(function(response) {
-    return response
-}, function(error) {
-    return Promise.reject(error.response.data.error);
-});
+axios.interceptors.request.use(config => config, error => Promise.reject(error))
+axios.interceptors.response.use(response => response, error => Promise.reject(error.response.data.error))
 
 export default axios

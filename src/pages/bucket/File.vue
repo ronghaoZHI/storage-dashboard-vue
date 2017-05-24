@@ -65,13 +65,13 @@
 </template>
 <script>
 import { getAWS, handler } from '@/service/Aws'
-import { bytes, keyFilter, convertPrefix2Router, removeItemFromArray } from '@/service/bucketService'
+import { bytes, keyFilter, convertPrefix2Router } from '@/service/bucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
 import Clipboard from 'clipboard'
 import moment from 'moment'
 import filePermission from './FilePermissions'
 export default {
-    data() {
+    data () {
         return {
             clipUrl: '',
             searchValue: '',
@@ -95,7 +95,7 @@ export default {
             searchInputFocus: false
         }
     },
-    components: { 
+    components: {
         filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item
     },
     computed: {
@@ -109,13 +109,13 @@ export default {
             return convertPrefix2Router(this.prefix)
         }
     },
-    mounted() {
+    mounted () {
         this.getData()
     },
     methods: {
-        async getData(nextMarker, searchValue = '') {
+        async getData (nextMarker, searchValue = '') {
             this.$Loading.start()
-            //this.setLoading(true)
+            // this.setLoading(true)
             try {
                 let self = this
                 let res = await handler('listObjects', {
@@ -138,48 +138,48 @@ export default {
                     item.isImage = isImage(item)
                     item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
                 }))
-                document.querySelector("#app").scrollTop = 0;
+                document.querySelector('#app').scrollTop = 0
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
                 console.log(error)
             }
         },
-        previousPage() {
+        previousPage () {
             let maker = this.makerArray[this.makerArray.length - 2]
             this.makerArray.pop()
-            this.getData(maker,this.searchValue)
+            this.getData(maker, this.searchValue)
         },
-        nextPage() {
+        nextPage () {
             this.nextMarker && this.makerArray.push(this.nextMarker)
-            this.getData(this.nextMarker,this.searchValue)
+            this.getData(this.nextMarker, this.searchValue)
         },
-        searchFile(value) {
+        searchFile (value) {
             this.searchMode = true
             this.getData(this.prefix, value)
         },
-        async addFolder() {
+        async addFolder () {
             if (!this.createFolderValue) return
             try {
                 await handler('putObject', { Bucket: this.bucket, Key: this.prefix + this.createFolderValue + '/', Body: '' })
-                this.$Message.success(this.$t("STORAGE.ADD_FOLDER_SUCCESS"))
+                this.$Message.success(this.$t('STORAGE.ADD_FOLDER_SUCCESS'))
                 this.getData()
             } catch (error) {
-                this.$Message.error(this.$t("STORAGE.ADD_FOLDER_FAILED"))
+                this.$Message.error(this.$t('STORAGE.ADD_FOLDER_FAILED'))
             }
         },
-        async clipModal(file) {
+        async clipModal (file) {
             this.$Loading.start()
             this.clipUrl = await getURL(this.bucket, file, this.prefix)
             this.selectedFileKey = file.Key
             this.copyModal = true
             this.$Loading.finish()
         },
-        download(url) {
-            document.querySelector("#element-download").href = url
-            document.querySelector("#span-download").click()
+        download (url) {
+            document.querySelector('#element-download').href = url
+            document.querySelector('#span-download').click()
         },
-        async downloadFile(file) {
+        async downloadFile (file) {
             let self = this
             if (file.Type === 'file') {
                 let url = await getURL(this.bucket, file, this.prefix)
@@ -189,7 +189,7 @@ export default {
                     Bucket: this.bucket,
                     Prefix: this.prefix + file.Prefix,
                     Delimiter: '/',
-                    Marker: this.prefix + file.Prefix,
+                    Marker: this.prefix + file.Prefix
                 })
                 _.each(res.Contents, async file => {
                     let url = await getURL(self.bucket, file, self.prefix)
@@ -197,34 +197,34 @@ export default {
                 })
             }
         },
-        async imageModal(file) {
+        async imageModal (file) {
             this.$Loading.start()
             this.clipUrl = await getURL(this.bucket, file, this.prefix)
             this.selectedFileKey = file.Key
             this.showImageModal = true
             this.$Loading.finish()
         },
-        async permissionModal(file) {
+        async permissionModal (file) {
             this.permissionKey = file.Key
             this.showPermissonModal = true
         },
-        batchDeleteFileConfirm() {
+        batchDeleteFileConfirm () {
             this.$Modal.confirm({
-                content: this.$t("STORAGE.DELETE_FILES_CONFIRMED"),
-                okText: this.$t("PUBLIC.CONFIRMED"),
-                cancelText: this.$t("PUBLIC.CANCLE"),
+                content: this.$t('STORAGE.DELETE_FILES_CONFIRMED'),
+                okText: this.$t('PUBLIC.CONFIRMED'),
+                cancelText: this.$t('PUBLIC.CANCLE'),
                 onOk: () => this.batchDelete()
             })
         },
-        deleteFileConfirm(file) {
+        deleteFileConfirm (file) {
             this.$Modal.confirm({
-                content: this.$t("STORAGE.DELETE_CONFIRMED",{fileName:file.Key}),
-                okText: this.$t("PUBLIC.CONFIRMED"),
-                cancelText: this.$t("PUBLIC.CANCLE"),
+                content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: file.Key}),
+                okText: this.$t('PUBLIC.CONFIRMED'),
+                cancelText: this.$t('PUBLIC.CANCLE'),
                 onOk: () => this.deleteFile(file)
             })
         },
-        async deleteFile(file) {
+        async deleteFile (file) {
             try {
                 if (file.Type === 'file') {
                     await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + file.Key })
@@ -236,38 +236,38 @@ export default {
                     batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
                 }
                 this.fileList.splice(file._index, 1)
-                this.$Message.success(this.$t("STORAGE.DELETE_FILES_SUCCESS"))
+                this.$Message.success(this.$t('STORAGE.DELETE_FILES_SUCCESS'))
             } catch (error) {
-                this.$Message.error(this.$t("STORAGE.DELETE_FILES_FAILED"))
+                this.$Message.error(this.$t('STORAGE.DELETE_FILES_FAILED'))
             }
         },
-        async batchDelete() {
+        async batchDelete () {
             let self = this
             await Promise.all(Array.map(self.selectedFileList, (file) => self.deleteFile(file)))
             self.getData()
         },
-        async batchDownload() {
+        async batchDownload () {
             let self = this
             await Promise.all(Array.map(self.selectedFileList, (file) => self.downloadFile(file)))
         },
-        openFolder(item) {
+        openFolder (item) {
             this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
         },
-        getUrl(prefix) {
+        getUrl (prefix) {
             return `/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
         },
-        upload() {
+        upload () {
             this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
         },
-        check() {
-            this.inputCheck = this.createFolderValue.length > 0 ? false : true
+        check () {
+            this.inputCheck = !this.createFolderValue.length > 0
         },
-        select(selection) {
+        select (selection) {
             this.selectedFileList = selection
         },
-        setLoading(bol) {
+        setLoading (bol) {
             this.$store.dispatch('setLoading', bol)
-        },
+        }
     },
     directives: {
         clip: {
@@ -278,7 +278,7 @@ export default {
     },
     watch: {
         // the fileList array need refresh when the $route value changed
-        '$route'(to, from) {
+        '$route' (to, from) {
             to.path !== from.path && this.getData()
         }
     }
@@ -288,7 +288,7 @@ const batchDeleteFileHandle = async (list, bucket, prefix) => {
     await Promise.all(Array.map(list, (file) => handler('deleteObject', { Bucket: bucket, Key: file.Key })))
 }
 
-const isImage = (file) => /\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key) ? true : false
+const isImage = (file) => !!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key)
 
 const getURL = async (bucket, file, prefix) => {
     try {
@@ -314,8 +314,8 @@ const fileHeaderSetting = [{
     width: 240,
     ellipsis: true,
     sortable: true,
-    render(row, column, index) {
-        return row.Type === 'file' ? `<Icon type="document" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`;
+    render (row, column, index) {
+        return row.Type === 'file' ? `<Icon type="document" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`
     }
 }, {
     title: 'Size',
@@ -333,13 +333,13 @@ const fileHeaderSetting = [{
     key: 'actions',
     width: 170,
     align: 'right',
-    render(row, column, index) {
-        return row.Type === 'folder' ? `<Tooltip :content='$t("STORAGE.DELETE_FOLDER")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>` :
-            `<Tooltip :content='$t("STORAGE.FILE_PERMISSIONS")' :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+    render (row, column, index) {
+        return row.Type === 'folder' ? `<Tooltip :content='$t("STORAGE.DELETE_FOLDER")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
+            : `<Tooltip :content='$t("STORAGE.FILE_PERMISSIONS")' :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip :content='$t("STORAGE.DOWNLOAD_FILE")' :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip :content='$t("STORAGE.IMG_PREVIEW")' :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip :content='$t("STORAGE.COPY_FILE_LINK")' :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.DELETE_FILE")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
+                        <Tooltip :content='$t("STORAGE.DELETE_FILE")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
     }
 }
 ]

@@ -126,9 +126,9 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { handler } from '@/service/Aws'
 import { getAnalysisUrl } from '@/service/API'
-import { bytes, times, timesK,date } from '@/service/bucketService'
+import { bytes, times, timesK, date } from '@/service/bucketService'
 export default {
-    data() {
+    data () {
         return {
             showChart: 0,
             bucketList: this.bucketList,
@@ -136,13 +136,13 @@ export default {
             dateDefault: {
                 seven_days: [lastNDays(7), lastNDays(1)],
                 this_month: [new Date(new Date().setDate(1)), lastNDays(1)],
-                thirty_days: [lastNDays(30), lastNDays(1)],
+                thirty_days: [lastNDays(30), lastNDays(1)]
             },
             dateSelect: this.dateSelect,
             originOverview: {},
             dateOptions: {
-                disabledDate(date) {
-                    return date && date.valueOf() > Date.now() - 86400000;
+                disabledDate (date) {
+                    return date && date.valueOf() > Date.now() - 86400000
                 }
             },
             capacityData: this.capacityData,
@@ -161,29 +161,29 @@ export default {
         chart: ECharts
     },
     computed: {
-        dateRange() {
+        dateRange () {
             return formatDate(this.dateSelect[0]) + '-' + formatDate(this.dateSelect[1])
         },
-        isFristDay() {
-            return new Date().getDate == 1
+        isFristDay () {
+            return new Date().getDate === 1
         }
     },
-    mounted() {
+    mounted () {
         this.dateSelect = this.dateDefault.seven_days
         this.getBucketList()
         this.getInitData()
     },
     methods: {
-        async getBucketList() {
+        async getBucketList () {
             try {
                 let res = await handler('listBuckets')
                 this.bucketList = [...res.Buckets, { Name: 'All Buckets' }]
             } catch (error) {
-                this.$Message.error(this.$t("DASHBOARD.GET_BUCKET_FAILED"))
+                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
             };
         },
-        async getInitData() {
-            if(!this.dateSelect){
+        async getInitData () {
+            if (!this.dateSelect) {
                 return
             }
             let self = this
@@ -213,107 +213,107 @@ export default {
                 })
             })
         },
-        convertData(item) {
+        convertData (item) {
             if (!item) {
                 return '000'
             }
-            return item.unit == 'byte' ? bytes(item.value) : times(item.value)
+            return item.unit === 'byte' ? bytes(item.value) : times(item.value)
         },
-        getApiURL(operation) {
+        getApiURL (operation) {
             let path = operation
             if (this.bucket && this.bucket !== 'All Buckets') {
                 path += '/' + this.bucket
             }
             return getAnalysisUrl(path + '?custom_range=' + this.dateRange)
         },
-        tabToggle(index,ref) {
+        tabToggle (index, ref) {
             let vm = this
             vm.showChart = index
-            setTimeout(() => { vm.$refs[ref].resize() },100)
+            setTimeout(() => { vm.$refs[ref].resize() }, 100)
         }
     },
     watch: {
-        'dateSelect'(to, from) {
+        'dateSelect' (to, from) {
             to[0] && this.getInitData()
         },
-        'capacityData'(to, from) {
+        'capacityData' (to, from) {
             chartReload(to.data, this.$refs.capacityLine)
         },
-        'uploadSpaceData'(to, from) {
+        'uploadSpaceData' (to, from) {
             chartReload(to.data, this.$refs.uploadTrafficLine)
         },
-        'downloadSpaceData'(to, from) {
+        'downloadSpaceData' (to, from) {
             chartReload(to.data, this.$refs.downloadTrafficLine)
         },
-        'downloadCountData'(to, from) {
+        'downloadCountData' (to, from) {
             chartReload(to.data, this.$refs.downloadsLine)
         },
-        'uploadCountData'(to, from) {
+        'uploadCountData' (to, from) {
             chartReload(to.data, this.$refs.uploadsLine)
         }
     }
 }
 
-const fixDate = n => n < 10 ? "0" + n : "" + n
+const fixDate = n => n < 10 ? '0' + n : '' + n
 const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
 const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
 const lineOptions = {
     tooltip: {
-        trigger: "axis",
-        textStyle:{
+        trigger: 'axis',
+        textStyle: {
             color: '#fff',
-            fontSize:14,
+            fontSize: 14
         },
-        padding:10,
+        padding: 10
     },
     grid: {
-        top: "20",
-        left: "10",
-        right: "40",
-        bottom: "10",
+        top: '20',
+        left: '10',
+        right: '40',
+        bottom: '10',
         containLabel: true
     },
     xAxis: {
         type: 'time',
-        offset:5,
-        axisLine:{
-            lineStyle:{
-                color:"#8492a6"
+        offset: 5,
+        axisLine: {
+            lineStyle: {
+                color: '#8492a6'
             }
         },
-        axisTick:{
-            show: false,
+        axisTick: {
+            show: false
         },
         axisLabel: {
             textStyle: {
-                color: "#8492a6"
+                color: '#8492a6'
             },
             formatter: function (value) {
                 return date(value)
             }
-        },
+        }
     },
     yAxis: {
-        type: "value",
+        type: 'value',
         min: 0,
-        offset:5,
+        offset: 5,
         nameTextStyle: {
-            color: "#333"
+            color: '#333'
         },
         axisLine: {
             show: false,
-            lineStyle:{
-                color:"#8492a6"
+            lineStyle: {
+                color: '#8492a6'
             }
         },
-        axisTick:{
-            show: false,
+        axisTick: {
+            show: false
         },
         axisLabel: {
             textStyle: {
-                color: "#8492a6"
-            },
-        },
+                color: '#8492a6'
+            }
+        }
     },
     series: [{
         data: [],
@@ -324,17 +324,17 @@ const lineOptions = {
         sampling: 'average',
         itemStyle: {
             normal: {
-                color: "#2c96ef"
+                color: '#2c96ef'
             }
         },
         lineStyle: {
             normal: {
-                color: "#2c96ef"
+                color: '#2c96ef'
             }
         },
         areaStyle: {
             normal: {
-                color: "#83C6F9",
+                color: '#83C6F9',
                 opacity: 0.8
             }
         }
@@ -344,25 +344,25 @@ const InitOptions = data => {
     let newOptions = _.defaultsDeep({}, lineOptions, {
         series: [{
             data: data.data,
-            name: data.label,
+            name: data.label
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
                 let res = '时间 : ' + date(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/>' + item.seriesName + ' : '
-                    res += data.unit == 'byte' ? bytes(item.value[1]) : times(item.value[1])
-                });
-                return res;
+                    res += data.unit === 'byte' ? bytes(item.value[1]) : times(item.value[1])
+                })
+                return res
             }
         },
         yAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return data.unit == 'byte' ? bytes(value) : timesK(value)+' times'
+                    return data.unit === 'byte' ? bytes(value) : timesK(value) + 'times'
                 }
-            },
-        },
+            }
+        }
     })
     return newOptions
 }
@@ -371,7 +371,7 @@ const chartReload = (data, chart) => {
     chart && chart.mergeOptions({ series: [{ ...data }] })
 }
 </script>
-<style lang="less" scoped>
+<style lang='less' scoped>
 .layout-bsc-toolbar {
     margin-bottom:20px;
     .button-datepicker {

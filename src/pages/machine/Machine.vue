@@ -7,7 +7,7 @@
 import { NODE } from '@/service/API'
 import moment from 'moment'
 export default {
-    data() {
+    data () {
         return {
             columns: [
                 {
@@ -34,11 +34,11 @@ export default {
             data: []
         }
     },
-    mounted() {
-        //this.getMachineList()
+    mounted () {
+        // this.getMachineList()
     },
     methods: {
-        async getMachineList() {
+        async getMachineList () {
             this.$Loading.start()
             try {
                 const res = await this.$http.get(NODE)

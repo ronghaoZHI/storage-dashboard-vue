@@ -35,10 +35,9 @@ import { getAWS } from '@/service/Aws'
 import moment from 'moment'
 import { bytes } from '@/service/bucketService'
 export default {
-    data() {
+    data () {
         return {
-            fileList: [],
-            self: this,
+            fileList: []
         }
     },
     computed: {
@@ -61,9 +60,9 @@ export default {
                 }
                 el.onclick = (e) => {
                     let fileInput = el.children[0]
-                    //click events bubble up the ancestry tree and the change event will trigge twice
-                    //fileInput.onclick((e,false) => e.stopPropagation()) not work ...
-                    fileInput.addEventListener("click", (e) => { e.stopPropagation() }, false)
+                    // click events bubble up the ancestry tree and the change event will trigge twice
+                    // fileInput.onclick((e,false) => e.stopPropagation()) not work ...
+                    fileInput.addEventListener('click', (e) => { e.stopPropagation() }, false)
                     fileInput.onchange = (e) => { pushFile2Vue(e.target.files) }
                     fileInput.click()
                 }
@@ -75,16 +74,16 @@ export default {
                         // get folder contents
                         let dirReader = item.createReader()
                         dirReader.readEntries((entries) => {
-                            Array.from(entries).forEach((file) => traverseFileTree(file, path + item.name + "/"))
+                            Array.from(entries).forEach((file) => traverseFileTree(file, path + item.name + '/'))
                         })
                     }
                 }
 
                 const pushFile2Vue = (target, path) => {
-                    //binding.value => vue(this)
-                    //but using dataset is best 
+                    // binding.value => vue(this)
+                    // but using dataset is best
 
-                    //when file upload by drag, we must get file itself by file.file()
+                    // when file upload by drag, we must get file itself by file.file()
                     !target.isFile ? Array.from(target).forEach((item) => {
                         binding.value.fileList.push({
                             name: item.name,
@@ -103,7 +102,7 @@ export default {
                             file: item,
                             isUpload: false
                         })
-                    },(error) => {
+                    }, (error) => {
                         console.log(error)
                     })
                 }
@@ -111,15 +110,14 @@ export default {
         }
     },
     methods: {
-        deleteFile(file) {
+        deleteFile (file) {
             this.$Message.error('Sorry, we will provide this functionality in the next version')
-            //file.request.abort()
+            // file.request.abort()
         },
-        back() {
+        back () {
             this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
         },
-        async uploadFile(item) {
-            console.log(item)
+        async uploadFile (item) {
             let file = item.file
             let params = {
                 Bucket: this.bucket,
@@ -143,7 +141,7 @@ export default {
                 to.forEach((file) => {
                     if (!file.isUpload) {
                         file.isUpload = true
-                        self.uploadFile(file).then(res => res, error => self.$Message.error($t("STORAGE.UPLOAD_FAILED",{fileName:file.name}), 5))
+                        self.uploadFile(file).then(res => res, () => self.$Message.error($t('STORAGE.UPLOAD_FAILED', {fileName: file.name}), 5))
                     }
                 })
             }

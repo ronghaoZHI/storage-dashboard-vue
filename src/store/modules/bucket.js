@@ -5,7 +5,7 @@ const state = {
 }
 
 const mutations = {
-    [types.SELECTED_BUCKET](state, bucket) {
+    [types.SELECTED_BUCKET] (state, bucket) {
         state.selectedBucket = bucket
     }
 }

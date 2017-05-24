@@ -7,7 +7,7 @@
 import { ACCESSKEY } from '@/service/API'
 import moment from 'moment'
 export default {
-    data() {
+    data () {
         return {
             columns: [
                 {
@@ -27,21 +27,21 @@ export default {
             data: []
         }
     },
-    mounted() {
+    mounted () {
         this.getKeychainList()
     },
     methods: {
-        async getKeychainList() {
+        async getKeychainList () {
             this.$Loading.start()
             try {
                 const res = await this.$http.get(ACCESSKEY)
-                this.data = await _.forEach(res.data,(item) => {
+                this.data = await _.forEach(res.data, (item) => {
                     item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
                 })
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.warning(this.$t("LOGIN.LOGIN_AGAIN"))
+                this.$Message.warning(this.$t('LOGIN.LOGIN_AGAIN'))
                 this.$router.push({
                     path: '/login',
                     query: { redirect: '/keychain' }

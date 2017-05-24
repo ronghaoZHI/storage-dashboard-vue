@@ -20,7 +20,7 @@ const store = new Vuex.Store({
         loading: false
     },
     mutations: {
-        [types.LOADING](state, bol) {
+        [types.LOADING] (state, bol) {
             state.loading = bol
         }
     }

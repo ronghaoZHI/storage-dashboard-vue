@@ -15,7 +15,7 @@ const layoutChild = [{
 }, {
     path: '/bucket',
     name: 'bucket',
-    meta: { title: 'My storage', ali: 'bucket' }, //'ali' => Menu.vue
+    meta: { title: 'My storage', ali: 'bucket' }, // 'ali' => Menu.vue
     component: Bucket
 }, {
     path: '/bucket/:bucket/prefix/:prefix',
@@ -26,17 +26,17 @@ const layoutChild = [{
     path: '/upload/:bucket/prefix/:prefix',
     name: 'upload',
     meta: { title: 'My storage', ali: 'bucket' },
-    component: Upload,
+    component: Upload
 }, {
     path: '/dashboard',
     name: 'dashboard',
     meta: { title: 'Dashboard', ali: 'dashboard' },
-    component: Dashboard,
+    component: Dashboard
 }, {
     path: '/keychain',
     name: 'keychain',
     meta: { title: 'Keychain', ali: 'keychain' },
-    component: Keychain,
+    component: Keychain
 }, {
     path: '/bucket/:bucket/bucketSettings',
     name: 'bucketSettings',
@@ -51,12 +51,12 @@ const layoutChild = [{
     path: '/machine',
     name: 'machine',
     meta: { title: 'Machine', ali: 'machine' },
-    component: Machine,
+    component: Machine
 }, {
     path: '/partition',
     name: 'partition',
     meta: { title: 'Partition', ali: 'partition' },
-    component: Keychain,
+    component: Keychain
 }]
 
 const routes = [{

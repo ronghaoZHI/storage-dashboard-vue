@@ -39,20 +39,20 @@ const timesK = (times) => {
     }
 }
 const date = (value) => {
-    let date = new Date(value);
-    let texts = [date.getFullYear(), (date.getMonth() + 1), date.getDate()];
-    return texts.join('-');
+    let date = new Date(value)
+    let texts = [date.getFullYear(), (date.getMonth() + 1), date.getDate()]
+    return texts.join('-')
 }
 
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
 
 Vue.filter('userType', (Grantee) => {
     if (Grantee.URI && Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers') {
-        return 'All Users';
+        return 'All Users'
     } else if (Grantee.URI && Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers') {
-        return 'Auth Users';
+        return 'Auth Users'
     } else if (Grantee.ID) {
-        return Grantee.ID;
+        return Grantee.ID
     }
 })
 

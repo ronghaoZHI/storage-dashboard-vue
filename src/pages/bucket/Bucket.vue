@@ -46,12 +46,11 @@
 </template>
 <script>
 import { handler } from '@/service/Aws'
-import { CREATE_USER,REDIRECT_BUCKET } from '@/service/API'
+import { CREATE_USER, REDIRECT_BUCKET } from '@/service/API'
 import { removeItemFromArray } from '@/service/bucketService'
 import moment from 'moment'
-import user from '@/store/modules/user'
 export default {
-    data() {
+    data () {
         return {
             adminMode: false,
             createBucketValue: '',
@@ -97,29 +96,30 @@ export default {
             }
         }
     },
-    mounted() {
+    mounted () {
         this.getBucketList()
     },
     directives: {
         cbutton: {
             bind: function (el, binding) {
                 el.onclick = (e) => {
-                    el.classList.toggle("bucket-selected")
+                    el.classList.toggle('bucket-selected')
                     _.each(el.parentNode.childNodes, (node) => {
-                        node !== el && node.classList.remove("bucket-selected")
+                        node !== el && node.classList.remove('bucket-selected')
                     })
                 }
             }
         }
     },
     methods: {
-        async getBucketList() {
+        async getBucketList () {
             try {
                 this.$Loading.start()
                 let res = await handler('listBuckets')
                 this.bucketList = _.forEach(res.Buckets, (item) => {
                     item.selected = false
-                    return item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                    return item
                 })
                 this.$Loading.finish()
             } catch (error) {
@@ -127,25 +127,25 @@ export default {
                 console.log(error)
             }
         },
-        deleteBucketConfirm() {
+        deleteBucketConfirm () {
             const item = this.selectedBucket
-            this.getBucketPolify().then(bucketPolify=> {
+            this.getBucketPolify().then(bucketPolify => {
                 if (bucketPolify.union && bucketPolify.union.picAdult) {
-                this.$Modal.warning({
-                    content: this.$t("STORAGE.DELETE_BUCKET_INFO",{fileName:item.Name,unionName:bucketPolify.union.picAdult}),
-                    okText: this.$t("PUBLIC.CONFIRMED")
-                })
-            } else {
-                this.$Modal.confirm({
-                    content: this.$t("STORAGE.DELETE_CONFIRMED",{fileName:item.Name}),
-                    okText: this.$t("PUBLIC.CONFIRMED"),
-                    cancelText: this.$t("PUBLIC.CANCLE"),
-                    onOk: () => this.deleteBucket(item)
-                })
-            }
+                    this.$Modal.warning({
+                        content: this.$t('STORAGE.DELETE_BUCKET_INFO', {fileName: item.Name, unionName: bucketPolify.union.picAdult}),
+                        okText: this.$t('PUBLIC.CONFIRMED')
+                    })
+                } else {
+                    this.$Modal.confirm({
+                        content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: item.Name}),
+                        okText: this.$t('PUBLIC.CONFIRMED'),
+                        cancelText: this.$t('PUBLIC.CANCLE'),
+                        onOk: () => this.deleteBucket(item)
+                    })
+                }
             })
         },
-        async deleteBucket(bucket) {
+        async deleteBucket (bucket) {
             try {
                 let buckets = await handler('listObjects', { Bucket: bucket.Name })
                 let response = await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
@@ -158,21 +158,21 @@ export default {
 
                 this.selectedBucket = {}
                 _.each(document.querySelector('.section-iconmode').childNodes, (node) => {
-                    node.classList.remove("bucket-selected")
+                    node.classList.remove('bucket-selected')
                 })
             } catch (error) {
                 console.log(error)
                 this.$Message.error(error.message)
             }
         },
-        createUser() {
+        createUser () {
             let self = this
             this.$refs['createUserForm'].validate((valid) => {
                 if (valid) {
                     self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
-                        self.createUserForm = { username: '',email: '',password: '' }
+                        self.createUserForm = { username: '', email: '', password: '' }
                         this.$Message.success('Create user success')
-                    },error => {
+                    }, error => {
                         this.$Message.error(error)
                     })
                 } else {
@@ -180,14 +180,14 @@ export default {
                 }
             })
         },
-        createRedirectBucket() {
+        createRedirectBucket () {
             let self = this
             this.$refs['redirectBucketForm'].validate((valid) => {
                 if (valid) {
-                    self.$http.post(REDIRECT_BUCKET, {...self.redirectBucketForm,original: self.selectedBucket.Name}).then(res => {
-                        self.redirectBucketForm = { redirect: '',email: '' }
+                    self.$http.post(REDIRECT_BUCKET, {...self.redirectBucketForm, original: self.selectedBucket.Name}).then(res => {
+                        self.redirectBucketForm = { redirect: '', email: '' }
                         this.$Message.success('Create bucket alias success')
-                    },error => {
+                    }, error => {
                         this.$Message.error(error)
                     })
                 } else {
@@ -195,43 +195,43 @@ export default {
                 }
             })
         },
-        goBucketSettings() {
+        goBucketSettings () {
             const bucket = this.selectedBucket
             this.$store.dispatch('selectBucket', bucket)
             this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name } })
         },
-        rowClick(item) {
+        rowClick (item) {
             this.selectedBucket = this.selectedBucket === item ? {} : item
         },
-        addBucket() {
+        addBucket () {
             // the 'this' in arrow function is not point to vue
             let self = this
             if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
-                    self.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
+                    self.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
                     self.getBucketList()
                     self.createBucketValue = ''
                 }, error => {
                     self.$Message.error(error.message)
                 })
             } else {
-                this.$Message.warning(this.$t("STORAGE.ADD_BUCKET_CHECK"))
+                this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
             }
         },
-        check() {
-            this.inputCheck = this.createBucketValue.length > 2 ? false : true
+        check () {
+            this.inputCheck = !this.createBucketValue.length > 2
         },
-        dbClick(item) {
+        dbClick (item) {
             this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
         },
-        async getBucketPolify(){
+        async getBucketPolify () {
             try {
                 let res = await handler('getBucketPolicy', {
-                    Bucket: this.selectedBucket.Name,
+                    Bucket: this.selectedBucket.Name
                 })
                 var polify = JSON.parse(res.Policy)
             } catch (error) {
-                this.$Message.error(this.$t("STORAGE.GET_ADULT_FAILED"))
+                this.$Message.error(this.$t('STORAGE.GET_ADULT_FAILED'))
             }
             return polify
         }
@@ -260,10 +260,10 @@ const headSetting = [
         key: 'actions',
         width: 200,
         align: 'center',
-        render(row, column, index) {
+        render (row, column, index) {
             return `<Tooltip :content='$t("STORAGE.FILE_LIST")' :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small"><Icon type="ios-list" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip :content='$t("STORAGE.BUCKET_SETTING")' :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="goBucketSettings(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.DELETE_BUCKET")' content="Delete bucket" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`;
+                        <Tooltip :content='$t("STORAGE.DELETE_BUCKET")' content="Delete bucket" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
         }
     }
 ]

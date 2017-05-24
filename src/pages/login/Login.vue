@@ -36,10 +36,10 @@
     </div>
 </template>
 <script>
-import { LOGIN, USERINFO } from '@/service/API'
+import { LOGIN } from '@/service/API'
 import Vue from 'vue'
 export default {
-    data() {
+    data () {
         return {
             formInline: {
                 email: '',
@@ -54,10 +54,10 @@ export default {
                     { type: 'string', min: 6, message: 'Requires 6 charactors', trigger: 'blur' }
                 ]
             },
-            lang: 'cn',
+            lang: 'cn'
         }
     },
-    mounted() {
+    mounted () {
 
     },
     components: {
@@ -65,24 +65,24 @@ export default {
     },
 
     methods: {
-        async handleSubmit(name) {
+        async handleSubmit (name) {
             let self = this
             this.$refs[name].validate((valid) => {
                 if (valid) {
                     self.$http.post(LOGIN, {...self.formInline}).then(res => {
                         this.$store.dispatch('setUserInfo', res.data)
-                        let redirect = this.$route.query.redirect //get redirect path
+                        let redirect = this.$route.query.redirect // get redirect path
                         !!redirect ? this.$router.push(redirect) : this.$router.push('/')
                         Vue.config.lang = this.lang
-                    },error => {
+                    }, error => {
                         this.$Message.error(error)
                     })
                 } else {
-                    this.$Message.error(this.$t("LOGIN.VALIDATE_FAILED"))
+                    this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
                 }
             })
         },
-        changeLang(){
+        changeLang () {
             Vue.config.lang = this.lang
             sessionStorage.removeItem('lang')
             sessionStorage.setItem('lang', this.lang)
