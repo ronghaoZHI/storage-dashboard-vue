@@ -13,7 +13,7 @@
     </span>
 </template>
 <script>
-    const prefixCls = 'bsc-breadcrumb-item';
+    const prefixCls = 'bsc-breadcrumb-item'
 
     export default {
         name: 'BscBreadcrumbItem',
@@ -34,24 +34,24 @@
         },
         computed: {
             linkClasses () {
-                return `${prefixCls}-link`;
+                return `${prefixCls}-link`
             },
             separatorClasses () {
-                return `${prefixCls}-separator`;
+                return `${prefixCls}-separator`
             }
         },
         mounted () {
-            this.showSeparator = this.$slots.separator !== undefined;
+            this.showSeparator = this.$slots.separator !== undefined
         },
         methods: {
             handleClick () {
-                const isRoute = this.$router;
+                const isRoute = this.$router
                 if (isRoute) {
-                    this.replace ? this.$router.replace(this.href) : this.$router.push(this.href);
+                    this.replace ? this.$router.replace(this.href) : this.$router.push(this.href)
                 } else {
-                    window.location.href = this.href;
+                    window.location.href = this.href
                 }
             }
         }
-    };
+    }
 </script>

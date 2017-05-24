@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-    const prefixCls = 'bsc-breadcrumb';
+    const prefixCls = 'bsc-breadcrumb'
 
     export default {
         name: 'bscBreadcrumb',
@@ -16,30 +16,30 @@
         },
         computed: {
             classes () {
-                return `${prefixCls}`;
+                return `${prefixCls}`
             }
         },
         mounted () {
-            this.updateChildren();
+            this.updateChildren()
         },
         updated () {
             this.$nextTick(() => {
-                this.updateChildren();
-            });
+                this.updateChildren()
+            })
         },
         methods: {
             updateChildren () {
                 this.$children.forEach((child) => {
-                    child.separator = this.separator;
-                });
+                    child.separator = this.separator
+                })
             }
         },
         watch: {
             separator () {
-                this.updateChildren();
+                this.updateChildren()
             }
         }
-    };
+    }
 </script>
 <style lang="less">
 .bsc-breadcrumb {
