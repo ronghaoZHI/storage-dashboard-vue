@@ -6,6 +6,7 @@
                 <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode">Add user</Button>
                 <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode">{{$t("STORAGE.AUTHORIZATION")}}Authorization</Button></Tooltip>
                 <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button></Tooltip>
+                <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goPictureStyles()">{{$t("STORAGE.PIC_STYLE")}}</Button></Tooltip>
                 <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button></Tooltip>
             </div>
         </div>
@@ -199,6 +200,11 @@ export default {
             const bucket = this.selectedBucket
             this.$store.dispatch('selectBucket', bucket)
             this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name } })
+        },
+        goPictureStyles(){
+            const bucket = this.selectedBucket
+            this.$store.dispatch('selectBucket', bucket)
+            this.$router.push({ name: 'pictureStyles', params: { bucket: bucket.Name } })
         },
         rowClick (item) {
             this.selectedBucket = this.selectedBucket === item ? {} : item

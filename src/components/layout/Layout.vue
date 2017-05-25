@@ -251,4 +251,10 @@ fieldset[disabled] .ivu-btn-primary:hover {
     font-size: 12px !important;
     border-radius: 3px !important;
 }
+
+.clearfix{
+    overflow: auto;
+    zoom: 1;
+}
+
 </style>

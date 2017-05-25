@@ -7,6 +7,8 @@ import Machine from '@/pages/machine/Machine'
 import Keychain from '@/pages/keychain/Keychain'
 import Login from '@/pages/login/Login'
 import Settings from '@/pages/bucket/Settings'
+import PictureStyles from '@/pages/bucket/PictureStyles'
+import EditStyles from '@/pages/bucket/EditStyles'
 import FilePermissions from '@/pages/bucket/FilePermissions'
 
 const layoutChild = [{
@@ -42,6 +44,16 @@ const layoutChild = [{
     name: 'bucketSettings',
     meta: { title: 'Bucket Settings', ali: 'bucket' },
     component: Settings
+}, {
+    path: '/bucket/:bucket/pictureStyles',
+    name: 'pictureStyles',
+    meta: { title: 'Picture Styles', ali: 'bucket' },
+    component: PictureStyles
+}, {
+    path: '/bucket/:bucket/pictureStyles/editStyles',
+    name: 'editStyles',
+    meta: { title: 'Edit Styles', ali: 'bucket' },
+    component: EditStyles
 }, {
     path: '/bucket/:bucket/prefix/:prefix/key/:key/FilePermissions',
     name: 'FilePermissions',
