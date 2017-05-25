@@ -18,18 +18,16 @@ import user from '@/store/modules/user'
 import headerTop from '../header'
 import menuLeft from '../menu'
 export default {
-    data() {
-        return {
-
-        }
+    data () {
+        return {}
     },
     components: { headerTop, menuLeft },
     computed: {
-        username() {
+        username () {
             return user.state.username
         }
-    },
-};
+    }
+}
 </script>
 
 <style lang="less">

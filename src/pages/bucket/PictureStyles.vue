@@ -15,36 +15,30 @@
 </template>
 
 <script>
-import { handler } from '@/service/Aws'
 export default {
-    data() {
-        return {
-            
-        }
+    data () {
+        return {}
     },
     computed: {
-        bucket() {
+        bucket () {
             return this.$route.params.bucket
-        },
-       
+        }
     },
-    mounted() {
+    mounted () {
         this.getPicStylesdList()
     },
     methods: {
-        getPicStylesdList(){
-
-        },
-        goCreateStyle(){
+        getPicStylesdList () {},
+        goCreateStyle () {
             const bucket = this.bucket
             this.$router.push({ name: 'editStyles', params: { bucket: bucket } })
-        },
+        }
     },
     watch: {
         // the contents array need refresh when the $route value changed
-        '$route'(to, from) {
+        '$route' (to, from) {
             to.path !== from.path && this.getData()
-        },
+        }
     }
 }
 </script>

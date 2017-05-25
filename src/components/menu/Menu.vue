@@ -15,21 +15,18 @@
 import iconBucket from '../../assets/icon-bucket.png'
 import iconDashboard from '../../assets/icon-dashboard.png'
 import iconKey from '../../assets/icon-key.png'
-import iconMachine from '../../assets/icon-machine.png'
-import iconPartition from '../../assets/icon-partition.png'
-import user from '@/store/modules/user'
 export default {
-    data() {
+    data () {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            menuList: ONLINE_USER,
+            menuList: ONLINE_USER
         }
     },
     methods: {
-        goRouter(link) {
+        goRouter (link) {
             this.$router.push({ name: link })
-        },
+        }
     }
 }
 
@@ -50,21 +47,7 @@ const keychain = {
     name: 'keychain',
     icon: iconKey
 }
-
-const machine = {
-    index: 4,
-    name: 'machine',
-    icon: iconMachine
-}
-
-const partition = {
-    index: 5,
-    name: 'partition',
-    icon: iconPartition
-}
 const ONLINE_USER = [bucket, dashboard, keychain]
-const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
-const OFFLINE_USER = [bucket, keychain]
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';

@@ -40,39 +40,39 @@
 <script>
 import { handler } from '@/service/Aws'
 export default {
-    data() {
+    data () {
         return {
             bucketList: this.bucketList,
             adultPolify: {},
             createBucketModal: false,
             inputCheck: false,
-            createBucketValue: '',
+            createBucketValue: ''
         }
     },
     props: ['bucket'],
     computed: {
-        enabledVertify(){
-            return _.findKey(this.bucketList , ['Name', this.adultPolify.isolate_bucket]) === undefined
+        enabledVertify () {
+            return _.findKey(this.bucketList, ['Name', this.adultPolify.isolate_bucket]) === undefined
         }
     },
-    mounted() {
+    mounted () {
         this.getBucketList()
         this.getBucketPolicy()
     },
     methods: {
-        async getBucketList() {
+        async getBucketList () {
             try {
                 let res = await handler('listBuckets')
                 this.bucketList = [...res.Buckets]
-                _.remove(this.bucketList, n => n.Name == this.bucket)
+                _.remove(this.bucketList, n => n.Name === this.bucket)
             } catch (error) {
-                this.$Message.error(this.$t("DASHBOARD.GET_BUCKET_FAILED"))
+                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
             };
         },
-        async getBucketPolicy() {
+        async getBucketPolicy () {
             try {
                 let res = await handler('getBucketPolicy', {
-                    Bucket: this.bucket,
+                    Bucket: this.bucket
                 })
                 let policy = JSON.parse(res.Policy)
                 if (_.includes(JSON.stringify(policy), '"adult":')) {
@@ -82,10 +82,10 @@ export default {
                     this.putBucketPolicy()
                 }
             } catch (error) {
-                this.$Message.error(this.$t("STORAGE.GET_ADULT_FAILED"))
+                this.$Message.error(this.$t('STORAGE.GET_ADULT_FAILED'))
             };
         },
-        async putBucketPolicy() {
+        async putBucketPolicy () {
             let boolPolify = convertPolify2Bool(_.cloneDeep(this.adultPolify))
             try {
                 await handler('putBucketPolicy', {
@@ -94,33 +94,33 @@ export default {
                 })
             } catch (error) {
                 this.getBucketPolicy()
-                this.$Message.error(this.$t("STORAGE.POLOCY_FAILED"))
+                this.$Message.error(this.$t('STORAGE.POLOCY_FAILED'))
             };
         },
-        addBucket() {
+        addBucket () {
             let self = this
             if (this.createBucketValue.length > 2) {
                 handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
-                    self.$Message.success(this.$t("STORAGE.ADD_BUCKET_SUCCESS"))
+                    self.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
                     self.getBucketList()
                     self.createBucketValue = ''
                 }, error => {
                     self.$Message.error(error.message)
                 })
             } else {
-                this.$Message.warning(this.$t("STORAGE.ADD_BUCKET_CHECK"))
+                this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
             }
         },
-        check() {
-            this.inputCheck = this.createBucketValue.length > 2 ? false : true
+        check () {
+            this.inputCheck = this.createBucketValue.length < 2
         },
-        async putUnionPolicy(unionBucket) {
-            if(this.enabledVertify){
+        async putUnionPolicy (unionBucket) {
+            if (this.enabledVertify) {
                 return
             }
             let union = {
-                union:{
-                    'picAdult':unionBucket
+                union: {
+                    'picAdult': unionBucket
                 }
             }
             try {
@@ -129,18 +129,18 @@ export default {
                     Policy: JSON.stringify(union)
                 })
             } catch (error) {
-                console.error("putUnionPolicy",error)
+                console.error('putUnionPolicy', error)
             };
-        },
+        }
     },
     watch: {
-        //arrow function can not be used in watcher
+        //  arrow function can not be used in watcher
         'adultPolify': {
-            handler: function(to, from){ from.enabled ===undefined ? '': this.putBucketPolicy()},
+            handler: function (to, from) { from.enabled === undefined ? '' : this.putBucketPolicy() },
             deep: true
         },
-        'adultPolify.enabled'(to,from){
-            to ? this.putUnionPolicy(this.bucket):this.putUnionPolicy('')
+        'adultPolify.enabled' (to, from) {
+            to ? this.putUnionPolicy(this.bucket) : this.putUnionPolicy('')
         }
     }
 }
@@ -151,18 +151,18 @@ const defultAdultPolify = {
     'isolate_bucket': ''
 }
 const convertPolify2Bool = (polify) => {
-    polify.delete = polify.delete == 'T' ? true : false
+    polify.delete = polify.delete === 'T'
     let polifyObj = {
         'cognitive': {
             'computer_vision': {
-                'adult': polify,
-            },
-        },
+                'adult': polify
+            }
+        }
     }
     return polifyObj
 }
 const convertPolify2String = (polify) => {
-    polify.delete = polify.delete == true ? "T" : "F"
+    polify.delete = polify.delete ? 'T' : 'F'
     return polify
 }
 </script>

@@ -11,7 +11,7 @@ export default {
     name: 'app',
     components: {loading},
     directives: {
-        //remove the default drop and drag actions 
+        // remove the default drop and drag actions
         drop: {
             bind: function (el) {
                 let doc = document.getElementsByTagName('body')[0]

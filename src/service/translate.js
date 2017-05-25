@@ -11,7 +11,7 @@ export const messages = {
             RESET: 'Reset',
             COPY: 'Copy',
             LOADING: 'Loading...',
-            LINK_CONVERSION: 'Link conversion',
+            LINK_CONVERSION: 'Link conversion'
         },
         LOGIN: {
             TITLE: 'LOGIN',
@@ -24,7 +24,7 @@ export const messages = {
             BUTTON_LOGIN: 'Login',
             LOGIN_FAILED: 'Login failed',
             VALIDATE_FAILED: 'Input validate failed',
-            LOGIN_AGAIN: 'Need to login again',
+            LOGIN_AGAIN: 'Need to login again'
         },
         NAV: {
             DOC: 'Documentation',
@@ -32,7 +32,7 @@ export const messages = {
             CHANGE_PASSWORD: 'Change password',
             NEW_PASSWORD: 'New password',
             CHANGE_PASSWORD_FAILED: 'Change password failed',
-            PASSWORD_CHECK: 'The password requires 6 charactors',
+            PASSWORD_CHECK: 'The password requires 6 charactors'
         },
         SIDEBAR: {
             BUCKET: 'My Storage',
@@ -91,7 +91,6 @@ export const messages = {
             FOLDER_PLACEHOLDER: 'Requires folder name',
             FOLDER_CHECKINFO: 'Requires 1 characters',
             NO_TITLE: 'no title',
-            FILE_PERMISSIONS: 'File Permissions',
             NO_FILE: 'No file',
             COPY_LINK_CONFIRM: 'Copy {selectedFileKey} link?',
             COPIED: 'Copied',
@@ -183,7 +182,6 @@ export const messages = {
             DOWNLOAD_SPACE_ALL_INFO: 'The bytes downloaded traffic within selected date range.',
             DOWNLOAD_COUNT_ALL_INFO: 'The number of download requests within selected date range.',
             UPLOAD_COUNT_ALL_INFO: 'The number of upload requests within selected date range.',
-            CAPACITY: 'Capacity',
             UPLOAD_SPACE: 'Upload traffic',
             DOWNLOAD_SPACE: 'Download traffic',
             DOWNLOAD_COUNT: 'Downloads',
@@ -194,8 +192,7 @@ export const messages = {
             DOWNLOAD_COUNT_INFO: 'The number of download requests within a day',
             UPLOAD_COUNT_INFO: 'The number of upload and delete requests within a day',
             UNIT: 'unit',
-            TIMES: 'times',
-            GET_BUCKET_FAILED: 'Get bucket list fail',
+            GET_BUCKET_FAILED: 'Get bucket list fail'
         },
         i: {
             select: {
@@ -303,7 +300,7 @@ export const messages = {
             RESET: '重置',
             COPY: '复制',
             LOADING: '加载中...',
-            LINK_CONVERSION: 'url转换',
+            LINK_CONVERSION: 'url转换'
         },
         LOGIN: {
             TITLE: '登 录',
@@ -316,7 +313,7 @@ export const messages = {
             BUTTON_LOGIN: '登 录',
             LOGIN_FAILED: '登录失败',
             VALIDATE_FAILED: '验证失败',
-            LOGIN_AGAIN: '请重新登录',
+            LOGIN_AGAIN: '请重新登录'
         },
         NAV: {
             DOC: '帮助文档',
@@ -324,7 +321,7 @@ export const messages = {
             CHANGE_PASSWORD: '修改密码',
             NEW_PASSWORD: '新密码',
             CHANGE_PASSWORD_FAILED: '修改密码失败',
-            PASSWORD_CHECK: '密码不能少于6个字符',
+            PASSWORD_CHECK: '密码不能少于6个字符'
         },
         SIDEBAR: {
             BUCKET: '我的存储',
@@ -383,7 +380,6 @@ export const messages = {
             FOLDER_PLACEHOLDER: '文件夹名称',
             FOLDER_CHECKINFO: '文件夹名称不可少于一个字符',
             NO_TITLE: '无标题',
-            FILE_PERMISSIONS: '权限设置',
             NO_FILE: '文件夹／Bucket为空',
             COPY_LINK_CONFIRM: '确定复制 {selectedFileKey} 的链接吗?',
             COPIED: '复制成功',
@@ -459,7 +455,6 @@ export const messages = {
             BANDWIDTH: '带宽',
             BANDWIDTH_PEAK: '带宽峰值',
             FLOW: '流量',
-            CAPACITY: '存储空间',
             CAPACITY_ALL: '总存储容量',
             UPLOAD_SPACE_ALL: '总上传流量',
             DOWNLOAD_SPACE_ALL: '总下载流量',
@@ -485,7 +480,7 @@ export const messages = {
             DOWNLOAD_SPACE_INFO: '某天的下载流量',
             DOWNLOAD_COUNT_INFO: '某天的读请求数',
             UPLOAD_COUNT_INFO: '某天的写请求数',
-            GET_BUCKET_FAILED: '获取Bucket列表失败',
+            GET_BUCKET_FAILED: '获取Bucket列表失败'
         },
         i: {
             select: {

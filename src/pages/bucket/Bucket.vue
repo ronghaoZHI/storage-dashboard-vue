@@ -201,7 +201,7 @@ export default {
             this.$store.dispatch('selectBucket', bucket)
             this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name } })
         },
-        goPictureStyles(){
+        goPictureStyles () {
             const bucket = this.selectedBucket
             this.$store.dispatch('selectBucket', bucket)
             this.$router.push({ name: 'pictureStyles', params: { bucket: bucket.Name } })

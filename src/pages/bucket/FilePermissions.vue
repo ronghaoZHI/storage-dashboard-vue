@@ -168,7 +168,7 @@
 import { handler } from '@/service/Aws'
 import { convertPrefix2Router } from '@/service/bucketService'
 export default {
-    data() {
+    data () {
         return {
             self: this,
             GroupACLList: this.GroupACLList,
@@ -184,62 +184,62 @@ export default {
                 }
             },
             iconSize: 16,
-            deleteList: [],
+            deleteList: []
         }
     },
     props: ['bucket', 'filePrefix', 'itemKey'],
     computed: {
-        prefix() {
+        prefix () {
             return this.filePrefix + this.itemKey
         },
-        isAddVerified() {
+        isAddVerified () {
             let name = this.newUserItem.name
             let { READ, READ_ACP, WRITE_ACP } = this.newUserItem.Permission
             return name && (READ || READ_ACP || WRITE_ACP)
         },
-        breadcrumb() {
+        breadcrumb () {
             return convertPrefix2Router(this.prefix)
         }
     },
-    mounted() {
-            this.getACLList()
+    mounted () {
+        this.getACLList()
     },
     methods: {
-        async getACLList() {
+        async getACLList () {
             this.$Loading.start()
             try {
                 let res = await handler('getObjectAcl', {
                     Bucket: this.bucket,
-                    Key: this.prefix,
+                    Key: this.prefix
                 })
                 this.GroupACLList = convertGrants(res.Grants)[0]
                 this.UserACLList = convertGrants(res.Grants)[1]
                 this.Data = {
                     bucket: this.bucket,
                     grants: res.Grants,
-                    owner: res.Owner,
-                };
-                this.owner = res.Owner.ID;
+                    owner: res.Owner
+                }
+                this.owner = res.Owner.ID
             } catch (error) {
-                this.$Message.error(this.$t("STORAGE.GET_PERMISSION_FAILED"));
+                this.$Message.error(this.$t('STORAGE.GET_PERMISSION_FAILED'))
             }
             this.$Loading.finish()
         },
-        async ACLsubmitForm() {
+        async ACLsubmitForm () {
             this.$Loading.start()
-            let originItems = [...this.GroupACLList, ...this.UserACLList, ...this.deleteList];
+            let originItems = [...this.GroupACLList, ...this.UserACLList, ...this.deleteList]
             let items = _.cloneDeep(originItems)
             if (this.isAdd) {
-                this.newUserItemPut = convertNewUserItem(this.newUserItem);
+                this.newUserItemPut = convertNewUserItem(this.newUserItem)
                 items = items.concat(this.newUserItemPut)
             }
             items = _.filter(items, value => {
-                value.Permission = convertObject2String(value.Permission);
-                return value.Permission.length > 0;
-            });
+                value.Permission = convertObject2String(value.Permission)
+                return value.Permission.length > 0
+            })
             if (items.length === 0) {
-                this.$Message.error(this.$t("STORAGE.PERMISSION_EMPTY"));
-                return false;
+                this.$Message.error(this.$t('STORAGE.PERMISSION_EMPTY'))
+                return false
             }
             let params = {
                 Bucket: this.bucket,
@@ -248,39 +248,39 @@ export default {
                     Grants: items,
                     Owner: this.Data.owner
                 }
-            };
+            }
             try {
                 await handler('putObjectAcl', params)
-                this.$Message.success(this.$t("STORAGE.PERMISSION_SUCCESS"));
+                this.$Message.success(this.$t('STORAGE.PERMISSION_SUCCESS'))
                 this.deleteList = []
-                if(this.isAdd){
+                if (this.isAdd) {
                     this.UserACLList = this.UserACLList.concat(convertNewUserItem(this.newUserItem))
                     this.isAdd = false
                 }
                 this.$emit('permissionSuccess')
             } catch (error) {
-                this.$Message.error(this.$t("STORAGE.PERMISSION_FAILED"));
+                this.$Message.error(this.$t('STORAGE.PERMISSION_FAILED'))
             }
             this.$Loading.finish()
         },
-        deleteUser(item) {
+        deleteUser (item) {
             item.Permission = {
                 READ: false,
                 READ_ACP: false,
                 WRITE_ACP: false
-            },
-            this.deleteList.push(item);
-            this.UserACLList = this.UserACLList.filter(val => val != item)
+            }
+            this.deleteList.push(item)
+            this.UserACLList = this.UserACLList.filter(val => val !== item)
         },
-        newUserItemInit() {
+        newUserItemInit () {
             this.newUserItem = {
                 Permission: { ...permissionFalse },
-                name: '',
+                name: ''
             }
         },
-        getUrl(prefix) {
+        getUrl (prefix) {
             return `/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
-        },
+        }
     }
 }
 
@@ -295,30 +295,26 @@ const gropItemsDefaultInit = () => {
         Grantee: {
             URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
             Type: 'Group'
-        },
+        }
     }, {
         Permission: { ...permissionFalse },
         Grantee: {
             URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
             Type: 'Group'
-        },
-    }];
-    return gropItemsDefault;
+        }
+    }]
+    return gropItemsDefault
 }
 
 const userItemsDefaultInit = () => {
     let userACLItemsDefault = {
         Permission: { ...permissionFalse },
-        Grantee: {},
-    };
-    return userACLItemsDefault;
+        Grantee: {}
+    }
+    return userACLItemsDefault
 }
 const convertGrants = grants => {
-    let [aclitems, userACLItems, IDArry] = [
-        [],
-        [],
-        []
-    ]
+    let userACLItems = []
     if (grants.length) {
         let IDArry = []
         var gropItemsDefault = gropItemsDefaultInit()
@@ -365,9 +361,9 @@ const convertObject2String = (object) => {
 const convertNewUserItem = item => {
     let newItem = { ...item }
     newItem.Grantee = item.name.includes('@') ? { Type: 'AmazonCustomerByEmail', EmailAddress: item.name } : { Type: 'CanonicalUser', ID: item.name }
-    delete newItem.name;
-    return newItem;
-} 
+    delete newItem.name
+    return newItem
+}
 </script>
 <style type="less">
 .pull-right {

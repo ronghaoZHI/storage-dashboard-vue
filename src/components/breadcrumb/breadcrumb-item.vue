@@ -30,7 +30,7 @@
             return {
                 separator: '',
                 showSeparator: false
-            };
+            }
         },
         computed: {
             linkClasses () {

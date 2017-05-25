@@ -45,7 +45,7 @@ import { LOGOUT, REPASSWORD } from '@/service/API'
 import { clear } from '@/service/Aws'
 import user from '@/store/modules/user'
 export default {
-    data() {
+    data () {
         return {
             rePasswordModal: false,
             rePasswordForm: {
@@ -53,14 +53,14 @@ export default {
             },
             ruleValidate: {
                 password: [
-                    { required: true,len: 6, message: 'Requires 6 charactors', trigger: 'blur' }
+                    { required: true, len: 6, message: 'Requires 6 charactors', trigger: 'blur' }
                 ]
             }
         }
     },
     props: ['username'],
     methods: {
-        async menuClick(name) {
+        async menuClick (name) {
             if (name === 'logout') {
                 try {
                     await this.$http.post(LOGOUT)
@@ -75,22 +75,22 @@ export default {
                 this.rePasswordModal = true
             }
         },
-        async changePassword() {
-            if(this.rePasswordForm.password.length < 6){
-                this.$Message.error(this.$t("NAV.PASSWORD_CHECK"))
+        async changePassword () {
+            if (this.rePasswordForm.password.length < 6) {
+                this.$Message.error(this.$t('NAV.PASSWORD_CHECK'))
                 return false
             }
             try {
-                await this.$http.post(REPASSWORD,{email: user.state.email,password:this.rePasswordForm.password})
+                await this.$http.post(REPASSWORD, {email: user.state.email, password: this.rePasswordForm.password})
                 await this.$http.post(LOGOUT)
                 await this.$store.dispatch('logout')
                 this.$router.push('/login')
             } catch (error) {
                 console.log(error)
-                this.$Message.error(this.$t("NAV.CHANGE_PASSWORD_FAILED"))
+                this.$Message.error(this.$t('NAV.CHANGE_PASSWORD_FAILED'))
             }
         },
-        openDoc() {
+        openDoc () {
             window.open('http://doc.bscstorage.com')
         }
     }

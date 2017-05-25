@@ -151,77 +151,71 @@
         </Tabs>
     </div>
 </template>
-
 <script>
-import { handler } from '@/service/Aws'
-import { Slider,Compact,Photoshop,Swatches} from 'vue-color'
+import {Slider, Compact, Photoshop, Swatches} from 'vue-color'
 export default {
-    data() {
+    data () {
         return {
-            transformation:this.transformation,
-            crop:'noCrop',
-            sharpen:false,
-            quality:20,
-            format:'original',
-            formatList:['original','png','webp','jpeg','jpg'],
-            watermark:false,
-            watermarkerType:'text',
-            fontList:['宋体','黑体','楷体','隶书','幼园','仿宋','Arial','Georgia','Helvetica','Times-new-roman'],
-            font_family:'宋体',
-            font_size:16,
-            overlay:'',
+            transformation: this.transformation,
+            crop: 'noCrop',
+            sharpen: false,
+            quality: 20,
+            format: 'original',
+            formatList: ['original', 'png', 'webp', 'jpeg', 'jpg'],
+            watermark: false,
+            watermarkerType: 'text',
+            fontList: ['宋体', '黑体', '楷体', '隶书', '幼园', '仿宋', 'Arial', 'Georgia', 'Helvetica', 'Times-new-roman'],
+            font_family: '宋体',
+            font_size: 16,
+            overlay: '',
             stroke: false,
-            stroke_size:2,
-            watermarkGravity:'north_west',
-            paddingLeft:10,
-            paddingTop:10,
-            opacity:90,
+            stroke_size: 2,
+            watermarkGravity: 'north_west',
+            paddingLeft: 10,
+            paddingTop: 10,
+            opacity: 90,
             colors: defaultProps,
-            font_color:defaultProps,
-            fontSizeColorPicker:true,
+            font_color: defaultProps,
+            fontSizeColorPicker: true
         }
     },
-    components: {'photoshop-picker': Photoshop,'slider-picker': Slider,'compact-picker': Compact,'swatches-picker':Swatches},
+    components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches },
     computed: {
-        bucket() {
+        bucket () {
             return this.$route.params.bucket
-        },
-       
+        }
     },
-    
-    mounted() {
+    mounted () {
     },
-    methods: {
-        
-    },
+    methods: {},
     watch: {
         // the contents array need refresh when the $route value changed
-        '$route'(to, from) {
+        '$route' (to, from) {
             to.path !== from.path && this.getData()
-        },
+        }
     }
 }
 const defaultProps = {
-  hex: '#194d33',
-  hsl: {
-    h: 150,
-    s: 0.5,
-    l: 0.2,
+    hex: '#194d33',
+    hsl: {
+        h: 150,
+        s: 0.5,
+        l: 0.2,
+        a: 1
+    },
+    hsv: {
+        h: 150,
+        s: 0.66,
+        v: 0.30,
+        a: 1
+    },
+    rgba: {
+        r: 25,
+        g: 77,
+        b: 51,
+        a: 1
+    },
     a: 1
-  },
-  hsv: {
-    h: 150,
-    s: 0.66,
-    v: 0.30,
-    a: 1
-  },
-  rgba: {
-    r: 25,
-    g: 77,
-    b: 51,
-    a: 1
-  },
-  a: 1
 }
 
 </script>

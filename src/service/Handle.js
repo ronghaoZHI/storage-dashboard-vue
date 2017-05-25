@@ -1,4 +1,3 @@
-import { HOST } from './HOST'
 import { USERINFO } from './API'
 import axios from './axios-bsc'
 

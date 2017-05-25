@@ -14,7 +14,7 @@
 
 export default {
     computed: {
-        isShow() {
+        isShow () {
             return this.$store.state.loading
         }
     }

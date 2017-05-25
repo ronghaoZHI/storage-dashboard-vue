@@ -5,7 +5,6 @@
 </template>
 <script>
 import { NODE } from '@/service/API'
-import moment from 'moment'
 export default {
     data () {
         return {
