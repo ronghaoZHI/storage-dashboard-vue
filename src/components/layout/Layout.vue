@@ -33,31 +33,28 @@ export default {
 </script>
 
 <style lang="less">
+@import '../../styles/index.less';
+
 .layout {
     height: 100%;
 }
 
 .layout-row {
     min-height: 100%;
-    display: inline-flex;
-    flex-direction: column;
+    .ff();
     .layout-container {
         flex: 1;
-        margin-left: 200px;
+        margin-left: @layout-margin-left;
     }
 }
 
 .flex-box {
-    display: flex;
-    flex-direction: column;
+    .ff(flex);
     text-align: left;
 }
 
 .layout-bsc-toolbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    .fb(space-between,center,flex);
     margin-bottom: 14px;
 }
 
@@ -90,20 +87,16 @@ export default {
 
 .section-separator {
     height: 16px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+    .fb(center,center,inline-flex);
     margin-bottom: 10px;
     .separator-icon {
         display: inline-block;
-        width: 3px;
-        height: 100%;
+        .wh(3px,100%);
         background: #20a0ff;
         margin-right: 8px;
     }
     .separator-info {
-        font-size: 16px;
-        color: #657180;
+        .sc(16px,#657180);
     }
 }
 
@@ -117,8 +110,7 @@ export default {
 .table-permission {
     width: 100%;
     margin-bottom: 34px;
-    color: #475669;
-    font-size: 14px;
+    .sc(14px,#475669);
     background-color: #fff;
     border: 1px solid #e5e9f2;
     border-collapse: collapse;

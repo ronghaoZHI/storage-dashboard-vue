@@ -359,7 +359,7 @@ const InitOptions = data => {
         yAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return data.unit === 'byte' ? bytes(value) : timesK(value) + 'times'
+                    return data.unit === 'byte' ? bytes(value) : timesK(value) + ' times'
                 }
             }
         }

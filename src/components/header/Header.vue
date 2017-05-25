@@ -97,32 +97,27 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
+
 .layout-header {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    width: 100%;
-    background: #20a0ff;
+    .fb(space-between,center);
+    .wh(100%,60px);
+    background: @primary-color;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     position: fixed;
     z-index: 1000;
-    padding-right: 200px;
+    padding-right: @layout-margin-left;
     .layout-header-right {
         margin-right: 16px;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
+        .fb(center,center);
     }
     .dropdown-link {
-        color: #fff;
-        font-size: 18px;
+        .sc(18px,@menu-text-color);
     }
 }
 
 .button-document {
-    font-size: 18px;
-    color: #fff;
+    .sc(18px,@menu-text-color);
     font-weight: bolder;
     padding-right: 10px;
     margin-right: 10px;
@@ -137,14 +132,10 @@ export default {
 
 .layout-header-left {
     a {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 18px;
+        .fb(center,center);
+        .sc(18px,@menu-text-color);
         font-weight: bolder;
-        height: 60px;
-        width: 140px;
-        color: #fff;
+        .wh(140px,60px);
     }
     .active{
         background-color: #1d8ce0;
@@ -154,8 +145,7 @@ export default {
     margin-bottom: 0
 }
 .icon-top-down {
-    font-size: 16px;
+    .sc(16px,@menu-text-color);
     padding-left: 8px;
-    color: #fff
 }
 </style>

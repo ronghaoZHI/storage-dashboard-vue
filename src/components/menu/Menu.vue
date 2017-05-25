@@ -67,13 +67,14 @@ const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
 const OFFLINE_USER = [bucket, keychain]
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
+
 .layout-menu {
-    width: 200px;
-    background: #2e373e;
+    .wh(200px, 100%);
+    background: @menu-background;
     position: fixed;
-    height: 100%;
     .ivu-menu-dark {
-        background: #2e373e;
+        background: @menu-background;
     }
     .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu),
     .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):hover,
@@ -81,20 +82,15 @@ const OFFLINE_USER = [bucket, keychain]
     .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover {
         border-left: 4px solid #39f;
         border-right: 0;
-        background: #3a434b;
+        background: @menu-background-active;
         color: #fff;
     }
 }
 
 .layout-logo-left {
-    width: 90%;
-    height: 30px;
-    border-radius: 3px;
+    .wh(90%,30px);
+    border-radius: @common-radius;
     margin: 15px auto;
-}
-
-.layout-ceiling-main a {
-    color: #9ba7b5;
 }
 
 .ivu-col {
@@ -103,9 +99,7 @@ const OFFLINE_USER = [bucket, keychain]
 
 .ivu-menu-item {
     border-left: 4px solid #2e373e;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: left;
+    .fb(left,flex-start);
     width: 100%;
     span {
         margin-left: 5px;

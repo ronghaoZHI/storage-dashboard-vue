@@ -26,11 +26,12 @@ export default {
 </script>
 
 <style lang="less">
+@import './styles/index.less';
+
 html,
 body {
-    height: 100%;
-    width: 100%;
-    min-width: 1210px;
+    .wh(100%,100%);
+    min-width: @body-min-width;
     overflow: inherit;
 }
 
@@ -38,7 +39,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
     height: 100%;
     overflow-y: auto;
 }
