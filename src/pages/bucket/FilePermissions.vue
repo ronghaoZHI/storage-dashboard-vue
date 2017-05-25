@@ -7,7 +7,7 @@
         <table class="table-permission">
             <thead>
                 <tr>
-                    <th class="percent20"> {{$t("STORAGE.ACL_GROUP")}}
+                    <th class="percent30"> {{$t("STORAGE.ACL_GROUP")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -15,7 +15,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent30">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent25">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -31,7 +31,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent20"></th>
+                    <th class="percent25"></th>
                 </tr>
             </thead>
             <tbody>
@@ -64,7 +64,7 @@
         <table class="table-permission">
             <thead>
                 <tr>
-                    <th class="percent20"> {{$t("STORAGE.USER")}}
+                    <th class="percent30"> {{$t("STORAGE.USER")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -72,7 +72,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent30">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent25">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -88,7 +88,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent20"></th>
+                    <th class="percent25"></th>
                 </tr>
             </thead>
             <tbody>
@@ -384,8 +384,8 @@ const convertNewUserItem = item => {
 .new-user-button {
     width:30%;
 }
-.table-permission th.percent20 {
-    width:20%;
+.table-permission th.percent25 {
+    width:25%;
 }
 .table-permission th.percent30 {
     width:30%;
