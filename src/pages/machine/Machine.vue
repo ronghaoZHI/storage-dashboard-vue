@@ -1,6 +1,11 @@
 <template>
     <div>
-        <Table :columns="columns" :data="data" no-data-text="No data"></Table>
+        <div class="bsc-flex-section">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
     </div>
 </template>
 <script>
@@ -58,5 +63,19 @@ export default {
 
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 
+.bsc-flex-section {
+    min-height: 100%;
+    width: 100%;
+    .fb(flex-start, flex-start);
+    flex-wrap: wrap;
+
+    & > div {
+        .wh(300px, 300px);
+        margin: 0 15px 15px 0;
+        padding: 16px;
+        border: 1px solid #eee;
+    }
+}
 </style>

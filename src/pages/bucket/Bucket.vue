@@ -9,7 +9,7 @@
                 <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button></Tooltip>
             </div>
         </div>
-        <div class="section-iconmode">
+        <div class="bsc-flex-section">
             <div class="bucket" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
@@ -157,7 +157,7 @@ export default {
                 removeItemFromArray(this.bucketList, bucket)
 
                 this.selectedBucket = {}
-                _.each(document.querySelector('.section-iconmode').childNodes, (node) => {
+                _.each(document.querySelector('.bsc-flex-section').childNodes, (node) => {
                     node.classList.remove('bucket-selected')
                 })
             } catch (error) {
@@ -275,7 +275,7 @@ const headSetting = [
 
 </script>
 <style lang="less" scoped>
-.section-iconmode {
+.bsc-flex-section {
     min-height: 100%;
     width: 100%;
     display: inline-flex;
