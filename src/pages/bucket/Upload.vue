@@ -37,7 +37,8 @@ import { bytes } from '@/service/bucketService'
 export default {
     data () {
         return {
-            fileList: []
+            fileList: [],
+            self: this
         }
     },
     computed: {

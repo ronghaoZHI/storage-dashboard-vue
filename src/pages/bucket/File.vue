@@ -47,7 +47,7 @@
             </div>
             <div slot="footer"></div>
         </Modal>
-        <Modal v-model="showPermissonModal" :title='$t("STORAGE.FILE_PERMISSION")' width="700">
+        <Modal v-model="showPermissonModal" :title='$t("STORAGE.FILE_PERMISSIONS")' width="700">
             <file-permission v-if="showPermissonModal" v-on:permissionSuccess="showPermissonModal = false" :bucket="bucket" :filePrefix="prefix" :itemKey="permissionKey" :show-modal="showPermissonModal"></file-permission>
             <div slot="footer" class="copy-modal-footer">
                  <Button style="visibility:hidden"
@@ -335,7 +335,7 @@ const fileHeaderSetting = [{
     align: 'right',
     render (row, column, index) {
         return row.Type === 'folder' ? `<Tooltip :content='$t("STORAGE.DELETE_FOLDER")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
-            : `<Tooltip :content='$t("STORAGE.FILE_PERMISSION")' :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+            : `<Tooltip :content='$t("STORAGE.FILE_PERMISSIONS")' :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip :content='$t("STORAGE.DOWNLOAD_FILE")' :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip :content='$t("STORAGE.IMG_PREVIEW")' :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
                         <Tooltip :content='$t("STORAGE.COPY_FILE_LINK")' :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
