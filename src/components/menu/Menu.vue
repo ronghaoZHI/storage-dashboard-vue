@@ -12,15 +12,13 @@
     </div>
 </template>
 <script>
-import iconBucket from '../../assets/icon-bucket.png'
-import iconDashboard from '../../assets/icon-dashboard.png'
-import iconKey from '../../assets/icon-key.png'
+import menuState from '@/store/modules/menu'
 export default {
     data () {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            menuList: ONLINE_USER
+            menuList: menuState.state.menuList
         }
     },
     methods: {
@@ -30,24 +28,6 @@ export default {
     }
 }
 
-const bucket = {
-    index: 1,
-    name: 'bucket',
-    icon: iconBucket
-}
-
-const dashboard = {
-    index: 2,
-    name: 'dashboard',
-    icon: iconDashboard
-}
-
-const keychain = {
-    index: 3,
-    name: 'keychain',
-    icon: iconKey
-}
-const ONLINE_USER = [bucket, dashboard, keychain]
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';

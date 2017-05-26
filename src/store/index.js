@@ -6,6 +6,7 @@ import * as getters from './getters'
 
 import bucket from './modules/bucket'
 import user from './modules/user'
+import menu from './modules/menu'
 
 Vue.use(Vuex)
 
@@ -14,10 +15,12 @@ const store = new Vuex.Store({
     getters,
     modules: {
         bucket,
-        user
+        user,
+        menu
     },
     state: {
-        loading: false
+        loading: false,
+        bucketList: []
     },
     mutations: {
         [types.LOADING] (state, bol) {
