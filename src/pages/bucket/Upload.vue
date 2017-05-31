@@ -126,7 +126,7 @@ export default {
                 ContentType: file.type,
                 Body: file
             }
-            let aws = await getAWS(360000)
+            let aws = await getAWS(3600000)
             let request = aws.upload(params, {partSize: 10000 * 1024 * 1024})
             request.on('httpUploadProgress', function (evt) {
                 item.progress = parseInt((evt.loaded * 100) / evt.total)
