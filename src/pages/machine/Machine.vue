@@ -1,45 +1,26 @@
 <template>
     <div>
         <div class="bsc-flex-section">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <machine-card></machine-card>
+            <machine-card></machine-card>
+            <machine-card></machine-card>
+            <machine-card></machine-card>
+            <machine-card></machine-card>
         </div>
     </div>
 </template>
 <script>
 import { NODE } from '@/service/API'
+import machineCard from './MachineCard'
 export default {
     data () {
-        return {
-            columns: [
-                {
-                    title: 'Hostname',
-                    key: 'hostname'
-                },
-                {
-                    title: 'Public ips',
-                    key: 'pub_ips'
-                },
-                {
-                    title: 'Inner ips',
-                    key: 'inn_ips'
-                },
-                {
-                    title: 'Inner ips',
-                    key: 'status'
-                },
-                {
-                    title: 'CPU load',
-                    key: 'cpu.load'
-                }
-            ],
-            data: []
-        }
+        return {}
     },
     mounted () {
         // this.getMachineList()
+    },
+    components: {
+        machineCard
     },
     methods: {
         async getMachineList () {
@@ -65,16 +46,15 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/index.less';
 
-.bsc-flex-section {
+.@{css-prefix}flex-section {
     min-height: 100%;
     width: 100%;
     .fb(flex-start, flex-start);
     flex-wrap: wrap;
 
     & > div {
-        .wh(300px, 300px);
+        .wh(300px, 100%);
         margin: 0 15px 15px 0;
-        padding: 16px;
         border: 1px solid #eee;
     }
 }
