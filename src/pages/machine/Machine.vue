@@ -1,23 +1,22 @@
 <template>
     <div>
         <div class="bsc-flex-section">
-            <machine-card></machine-card>
-            <machine-card></machine-card>
-            <machine-card></machine-card>
-            <machine-card></machine-card>
-            <machine-card></machine-card>
+            <machine-card v-for="item in machineList" :key="item.hostname" :data="item"></machine-card>
         </div>
     </div>
 </template>
 <script>
-import { NODE } from '@/service/API'
+import { NODE, PARTITION } from '@/service/API'
 import machineCard from './MachineCard'
 export default {
     data () {
-        return {}
+        return {
+            machineList: []
+        }
     },
     mounted () {
-        // this.getMachineList()
+        this.getMachineList()
+        this.getPartitionList()
     },
     components: {
         machineCard
@@ -27,7 +26,7 @@ export default {
             this.$Loading.start()
             try {
                 const res = await this.$http.get(NODE)
-                this.data = res.data
+                this.machineList = res.data
                 console.log(res)
                 this.$Loading.finish()
             } catch (error) {
@@ -38,6 +37,10 @@ export default {
                     query: { redirect: '/keychain' }
                 })
             }
+        },
+        async getPartitionList () {
+            const res = await this.$http.get(PARTITION)
+            console.log(res)
         }
     }
 }

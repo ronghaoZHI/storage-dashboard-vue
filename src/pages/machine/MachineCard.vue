@@ -1,22 +1,22 @@
 <template>
     <div class="bsc-machine-card">
         <div class="card-title">
-            <span>iZ25sdfasdf9zZ</span>
-            <span>CPU Load:0.53</span>
+            <span>{{data.hostname}}</span>
+            <span>CPU load: {{data.cpu.load}}</span>
         </div>
         <div class="card-chart">
             <chart :options="pieOptions" auto-resize></chart>
-            <span class="data-scale">71%</span>
+            <span class="data-scale">{{data.mem.percent}}%</span>
         </div>
         <div class="card-tooltip">
             <span>
                 <i class="tooltip-color"></i>
-                已用:2.5GB</span>
-            <span>总容量:3.5GB</span>
+                已用:{{bytes(data.mem.used)}}</span>
+            <span>总容量:{{bytes(data.mem.total)}}</span>
         </div>
         <div class="card-ip">
-            <div>Public IP:101.200.190.134</div>
-            <div>Inner IP:101.200.190.134</div>
+            <div v-for="pubip in data.pub_ips">Public IP: {{pubip}}</div>
+            <div v-for="innip in data.inn_ips">Inner IP: {{innip}}</div>
         </div>
         <div class="card-footer">
             <div v-openBtn class="button-open">
@@ -28,15 +28,10 @@
                     <span>发送</span>
                     <span>接收</span>
                 </div>
-                <div class="row-network">
-                    <span>eth01</span>
-                    <span>256.0 B</span>
-                    <span>352.0 B</span>
-                </div>
-                <div class="row-network">
-                    <span>eth02</span>
-                    <span>256.0 B</span>
-                    <span>352.0 B</span>
+                <div class="row-network" v-for="(value, key) in data.net.io">
+                    <span>{{key}}</span>
+                    <span>{{bytes(value.bytes_sent)}}</span>
+                    <span>{{bytes(value.bytes_recv)}}</span>
                 </div>
                 <div v-cloBtn class="button-close">
                     <Icon type="chevron-up"></Icon>
@@ -46,15 +41,17 @@
     </div>
 </template>
 <script>
-import ECharts from 'vue-echarts/components/ECharts.vue'
+import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
+import { bytes } from '@/service/bucketService'
 export default {
     data () {
         return {
             pieOptions: pieOptions
         }
     },
+    props: ['data'],
     components: {
         chart: ECharts
     },
@@ -76,7 +73,9 @@ export default {
             }
         }
     },
-    methods: {}
+    methods: {
+        bytes: bytes
+    }
 }
 
 const pieOptions = {
@@ -114,13 +113,11 @@ const pieOptions = {
 @import '../../styles/index.less';
 
 .@{css-prefix}machine-card {
+
+
     .card-title {
         padding: 16px 16px 0 16px;
         .sc(14px, #475669);
-
-        & > span:last-child {
-            float: right;
-        }
     }
 
     .card-chart {
@@ -129,7 +126,7 @@ const pieOptions = {
         .data-scale {
             position: relative;
             top: -98px;
-            left: 130px;
+            left: 125px;
             font-size: 20px;
             font-weight: 500;
         }
@@ -156,7 +153,6 @@ const pieOptions = {
     }
 
     .card-ip {
-        .wh(100%, 60px);
         border-top: @common-border;
         .sc(13px, #475669);
         padding-left: 16px;
@@ -166,7 +162,7 @@ const pieOptions = {
             line-height: 30px;
         }
 
-        & > div:last-child {
+        & > div:not(:first-child) {
             border-top: @common-border;
         }
     }
