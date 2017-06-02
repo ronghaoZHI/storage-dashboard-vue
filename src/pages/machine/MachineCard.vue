@@ -102,8 +102,8 @@ const pieOptions = {
             },
             color: ['#20a0ff', '#ffde2a'],
             data: [
-                {value: 335, name: '已用'},
-                {value: 310, name: '未用'}
+                { value: 335, name: '已用' },
+                { value: 310, name: '未用' }
             ]
         }
     ]
@@ -118,14 +118,14 @@ const pieOptions = {
         padding: 16px 16px 0 16px;
         .sc(14px, #475669);
 
-        &>span:last-child {
+        & > span:last-child {
             float: right;
         }
     }
 
     .card-chart {
         .wh(100%, 165px);
-        
+
         .data-scale {
             position: relative;
             top: -98px;
@@ -140,10 +140,10 @@ const pieOptions = {
         margin-bottom: 15px;
         .sc(14px, #475669);
 
-        &>span:last-child {
+        & > span:last-child {
             float: right;
         }
-        
+
         .tooltip-color {
             display: inline-block;
             position: relative;
@@ -161,12 +161,12 @@ const pieOptions = {
         .sc(13px, #475669);
         padding-left: 16px;
 
-        &>div {
+        & > div {
             height: 30px;
             line-height: 30px;
         }
 
-        &>div:last-child {
+        & > div:last-child {
             border-top: @common-border;
         }
     }
@@ -194,23 +194,28 @@ const pieOptions = {
         .card-network {
             position: absolute;
             background: #f9fafc;
-            width: 300px;
+            width: 298px;
             .sc(13px, #475669);
             line-height: 30px;
             z-index: 10000;
+            border: @common-border;
 
             .row-network {
                 width: 100%;
                 .fb(center, center);
 
-                &>span {
+                & > span {
                     flex: 1;
                     padding: 0 16px;
                     border-top: @common-border;
                 }
 
-                &>span:first-child {
+                & > span:first-child {
                     flex: 2;
+                }
+
+                & > span:not(:last-child) {
+                    border-top: @common-border;
                 }
             }
         }
