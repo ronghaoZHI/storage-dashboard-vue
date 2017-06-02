@@ -254,7 +254,7 @@ export default {
             this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
         },
         getUrl (prefix) {
-            return `/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
+            return '/bucket/' + this.bucket + '/prefix/' + repliceAllString(prefix, '/', '%2F')
         },
         upload () {
             this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
@@ -282,6 +282,13 @@ export default {
             to.path !== from.path && this.getData()
         }
     }
+}
+
+const repliceAllString = (str, oldStr, newStr) => {
+    while (str.indexOf(oldStr) > 0) {
+        str = str.replace(oldStr, newStr)
+    }
+    return str
 }
 
 const batchDeleteFileHandle = async (list, bucket, prefix) => {
