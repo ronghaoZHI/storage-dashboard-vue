@@ -2,7 +2,6 @@
     <div class="bsc-machine-card">
         <div class="card-title">
             <span>{{data.hostname}}</span>
-            <span>CPU load: {{data.cpu.load}}</span>
         </div>
         <div class="card-chart">
             <chart :options="pieOptions" auto-resize></chart>
@@ -12,7 +11,10 @@
             <span>
                 <i class="tooltip-color"></i>
                 已用:{{bytes(data.mem.used)}}</span>
-            <span>总容量:{{bytes(data.mem.total)}}</span>
+            <span>总内存:{{bytes(data.mem.total)}}</span>
+        </div>
+        <div class="card-partition">
+            <partition-node v-for="node in partitionList" :data="node" :key="node.ts"></partition-node>
         </div>
         <div class="card-ip">
             <div v-for="pubip in data.pub_ips">Public IP: {{pubip}}</div>
@@ -45,15 +47,22 @@ import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import { bytes } from '@/service/bucketService'
+import { PARTITION } from '@/service/API'
+import partitionNode from './PartitionNode'
 export default {
     data () {
         return {
-            pieOptions: pieOptions
+            pieOptions: pieOptions,
+            partitionList: []
         }
     },
     props: ['data'],
+    mounted () {
+        this.getPartitionList()
+    },
     components: {
-        chart: ECharts
+        chart: ECharts,
+        partitionNode
     },
     directives: {
         cloBtn: {
@@ -74,7 +83,11 @@ export default {
         }
     },
     methods: {
-        bytes: bytes
+        bytes: bytes,
+        async getPartitionList () {
+            const res = await this.$http.get(PARTITION)
+            this.partitionList = res.data.ok
+        }
     }
 }
 
@@ -135,7 +148,7 @@ const pieOptions = {
     .card-tooltip {
         padding: 0 30px;
         margin-bottom: 15px;
-        .sc(14px, #475669);
+        .sc(12px, #475669);
 
         & > span:last-child {
             float: right;
@@ -145,11 +158,20 @@ const pieOptions = {
             display: inline-block;
             position: relative;
             top: 2px;
-            height: 14px;
-            width: 14px;
+            height: 12px;
+            width: 12px;
             border-radius: 2px;
             background-color: @primary-color;
         }
+    }
+
+    .card-partition {
+        border-top: @common-border;
+        min-height: 100%;
+        width: 100%;
+        .fb(flex-start, flex-start);
+        flex-wrap: wrap;
+        padding: 16px;
     }
 
     .card-ip {

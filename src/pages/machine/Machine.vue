@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { NODE, PARTITION } from '@/service/API'
+import { NODE } from '@/service/API'
 import machineCard from './MachineCard'
 export default {
     data () {
@@ -16,7 +16,6 @@ export default {
     },
     mounted () {
         this.getMachineList()
-        this.getPartitionList()
     },
     components: {
         machineCard
@@ -37,10 +36,6 @@ export default {
                     query: { redirect: '/keychain' }
                 })
             }
-        },
-        async getPartitionList () {
-            const res = await this.$http.get(PARTITION)
-            console.log(res)
         }
     }
 }
