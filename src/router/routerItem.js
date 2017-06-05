@@ -51,7 +51,7 @@ const layoutChild = [{
     meta: { title: 'Picture Styles', ali: 'bucket' },
     component: PictureStyles
 }, {
-    path: '/bucket/:bucket/pictureStyles/editStyles',
+    path: '/bucket/:bucket/pictureStyles/editStyles/ruleName/:ruleName/IS/:IS',
     name: 'editStyles',
     meta: { title: 'Edit Styles', ali: 'bucket' },
     component: EditStyles

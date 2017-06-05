@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div @click="fontColorPicker = strokeColorPicker = false">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
-                <Breadcrumb-item>{{$t("STORAGE.PIC_STYLE")}} ({{bucket}})</Breadcrumb-item>
-                <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}}</Breadcrumb-item>
+                <Breadcrumb-item :href="styleListHref">{{$t("STORAGE.PIC_STYLE")}}</Breadcrumb-item>
+                <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <Tabs size="small" >
@@ -14,7 +14,7 @@
                         <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
                         <div class="test-img">
                             <img class='' src="../../assets/logo.png">
-                                <div class="img-button">
+                            <div class="img-button">
                                 <Button type="primary" @click="">新窗口显示</Button>
                                 <Button type="primary" @click="">图片对比</Button>
                             </div>
@@ -24,106 +24,102 @@
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
                             <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 350px"></Input>
-                            <p class="style-name-info">名称使用数字、字母、小数点、不超过20个字符</p>
+                            <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_CROP")}} : </span>
-                            <Radio-group v-model="crop">
+                            <Radio-group v-model="general.crop">
                                 <Radio label="noCrop">{{$t("STORAGE.CROP_NONE")}}</Radio>
                                 <Radio label="fit">{{$t("STORAGE.CROP_FIT")}}</Radio>
                             </Radio-group>
                         </div>
+                        <div class="form-item" v-if="general.crop === 'fit'">
+                            <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
+                            <Radio-group v-model="general.fitStyle">
+                                <Radio label="width">{{$t("STORAGE.FIT_WIDTH")}}</Radio>
+                                <Radio label="height">{{$t("STORAGE.FIT_HEIGHT")}}</Radio>
+                            </Radio-group>
+                            <div class="input-text-box">
+                                <input type='number' v-model="general.fitSize">
+                                <span>px</span>
+                            </div>
+                        </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_EFFECT")}} : </span>
-                            <Checkbox v-model="sharpen">{{$t("STORAGE.STYLE_SHARPEN")}}</Checkbox>
+                            <Checkbox v-model="general.sharpen">{{$t("STORAGE.STYLE_SHARPEN")}}</Checkbox>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_QUALITY")}} : </span>
-                            <Slider class="pic-slider" v-model="quality"></Slider>
-                            <Input v-model="quality" class="slider-input"></Input>
+                            <Slider class="pic-slider" v-model="general.quality"></Slider>
+                            <Input v-model="general.quality" class="slider-input" number></Input>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_FORMAT")}} : </span>
-                            <Select v-model="format" style="width:400px">
+                            <Select v-model="general.format" style="width:350px">
                                 <Option v-for="item in formatList" :value="item" :key="item">{{ item }}</Option>
                             </Select>
                         </div>
                         <div class="separator-line"></div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_WATERMARKER")}} : </span>
-                            <i-switch v-model="watermark" size="large">
+                            <i-switch v-model="watermarker.open" size="large">
                                 <span slot="open">ON</span>
                                 <span slot="close">OFF</span>
                             </i-switch>
                         </div>
-                        <div v-if="watermark">
+                        <div v-if="watermarker.open">
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.WATERMARKER_TYPE")}} : </span>
-                                <Radio-group v-model="watermarkerType">
+                                <Radio-group v-model="watermarker.type">
                                     <Radio label="text">{{$t("STORAGE.TEXT_WATERMARKER")}}</Radio>
                                     <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
                                 </Radio-group>
                             </div>
-                            <div v-if="watermarkerType == 'text'" class="clearfix">
+                            <div v-if="watermarker.type == 'text'" class="clearfix">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
-                                    <Input v-model="overlay" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 400px"></Input>
+                                    <Input v-model="watermarker.fontStyle.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 350px"></Input>
+                                    <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
                                 </div>
-                                <!--<div class="form-item font-styles clearfix">-->
-                                    <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
-                                    <Select v-model="font_family" style="width:135px;margin-right:10px;">
-                                        <Option v-for="item in fontList" :value="item" :key="item">{{ item }}</Option>
-                                    </Select>
-                                    <div class="input-text-box">
-                                        <input type='text' v-model="font_size">
-                                        <span>px</span>
-                                    </div>
-                                    <div class="color-box">
-                                        <div class="color-trigger" :style="{background: font_color.hex}" @click="fontSizeColorPicker=!fontSizeColorPicker"></div>
-                                        <input type='text' v-model="font_color.hex">
-                                        <slider-picker class="color-picker" v-if="fontSizeColorPicker" v-model="font_color" />
-                                    </div>
-                                    <br>
-                                <!--</div>-->
-                                <!--<div class="form-item font-styles clearfix" style="padding-left:60px;">-->
-                                    <div class="stroke">
-                                        <Checkbox v-model="stroke">{{$t("STORAGE.STROKE")}}</Checkbox>
-                                    </div>
-                                    <div class="input-text-box">
-                                        <input type='text' v-model="stroke_size">
-                                        <span>px</span>
-                                    </div>
-                                    <div class="color-box">
-                                        <div class="color-trigger" :style="{background: font_color.hex}" @click="fontSizeColorPicker=!fontSizeColorPicker"></div>
-                                        <input type='text' v-model="font_color.hex">
-                                        <slider-picker class="color-picker" v-if="fontSizeColorPicker" v-model="font_color" />
-                                    </div>
-                                <!--</div>-->
+                                <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
+                                <Select v-model="watermarker.fontStyle.font_family" style="width:135px;margin-right:10px;">
+                                    <Option v-for="item in fontList" :value="item" :key="item">{{ item }}</Option>
+                                </Select>
+                                <div class="input-text-box">
+                                    <input type='number' v-model="watermarker.fontStyle.font_size">
+                                    <span>px</span>
+                                </div>
+                                <div class="color-box" @click.stop>
+                                    <div class="color-trigger" :style="{background: fontColor.hex}" @click.stop="fontColorPicker=!fontColorPicker"></div>
+                                    <input type='text' v-model="fontColor.hex">
+                                    <slider-picker class="color-picker" v-if="fontColorPicker" v-model="fontColor" @click.stop/>
+                                </div>
+                                <br>
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
                                     <div class="gravity-selector">
-                                        <input type="radio" value="north_west" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="north" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="north_east" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="west" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="center" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="east" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="south_west" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="south" v-model="watermarkGravity"></Radio>
-                                        <input type="radio" value="south_east" v-model="watermarkGravity"></Radio>
+                                        <input type="radio" value="north_west" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="north" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="north_east" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="west" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="center" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="east" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="south_west" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="south" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="south_east" v-model="watermarker.gravity"></Radio>
                                     </div>
                                     <div class="padding-setting">
                                         <div class="form-item">
                                             <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
                                             <div class="input-text-box">
-                                                <input type='text' v-model="paddingLeft">
+                                                <input type='number' v-model="watermarker.x">
                                                 <span>px</span>
                                             </div>
                                         </div>
                                         <div class="form-item">
                                             <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
                                             <div class="input-text-box">
-                                                <input type='text' v-model="paddingTop">
+                                                <input type='number' v-model="watermarker.y">
                                                 <span>px</span>
                                             </div>
                                         </div>
@@ -131,63 +127,238 @@
                                 </div>
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
-                                    <Slider class="pic-slider" v-model="opacity"></Slider>
-                                    <Input v-model="opacity" class="slider-input"></Input>
+                                    <Slider class="pic-slider" v-model="watermarker.opacity"></Slider>
+                                    <Input v-model="watermarker.opacity" class="slider-input" number></Input>
                                 </div>
                             </div>
-                            <div v-if="watermarkerType == 'img'">
+                            <div v-if="watermarker.type == 'img'">
                                 <div class="form-item">
-                                    
-                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_")}} : </span>
-                                    
+                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
                                 </div>
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
+                                    <div class="gravity-selector">
+                                        <input type="radio" value="north_west" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="north" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="north_east" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="west" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="center" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="east" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="south_west" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="south" v-model="watermarker.gravity"></Radio>
+                                        <input type="radio" value="south_east" v-model="watermarker.gravity"></Radio>
+                                    </div>
+                                    <div class="padding-setting">
+                                        <div class="form-item">
+                                            <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
+                                            <div class="input-text-box">
+                                                <input type='number' v-model="watermarker.x">
+                                                <span>px</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-item">
+                                            <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
+                                            <div class="input-text-box">
+                                                <input type='number' v-model="watermarker.y">
+                                                <span>px</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
+                                    <Slider class="pic-slider" v-model="watermarker.opacity"></Slider>
+                                    <Input v-model="watermarker.opacity" class="slider-input"></Input>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-item clearfix" style="width:415px;">
+                            <div class="img-button">
+                                <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
+                                <Button type="primary" @click="submitStyles" :disabled="transformationError || textError">{{$t("PUBLIC.CONFIRMED")}}</Button>
                             </div>
                         </div>
                     </Col>
                 </Row>
             </Tab-pane>
             <Tab-pane :label='$t("STORAGE.ADV_EDIT")'>
+                <Row>
+                    <Col span="8">
+                        <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
+                        <div class="test-img">
+                            <img class='' src="../../assets/logo.png">
+                            <div class="img-button">
+                                <Button type="primary" @click="">新窗口显示</Button>
+                                <Button type="primary" @click="">图片对比</Button>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col span="16" class="page-left">
+                        <div class="form-item">
+                            <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
+                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 500px"></Input>
+                            <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
+                        </div>
+                        <div class="form-item">
+                            <span class="form-label">{{$t("STORAGE.PROSCESS_PARAM")}} : </span>
+                            <Input v-model="instructions" type="textarea" :rows="6" placeholder="使用高级编辑之前，建议先阅读Imgx图片处理服务使用说明" style="width: 500px"></Input>
+                            <p class="style-name-info">示例（图片缩放+图片水印）</p>
+                            <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
+                            <p class="style-name-info dis-inline">参数说明，</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">见文档</a>
+                        </div>
+                        <div class="form-item clearfix" style="width:415px;">
+                            <div class="img-button">
+                                <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
+                                <Button type="primary" @click="submitInsStyles" :disabled="transformationError || textError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
             </Tab-pane>
         </Tabs>
     </div>
 </template>
 <script>
 import {Slider, Compact, Photoshop, Swatches} from 'vue-color'
+import { handler } from '@/service/Aws'
+import { picStylePrefix } from '@/service/BucketService'
 export default {
     data () {
         return {
-            transformation: this.transformation,
-            crop: 'noCrop',
-            sharpen: false,
-            quality: 20,
-            format: 'original',
+            transformation: '',
             formatList: ['original', 'png', 'webp', 'jpeg', 'jpg'],
-            watermark: false,
-            watermarkerType: 'text',
             fontList: ['宋体', '黑体', '楷体', '隶书', '幼园', '仿宋', 'Arial', 'Georgia', 'Helvetica', 'Times-new-roman'],
-            font_family: '宋体',
-            font_size: 16,
-            overlay: '',
-            stroke: false,
-            stroke_size: 2,
-            watermarkGravity: 'north_west',
-            paddingLeft: 10,
-            paddingTop: 10,
-            opacity: 90,
-            colors: defaultProps,
-            font_color: defaultProps,
-            fontSizeColorPicker: true
+            fontColorPicker: false,
+            watermarker: watermarkerDefult,
+            general: generalDefult,
+            fontColor: defaultFontColor
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches },
     computed: {
         bucket () {
             return this.$route.params.bucket
+        },
+        ruleName () {
+            return this.$route.params.ruleName
+        },
+        instructions () {
+            return this.$route.params.IS
+        },
+        key () {
+            return this.$route.params.ruleName ? picStylePrefix + this.$route.params.ruleName + '.json' : ''
+        },
+        transformationError () {
+            return !(/^[a-z0-9_]{1,20}$/).test(this.transformation)
+        },
+        textError () {
+            return this.watermarker.open && !(/.+/).test(this.watermarker.fontStyle.text)
+        },
+        styleListHref () {
+            return '/bucket/' + this.bucket + '/pictureStyles'
         }
     },
     mounted () {
+        this.readStyles()
     },
-    methods: {},
+    methods: {
+        async submitStyles () {
+            if (!this.transformationError && !this.textError) {
+                const generalData = originalConvert2Save(this.general)
+                let content = []
+                content.push(generalData)
+                if (this.watermarker.open) {
+                    if (this.watermarker.type === 'text') {
+                        this.saveFont()
+                    }
+                    const watermarkerData = watermarkerConvert2Save(this.watermarker, this.transformation)
+                    content.push(watermarkerData)
+                }
+                this.saveJSON2Bucket(content)
+            }
+        },
+        async readStyles () {
+            if (!!this.ruleName && this.ruleName !== 'noRuleName') {
+                let params = {
+                    Bucket: this.bucket,
+                    Key: this.key
+                }
+                this.transformation = this.ruleName
+                let res = await handler('getObject', params)
+                let styles = JSON.parse(new TextDecoder('utf-8').decode(res.Body))
+                this.general = generalConvert2Font(styeItemCheckout(styles).ganeralData)
+                this.watermarker = _.assignIn(watermarkerDefult, watermarkerConvert2Font(styeItemCheckout(styles).watermarkerData))
+                let fontName = styeItemCheckout(styles).fontName
+                if (!!fontName) {
+                    let fontStyle = await this.readFont(fontName)
+                    this.watermarker.fontStyle = fontStyle
+                    this.fontColor = {hex: fontStyle.font_color}
+                }
+            }
+        },
+        async readFont (fileName) {
+            if (!!fileName) {
+                let params = {
+                    Bucket: this.bucket,
+                    Key: picStylePrefix + fileName + '.json'
+                }
+                let res = await handler('getObject', params)
+                return JSON.parse(new TextDecoder('utf-8').decode(res.Body))
+            }
+        },
+        async saveFont () {
+            let style = {}
+            style = this.watermarker.fontStyle
+            style.font_color = this.fontColor.hex
+            const fontStyleFile = new Blob([JSON.stringify(style)], {'type': 'application/json'})
+            try {
+                await handler('putObject', {
+                    Bucket: this.bucket,
+                    Key: picStylePrefix + this.transformation + '_font.json',
+                    ContentType: 'application/json',
+                    Body: fontStyleFile
+                })
+            } catch (error) {
+                this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
+            }
+        },
+        submitInsStyles () {
+            const insArray = this.instructions.split('--')
+            const insJSON = []
+            insArray.forEach(instruction => {
+                const item = {}
+                const instructionArray = instruction.split(',')
+                instructionArray.forEach(ins => {
+                    const reg = /^[a-z0-9]+_/g
+                    const insKey = I2J[reg.exec(ins)[0]]
+                    const insValue = ins.substr(reg.lastIndex)
+                    if (insKey === 'overlay' && insValue.substr(0, 5) === 'text:') {
+                        const watermarkerArray = insValue.split(':')
+                        item.overlay = watermarkerArray[1] || ''
+                        item.text = watermarkerArray[2] || ''
+                    } else {
+                        item[insKey] = insValue
+                    }
+                })
+                insJSON.push(item)
+            })
+            this.saveJSON2Bucket(insJSON)
+        },
+        async saveJSON2Bucket (jsonObj) {
+            const file = new Blob([JSON.stringify(jsonObj)], {'type': 'application/json'})
+            try {
+                await handler('putObject', {
+                    Bucket: this.bucket,
+                    Key: picStylePrefix + this.transformation + '.json',
+                    ContentType: 'application/json',
+                    Body: file
+                })
+                this.$Message.success(this.$t('STORAGE.ADD_STYLE_SUCCESS'))
+            } catch (error) {
+                this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
+            }
+        }
+    },
     watch: {
         // the contents array need refresh when the $route value changed
         '$route' (to, from) {
@@ -195,29 +366,121 @@ export default {
         }
     }
 }
-const defaultProps = {
-    hex: '#194d33',
-    hsl: {
-        h: 150,
-        s: 0.5,
-        l: 0.2,
-        a: 1
-    },
-    hsv: {
-        h: 150,
-        s: 0.66,
-        v: 0.30,
-        a: 1
-    },
-    rgba: {
-        r: 25,
-        g: 77,
-        b: 51,
-        a: 1
-    },
-    a: 1
+const I2J = {
+    c_: 'crop',
+    w_: 'width',
+    h_: 'height',
+    g_: 'gravity',
+    x_: 'x',
+    y_: 'y',
+    q_: 'quality',
+    r_: 'radius',
+    a_: 'angle',
+    e_: 'effect',
+    o_: 'opacity',
+    bo_: 'border',
+    b_: 'background',
+    l_: 'overlay',
+    f_: 'format',
+    v_: 'version',
+    t_: 'transformation'
 }
-
+const defaultFontColor = {
+    hex: '#000000'
+}
+const generalDefult = {
+    crop: 'noCrop',
+    sharpen: false,
+    quality: 70,
+    format: 'original',
+    fitSize: 10,
+    fitStyle: 'width'
+}
+const watermarkerDefult = {
+    open: false,
+    type: 'text',
+    text: '',
+    fontStyle: {
+        text: '',
+        font_family: '宋体',
+        font_size: 16
+    },
+    gravity: 'north_west',
+    x: 0,
+    y: 0,
+    opacity: 100
+}
+const originalConvert2Save = (generalData) => {
+    let generalSave = _.cloneDeep(generalData)
+    if (generalSave.crop === 'fit') {
+        generalSave[generalData.fitStyle] = parseInt(generalData.fitSize)
+    } else {
+        delete generalSave.crop
+    }
+    if (generalSave.sharpen) {
+        generalSave.effect = 'sharpen'
+    }
+    if (generalSave.format === 'original') {
+        delete generalSave.format
+    }
+    delete generalSave.fitStyle
+    delete generalSave.fitSize
+    delete generalSave.sharpen
+    return generalSave
+}
+const watermarkerConvert2Save = (watermarkerData, styleName) => {
+    let watermarkerSave = {
+        x: parseInt(watermarkerData.x),
+        y: parseInt(watermarkerData.y),
+        gravity: watermarkerData.gravity,
+        opacity: watermarkerData.opacity,
+        text: watermarkerData.fontStyle.text,
+        overlay: styleName + '_font'
+    }
+    return watermarkerSave
+}
+const styeItemCheckout = styles => {
+    let ganeralData = {}
+    let watermarkerData = {}
+    let fontName = ''
+    _.each(styles, item => {
+        _.forIn(item, (value, key) => {
+            if (generalKeyArray.indexOf(key) !== -1) {
+                ganeralData = item
+                return false
+            } else if (watermarkerKeyArray.indexOf(key) !== -1) {
+                if (key === 'overlay') {
+                    fontName = value
+                }
+                watermarkerData = item
+                return false
+            }
+        })
+    })
+    return { ganeralData, watermarkerData, fontName }
+}
+const generalKeyArray = ['crop', 'quality', 'radius', 'angle', 'effect', 'format']
+const watermarkerKeyArray = ['overlay']
+const generalConvert2Font = fileData => {
+    let generalFont = _.cloneDeep(fileData)
+    if (generalFont.crop === 'fit') {
+        generalFont.fitStyle = generalFont.width ? 'width' : 'height'
+        generalFont.fitSize = generalFont.width || generalFont.height
+    }
+    generalFont.sharpen = fileData.effect === 'sharpen'
+    generalFont.format = fileData.format || 'original'
+    generalFont.quality = fileData.quality || 0
+    return generalFont
+}
+const watermarkerConvert2Font = data => {
+    let watermarkerFont = _.cloneDeep(data)
+    let dataKeys = Object.keys(data)
+    if (dataKeys.length) {
+        watermarkerFont.open = true
+        watermarkerFont.type = 'text'
+    }
+    return watermarkerFont
+}
 </script>
 
 <style lang="less" scoped>
@@ -249,7 +512,7 @@ const defaultProps = {
     }
     .pic-slider{
         display:inline-block;
-        width:350px;
+        width:310px;
         vertical-align:middle;
     }
     .slider-input{
@@ -380,12 +643,18 @@ const defaultProps = {
     .color-picker{
         position:absolute;
         top:35px;
-        left:0;
+        left:-180px;
         z-index:2;
         background: #fff;
         border:1px solid #d7dde4;
         border-radius:4px;
         padding:15px;
     }
+}
+.red{
+    color:red !important;
+}
+.dis-inline{
+    display:inline
 }
 </style>

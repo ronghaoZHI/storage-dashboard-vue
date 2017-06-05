@@ -78,5 +78,5 @@ const convertPrefix2Router = (prefix) => {
         return []
     }
 }
-
-export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray }
+const picStylePrefix = 'imgx/l/'
+export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, picStylePrefix }
