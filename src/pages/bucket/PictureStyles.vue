@@ -8,8 +8,7 @@
         </div>
         <div class="toolbar-nav">
             <Button type="primary" @click="goCreateStyle">{{$t("STORAGE.CREATE_STYLE")}}</Button>
-            <Button type="primary" @click="">{{$t("STORAGE.EXPORT_STYLE")}}</Button>
-            <Button type="primary" @click="" >{{$t("STORAGE.IMPORT_STYLE")}}</Button>
+            <Button type="primary" @click="uploadModal" >{{$t("STORAGE.IMPORT_STYLE")}}</Button>
         </div>
         <Table border :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="styleHeader" :data="styleList" :no-data-text='$t("STORAGE.NO_STYLE")'></Table>
         <Modal v-model="showImageModal" :title='selectedStyleName' width="900">
@@ -18,13 +17,20 @@
             </div>
             <div slot="footer"></div>
         </Modal>
+        <Modal v-model="showUploadModal" :title='$t("STORAGE.FILE_PERMISSION")' width="700">
+            <upload v-if="showUploadModal" v-on:uploadSuccess="uploadSuccess" :bucket="bucket" :prefix="prefix"></upload>
+            <div slot="footer" class="copy-modal-footer">
+                 <Button style="visibility:hidden" type="primary"></Button>
+            </div>
+        </Modal>
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
     </div>
 </template>
 
 <script>
 import { getAWS, handler } from '@/service/Aws'
-import { picStylePrefix } from '@/service/BucketService'
+import { picStylePrefix, Utf8ArrayToStr } from '@/service/BucketService'
+import upload from '@/components/bucket/upload'
 export default {
     data () {
         return {
@@ -36,7 +42,9 @@ export default {
             fontName: this.fontName,
             showImageModal: false,
             clipUrl: '',
-            selectedStyleName: ''
+            selectedStyleName: '',
+            showUploadModal: false,
+            prefix: picStylePrefix
         }
     },
     computed: {
@@ -44,12 +52,13 @@ export default {
             return this.$route.params.bucket
         }
     },
+    components: { upload },
     mounted () {
         this.getList()
     },
     methods: {
         goCreateStyle () {
-            this.$router.push({ name: 'editStyles', params: { bucket: this.bucket, ruleName: 'noRuleName', IS: '' } })
+            this.$router.push({ name: 'editStyles', params: { bucket: this.bucket, ruleName: 'noRuleName', IS: 'noIS' } })
         },
         async getList () {
             try {
@@ -60,7 +69,9 @@ export default {
                 })
                 const fileList = res.Contents
                 _.each(fileList, file => {
-                    this.getObject(file)
+                    if (file.Key.split('.json').length === 2) {
+                        this.getObject(file)
+                    }
                 })
                 this.$Loading.finish()
             } catch (error) {
@@ -73,7 +84,7 @@ export default {
                 Key: file.Key
             }
             let res = await handler('getObject', params)
-            let fileJson = JSON.parse(new TextDecoder('utf-8').decode(res.Body))
+            let fileJson = JSON.parse(Utf8ArrayToStr(res.Body))
             if (fileJson[0]) {
                 let ruleName = file.Key.split(picStylePrefix)[1].split('.json')[0]
                 this.styleList.push({'ruleName': ruleName, ...this.convert2list(fileJson)})
@@ -145,12 +156,18 @@ export default {
         },
         previewModal (style) {
             this.$Loading.start()
-            const previewURL = style.ruleName
-            console.log('previewURL', previewURL, style)
-            // this.clipUrl = previewURL
+            const ruleIS = style.IS
+            this.clipUrl = 'http://imgx-ss.bscstorage.com/imgx-test/' + ruleIS + '/dashboard.jpg'
             this.selectedStyleName = style.ruleName
             this.showImageModal = true
             this.$Loading.finish()
+        },
+        uploadModal () {
+            this.showUploadModal = true
+        },
+        uploadSuccess (fileName) {
+            const file = {Key: picStylePrefix + fileName}
+            this.getObject(file)
         }
     },
     watch: {
@@ -226,20 +243,5 @@ const styleHeaderSetting = [{
 .layout-bsc-toolbar {
     padding-bottom: 8px;
     border-bottom: 1px solid #f2f1f6;
-}
-.new-user-input{
-    width:70%;
-    max-width:150px;
-    margin-right:5%;
-}
-.new-user-button{
-    width:25%;
-    max-width:50px;
-}
-.table-permission th.percent20 {
-    width:20%;
-}
-.table-permission th.percent30 {
-    width:30%;
 }
 </style>

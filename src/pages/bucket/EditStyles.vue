@@ -23,7 +23,7 @@
                     <Col span="16" class="page-left">
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
-                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 350px"></Input>
+                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 500px"></Input>
                             <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
                         </div>
                         <div class="form-item">
@@ -55,7 +55,7 @@
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_FORMAT")}} : </span>
-                            <Select v-model="general.format" style="width:350px">
+                            <Select v-model="general.format" style="width:500px">
                                 <Option v-for="item in formatList" :value="item" :key="item">{{ item }}</Option>
                             </Select>
                         </div>
@@ -78,7 +78,7 @@
                             <div v-if="watermarker.type == 'text'" class="clearfix">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
-                                    <Input v-model="watermarker.fontStyle.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 350px"></Input>
+                                    <Input v-model="watermarker.fontStyle.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 500px"></Input>
                                     <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
                                 </div>
                                 <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
@@ -134,6 +134,9 @@
                             <div v-if="watermarker.type == 'img'">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
+                                    <div class="upload-box">
+                                        <upload :bucket="bucket" :prefix="prefix" v-on:uploadSuccess="uploadSuccess"></upload>
+                                    </div>
                                 </div>
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
@@ -222,6 +225,7 @@
 import {Slider, Compact, Photoshop, Swatches} from 'vue-color'
 import { handler } from '@/service/Aws'
 import { picStylePrefix } from '@/service/BucketService'
+import upload from '@/components/bucket/upload'
 export default {
     data () {
         return {
@@ -231,10 +235,12 @@ export default {
             fontColorPicker: false,
             watermarker: watermarkerDefult,
             general: generalDefult,
-            fontColor: defaultFontColor
+            fontColor: defaultFontColor,
+            prefix: picStylePrefix,
+            imgName: ''
         }
     },
-    components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches },
+    components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -243,7 +249,7 @@ export default {
             return this.$route.params.ruleName
         },
         instructions () {
-            return this.$route.params.IS
+            return this.$route.params.IS === 'noIS' ? '' : this.$route.params.IS
         },
         key () {
             return this.$route.params.ruleName ? picStylePrefix + this.$route.params.ruleName + '.json' : ''
@@ -252,7 +258,7 @@ export default {
             return !(/^[a-z0-9_]{1,20}$/).test(this.transformation)
         },
         textError () {
-            return this.watermarker.open && !(/.+/).test(this.watermarker.fontStyle.text)
+            return this.watermarker.open && this.watermarker.type === 'text' && !(/.+/).test(this.watermarker.fontStyle.text)
         },
         styleListHref () {
             return '/bucket/' + this.bucket + '/pictureStyles'
@@ -265,13 +271,16 @@ export default {
         async submitStyles () {
             if (!this.transformationError && !this.textError) {
                 const generalData = originalConvert2Save(this.general)
+                let watermarkerData = {}
                 let content = []
                 content.push(generalData)
                 if (this.watermarker.open) {
                     if (this.watermarker.type === 'text') {
                         this.saveFont()
+                        watermarkerData = watermarkerConvert2Save(this.watermarker, this.transformation)
+                    } else if (this.watermarker.type === 'img') {
+                        watermarkerData = watermarkerConvert2Save(this.watermarker, this.imgName)
                     }
-                    const watermarkerData = watermarkerConvert2Save(this.watermarker, this.transformation)
                     content.push(watermarkerData)
                 }
                 this.saveJSON2Bucket(content)
@@ -357,6 +366,9 @@ export default {
             } catch (error) {
                 this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
             }
+        },
+        uploadSuccess (fileName) {
+            this.imgName = fileName.split('.')[0]
         }
     },
     watch: {
@@ -433,9 +445,13 @@ const watermarkerConvert2Save = (watermarkerData, styleName) => {
         x: parseInt(watermarkerData.x),
         y: parseInt(watermarkerData.y),
         gravity: watermarkerData.gravity,
-        opacity: watermarkerData.opacity,
-        text: watermarkerData.fontStyle.text,
-        overlay: styleName + '_font'
+        opacity: watermarkerData.opacity
+    }
+    if (watermarkerData.type === 'text') {
+        watermarkerSave.text = watermarkerData.fontStyle.text
+        watermarkerSave.overlay = styleName + '_font'
+    } else if (watermarkerData.type === 'img') {
+        watermarkerSave.overlay = styleName
     }
     return watermarkerSave
 }
@@ -473,6 +489,7 @@ const generalConvert2Font = fileData => {
     return generalFont
 }
 const watermarkerConvert2Font = data => {
+    console.log('watermarker2Font')
     let watermarkerFont = _.cloneDeep(data)
     let dataKeys = Object.keys(data)
     if (dataKeys.length) {
@@ -656,5 +673,10 @@ const watermarkerConvert2Font = data => {
 }
 .dis-inline{
     display:inline
+}
+.upload-box{
+    width:500px;
+    display:inline-block;
+    vertical-align: text-top;
 }
 </style>
