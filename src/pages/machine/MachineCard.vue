@@ -1,19 +1,26 @@
 <template>
     <div class="bsc-machine-card">
         <div class="card-title">
-            <span>{{data.hostname}}</span>
+            <span>{{data.hostname.slice(data.hostname.indexOf('-',14) + 1)}}</span>
         </div>
         <div class="card-chart">
-            <chart :options="pieOptions" auto-resize></chart>
-            <span class="data-scale">{{data.mem.percent}}%</span>
+            <chart :options="memOptions" auto-resize></chart>
+            <div class="data-scale">
+                <span>{{data.mem.percent}}%</span>
+                <span>已用内存</span>
+            </div>
         </div>
         <div class="card-tooltip">
             <span>
                 <i class="tooltip-color"></i>
-                已用:{{bytes(data.mem.used)}}</span>
+                已用:{{bytes(data.mem.total - data.mem.available)}}</span>
             <span>总内存:{{bytes(data.mem.total)}}</span>
         </div>
-        <div class="card-partition">
+        <div class="card-cpu">
+            <span>CPU load: {{data.cpu.load}}</span>
+        </div>
+        <div class="card-partition" v-if="partitionList.length > 0">
+            <span>磁盘信息</span>
             <partition-node v-for="node in partitionList" :data="node" :key="node.ts"></partition-node>
         </div>
         <div class="card-ip">
@@ -47,18 +54,46 @@ import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import { bytes } from '@/service/bucketService'
-import { PARTITION } from '@/service/API'
 import partitionNode from './PartitionNode'
 export default {
     data () {
-        return {
-            pieOptions: pieOptions,
-            partitionList: []
-        }
+        return {}
     },
     props: ['data'],
-    mounted () {
-        this.getPartitionList()
+    computed: {
+        partitionList: function () {
+            return this.data.partitions.ok.concat(this.data.partitions.bad).slice(0, 50)
+        },
+        memOptions: function () {
+            return {
+                tooltip: {
+                    show: false
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: ['70%', '80%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        color: ['#20a0ff', '#ffde2a'],
+                        data: [
+                            { value: this.data.mem.total - this.data.mem.available, name: 'used' },
+                            { value: this.data.mem.available, name: 'unused' }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     components: {
         chart: ECharts,
@@ -83,42 +118,8 @@ export default {
         }
     },
     methods: {
-        bytes: bytes,
-        async getPartitionList () {
-            const res = await this.$http.get(PARTITION)
-            this.partitionList = res.data.ok
-        }
+        bytes: bytes
     }
-}
-
-const pieOptions = {
-    tooltip: {
-        trigger: 'item',
-        formatter: '{b}: {c} ({d}%)'
-    },
-    series: [
-        {
-            type: 'pie',
-            radius: ['50%', '80%'],
-            avoidLabelOverlap: false,
-            label: {
-                normal: {
-                    show: false,
-                    position: 'center'
-                }
-            },
-            labelLine: {
-                normal: {
-                    show: false
-                }
-            },
-            color: ['#20a0ff', '#ffde2a'],
-            data: [
-                { value: 335, name: '已用' },
-                { value: 310, name: '未用' }
-            ]
-        }
-    ]
 }
 
 </script>
@@ -138,17 +139,29 @@ const pieOptions = {
 
         .data-scale {
             position: relative;
-            top: -98px;
-            left: 125px;
-            font-size: 20px;
-            font-weight: 500;
+            top: -105px;
+
+            & > span {
+                display: block;
+                text-align: center;
+            }
+            
+            & > span:first-child {
+                font-size: 20px;
+                font-weight: 500;
+            }
+
+            & > span:last-child {
+                .sc(12px,#a2a8bb);
+                font-weight: normal;
+            }
         }
     }
 
     .card-tooltip {
         padding: 0 30px;
         margin-bottom: 15px;
-        .sc(12px, #475669);
+        .sc(12px, #a2a8bb);
 
         & > span:last-child {
             float: right;
@@ -158,20 +171,33 @@ const pieOptions = {
             display: inline-block;
             position: relative;
             top: 2px;
-            height: 12px;
-            width: 12px;
+            .wh(12px,12px);
             border-radius: 2px;
             background-color: @primary-color;
         }
     }
 
+    .card-cpu {
+        text-align: center;
+        margin-bottom: 10px;
+        span {
+            .sc(14px,#475669)
+        }
+    }
+
     .card-partition {
+        position: relative;
         border-top: @common-border;
         min-height: 100%;
         width: 100%;
         .fb(flex-start, flex-start);
         flex-wrap: wrap;
-        padding: 16px;
+        padding: 30px 16px 16px 16px;
+
+        & > span {
+            position: absolute;
+            top: 10px;
+        }
     }
 
     .card-ip {
@@ -210,12 +236,11 @@ const pieOptions = {
         }
 
         .card-network {
-            position: absolute;
             background: #f9fafc;
             width: 298px;
             .sc(13px, #475669);
             line-height: 30px;
-            z-index: 10000;
+            z-index: 100;
             border: @common-border;
 
             .row-network {
@@ -229,7 +254,7 @@ const pieOptions = {
                 }
 
                 & > span:first-child {
-                    flex: 2;
+                    flex: 1;
                 }
 
                 & > span:not(:last-child) {

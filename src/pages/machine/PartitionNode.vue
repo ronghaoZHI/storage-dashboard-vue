@@ -1,6 +1,6 @@
 <template>
     <div class="bsc-partition-node">
-        <span v-pinter="data"></span>
+        <span v-pinter="data" @click="showDetail(data)"></span>
     </div>
 </template>
 <script>
@@ -13,14 +13,18 @@ export default {
         pinter: {
             inserted: function (el, binding) {
                 const data = binding.value
-                const nodeWidth = Math.floor((data.space / data.capacity) * 30) + 10
-                const colorList = ['#007b43', '#00a854', '#00a854', '#00a854', '#00a854', '#00a854', '#00a854', '#faaf76', '#d75000', '#7a0000']
+                const nodeWidth = Math.floor((data.space / data.capacity) * 30) + 1
+                const colorList = ['#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#3dbd7d', '#00a854', '#00a854', '#faaf76', '#f78e3d', '#f56a00']
                 el.style.backgroundColor = colorList[data.ioutil / 100]
                 el.style.width = nodeWidth + 'px'
             }
         }
     },
-    methods: { }
+    methods: {
+        showDetail (data) {
+            console.log(data)
+        }
+    }
 }
 
 </script>
@@ -38,6 +42,7 @@ export default {
         display: inline-block;
         margin: 4px 0 0 4px;
         background-color: red;
+        cursor: pointer;
     }
 }
 </style>
