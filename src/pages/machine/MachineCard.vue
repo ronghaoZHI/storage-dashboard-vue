@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-machine-card">
         <div class="card-title">
-            <span>{{data.hostname.slice(data.hostname.indexOf('-',14) + 1)}}</span>
+            <span><Icon :class="{ alive: data.status === 'alive', down: data.status !== 'alive' }" type="heart"></Icon> {{data.hostname.slice(data.hostname.indexOf('-',14) + 1)}}</span>
         </div>
         <div class="card-chart">
             <chart :options="memOptions" auto-resize></chart>
@@ -132,6 +132,14 @@ export default {
     .card-title {
         padding: 16px 16px 0 16px;
         .sc(14px, #475669);
+
+        .alive {
+            color: #00924c;
+        }
+
+        .down {
+            color: #b93600;
+        }
     }
 
     .card-chart {
