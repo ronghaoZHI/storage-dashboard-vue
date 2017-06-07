@@ -17,7 +17,7 @@
                     <form class="form-login" v-model="loginForm" ref="loginForm">
                         <div class="email">
                             <span><Icon type="email" :size="18"></Icon></span>
-                            <input v-bfocus type="email" oninvalid="setCustomValidity('Requires your correct email')" onchange="" v-model="loginForm.email" required autofocus placeholder="email"/>
+                            <input v-bfocus type="email" oninvalid="setCustomValidity('Requires your correct email')" onchange="try{setCustomValidity('')}catch(e){}" v-model="loginForm.email" required autofocus placeholder="email"/>
                         </div>
                         <div class="password">
                             <span><Icon type="unlocked" :size="18"></Icon></Icon></span>
