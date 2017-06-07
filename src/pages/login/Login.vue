@@ -1,30 +1,39 @@
 <template>
-    <div class="bsc-login" @keyup.enter="handleSubmit('formInline')">
+    <div class="bsc-login" @keyup.enter="loginSubmit('loginForm')">
         <div class="card-login">
             <div class="tab-login">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
                     <span>Language</span>
+                    <div class="select-language">
+                        <div class="border-triangle-external"></div>
+                        <div class="border-triangle"></div>
+                        <span @click="changeLang('en')">English</span>
+                        <span @click="changeLang('cn')">中文</span>
+                    </div>
                 </div>
                 <div class="body">
                     <span class="slogn">WELCOME TO<br/>THE BAISHANCLOUD DIGITAL WORLD</span>
-                    <form class="form-login">
-                        <div class="input-email">
+                    <form class="form-login" v-model="loginForm" ref="loginForm">
+                        <div class="email">
                             <span><Icon type="email" :size="18"></Icon></span>
-                            <input v-bfocus />
+                            <input v-bfocus type="email" oninvalid="setCustomValidity('Requires your correct email')" onchange="" v-model="loginForm.email" required autofocus placeholder="email"/>
                         </div>
-                        <div class="input-password">
+                        <div class="password">
                             <span><Icon type="unlocked" :size="18"></Icon></Icon></span>
-                            <input v-bfocus />
+                            <input v-bfocus class="input-password" oninvalid="setCustomValidity('Requires 6 characters')" onchange="try{setCustomValidity('')}catch(e){}" type="password" v-model="loginForm.password" required minlength="6" placeholder="password" />
+                            <span @click="showPw" :class="{ showPw:showPassword }"><Icon type="eye" :size="18"></Icon></span>
                         </div>
-                        <div class="checkbox-keep">
-                            <input id="keep" type="checkbox">
-                            <label for="kep">保持登录</label>
+                        <div class="keep">
+                            <input type="checkbox" id="bsc-checkbox"/>
+                            <label for="bsc-checkbox"><span></span>保持登录</label>
                         </div>
-                        <div class="button-login">
-                            <button>登录</button>
+                        <div class="login">
+                            <button @click="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</button>
                         </div>
-                        <div class="register"></div>
+                        <div class="register">
+                            没有账号？<a>立即申请</a>
+                        </div>
                     </form>
                 </div>
                 <div class="footer">
@@ -57,7 +66,12 @@ export default {
     data () {
         return {
             lang: 'cn',
-            selectedCustomer: ''
+            selectedCustomer: '',
+            loginForm: {
+                email: '',
+                password: ''
+            },
+            showPassword: false
         }
     },
     mounted () {
@@ -76,27 +90,43 @@ export default {
         }
     },
     methods: {
-        async handleSubmit (name) {
-            let self = this
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    self.$http.post(LOGIN, {...self.formInline}).then(res => {
-                        this.$store.dispatch('setUserInfo', res.data)
-                        let redirect = this.$route.query.redirect // get redirect path
-                        !!redirect ? this.$router.push(redirect) : this.$router.push('/')
-                        Vue.config.lang = this.lang
-                    }, error => {
-                        this.$Message.error(error)
-                    })
-                } else {
-                    this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
+        async loginSubmit (name) {
+            if (this.formValid(name)) {
+                this.$http.post(LOGIN, { ...this.loginForm }).then(res => {
+                    this.$store.dispatch('setUserInfo', res.data)
+                    let redirect = this.$route.query.redirect // get redirect path
+                    !!redirect ? this.$router.push(redirect) : this.$router.push('/')
+                    Vue.config.lang = this.lang
+                }, error => {
+                    this.$Message.error(error)
+                })
+            } else {
+                this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
+            }
+        },
+        changeLang (lang) {
+            Vue.config.lang = lang
+            sessionStorage.removeItem('lang')
+            sessionStorage.setItem('lang', lang)
+        },
+        showPw () {
+            let input = document.querySelector('.input-password')
+            if (input.type === 'password') {
+                this.showPassword = true
+                input.type = 'text'
+            } else {
+                this.showPassword = false
+                input.type = 'password'
+            }
+        },
+        formValid (name) {
+            let isValid = true
+            this.$refs[name].querySelectorAll('input').forEach((input) => {
+                if (!input.validity.valid) {
+                    isValid = false
                 }
             })
-        },
-        changeLang () {
-            Vue.config.lang = this.lang
-            sessionStorage.removeItem('lang')
-            sessionStorage.setItem('lang', this.lang)
+            return isValid
         }
     }
 }
@@ -109,7 +139,9 @@ export default {
 @login-card-width: 1000px;
 @login-card-padding: 48px;
 @login-card-bg: #2e373e;
+@login-card-language-select-background: #384549;
 @login-card-login-text-color: #8492a6;
+@login-card-login-input-invalid-text-color: #d75000;
 @login-card-login-input-width: 380px;
 @login-card-register-header-height: 60px;
 @login-card-register-text-color: #a3afbb;
@@ -137,6 +169,72 @@ export default {
                     .sc(18px,#fff);
                     font-weight: 500;
                     float: right;
+                    cursor: pointer;
+                    padding-bottom: 20px;
+
+                    &:hover + .select-language {
+                        display: block;
+                    }
+                }
+
+                .select-language {
+                    display: none;
+                    position: relative;
+                    left: @login-card-width - 2 * @login-card-padding - 100;
+                    top: 40px;
+                    width: 100px; 
+                    height: 60px; 
+                    border: 1px solid @login-card-login-text-color;
+                    border-radius: 5px;
+                    background-color: @login-card-language-select-background;
+
+                    &:hover {
+                        display: block;
+                    }
+
+                    &:target {
+                        display: none;
+                    }
+
+                    div.border-triangle-external {
+                        display: block;
+                        position: absolute;
+                        left: 60px;
+                        top: -21px;
+                        width: 0px;
+                        height: 0px;
+                        border: 10px solid;
+                        border-color: transparent transparent @login-card-login-text-color transparent;
+                    }
+
+                    div.border-triangle {
+                        display: block;
+                        position: absolute;
+                        left: 60px;
+                        top: -20px;
+                        width: 0px;
+                        height: 0px;
+                        border: 10px solid;
+                        border-color: transparent transparent @login-card-language-select-background transparent;
+                    }
+
+                    & > span {
+                        position: relative;
+                        top: -34px;
+                        display: inline-block;
+                        .wh(80%,28px);
+                        line-height: 28px;
+                        .sc(14px,@login-card-login-text-color);
+                        cursor: pointer;
+
+                        &:hover {
+                            color: #fff;
+                        }
+                    }
+
+                    & > span:last-child {
+                        border-top: 1px solid #424e55;
+                    }
                 }
             }
 
@@ -149,11 +247,8 @@ export default {
                 }
 
                 .form-login {
-                    & > div {
-                    }
-
-                    .input-email,
-                    .input-password {
+                    .email,
+                    .password {
                         margin: 0 auto;
                         padding-bottom: 14px;
                         .fb(flex-start,flex-end,flex);
@@ -165,7 +260,6 @@ export default {
                         }
 
                         input {
-                            flex: 7;
                             height: 24px;
                             .sc(18px,@login-card-login-text-color);
                             background: @login-card-bg;
@@ -176,35 +270,77 @@ export default {
                                 outline: -webkit-focus-ring-color auto 0;
                             }
                         }
+
+                        & > input:invalid {
+                            color: @login-card-login-input-invalid-text-color;
+                        }
+                    }
+
+                    .email {
+                        input {
+                            flex: 7;
+                        }
+                    }
+
+                    .password {
+                        input {
+                            flex: 6;
+                        }
+
+                        & > span:last-child {
+                            cursor: pointer;
+                        }
+
+                        .showPw {
+                            color: @primary-color;
+                        }
                     }
 
                     .input-focus {
                         border-bottom: 2px solid @primary-color;
 
-                        & > span {
+                        & > span:first-child {
                             color: @primary-color;
                         }
                     }
 
-                    .checkbox-keep {
+                    .keep {
                         height: 20px;
-                        .sc(14px,@login-card-login-text-color);
                         margin-right: @login-card-width / 2 - @login-card-padding - @login-card-login-input-width / 2 + 20px;
-                        margin-top: 6px;
+                        margin-top: 12px;
+                        .sc(14px,@login-card-login-text-color);
                         .fb(flex-end,center,flex);
 
-                        input {
-                            .wh(14px,14px);
-                            margin-right: 10px;
+                        input[type="checkbox"] {
+                            display:none;
+                        }
+
+                        input[type="checkbox"] + label span {
+                            display: inline-block;
+                            width: 19px;
+                            height: 19px;
+                            margin: -2px 10px 0 0;
+                            vertical-align: middle;
+                            background: url('../../assets/login-checkbox.png') no-repeat left center;
+                            cursor: pointer;
+                        }
+
+                        input[type="checkbox"]:checked + label span {
+                            background: url('../../assets/login-checkbox-checked.png') no-repeat left center;
+                        }
+
+                        & > label {
+                            cursor: pointer;
                         }
                     }
 
-                    .button-login {
-                        margin-top: 30px;
+                    .login {
+                        margin-top: 24px;
 
                         button {
                             .wh(280px,40px);
                             .sc(18px,#fff);
+                            cursor: pointer;
                             background: @primary-color;
                             border: 0;
 
@@ -212,6 +348,20 @@ export default {
                                 outline-offset: 0;
                                 outline: -webkit-focus-ring-color auto 0;
                             }
+
+                            &:hover {
+                                background-color: #57a3f3;
+                                border-color: #57a3f3;
+                            }
+                        }
+                    }
+
+                    .register {
+                        margin-top: 20px;
+                        .sc(14px,#8492a6);
+
+                        a {
+                            color: @primary-color;
                         }
                     }
                 }
