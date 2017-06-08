@@ -25,7 +25,7 @@ export const messages = {
             LOGIN_FAILED: 'Login failed',
             VALIDATE_FAILED: 'Input validate failed',
             LOGIN_AGAIN: 'Need to login again',
-            KEEP_EMAIL: 'Remember the email'
+            KEEP_EMAIL: 'Remember my email'
         },
         NAV: {
             DOC: 'Documentation',
