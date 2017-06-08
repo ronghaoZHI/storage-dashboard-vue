@@ -43,49 +43,13 @@
             <div class="tab-register" v-if="!isLogin">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
-                    <span>选择您要进行的操作(二选一)</span>
+                    <a>用户管理</a>
                 </div>
                 <div class="body">
-                    <div class="body-left">
-                        <div class="title">选择(一)</div>
-                        <div class="select-label">查看客户使用情况:</div>
-                        <div class="select-group">
-                            <select>
-                                <option value="volvo">Volvo</option>
-                                <option value="saab">Saab</option>
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option>
-                            </select>
-                        </div>
-                        <button>确定</button>
-                    </div>
-                    <div class="body-right">
-                        <div class="title">选择(二):给新客户申请账号</div>
-                        <div class="input-group">
-                            <span>公司名:</span>
-                            <input />
-                            <div>*必须与工商执照一致</div>
-                        </div>
-                        <div class="input-group">
-                            <span>邮箱地址:</span>
-                            <input />
-                        </div>
-                        <div class="input-group">
-                            <span>用户名:</span>
-                            <input />
-                        </div>
-                        <div class="input-group">
-                            <span>初始密码:</span>
-                            <input />
-                        </div>
-                        <div class="select-label">账户类型:</div>
-                        <div class="select-group">
-                            <select>
-                                <option value="normal">Normal user</option>
-                                <option value="super">Super user</option>
-                            </select>
-                        </div>
-                        <button>确定</button>
+                    <div v-for="user in userList">
+                        <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
+                        <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
+                        <span class="icon" v-show="user.info.type === 'super'"><Icon type="star"></Icon></span>
                     </div>
                 </div>
             </div>
@@ -93,7 +57,7 @@
     </div>
 </template>
 <script>
-import { LOGIN } from '@/service/API'
+import { LOGIN, BOUND_USER } from '@/service/API'
 import Vue from 'vue'
 export default {
     data () {
@@ -106,7 +70,8 @@ export default {
                 email: localStorage.getItem('loginEmail'),
                 password: ''
             },
-            showPassword: false
+            showPassword: false,
+            userList: []
         }
     },
     mounted () {
@@ -127,7 +92,7 @@ export default {
     methods: {
         async loginSubmit (name) {
             if (this.formValid(name)) {
-                // save login email
+                // save user email
                 this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
                 this.$http.post(LOGIN, { ...this.loginForm }).then(res => {
                     res.data.type === 'admin' ? this.adminMode(res.data) : this.toIndex(res.data)
@@ -138,8 +103,13 @@ export default {
                 this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
             }
         },
-        adminMode (data) {
-            this.isLogin = false
+        async adminMode (data) {
+            let res = await this.$http.get(BOUND_USER)
+            console.log(res)
+            if (res.data.length > 0) {
+                this.userList = res.data
+                this.isLogin = false
+            }
         },
         toIndex (data) {
             this.$store.dispatch('setUserInfo', data)
@@ -189,10 +159,11 @@ export default {
 @login-card-login-text-color: #8492a6;
 @login-card-login-input-invalid-text-color: #d75000;
 @login-card-login-input-width: 380px;
-@login-card-register-header-height: 60px;
+@login-card-register-item-width: 160px;
+@login-card-register-item-height: 80px;
 @login-card-register-text-color: #c0ccda;
 @login-card-register-input-backgrand: #414d56;
-@login-card-register-input-border: #52626d;
+@login-card-register-border: #52626d;
 
 .@{css-prefix}login {
     .wh(100%,100%);
@@ -434,117 +405,56 @@ export default {
                     left: @login-card-padding;
                 }
 
-                & > span {
-                    display: inline-block;
-                    margin-top: 20px;
-                    .sc(18px,@login-card-register-text-color);
-                    font-weight: 500;
+                & > a {
+                    .sc(18px,@primary-color);
+                    position: absolute; 
+                    top: @login-card-padding + 3px;
+                    right: @login-card-padding;
+                    cursor: pointer;
                 }
-            }  
+            }
 
             .body {
-                height: @login-card-height - (2 * @login-card-padding) - @login-card-register-header-height;
+                min-height: 100%;
+                width: 100%;
+                display: inline-flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                align-items: flex-start;
+                padding-top: 10px;
 
-                .body-left,
-                .body-right {
-                    width: 50%;
-                    float: left;
-                    margin: 14px 0;
+                & > div {
+                    position: relative;
+                    .wh(@login-card-register-item-width,@login-card-register-item-height);
+                    background-color: @login-card-register-input-backgrand;
+                    border-radius: @common-radius;
+                    .sc(16px,#fff);
+                    margin: 6px 3px;
 
-                    input {
-                        .wh(100%,36px);
-                        background: @login-card-register-input-backgrand;
-                        border: 1px solid @login-card-register-input-border;
-                        padding: 6px 8px;
-                        .sc(16px,@login-card-register-text-color);
-                        border-radius: @common-radius;
-                        overflow: hidden;
-
-                        &:focus {
-                            outline-offset: 0;
-                            outline: -webkit-focus-ring-color auto 0;
-                        }
-                    }
-
-                    button {
-                        cursor: pointer;
-                        .wh(180px,36px);
-                        border-radius: @common-radius;
-                        border: 0;
-                        .sc(14px,#fff);
-                        background: @primary-color;
-                        margin-top: 20px;
-
-                        &:focus {
-                            outline-offset: 0;
-                            outline: -webkit-focus-ring-color auto 0;
-                        }
-
-                        &:hover {
-                            background-color: #57a3f3;
-                            border-color: #57a3f3;
-                        }
-                    }
-
-                    .title {
+                    .info {
+                        display: inline-block;
+                        .wh(100%,@login-card-register-item-height / 2 - 15);
+                        line-height: @login-card-register-item-height / 2 - 15;
+                        vertical-align: bottom;
+                        padding: 6px + 8px 10px;
                         text-align: left;
-                        .sc(18px,@login-card-register-text-color)
-                    }
 
-                    .select-label {
-                        margin: 10px 0;
-                        text-align: left;
-                        .sc(14px,@login-card-register-text-color)
-                    }
-
-                    .select-group {
-                        border: 1px solid @login-card-register-input-border;
-                        width: 100%;
-                        border-radius: @common-radius;
-                        overflow: hidden;
-                        background: @login-card-register-input-backgrand;
-
-                        select {
-                            padding: 5px 8px;
-                            width: 100%;
-                            .sc(16px,@login-card-register-text-color);
-                            border: none;
-                            box-shadow: none;
-                            background-image: none;
-                            -webkit-appearance: none;
-                            background: @login-card-register-input-backgrand;
-                            
-                            &:focus {
-                                outline: none;
-                            }
+                        i {
+                            position: relative;
+                            top: 1px;
+                            padding-right: 4px;
                         }
                     }
-                }
-
-                .body-left {
-                    padding-right: 48px;
-                }
-
-                .body-right {
-                    padding-left: 48px;
-                    border-left: 1px dashed #8492a6;
-
-                    .input-group {
-                        margin: 10px 0;
-                        & > span {
-                            margin-bottom: 6px;
-                            float: left;
-                            .sc(14px,@login-card-register-text-color)
-                        }
-
-                        & > div {
-                            margin: 5px 20px 0 0;
-                            text-align: right;
-                            .sc(12px,#8492a6);
-                        }
+                    
+                    .icon {
+                        position: absolute;
+                        color: #fff;
+                        top: 0px;
+                        right: 4px;
                     }
                 }
-            } 
+            }
         }
     }
 }
