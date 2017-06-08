@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-login" @keyup.enter="loginSubmit('loginForm')">
         <div class="card-login">
-            <div class="tab-login">
+            <div class="tab-login  dn">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
                     <span>Language</span>
@@ -40,20 +40,50 @@
                     Copyright © 2015-2017 BaishanCloud. All rights Reserved.
                 </div>
             </div>
-            <div class="tab-register dn">
+            <div class="tab-register">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
                     <span>选择您要进行的操作(二选一)</span>
                 </div>
                 <div class="body">
                     <div class="body-left">
-                        <select name="select">
-                            <option value="value1">Value 1</option> 
-                            <option value="value2" selected>Value 2</option>
-                            <option value="value3">Value 3</option>
-                        </select>
+                        <div class="title">选择(一)</div>
+                        <div class="select-label">查看客户使用情况:</div>
+                        <div class="select-style">
+                            <select>
+                                <option value="volvo">Volvo</option>
+                                <option value="saab">Saab</option>
+                                <option value="mercedes">Mercedes</option>
+                                <option value="audi">Audi</option>
+                            </select>
+                        </div>
+                        <button>确定</button>
                     </div>
-                    <div class="body-right"></div>
+                    <div class="body-right">
+                        <div class="title">选择(二):给新客户申请账号</div>
+                        <div class="input-group">
+                            <span>公司名:</span>
+                            <input />
+                            <div>*必须与工商执照一致</div>
+                        </div>
+                        <div class="input-group">
+                            <span>邮箱地址:</span>
+                            <input />
+                        </div>
+                        <div class="input-group">
+                            <span>用户名:</span>
+                            <input />
+                        </div>
+                        <div class="input-group">
+                            <span>初始密码:</span>
+                            <input />
+                        </div>
+                        <div class="input-group">
+                            <span>销售:</span>
+                            <input />
+                        </div>
+                        <button>确定</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,7 +180,9 @@ export default {
 @login-card-login-input-invalid-text-color: #d75000;
 @login-card-login-input-width: 380px;
 @login-card-register-header-height: 60px;
-@login-card-register-text-color: #a3afbb;
+@login-card-register-text-color: #c0ccda;
+@login-card-register-input-backgrand: #414d56;
+@login-card-register-input-border: #52626d;
 
 .@{css-prefix}login {
     .wh(100%,100%);
@@ -407,10 +439,100 @@ export default {
                 .body-right {
                     width: 50%;
                     float: left;
+                    margin: 14px 0;
+
+                    input {
+                        .wh(100%,36px);
+                        background: @login-card-register-input-backgrand;
+                        border: 1px solid @login-card-register-input-border;
+                        padding: 6px 8px;
+                        .sc(16px,@login-card-register-text-color);
+                        border-radius: @common-radius;
+                        overflow: hidden;
+
+                        &:focus {
+                            outline-offset: 0;
+                            outline: -webkit-focus-ring-color auto 0;
+                        }
+                    }
+
+                    button {
+                        cursor: pointer;
+                        .wh(180px,36px);
+                        border-radius: @common-radius;
+                        border: 0;
+                        .sc(14px,#fff);
+                        background: @primary-color;
+                        margin-top: 20px;
+
+                        &:focus {
+                            outline-offset: 0;
+                            outline: -webkit-focus-ring-color auto 0;
+                        }
+
+                        &:hover {
+                            background-color: #57a3f3;
+                            border-color: #57a3f3;
+                        }
+                    }
+
+                    .title {
+                        text-align: left;
+                        .sc(18px,@login-card-register-text-color)
+                    }
                 }
 
                 .body-left {
-                    
+                    padding-right: 48px;
+
+                    .select-label {
+                        margin: 10px 0;
+                        text-align: left;
+                        .sc(14px,@login-card-register-text-color)
+                    }
+
+                    .select-style {
+                        border: 1px solid @login-card-register-input-border;
+                        width: 100%;
+                        border-radius: @common-radius;
+                        overflow: hidden;
+                        background: @login-card-register-input-backgrand;
+
+                        select {
+                            padding: 5px 8px;
+                            width: 100%;
+                            .sc(16px,@login-card-register-text-color);
+                            border: none;
+                            box-shadow: none;
+                            background-image: none;
+                            -webkit-appearance: none;
+                            background: @login-card-register-input-backgrand;
+                            
+                            &:focus {
+                                outline: none;
+                            }
+                        }
+                    }
+                }
+
+                .body-right {
+                    padding-left: 48px;
+                    border-left: 1px dashed #8492a6;
+
+                    .input-group {
+                        margin: 8px 0;
+                        & > span {
+                            margin-bottom: 10px;
+                            float: left;
+                            .sc(14px,@login-card-register-text-color)
+                        }
+
+                        & > div {
+                            margin: 5px 20px 0 0;
+                            text-align: right;
+                            .sc(12px,#8492a6);
+                        }
+                    }
                 }
             } 
         }
