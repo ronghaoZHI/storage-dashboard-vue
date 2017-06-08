@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-login" @keyup.enter="loginSubmit('loginForm')">
         <div class="card-login">
-            <div class="tab-login  dn">
+            <div class="tab-login" v-if="isLogin">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
                     <span>Language</span>
@@ -40,7 +40,7 @@
                     Copyright © 2015-2017 BaishanCloud. All rights Reserved.
                 </div>
             </div>
-            <div class="tab-register">
+            <div class="tab-register" v-if="!isLogin">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
                     <span>选择您要进行的操作(二选一)</span>
@@ -49,7 +49,7 @@
                     <div class="body-left">
                         <div class="title">选择(一)</div>
                         <div class="select-label">查看客户使用情况:</div>
-                        <div class="select-style">
+                        <div class="select-group">
                             <select>
                                 <option value="volvo">Volvo</option>
                                 <option value="saab">Saab</option>
@@ -78,9 +78,12 @@
                             <span>初始密码:</span>
                             <input />
                         </div>
-                        <div class="input-group">
-                            <span>销售:</span>
-                            <input />
+                        <div class="select-label">账户类型:</div>
+                        <div class="select-group">
+                            <select>
+                                <option value="normal">Normal user</option>
+                                <option value="super">Super user</option>
+                            </select>
                         </div>
                         <button>确定</button>
                     </div>
@@ -97,6 +100,7 @@ export default {
         return {
             lang: 'cn',
             selectedCustomer: '',
+            isLogin: true,
             keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
             loginForm: {
                 email: localStorage.getItem('loginEmail'),
@@ -126,16 +130,22 @@ export default {
                 // save login email
                 this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
                 this.$http.post(LOGIN, { ...this.loginForm }).then(res => {
-                    this.$store.dispatch('setUserInfo', res.data)
-                    let redirect = this.$route.query.redirect // get redirect path
-                    !!redirect ? this.$router.push(redirect) : this.$router.push('/')
-                    Vue.config.lang = this.lang
+                    res.data.type === 'admin' ? this.adminMode(res.data) : this.toIndex(res.data)
                 }, error => {
                     this.$Message.error(error)
                 })
             } else {
                 this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
             }
+        },
+        adminMode (data) {
+            this.isLogin = false
+        },
+        toIndex (data) {
+            this.$store.dispatch('setUserInfo', data)
+            let redirect = this.$route.query.redirect // get redirect path
+            !!redirect ? this.$router.push(redirect) : this.$router.push('/')
+            Vue.config.lang = this.lang
         },
         changeLang (lang) {
             Vue.config.lang = lang
@@ -480,10 +490,6 @@ export default {
                         text-align: left;
                         .sc(18px,@login-card-register-text-color)
                     }
-                }
-
-                .body-left {
-                    padding-right: 48px;
 
                     .select-label {
                         margin: 10px 0;
@@ -491,7 +497,7 @@ export default {
                         .sc(14px,@login-card-register-text-color)
                     }
 
-                    .select-style {
+                    .select-group {
                         border: 1px solid @login-card-register-input-border;
                         width: 100%;
                         border-radius: @common-radius;
@@ -515,14 +521,18 @@ export default {
                     }
                 }
 
+                .body-left {
+                    padding-right: 48px;
+                }
+
                 .body-right {
                     padding-left: 48px;
                     border-left: 1px dashed #8492a6;
 
                     .input-group {
-                        margin: 8px 0;
+                        margin: 10px 0;
                         & > span {
-                            margin-bottom: 10px;
+                            margin-bottom: 6px;
                             float: left;
                             .sc(14px,@login-card-register-text-color)
                         }
