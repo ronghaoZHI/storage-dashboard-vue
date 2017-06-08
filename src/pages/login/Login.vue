@@ -25,13 +25,13 @@
                             <span @click="showPw" :class="{ showPw:showPassword }"><Icon type="eye" :size="18"></Icon></span>
                         </div>
                         <div class="keep">
-                            <input type="checkbox" id="bsc-checkbox"/>
-                            <label for="bsc-checkbox"><span></span>保持登录</label>
+                            <input type="checkbox" v-model="keepEmail" @click="keep" id="bsc-checkbox"/>
+                            <label for="bsc-checkbox"><span></span>{{$t("LOGIN.KEEP_EMAIL")}}</label>
                         </div>
                         <div class="login">
                             <button @click="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</button>
                         </div>
-                        <div class="register">
+                        <div class="register dn">
                             没有账号？<a>立即申请</a>
                         </div>
                     </form>
@@ -67,8 +67,9 @@ export default {
         return {
             lang: 'cn',
             selectedCustomer: '',
+            keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
             loginForm: {
-                email: '',
+                email: localStorage.getItem('loginEmail'),
                 password: ''
             },
             showPassword: false
@@ -92,6 +93,8 @@ export default {
     methods: {
         async loginSubmit (name) {
             if (this.formValid(name)) {
+                // save login email
+                this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
                 this.$http.post(LOGIN, { ...this.loginForm }).then(res => {
                     this.$store.dispatch('setUserInfo', res.data)
                     let redirect = this.$route.query.redirect // get redirect path
@@ -127,6 +130,9 @@ export default {
                 }
             })
             return isValid
+        },
+        keep () {
+            localStorage.setItem('keepEmail', this.keepEmail)
         }
     }
 }
