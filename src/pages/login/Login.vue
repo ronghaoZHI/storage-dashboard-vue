@@ -88,6 +88,9 @@ export default {
             }
         }
     },
+    mounted () {
+        this.refreshMenu()
+    },
     methods: {
         async loginSubmit (name) {
             if (this.formValid(name)) {
@@ -127,6 +130,9 @@ export default {
             Vue.config.lang = lang
             sessionStorage.removeItem('lang')
             sessionStorage.setItem('lang', lang)
+        },
+        refreshMenu () {
+            this.$store.dispatch('refreshMenu')
         },
         showPw () {
             let input = document.querySelector('.input-password')

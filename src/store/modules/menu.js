@@ -1,4 +1,5 @@
 import user from './user'
+import * as types from '../mutation-types'
 
 import iconBucket from '../../assets/icon-bucket.png'
 import iconDashboard from '../../assets/icon-dashboard.png'
@@ -33,9 +34,17 @@ const ONLINE_NORMAL = [bucket, dashboard, keychain]
 const ONLINE_ADMIN = [bucket, dashboard, keychain, machine]
 
 const state = {
-    menuList: user.state.type === 'admin' || user.state.type === 'super' ? ONLINE_ADMIN : ONLINE_NORMAL
+    menuList: user.state.type === 'super' || (user.state.subUser && user.state.subUser.info.type === 'super') ? ONLINE_ADMIN : ONLINE_NORMAL
+}
+
+const mutations = {
+    [types.REFRESH_MENU] (state) {
+        console.log(user.state.type === 'super' || (user.state.subUser && user.state.subUser.type === 'super'))
+        state.menuList = user.state.type === 'super' || (user.state.subUser && user.state.subUser.type === 'super') ? ONLINE_ADMIN : ONLINE_NORMAL
+    }
 }
 
 export default {
-    state
+    state,
+    mutations
 }
