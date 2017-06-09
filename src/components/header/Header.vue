@@ -11,13 +11,13 @@
                 </div>
                 <Dropdown style="margin-left: 3px"
                           @on-click="menuClick"
-                          placement="bottom-start">
+                          placement="bottom-end">
                     <a class="dropdown-link"
                        href="javascript:void(0)">{{uname}}</a>
                     <Icon type="chevron-down"
                           class="icon-top-down"></Icon>
                     <Dropdown-menu slot="list">
-                        <Dropdown-item name="selectSubUser">切换子账号</Dropdown-item>
+                        <Dropdown-item v-show="isAdminMode" name="selectSubUser">切换子账号</Dropdown-item>
                         <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
                         <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
                     </Dropdown-menu>
@@ -49,6 +49,7 @@ export default {
     data () {
         return {
             rePasswordModal: false,
+            isAdminMode: user.state.type === 'admin',
             rePasswordForm: {
                 password: ''
             },

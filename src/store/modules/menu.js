@@ -39,8 +39,7 @@ const state = {
 
 const mutations = {
     [types.REFRESH_MENU] (state) {
-        console.log(user.state.type === 'super' || (user.state.subUser && user.state.subUser.type === 'super'))
-        state.menuList = user.state.type === 'super' || (user.state.subUser && user.state.subUser.type === 'super') ? ONLINE_ADMIN : ONLINE_NORMAL
+        state.menuList = user.state.type === 'super' || (user.state.subUser && user.state.subUser.info.type === 'super') ? ONLINE_ADMIN : ONLINE_NORMAL
     }
 }
 

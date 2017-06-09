@@ -88,9 +88,6 @@ export default {
             }
         }
     },
-    mounted () {
-        this.refreshMenu()
-    },
     methods: {
         async loginSubmit (name) {
             if (this.formValid(name)) {
@@ -120,8 +117,9 @@ export default {
                 subUserList: this.subUserList
             })
         },
-        toIndex (data) {
-            this.$store.dispatch('setUserInfo', data)
+        async toIndex (data) {
+            await this.$store.dispatch('setUserInfo', data)
+            await this.refreshMenu()
             let redirect = this.$route.query.redirect // get redirect path
             !!redirect ? this.$router.push(redirect) : this.$router.push('/')
             Vue.config.lang = this.lang
