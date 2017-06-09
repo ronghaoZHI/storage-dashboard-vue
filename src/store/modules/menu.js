@@ -4,7 +4,6 @@ import iconBucket from '../../assets/icon-bucket.png'
 import iconDashboard from '../../assets/icon-dashboard.png'
 import iconKey from '../../assets/icon-key.png'
 import iconMachine from '../../assets/icon-machine.png'
-import iconPartition from '../../assets/icon-partition.png'
 
 const bucket = {
     index: 1,
@@ -30,13 +29,8 @@ const machine = {
     icon: iconMachine
 }
 
-const partition = {
-    index: 5,
-    name: 'partition',
-    icon: iconPartition
-}
 const ONLINE_NORMAL = [bucket, dashboard, keychain]
-const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, partition]
+const ONLINE_ADMIN = [bucket, dashboard, keychain, machine]
 
 const state = {
     menuList: user.state.type === 'admin' || user.state.type === 'super' ? ONLINE_ADMIN : ONLINE_NORMAL

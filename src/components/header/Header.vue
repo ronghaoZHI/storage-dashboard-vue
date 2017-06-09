@@ -11,12 +11,13 @@
                 </div>
                 <Dropdown style="margin-left: 3px"
                           @on-click="menuClick"
-                          placement="bottom-end">
+                          placement="bottom-start">
                     <a class="dropdown-link"
-                       href="javascript:void(0)">{{username}}</a>
+                       href="javascript:void(0)">{{uname}}</a>
                     <Icon type="chevron-down"
                           class="icon-top-down"></Icon>
                     <Dropdown-menu slot="list">
+                        <Dropdown-item name="selectSubUser">切换子账号</Dropdown-item>
                         <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
                         <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
                     </Dropdown-menu>
@@ -58,6 +59,11 @@ export default {
             }
         }
     },
+    computed: {
+        uname: function () {
+            return user.state.type === 'admin' ? `${this.username} -- ${user.state.subUser.username}` : this.username
+        }
+    },
     props: ['username'],
     methods: {
         async menuClick (name) {
@@ -73,6 +79,8 @@ export default {
                 }
             } else if (name === 'rePasssword') {
                 this.rePasswordModal = true
+            } else if (name === 'selectSubUser') {
+                this.$router.push('/login')
             }
         },
         async changePassword () {

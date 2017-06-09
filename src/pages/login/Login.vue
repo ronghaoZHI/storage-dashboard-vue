@@ -46,7 +46,7 @@
                     <a>用户管理</a>
                 </div>
                 <div class="body">
-                    <div v-for="user in userList">
+                    <div v-for="user in subUserList" @click="selectSubUser(user)">
                         <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
                         <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
                         <span class="icon" v-show="user.info.type === 'super'"><Icon type="star"></Icon></span>
@@ -58,24 +58,23 @@
 </template>
 <script>
 import { LOGIN, BOUND_USER } from '@/service/API'
+import user from '@/store/modules/user'
 import Vue from 'vue'
 export default {
     data () {
         return {
             lang: 'cn',
             selectedCustomer: '',
-            isLogin: true,
+            isLogin: !(!!user.state && user.state.type === 'admin'),
             keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
             loginForm: {
                 email: localStorage.getItem('loginEmail'),
                 password: ''
             },
             showPassword: false,
-            userList: []
+            userInfo: user.state || {},
+            subUserList: user.state.subUserList || []
         }
-    },
-    mounted () {
-
     },
     directives: {
         bfocus: {
@@ -105,11 +104,18 @@ export default {
         },
         async adminMode (data) {
             let res = await this.$http.get(BOUND_USER)
-            console.log(res)
+            this.userInfo = data
             if (res.data.length > 0) {
-                this.userList = res.data
+                this.subUserList = res.data
                 this.isLogin = false
             }
+        },
+        selectSubUser (user) {
+            this.toIndex({
+                ...this.userInfo,
+                subUser: user,
+                subUserList: this.subUserList
+            })
         },
         toIndex (data) {
             this.$store.dispatch('setUserInfo', data)
@@ -163,7 +169,7 @@ export default {
 @login-card-register-item-height: 80px;
 @login-card-register-text-color: #c0ccda;
 @login-card-register-input-backgrand: #414d56;
-@login-card-register-border: #52626d;
+@login-card-register-input-backgrand-hover: #52626d;
 
 .@{css-prefix}login {
     .wh(100%,100%);
@@ -431,6 +437,11 @@ export default {
                     border-radius: @common-radius;
                     .sc(16px,#fff);
                     margin: 6px 3px;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: @login-card-register-input-backgrand-hover;
+                    }
 
                     .info {
                         display: inline-block;
@@ -450,8 +461,8 @@ export default {
                     .icon {
                         position: absolute;
                         color: #fff;
-                        top: 0px;
-                        right: 4px;
+                        top: 2px;
+                        right: 6px;
                     }
                 }
             }

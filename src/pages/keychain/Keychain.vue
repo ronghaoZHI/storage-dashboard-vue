@@ -5,6 +5,7 @@
 </template>
 <script>
 import { ACCESSKEY } from '@/service/API'
+import user from '@/store/modules/user'
 import moment from 'moment'
 export default {
     data () {
@@ -33,9 +34,16 @@ export default {
     methods: {
         async getKeychainList () {
             this.$Loading.start()
+            console.log(user.state.subUser)
             try {
-                const res = await this.$http.get(ACCESSKEY)
-                this.data = await _.forEach(res.data, (item) => {
+                let keys = []
+                if (user.state.type === 'admin') {
+                    keys = user.state.subUser.keys
+                } else {
+                    let res = await this.$http.get(ACCESSKEY)
+                    keys = res.data
+                }
+                this.data = await _.forEach(keys, (item) => {
                     item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
                 })
                 this.$Loading.finish()

@@ -4,6 +4,7 @@ import AWS from 'aws-sdk'
 import { ACCESSKEY } from './API'
 import axios from './axios-bsc'
 import store from '@/store'
+import user from '@/store/modules/user'
 import router from '@/router'
 
 let key = {}
@@ -33,7 +34,9 @@ export const config = ({ accesskey, secretkey }, timeout = 10000, region = 'us-w
 }
 
 export const getAWS = async(timeout = 10000) => {
-    if (!key.accesskey) {
+    if (user.state.type === 'admin') {
+        key = user.state.subUser.keys[0]
+    } else if (!key.accesskey) {
         key = await getKey()
     }
     return config(key, timeout)

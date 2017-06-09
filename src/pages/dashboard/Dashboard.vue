@@ -126,6 +126,7 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { handler } from '@/service/Aws'
 import { getAnalysisUrl } from '@/service/API'
+import user from '@/store/modules/user'
 import { bytes, times, timesK, date } from '@/service/bucketService'
 export default {
     data () {
@@ -179,6 +180,7 @@ export default {
                 let res = await handler('listBuckets')
                 this.bucketList = [...res.Buckets, { Name: 'All Buckets' }]
             } catch (error) {
+                console.log(error)
                 this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
             };
         },
@@ -224,7 +226,11 @@ export default {
             if (this.bucket && this.bucket !== 'All Buckets') {
                 path += '/' + this.bucket
             }
-            return getAnalysisUrl(path + '?custom_range=' + this.dateRange)
+            path += '?custom_range=' + this.dateRange
+            if (user.state.type === 'admin') {
+                path += '&customer=' + user.state.subUser.email
+            }
+            return getAnalysisUrl(path)
         },
         tabToggle (index, ref) {
             let vm = this

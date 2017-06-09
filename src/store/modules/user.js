@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import * as types from '../mutation-types'
 
-const state = JSON.parse(sessionStorage.getItem('user')) || {}
+const state = {
+    ...JSON.parse(sessionStorage.getItem('user'))
+}
 
 const mutations = {
     [types.LOGIN] (state, info) {
