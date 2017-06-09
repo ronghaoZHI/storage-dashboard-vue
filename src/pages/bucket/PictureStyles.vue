@@ -28,9 +28,10 @@
 </template>
 
 <script>
-import { getAWS, handler } from '@/service/Aws'
-import { picStylePrefix, Utf8ArrayToStr } from '@/service/BucketService'
+import { getAWS, handler, config } from '@/service/Aws'
+import { picStyleRulesPrefix, picStyleOverlayPrefix, Utf8ArrayToStr } from '@/service/BucketService'
 import upload from '@/components/bucket/upload'
+import iView from 'iview'
 export default {
     data () {
         return {
@@ -44,7 +45,7 @@ export default {
             clipUrl: '',
             selectedStyleName: '',
             showUploadModal: false,
-            prefix: picStylePrefix
+            prefix: picStyleRulesPrefix
         }
     },
     computed: {
@@ -65,10 +66,11 @@ export default {
                 this.$Loading.start()
                 let res = await handler('listObjects', {
                     Bucket: this.bucket,
-                    Prefix: picStylePrefix
+                    Prefix: picStyleRulesPrefix
                 })
                 const fileList = res.Contents
                 _.each(fileList, file => {
+                    // make sure this is a json file
                     if (file.Key.split('.json').length === 2) {
                         this.getObject(file)
                     }
@@ -85,10 +87,8 @@ export default {
             }
             let res = await handler('getObject', params)
             let fileJson = JSON.parse(Utf8ArrayToStr(res.Body))
-            if (fileJson[0]) {
-                let ruleName = file.Key.split(picStylePrefix)[1].split('.json')[0]
-                this.styleList.push({'ruleName': ruleName, ...this.convert2list(fileJson)})
-            }
+            let ruleName = file.Key.split(picStyleRulesPrefix)[1].split('.json')[0]
+            this.styleList.push({'ruleName': ruleName, ...this.convert2list(fileJson)})
         },
         deleteStyleConfirm (style) {
             this.$Modal.confirm({
@@ -102,7 +102,7 @@ export default {
             try {
                 await handler('deleteObject', {
                     Bucket: this.bucket,
-                    Key: picStylePrefix + style.ruleName + '.json'
+                    Key: picStyleRulesPrefix + style.ruleName + '.json'
                 })
                 this.styleList.splice(style._index, 1)
                 this.$Message.success(this.$t('STORAGE.DELETE_STYLE_SUCCESS'))
@@ -111,7 +111,7 @@ export default {
             }
         },
         async exportStyle (style) {
-            let url = await getURL(this.bucket, picStylePrefix + style.ruleName + '.json')
+            let url = await getURL(this.bucket, picStyleRulesPrefix + style.ruleName + '.json')
             document.querySelector('#element-download').href = url
             document.querySelector('#span-download').click()
         },
@@ -120,23 +120,16 @@ export default {
         },
         json2instruction (jsonData) {
             let instructionArray = []
-            let fontName = ''
-            let watermarkerText = ''
+            let overlayFileName = ''
             _.each(jsonData, (value, key) => {
                 let item = ''
                 if (key === 'overlay') {
-                    fontName = value
-                } else if (key === 'text') {
-                    watermarkerText = value
-                } else {
-                    item = J2I[key] + value
-                    instructionArray.push(item)
+                    overlayFileName = value.substr(0, 5) === 'text:' ? value.split('text:')[1].split(':')[0] + '.json' : value + '.png'
                 }
+                item = J2I[key] + value
+                instructionArray.push(item)
             })
-            if (!!fontName) {
-                instructionArray.push('l_text:' + fontName + ':' + watermarkerText)
-            }
-            return instructionArray.join(',')
+            return [instructionArray.join(','), overlayFileName]
         },
         convert2list (data) {
             const listItem = {
@@ -144,29 +137,58 @@ export default {
                 format: '原图格式'
             }
             const ISArry = []
+            const overlayList = new Set()
             _.each(data, item => {
-                ISArry.push(this.json2instruction(item))
+                const itemConvert = this.json2instruction(item)
+                ISArry.push(itemConvert[0])
+                if (!!itemConvert[1]) {
+                    overlayList.add(itemConvert[1])
+                }
                 if (!!item.format) {
                     listItem.quality = item.quality
                     listItem.format = item.format
                 }
             })
+            listItem.overlayList = overlayList
             listItem.IS = ISArry.join('--')
             return listItem
         },
-        previewModal (style) {
+        async previewModal (style) {
             this.$Loading.start()
-            const ruleIS = style.IS
-            this.clipUrl = 'http://imgx-ss.bscstorage.com/imgx-test/' + ruleIS + '/dashboard.jpg'
+            if (style.overlayList.size > 0) {
+                var promises = []
+                style.overlayList.forEach(item => {
+                    promises.push(this.putOverlayObject(item))
+                })
+                await Promise.all(promises)
+            }
+            console.log(style.IS)
+            this.clipUrl = 'http://imgx-ss.bscstorage.com/image-example/' + style.IS + '/dashboard.jpg'
             this.selectedStyleName = style.ruleName
             this.showImageModal = true
             this.$Loading.finish()
+        },
+        async putOverlayObject (fileName) {
+            const file = await handler('getObject', {
+                Bucket: this.bucket,
+                Key: picStyleOverlayPrefix + fileName
+            })
+            const s3 = config({ previewAccessKey, previewSecretKey })
+            return await new Promise((resolve, reject) => s3.putObject({
+                Bucket: 'image-example',
+                Key: picStyleOverlayPrefix + fileName,
+                ContentType: file.ContentType,
+                Body: file.Body
+            }, (error, data) => {
+                error && iView.Message.error(error.message, 5)
+                return error ? reject(error) : resolve(data)
+            }))
         },
         uploadModal () {
             this.showUploadModal = true
         },
         uploadSuccess (fileName) {
-            const file = {Key: picStylePrefix + fileName}
+            const file = {Key: picStyleRulesPrefix + fileName}
             this.getObject(file)
         }
     },
@@ -177,6 +199,8 @@ export default {
         }
     }
 }
+const previewAccessKey = 'acc_drdrxp'
+const previewSecretKey = '11111111111111111111'
 const getURL = async (bucket, key) => {
     try {
         let params = { Bucket: bucket, Key: key }
@@ -205,7 +229,8 @@ const J2I = {
     background: 'b_',
     format: 'f_',
     version: 'v_',
-    transformation: 't_'
+    transformation: 't_',
+    overlay: 'l_'
 }
 const styleHeaderSetting = [{
     title: 'Rule name(规则名)',
@@ -231,12 +256,11 @@ const styleHeaderSetting = [{
     align: 'right',
     render (row, column, index) {
         return `<Tooltip :content='$t("STORAGE.IMG_PREVIEW")' :delay="1000" placement="top"><i-button size="small" @click="previewModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
-                <Tooltip :content='$t("STORAGE.EXPORT_STYLE")' :delay="1000" placement="top"><i-button size="small" @click="exportStyle(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
-                <Tooltip :content='$t("STORAGE.EDIT")' :delay="1000" placement="top"><i-button @click="goEdit(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
+                <Tooltip :content='$t("STORAGE.EXPORT_STYLE")' :delay="1000" placement="top"><i-button size="small" @click="exportStyle(row)"><Icon type="share" :size="iconSize"></Icon></i-button></Tooltip>
+                <Tooltip :content='$t("STORAGE.EDIT")' :delay="1000" placement="top"><i-button @click="goEdit(row)" size="small"><Icon type="compose" :size="iconSize"></Icon></i-button></Tooltip>
                 <Tooltip :content='$t("STORAGE.DELETE_STYLE")' :delay="1000" placement="top"><i-button size="small" @click="deleteStyleConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
     }
-}
-]
+}]
 </script>
 
 <style lang="less" scoped>

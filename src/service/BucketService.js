@@ -78,11 +78,11 @@ const convertPrefix2Router = (prefix) => {
         return []
     }
 }
-const picStylePrefix = 'imgx/l/'
+const picStyleRulesPrefix = 'imgx/cmd_template/'
+const picStyleOverlayPrefix = 'imgx/overlay/'
 const Utf8ArrayToStr = array => {
     var out, i, len, c
     var char2, char3
-
     out = ''
     len = array.length
     i = 0
@@ -108,7 +108,6 @@ const Utf8ArrayToStr = array => {
             break
         }
     }
-
     return out
 }
-export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, picStylePrefix, Utf8ArrayToStr }
+export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, picStyleRulesPrefix, picStyleOverlayPrefix, Utf8ArrayToStr }

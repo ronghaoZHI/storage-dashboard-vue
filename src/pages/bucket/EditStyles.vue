@@ -224,7 +224,7 @@
 <script>
 import {Slider, Compact, Photoshop, Swatches} from 'vue-color'
 import { handler } from '@/service/Aws'
-import { picStylePrefix } from '@/service/BucketService'
+import { picStyleRulesPrefix, picStyleOverlayPrefix } from '@/service/BucketService'
 import upload from '@/components/bucket/upload'
 export default {
     data () {
@@ -236,7 +236,7 @@ export default {
             watermarker: watermarkerDefult,
             general: generalDefult,
             fontColor: defaultFontColor,
-            prefix: picStylePrefix,
+            prefix: picStyleOverlayPrefix,
             imgName: ''
         }
     },
@@ -252,7 +252,7 @@ export default {
             return this.$route.params.IS === 'noIS' ? '' : this.$route.params.IS
         },
         key () {
-            return this.$route.params.ruleName ? picStylePrefix + this.$route.params.ruleName + '.json' : ''
+            return this.$route.params.ruleName ? picStyleRulesPrefix + this.$route.params.ruleName + '.json' : ''
         },
         transformationError () {
             return !(/^[a-z0-9_]{1,20}$/).test(this.transformation)
@@ -309,7 +309,7 @@ export default {
             if (!!fileName) {
                 let params = {
                     Bucket: this.bucket,
-                    Key: picStylePrefix + fileName + '.json'
+                    Key: picStyleOverlayPrefix + fileName + '.json'
                 }
                 let res = await handler('getObject', params)
                 return JSON.parse(new TextDecoder('utf-8').decode(res.Body))
@@ -318,12 +318,13 @@ export default {
         async saveFont () {
             let style = {}
             style = this.watermarker.fontStyle
-            style.font_color = this.fontColor.hex
+            style.font_size = parseInt(this.watermarker.fontStyle.font_size)
+            style.font_color = this.fontColor.hex.substr(1).toLowerCase()
             const fontStyleFile = new Blob([JSON.stringify(style)], {'type': 'application/json'})
             try {
                 await handler('putObject', {
                     Bucket: this.bucket,
-                    Key: picStylePrefix + this.transformation + '_font.json',
+                    Key: picStyleOverlayPrefix + this.transformation + '_font.json',
                     ContentType: 'application/json',
                     Body: fontStyleFile
                 })
@@ -358,7 +359,7 @@ export default {
             try {
                 await handler('putObject', {
                     Bucket: this.bucket,
-                    Key: picStylePrefix + this.transformation + '.json',
+                    Key: picStyleRulesPrefix + this.transformation + '.json',
                     ContentType: 'application/json',
                     Body: file
                 })
@@ -448,8 +449,7 @@ const watermarkerConvert2Save = (watermarkerData, styleName) => {
         opacity: watermarkerData.opacity
     }
     if (watermarkerData.type === 'text') {
-        watermarkerSave.text = watermarkerData.fontStyle.text
-        watermarkerSave.overlay = styleName + '_font'
+        watermarkerSave.overlay = 'text:' + styleName + '_font:' + watermarkerData.fontStyle.text
     } else if (watermarkerData.type === 'img') {
         watermarkerSave.overlay = styleName
     }
@@ -489,12 +489,16 @@ const generalConvert2Font = fileData => {
     return generalFont
 }
 const watermarkerConvert2Font = data => {
-    console.log('watermarker2Font')
     let watermarkerFont = _.cloneDeep(data)
     let dataKeys = Object.keys(data)
     if (dataKeys.length) {
         watermarkerFont.open = true
-        watermarkerFont.type = 'text'
+        if (watermarkerFont.overlay && watermarkerFont.overlay.font) {
+            watermarkerFont.type = 'text'
+            watermarkerFont.fontStyle.text = watermarkerFont.overlay.text
+        } else if (watermarkerFont.overlay && watermarkerFont.overlay.image) {
+            watermarkerFont.type = 'img'
+        }
     }
     return watermarkerFont
 }
