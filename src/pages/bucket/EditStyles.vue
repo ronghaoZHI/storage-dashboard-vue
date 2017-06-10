@@ -135,7 +135,7 @@
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
                                     <div class="upload-box">
-                                        <upload :bucket="bucket" :prefix="prefix" v-on:uploadSuccess="uploadSuccess"></upload>
+                                        <upload :bucket="bucket" :prefix="prefix" accept="image/png" validationInfo='支持png格式文件，文件名为不包含“/:,”的ascii' :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
                                     </div>
                                 </div>
                                 <div class="form-item">
@@ -237,7 +237,8 @@ export default {
             general: generalDefult,
             fontColor: defaultFontColor,
             prefix: picStyleOverlayPrefix,
-            imgName: ''
+            imgName: '',
+            uploadValidation: /^[\x00-\x2b\x2d\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },

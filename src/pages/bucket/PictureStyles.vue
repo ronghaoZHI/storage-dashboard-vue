@@ -18,7 +18,7 @@
             <div slot="footer"></div>
         </Modal>
         <Modal v-model="showUploadModal" :title='$t("STORAGE.FILE_PERMISSION")' width="700">
-            <upload v-if="showUploadModal" v-on:uploadSuccess="uploadSuccess" :bucket="bucket" :prefix="prefix"></upload>
+            <upload accept="application/json" v-if="showUploadModal" v-on:uploadSuccess="uploadSuccess" validationInfo='只支持json文件' :validation="uploadValidation" :bucket="bucket" :prefix="prefix"></upload>
             <div slot="footer" class="copy-modal-footer">
                  <Button style="visibility:hidden" type="primary"></Button>
             </div>
@@ -45,7 +45,8 @@ export default {
             clipUrl: '',
             selectedStyleName: '',
             showUploadModal: false,
-            prefix: picStyleRulesPrefix
+            prefix: picStyleRulesPrefix,
+            uploadValidation: /\.(json|JSON)$/
         }
     },
     computed: {

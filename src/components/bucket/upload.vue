@@ -5,10 +5,13 @@
              v-upload="self">
             <input type="file"
                    multiple="multiple"
-                   class="ivu-upload-input">
+                   class="ivu-upload-input"
+                   :accept="accept"
+                   :validation="validation">
             <div style="padding: 50px 0px;"><i class="ivu-icon ivu-icon-ios-cloud-upload"
                    style="font-size: 52px; color: rgb(51, 153, 255);"></i>
                 <p>{{$t("STORAGE.FILE_UPLOAD_LIM")}}</p>
+                <p class='upload-info'>{{validationInfo}}</p>
             </div>
         </div>
         <ul class="section-file-list">
@@ -19,7 +22,7 @@
                 <Progress :percent="file.progress">
                     <Icon type="checkmark-circled"></Icon>
                 </Progress>
-                <span class="upload-span-status">{{file.progress === 100 ? 'Success' : file.request && file.request.faileded ? 'failed' : 'Uploading'}}</span>
+                <span class="upload-span-status">{{file.progress === 100 ? 'Success' : file.request && file.request.faileded ? 'failed' : file.valid ? 'Uploading' : 'Invalid'}}</span>
                 <Button @click="deleteFile(file)" type="text" style="width:48px"><Icon type="close"></Icon></Button>
             </li>
         </ul>
@@ -36,7 +39,7 @@ export default {
             self: this
         }
     },
-    props: ['bucket', 'prefix'],
+    props: ['bucket', 'prefix', 'accept', 'validation', 'validationInfo'],
     computed: {},
     directives: {
         upload: {
@@ -128,10 +131,14 @@ export default {
                 to.forEach((file) => {
                     if (!file.isUpload) {
                         file.isUpload = true
-                        self.uploadFile(file).then(res => {
-                            this.$emit('uploadSuccess', file.name)
-                            return res
-                        }, () => self.$Message.error($t('STORAGE.UPLOAD_FAILED', {fileName: file.name}), 5))
+                        if (this.validation.test(file.name)) {
+                            self.uploadFile(file).then(res => {
+                                this.$emit('uploadSuccess', file.name)
+                                return res
+                            }, () => self.$Message.error($t('STORAGE.UPLOAD_FAILED', {fileName: file.name}), 5))
+                        } else {
+                            file.valid = false
+                        }
                     }
                 })
             }
@@ -204,5 +211,10 @@ export default {
     div {
         flex: 6;
     }
+}
+.upload-info{
+    font-size: 12px !important;
+    color: #657180;
+    padding-top: 5px;
 }
 </style>
