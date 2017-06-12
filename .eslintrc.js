@@ -30,6 +30,7 @@ module.exports = {
     },
     'globals': {
         '_': false,
-        '$t': false
+        '$t': false,
+        '$': false
     }
 }

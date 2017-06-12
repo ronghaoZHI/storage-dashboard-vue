@@ -79,12 +79,12 @@ export default {
     directives: {
         bfocus: {
             inserted: function (el) {
-                el.onfocus = (e) => {
-                    el.parentNode.parentNode.childNodes.forEach((node) => {
-                        node.classList && node.classList.contains('input-focus') && node.classList.remove('input-focus')
+                $(el).on('focus', () => {
+                    _.each($(el).parent().parent().children(), (node) => {
+                        $(node).hasClass('input-focus') && $(node).removeClass('input-focus')
                     })
-                    el.parentNode.classList.add('input-focus')
-                }
+                    $(el).parent().addClass('input-focus')
+                })
             }
         }
     },
@@ -133,18 +133,18 @@ export default {
             this.$store.dispatch('refreshMenu')
         },
         showPw () {
-            let input = document.querySelector('.input-password')
-            if (input.type === 'password') {
+            let $input = $('.input-password')[0]
+            if ($input.type === 'password') {
                 this.showPassword = true
-                input.type = 'text'
+                $input.type = 'text'
             } else {
                 this.showPassword = false
-                input.type = 'password'
+                $input.type = 'password'
             }
         },
         formValid (name) {
             let isValid = true
-            this.$refs[name].querySelectorAll('input').forEach((input) => {
+            _.each($(this.$refs[name]).find('input'), (input) => {
                 if (!input.validity.valid) {
                     isValid = false
                 }

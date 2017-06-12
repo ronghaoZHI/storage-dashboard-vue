@@ -11,8 +11,10 @@ import 'iview/dist/styles/iview.css'
 import _ from 'lodash'
 import axios from '@/service/axios-bsc'
 import { messages } from '@/service/translate'
+import $ from 'jquery'
 
 window._ = _
+window.$ = $
 window.Promise = Bluebird
 Vue.use(VueI18n)
 Vue.use(Vuex)
