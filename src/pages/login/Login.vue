@@ -179,6 +179,7 @@ export default {
     .wh(100%,100%);
     .fb(center,center);
     background: url('../../assets/login-bg.png') no-repeat;
+    background-size: cover;
 
     .card-login {
         position: relative;
