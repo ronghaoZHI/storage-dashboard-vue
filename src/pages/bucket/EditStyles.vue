@@ -7,7 +7,7 @@
                 <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Tabs size="small" >
+        <Tabs size="small">
             <Tab-pane :label='$t("STORAGE.BASIC_EDIT")'>
                 <Row>
                     <Col span="8">
@@ -212,7 +212,7 @@
                         <div class="form-item clearfix" style="width:415px;">
                             <div class="img-button">
                                 <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
-                                <Button type="primary" @click="submitInsStyles" :disabled="transformationError || textError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                <Button type="primary" @click="submitInsStyles" :disabled="transformationError">{{$t("PUBLIC.CONFIRMED")}}</Button>
                             </div>
                         </div>
                     </Col>
@@ -238,7 +238,8 @@ export default {
             fontColor: defaultFontColor,
             prefix: picStyleOverlayPrefix,
             imgName: '',
-            uploadValidation: /^[\x00-\x2b\x2d\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/
+            uploadValidation: /^[\x00-\x2b\x2d\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
+            instructions: this.paramsIS
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
@@ -249,7 +250,7 @@ export default {
         ruleName () {
             return this.$route.params.ruleName
         },
-        instructions () {
+        paramsIS () {
             return this.$route.params.IS === 'noIS' ? '' : this.$route.params.IS
         },
         key () {
@@ -294,6 +295,7 @@ export default {
                     Key: this.key
                 }
                 this.transformation = this.ruleName
+                this.instructions = this.paramsIS
                 let res = await handler('getObject', params)
                 let styles = JSON.parse(new TextDecoder('utf-8').decode(res.Body))
                 this.general = generalConvert2Font(styeItemCheckout(styles).ganeralData)
@@ -343,13 +345,7 @@ export default {
                     const reg = /^[a-z0-9]+_/g
                     const insKey = I2J[reg.exec(ins)[0]]
                     const insValue = ins.substr(reg.lastIndex)
-                    if (insKey === 'overlay' && insValue.substr(0, 5) === 'text:') {
-                        const watermarkerArray = insValue.split(':')
-                        item.overlay = watermarkerArray[1] || ''
-                        item.text = watermarkerArray[2] || ''
-                    } else {
-                        item[insKey] = insValue
-                    }
+                    item[insKey] = insValue
                 })
                 insJSON.push(item)
             })
@@ -382,6 +378,130 @@ export default {
             console.log('watermarker', to)
         }
     }
+}
+
+const I2J = {
+    c_: 'crop',
+    w_: 'width',
+    h_: 'height',
+    g_: 'gravity',
+    x_: 'x',
+    y_: 'y',
+    q_: 'quality',
+    r_: 'radius',
+    a_: 'angle',
+    e_: 'effect',
+    o_: 'opacity',
+    bo_: 'border',
+    b_: 'background',
+    l_: 'overlay',
+    f_: 'format',
+    v_: 'version',
+    t_: 'transformation'
+}
+const defaultFontColor = {
+    hex: '#BF4040'
+}
+const generalDefult = {
+    crop: 'noCrop',
+    sharpen: false,
+    quality: 70,
+    format: 'original',
+    fitSize: 10,
+    fitStyle: 'width'
+}
+const watermarkerDefult = {
+    open: false,
+    type: 'text',
+    text: '',
+    fontStyle: {
+        text: '',
+        font_family: 'Songti SC',
+        font_size: 16
+    },
+    gravity: 'north_west',
+    x: 0,
+    y: 0,
+    opacity: 100
+}
+const originalConvert2Save = (generalData) => {
+    let generalSave = _.cloneDeep(generalData)
+    if (generalSave.crop === 'fit') {
+        generalSave[generalData.fitStyle] = parseInt(generalData.fitSize)
+    } else {
+        delete generalSave.crop
+    }
+    if (generalSave.sharpen) {
+        generalSave.effect = 'sharpen'
+    }
+    if (generalSave.format === 'original') {
+        delete generalSave.format
+    }
+    delete generalSave.fitStyle
+    delete generalSave.fitSize
+    delete generalSave.sharpen
+    return generalSave
+}
+const watermarkerConvert2Save = (watermarkerData, styleName) => {
+    let watermarkerSave = {
+        x: parseInt(watermarkerData.x),
+        y: parseInt(watermarkerData.y),
+        gravity: watermarkerData.gravity,
+        opacity: watermarkerData.opacity
+    }
+    if (watermarkerData.type === 'text') {
+        watermarkerSave.overlay = 'text:' + styleName + '_font:' + watermarkerData.fontStyle.text
+    } else if (watermarkerData.type === 'img') {
+        watermarkerSave.overlay = styleName
+    }
+    return watermarkerSave
+}
+const styeItemCheckout = styles => {
+    let ganeralData = {}
+    let watermarkerData = {}
+    let fontName = ''
+    _.each(styles, item => {
+        _.forIn(item, (value, key) => {
+            if (generalKeyArray.indexOf(key) !== -1) {
+                ganeralData = item
+                return false
+            } else if (watermarkerKeyArray.indexOf(key) !== -1) {
+                if (key === 'overlay' && value.substr(0, 5) === 'text:') {
+                    fontName = value
+                }
+                watermarkerData = item
+                return false
+            }
+        })
+    })
+    return { ganeralData, watermarkerData, fontName }
+}
+const generalKeyArray = ['crop', 'quality', 'radius', 'angle', 'effect', 'format']
+const watermarkerKeyArray = ['overlay']
+const generalConvert2Font = fileData => {
+    let generalFont = _.cloneDeep(fileData)
+    if (generalFont.crop === 'fit') {
+        generalFont.fitStyle = generalFont.width ? 'width' : 'height'
+        generalFont.fitSize = generalFont.width || generalFont.height
+    }
+    generalFont.sharpen = fileData.effect === 'sharpen'
+    generalFont.format = fileData.format || 'original'
+    generalFont.quality = fileData.quality || 0
+    return generalFont
+}
+const watermarkerConvert2Font = data => {
+    let watermarkerFont = _.cloneDeep(data)
+    let dataKeys = Object.keys(data)
+    if (dataKeys.length) {
+        watermarkerFont.open = true
+        if (watermarkerFont.overlay && watermarkerFont.overlay.font) {
+            watermarkerFont.type = 'text'
+            watermarkerFont.fontStyle.text = watermarkerFont.overlay.text
+        } else if (watermarkerFont.overlay && watermarkerFont.overlay.image) {
+            watermarkerFont.type = 'img'
+        }
+    }
+    return watermarkerFont
 }
 const allFontList = [{
     value: 'Songti SC',
@@ -642,131 +762,7 @@ const allFontList = [{
 {
     value: 'Yuppy SC',
     label: 'Yuppy SC'
-}
-]
-const I2J = {
-    c_: 'crop',
-    w_: 'width',
-    h_: 'height',
-    g_: 'gravity',
-    x_: 'x',
-    y_: 'y',
-    q_: 'quality',
-    r_: 'radius',
-    a_: 'angle',
-    e_: 'effect',
-    o_: 'opacity',
-    bo_: 'border',
-    b_: 'background',
-    l_: 'overlay',
-    f_: 'format',
-    v_: 'version',
-    t_: 'transformation'
-}
-const defaultFontColor = {
-    hex: '#BF4040'
-}
-const generalDefult = {
-    crop: 'noCrop',
-    sharpen: false,
-    quality: 70,
-    format: 'original',
-    fitSize: 10,
-    fitStyle: 'width'
-}
-const watermarkerDefult = {
-    open: false,
-    type: 'text',
-    text: '',
-    fontStyle: {
-        text: '',
-        font_family: 'Songti SC',
-        font_size: 16
-    },
-    gravity: 'north_west',
-    x: 0,
-    y: 0,
-    opacity: 100
-}
-const originalConvert2Save = (generalData) => {
-    let generalSave = _.cloneDeep(generalData)
-    if (generalSave.crop === 'fit') {
-        generalSave[generalData.fitStyle] = parseInt(generalData.fitSize)
-    } else {
-        delete generalSave.crop
-    }
-    if (generalSave.sharpen) {
-        generalSave.effect = 'sharpen'
-    }
-    if (generalSave.format === 'original') {
-        delete generalSave.format
-    }
-    delete generalSave.fitStyle
-    delete generalSave.fitSize
-    delete generalSave.sharpen
-    return generalSave
-}
-const watermarkerConvert2Save = (watermarkerData, styleName) => {
-    let watermarkerSave = {
-        x: parseInt(watermarkerData.x),
-        y: parseInt(watermarkerData.y),
-        gravity: watermarkerData.gravity,
-        opacity: watermarkerData.opacity
-    }
-    if (watermarkerData.type === 'text') {
-        watermarkerSave.overlay = 'text:' + styleName + '_font:' + watermarkerData.fontStyle.text
-    } else if (watermarkerData.type === 'img') {
-        watermarkerSave.overlay = styleName
-    }
-    return watermarkerSave
-}
-const styeItemCheckout = styles => {
-    let ganeralData = {}
-    let watermarkerData = {}
-    let fontName = ''
-    _.each(styles, item => {
-        _.forIn(item, (value, key) => {
-            if (generalKeyArray.indexOf(key) !== -1) {
-                ganeralData = item
-                return false
-            } else if (watermarkerKeyArray.indexOf(key) !== -1) {
-                if (key === 'overlay') {
-                    fontName = value
-                }
-                watermarkerData = item
-                return false
-            }
-        })
-    })
-    return { ganeralData, watermarkerData, fontName }
-}
-const generalKeyArray = ['crop', 'quality', 'radius', 'angle', 'effect', 'format']
-const watermarkerKeyArray = ['overlay']
-const generalConvert2Font = fileData => {
-    let generalFont = _.cloneDeep(fileData)
-    if (generalFont.crop === 'fit') {
-        generalFont.fitStyle = generalFont.width ? 'width' : 'height'
-        generalFont.fitSize = generalFont.width || generalFont.height
-    }
-    generalFont.sharpen = fileData.effect === 'sharpen'
-    generalFont.format = fileData.format || 'original'
-    generalFont.quality = fileData.quality || 0
-    return generalFont
-}
-const watermarkerConvert2Font = data => {
-    let watermarkerFont = _.cloneDeep(data)
-    let dataKeys = Object.keys(data)
-    if (dataKeys.length) {
-        watermarkerFont.open = true
-        if (watermarkerFont.overlay && watermarkerFont.overlay.font) {
-            watermarkerFont.type = 'text'
-            watermarkerFont.fontStyle.text = watermarkerFont.overlay.text
-        } else if (watermarkerFont.overlay && watermarkerFont.overlay.image) {
-            watermarkerFont.type = 'img'
-        }
-    }
-    return watermarkerFont
-}
+}]
 </script>
 
 <style lang="less" scoped>
