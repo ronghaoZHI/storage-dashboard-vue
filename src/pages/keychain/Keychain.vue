@@ -1,40 +1,28 @@
 <template>
-    <div>
-        <Table :columns="columns" :data="data" no-data-text="No data"></Table>
+    <div class="bsc-keychain">
+        <keychain-card v-for="key in data" :keychain="key" :key="key.ts"></keychain-card>
     </div>
 </template>
 <script>
 import { ACCESSKEY } from '@/service/API'
+import keychainCard from './KeychainCard'
 import user from '@/store/modules/user'
 import moment from 'moment'
 export default {
     data () {
         return {
-            columns: [
-                {
-                    title: 'Accesskey',
-                    key: 'accesskey'
-                },
-                {
-                    title: 'Secretkey',
-                    key: 'secretkey'
-                },
-                {
-                    title: 'Create time',
-                    width: 140,
-                    key: 'ts'
-                }
-            ],
             data: []
         }
     },
     mounted () {
         this.getKeychainList()
     },
+    components: {
+        keychainCard
+    },
     methods: {
         async getKeychainList () {
             this.$Loading.start()
-            console.log(user.state.subUser)
             try {
                 let keys = []
                 if (user.state.type === 'admin') {
@@ -61,5 +49,12 @@ export default {
 
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 
+.@{css-prefix}keychain {
+    min-height: 100%;
+    width: 100%;
+    .fb(flex-start, flex-start);
+    flex-wrap: wrap;
+}
 </style>
