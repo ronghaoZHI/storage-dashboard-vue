@@ -132,12 +132,12 @@
                             </div><!--angleType-->
                             <div class="form-item" v-if="general.angleType === 'angle'">
                                 <span class="form-label">角度 : </span>
-                                <div class="input-text-box">
+                                <div class="input-text-box" style="margin-left:25px;">
                                     <input type='number' v-model="general.angle">
                                 </div>
                             </div><!--angle-->
                             <div class="form-item">
-                                <span class="form-label">使用滤镜或特效 : </span>
+                                <span class="form-label">滤镜与特效 : </span>
                                 <Radio-group v-model="general.effect" style='vertical-align: text-top'>
                                     <Radio label="noEffect">不添加滤镜或特效</Radio>
                                     <Radio label="grayscale">灰度</Radio>
@@ -227,7 +227,7 @@
                                 <span slot="open">ON</span>
                                 <span slot="close">OFF</span>
                             </i-switch>
-                        </div>
+                        </div><!--watermarkerOpen-->
                         <div v-if="watermarker.open">
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.WATERMARKER_TYPE")}} : </span>
@@ -235,26 +235,36 @@
                                     <Radio label="text">{{$t("STORAGE.TEXT_WATERMARKER")}}</Radio>
                                     <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
                                 </Radio-group>
-                            </div>
-                            <div v-if="watermarker.type == 'text'" class="clearfix" style="margin-bottom:20px;">
+                            </div><!--watermarkerType-->
+                            <div v-if="watermarker.type == 'text'" class="clearfix">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
                                     <Input v-model="watermarker.fontStyle.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 500px"></Input>
                                     <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
+                                </div><!--text-->
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
+                                    <Select v-model="watermarker.fontStyle.font_family" style="width:135px;margin-right:10px;">
+                                        <Option v-for="item in fontList" :value="item.value" :key="item">{{ item.label }}</Option>
+                                    </Select><!--font_family-->
+                                    <div class="input-text-box">
+                                        <input type='number' v-model="watermarker.fontStyle.font_size">
+                                        <span>px</span>
+                                    </div><!--font_size-->
+                                    <div class="color-box" @click.stop>
+                                        <div class="color-trigger" :style="{background: fontColor.hex}" @click.stop="fontColorPicker=!fontColorPicker"></div>
+                                        <input type='text' v-model="fontColor.hex">
+                                        <slider-picker class="color-picker" v-if="fontColorPicker" v-model="fontColor" @click.stop/>
+                                    </div><!--fontColor-->
                                 </div>
-                                <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
-                                <Select v-model="watermarker.fontStyle.font_family" style="width:135px;margin-right:10px;">
-                                    <Option v-for="item in fontList" :value="item.value" :key="item">{{ item.label }}</Option>
-                                </Select>
-                                <div class="input-text-box">
-                                    <input type='number' v-model="watermarker.fontStyle.font_size">
-                                    <span>px</span>
-                                </div>
-                                <div class="color-box" @click.stop>
-                                    <div class="color-trigger" :style="{background: fontColor.hex}" @click.stop="fontColorPicker=!fontColorPicker"></div>
-                                    <input type='text' v-model="fontColor.hex">
-                                    <slider-picker class="color-picker" v-if="fontColorPicker" v-model="fontColor" @click.stop/>
-                                </div>
+                                <div class="form-item">
+                                    <span class="form-label">背景 : </span>
+                                    <div class="color-box" @click.stop style="margin-left:25px;">
+                                        <div class="color-trigger" :style="{background: fontBack.hex}" @click.stop="fontBackPicker=!fontBackPicker"></div>
+                                        <input type='text' v-model="fontBack.hex">
+                                        <slider-picker class="color-picker" v-if="fontBackPicker" v-model="fontColor" @click.stop/>
+                                    </div><!--fontColor-->
+                                </div><!--fontBack-->
                             </div>
                             <div v-if="watermarker.type == 'img'">
                                 <div class="form-item">
@@ -262,7 +272,7 @@
                                     <div class="upload-box">
                                         <upload :bucket="bucket" :prefix="prefix" accept="image/png" validationInfo='支持png格式文件，文件名为不包含“/:,”的ascii' :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
                                     </div>
-                                </div>
+                                </div><!--image-->
                             </div>
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
@@ -372,7 +382,8 @@ export default {
             angleList: [{value: 'angle', label: '旋转角度'}, {value: 'vflip', label: '垂直翻转'}, {value: 'hflip', label: '水平翻转'}],
             borderColorPicker: false,
             borderColor: defaultBorderColor,
-            setMore: false
+            setMore: false,
+            fontBack: defaultTextBack
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
@@ -539,6 +550,9 @@ const defaultFontColor = {
     hex: '#BF4040'
 }
 const defaultBorderColor = {
+    hex: '#BF4040'
+}
+const defaultTextBack = {
     hex: '#BF4040'
 }
 const generalDefult = {

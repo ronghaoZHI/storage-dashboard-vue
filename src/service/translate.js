@@ -452,7 +452,7 @@ export const messages = {
             STYLE_SHARPEN: '图片锐化',
             STYLE_QUALITY: '图片质量',
             STYLE_FORMAT: '保存格式',
-            STYLE_WATERMARKER: '是否添加水印',
+            STYLE_WATERMARKER: '添加水印',
             WATERMARKER_TYPE: '水印类型',
             TEXT_WATERMARKER: '文字水印',
             IMG_WATERMARKER: '图片水印',
