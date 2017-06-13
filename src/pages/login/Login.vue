@@ -91,11 +91,14 @@ export default {
     methods: {
         async loginSubmit (name) {
             if (this.formValid(name)) {
+                this.$Loading.start()
                 // save user email
                 this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
                 this.$http.post(LOGIN, { ...this.loginForm }).then(res => {
                     res.data.type === 'admin' ? this.adminMode(res.data) : this.toIndex(res.data)
+                    this.$Loading.finish()
                 }, error => {
+                    this.$Loading.error()
                     this.$Message.error(error)
                 })
             } else {
