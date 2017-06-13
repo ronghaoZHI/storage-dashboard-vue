@@ -29,7 +29,7 @@
                             <label for="bsc-checkbox"><span></span>{{$t("LOGIN.KEEP_EMAIL")}}</label>
                         </div>
                         <div class="login">
-                            <button @click="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</button>
+                            <a @click.stop="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</a>
                         </div>
                         <div class="register dn">
                             没有账号？<a>立即申请</a>
@@ -367,7 +367,9 @@ export default {
                     .login {
                         margin-top: 24px;
 
-                        button {
+                        a {
+                            display: inline-block;
+                            line-height: 40px;
                             .wh(280px,40px);
                             .sc(18px,#fff);
                             cursor: pointer;
