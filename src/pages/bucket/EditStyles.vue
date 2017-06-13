@@ -28,25 +28,85 @@
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_CROP")}} : </span>
-                            <Radio-group v-model="general.crop">
+                            <Radio-group v-model="general.crop" style='vertical-align: text-top'>
                                 <Radio label="noCrop">{{$t("STORAGE.CROP_NONE")}}</Radio>
+                                <Radio label="scale">{{$t("STORAGE.CROP_SCALE")}}</Radio>
                                 <Radio label="fit">{{$t("STORAGE.CROP_FIT")}}</Radio>
+                                <Radio label="pad">{{$t("STORAGE.CROP_PAD")}}</Radio>
+                                <br style='line-height: 10px;'>
+                                <Radio label="fill">{{$t("STORAGE.CROP_FILL")}}</Radio>
+                                <Radio label="crop">{{$t("STORAGE.CROP_CROP")}}</Radio>
+                                <Radio label="thumb">{{$t("STORAGE.CROP_THUMB")}}</Radio>
                             </Radio-group>
                         </div>
                         <div class="form-item" v-if="general.crop === 'fit'">
-                            <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
-                            <Radio-group v-model="general.fitStyle">
-                                <Radio label="width">{{$t("STORAGE.FIT_WIDTH")}}</Radio>
-                                <Radio label="height">{{$t("STORAGE.FIT_HEIGHT")}}</Radio>
-                            </Radio-group>
-                            <div class="input-text-box">
-                                <input type='number' v-model="general.fitSize">
-                                <span>px</span>
+                            <Select v-model="general.fitType" style="width:300px;margin-left:65px;">
+                                <Option v-for="item in fitList" :value="item.value" :key="item">{{ item.label }}</Option>
+                            </Select>
+                        </div>
+                        <div class="form-item" v-if="general.crop === 'pad'">
+                            <Select v-model="general.padType" style="width:300px;margin-left:65px;">
+                                <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
+                            </Select>
+                        </div>
+                        <div class="form-item" v-if="general.crop === 'fill'">
+                            <Select v-model="general.fillType" style="width:300px;margin-left:65px;">
+                                <Option v-for="item in fillList" :value="item.value" :key="item">{{ item.label }}</Option>
+                            </Select>
+                        </div>
+                        <div class="form-item" v-if="general.crop === 'thumb'">
+                            <Select v-model="general.thumbType" style="width:300px;margin-left:65px;">
+                                <Option v-for="item in thumbList" :value="item.value" :key="item">{{ item.label }}</Option>
+                            </Select>
+                        </div>
+                        <div class="form-item" v-if="general.crop === 'crop'">
+                            <span class="form-label">选择位置 : </span>
+                            <div class="gravity-selector">
+                                <input type="radio" value="north_west" v-model="general.gravity"></Radio>
+                                <input type="radio" value="north" v-model="general.gravity"></Radio>
+                                <input type="radio" value="north_east" v-model="general.gravity"></Radio>
+                                <input type="radio" value="west" v-model="general.gravity"></Radio>
+                                <input type="radio" value="center" v-model="general.gravity"></Radio>
+                                <input type="radio" value="east" v-model="general.gravity"></Radio>
+                                <input type="radio" value="south_west" v-model="general.gravity"></Radio>
+                                <input type="radio" value="south" v-model="general.gravity"></Radio>
+                                <input type="radio" value="south_east" v-model="general.gravity"></Radio>
+                            </div>
+                            <div class="padding-setting">
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
+                                    <div class="input-text-box">
+                                        <input type='number' v-model="general.x">
+                                        <span>px</span>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
+                                    <div class="input-text-box">
+                                        <input type='number' v-model="general.y">
+                                        <span>px</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.STYLE_EFFECT")}} : </span>
-                            <Checkbox v-model="general.sharpen">{{$t("STORAGE.STYLE_SHARPEN")}}</Checkbox>
+                        <div class="form-item" v-if="general.crop !== 'noCrop'">
+                            <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
+                            <Radio-group v-model="general.dataType">
+                                <Radio label="pixel">像素(px)</Radio>
+                                <Radio label="percent">百分比(%)</Radio>
+                            </Radio-group>
+                            <span class="form-label">W : </span>
+                            <div class="input-text-box">
+                                <input type='number' v-model="general.Width">
+                                <span v-if="general.dataType==='pixel'" class="form-label">px</span>
+                                <span v-else class="form-label">%</span>
+                            </div>
+                            <span class="form-label">H : </span>
+                            <div class="input-text-box">
+                                <input v-model.number="general.Height">
+                                <span v-if="general.dataType==='pixel'" class="form-label">px</span>
+                                <span v-else class="form-label">%</span>
+                            </div>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_QUALITY")}} : </span>
@@ -58,6 +118,107 @@
                             <Select v-model="general.format" style="width:500px">
                                 <Option v-for="item in formatList" :value="item" :key="item">{{ item }}</Option>
                             </Select>
+                        </div>
+                        <div class="form-item">
+                            <Button type="ghost" @click="setMore = !setMore">更多设置 <Icon type="chevron-down"></Icon></Button>
+                        </div>
+                        <div v-if="setMore">
+                            <div class="separator-line"></div>
+                            <div class="form-item">
+                                <span class="form-label">翻转模式 : </span>
+                                <Select v-model="general.angleType" style="width:500px">
+                                    <Option v-for="item in angleList" :value="item" :key="item">{{ item }}</Option>
+                                </Select>
+                            </div><!--angleType-->
+                            <div class="form-item" v-if="general.angleType === 'angle'">
+                                <span class="form-label">角度 : </span>
+                                <div class="input-text-box">
+                                    <input type='number' v-model="general.angle">
+                                </div>
+                            </div><!--angle-->
+                            <div class="form-item">
+                                <span class="form-label">使用滤镜或特效 : </span>
+                                <Radio-group v-model="general.effect" style='vertical-align: text-top'>
+                                    <Radio label="noEffect">不添加滤镜或特效</Radio>
+                                    <Radio label="grayscale">灰度</Radio>
+                                    <Radio label="oil_paint">油画效果</Radio>
+                                    <Radio label="negate">反色</Radio>
+                                    <Radio label="brightness">调整图片亮度</Radio>
+                                    <Radio label="blur">模糊效果</Radio>
+                                    <Radio label="pixelate">像素化</Radio>
+                                    <br style='line-height: 10px;'>
+                                    <Radio label="sharpen">锐化</Radio>
+                                    <Radio label="auto_contrast">自动对比度</Radio>
+                                    <Radio label="improve">自动调整图像色彩，对比度和亮度</Radio>
+                                    <Radio label="color">增加颜色</Radio>
+                                </Radio-group>
+                            </div><!--effect-->
+                            <div class="form-item" v-if="general.effect === 'brightness'">
+                                <span class="form-label">图片亮度 : </span>
+                                <Slider class="pic-slider" :min='-300' :max='300' v-model="general.brightnessValue"></Slider>
+                                <Input v-model="general.brightnessValue" class="slider-input" number></Input>
+                            </div><!--brightnessValue-->
+                            <div class="form-item" v-if="general.effect === 'blur'">
+                                <span class="form-label">模糊值 : </span>
+                                <Slider class="pic-slider" :min='1' :max='2000' v-model="general.blurValue"></Slider>
+                                <Input v-model="general.blurValue" class="slider-input" number></Input>
+                            </div><!--blurValue-->
+                            <div class="form-item" v-if="general.effect === 'sharpen'">
+                                <span class="form-label">锐化值 : </span>
+                                <Slider class="pic-slider" :min='1' :max='2000' v-model="general.sharpenValue"></Slider>
+                                <Input v-model="general.sharpenValue" class="slider-input" number></Input>
+                            </div><!--sharpenValue-->
+                            <div class="form-item" v-if="general.effect === 'oil_paint'">
+                                <span class="form-label">油画值 : </span>
+                                <Slider class="pic-slider" :min='1' :max='8' v-model="general.oilValue"></Slider>
+                                <Input v-model="general.oilValue" class="slider-input" number></Input>
+                            </div><!--oilValue-->
+                            <div class="form-item" v-if="general.effect === 'color'">
+                                <span class="form-label">颜色 : </span>
+                                <div class="color-selector">
+                                    <input type="radio" value="sepia" v-model="general.color" style="background-color:sepia"></Radio>
+                                    <input type="radio" value="red" v-model="general.color" style="background-color:red"></Radio>
+                                    <input type="radio" value="green" v-model="general.color" style="background-color:green"></Radio>
+                                    <input type="radio" value="blue" v-model="general.color" style="background-color:blue"></Radio>
+                                    <input type="radio" value="yellow" v-model="general.color" style="background-color:yellow"></Radio>
+                                    <input type="radio" value="cyan" v-model="general.color" style="background-color:sepcyania"></Radio>
+                                    <input type="radio" value="magenta" v-model="general.color" style="background-color:magenta"></Radio>
+                                </div>
+                            </div><!--color-->
+                            <div class="form-item" v-if="general.effect === 'color'">
+                                <span class="form-label">颜色取值 : </span>
+                                <Slider class="pic-slider" :min='1' :max='100' v-model="general.colorValue"></Slider>
+                                <Input v-model="general.colorValue" class="slider-input" number></Input>
+                            </div><!--colorValue-->
+                            <div class="form-item">
+                                <span class="form-label">设置边框 : </span>
+                                <i-switch v-model="general.border" size="large">
+                                    <span slot="open">ON</span>
+                                    <span slot="close">OFF</span>
+                                </i-switch>
+                            </div><!--border-->
+                            <div class="form-item" v-if="general.border">
+                                <span class="form-label">边框设置 : </span>
+                                <div class="input-text-box">
+                                    <input type='number' v-model="general.borderSize">
+                                    <span>px</span>
+                                </div><!--borderSize-->
+                                <div class="color-box" @click.stop>
+                                    <div class="color-trigger" :style="{background: borderColor.hex}" @click.stop="borderColorPicker=!borderColorPicker"></div>
+                                    <input type='text' v-model="borderColor.hex">
+                                    <slider-picker class="color-picker" v-if="borderColorPicker" v-model="borderColor" @click.stop/>
+                                </div><!--borderColor-->
+                            </div><!--border-->
+                            <div class="form-item">
+                                <span class="form-label">生成圆角 : </span>
+                                <Slider class="pic-slider" :min='1' :max='1000' v-model="general.radius"></Slider>
+                                <Input v-model="general.radius" class="slider-input" number></Input>
+                            </div><!--radius-->
+                            <div class="form-item">
+                                <span class="form-label">不透明度 : </span>
+                                <Slider class="pic-slider" v-model="general.opacity" :disabled="!isOpacity"></Slider>
+                                <Input v-model="general.opacity" class="slider-input" number></Input>
+                            </div><!--opacity-->
                         </div>
                         <div class="separator-line"></div>
                         <div class="form-item">
@@ -75,7 +236,7 @@
                                     <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
                                 </Radio-group>
                             </div>
-                            <div v-if="watermarker.type == 'text'" class="clearfix">
+                            <div v-if="watermarker.type == 'text'" class="clearfix" style="margin-bottom:20px;">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
                                     <Input v-model="watermarker.fontStyle.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 500px"></Input>
@@ -94,42 +255,6 @@
                                     <input type='text' v-model="fontColor.hex">
                                     <slider-picker class="color-picker" v-if="fontColorPicker" v-model="fontColor" @click.stop/>
                                 </div>
-                                <br>
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
-                                    <div class="gravity-selector">
-                                        <input type="radio" value="north_west" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="north" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="north_east" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="west" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="center" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="east" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="south_west" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="south" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="south_east" v-model="watermarker.gravity"></Radio>
-                                    </div>
-                                    <div class="padding-setting">
-                                        <div class="form-item">
-                                            <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
-                                            <div class="input-text-box">
-                                                <input type='number' v-model="watermarker.x">
-                                                <span>px</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-item">
-                                            <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
-                                            <div class="input-text-box">
-                                                <input type='number' v-model="watermarker.y">
-                                                <span>px</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
-                                    <Slider class="pic-slider" v-model="watermarker.opacity"></Slider>
-                                    <Input v-model="watermarker.opacity" class="slider-input" number></Input>
-                                </div>
                             </div>
                             <div v-if="watermarker.type == 'img'">
                                 <div class="form-item">
@@ -138,42 +263,42 @@
                                         <upload :bucket="bucket" :prefix="prefix" accept="image/png" validationInfo='支持png格式文件，文件名为不包含“/:,”的ascii' :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
                                     </div>
                                 </div>
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
-                                    <div class="gravity-selector">
-                                        <input type="radio" value="north_west" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="north" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="north_east" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="west" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="center" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="east" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="south_west" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="south" v-model="watermarker.gravity"></Radio>
-                                        <input type="radio" value="south_east" v-model="watermarker.gravity"></Radio>
-                                    </div>
-                                    <div class="padding-setting">
-                                        <div class="form-item">
-                                            <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
-                                            <div class="input-text-box">
-                                                <input type='number' v-model="watermarker.x">
-                                                <span>px</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-item">
-                                            <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
-                                            <div class="input-text-box">
-                                                <input type='number' v-model="watermarker.y">
-                                                <span>px</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
-                                    <Slider class="pic-slider" v-model="watermarker.opacity"></Slider>
-                                    <Input v-model="watermarker.opacity" class="slider-input"></Input>
-                                </div>
                             </div>
+                            <div class="form-item">
+                                <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
+                                <div class="gravity-selector">
+                                    <input type="radio" value="north_west" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="north" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="north_east" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="west" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="center" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="east" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="south_west" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="south" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="south_east" v-model="watermarker.gravity"></Radio>
+                                </div>
+                                <div class="padding-setting">
+                                    <div class="form-item">
+                                        <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
+                                        <div class="input-text-box">
+                                            <input type='number' v-model="watermarker.x">
+                                            <span>px</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-item">
+                                        <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
+                                        <div class="input-text-box">
+                                            <input type='number' v-model="watermarker.y">
+                                            <span>px</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--location-->
+                            <div class="form-item">
+                                <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
+                                <Slider class="pic-slider" v-model="watermarker.opacity"></Slider>
+                                <Input v-model="watermarker.opacity" class="slider-input" number></Input>
+                            </div><!--opacity-->
                         </div>
                         <div class="form-item clearfix" style="width:415px;">
                             <div class="img-button">
@@ -239,7 +364,15 @@ export default {
             prefix: picStyleOverlayPrefix,
             imgName: '',
             uploadValidation: /^[\x00-\x2b\x2d\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
-            instructions: this.paramsIS
+            instructions: this.instructions,
+            padList: [{value: 'pad', label: '背景填充等比例缩放'}, {value: 'lpad', label: '背景填充等比例缩小'}, {value: 'mpad', label: '背景填充等比例放大'}],
+            fillList: [{value: 'fill', label: '等比例裁剪'}, {value: 'lfill', label: '不放大原图的等比例裁剪'}],
+            thumbList: [{value: 'face', label: '定位一张最易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}],
+            fitList: [{value: 'fit', label: '等比例缩放'}, {value: 'mfit', label: '等比例放大'}, {value: 'limit', label: '等比例缩小'}],
+            angleList: [{value: 'angle', label: '旋转角度'}, {value: 'vflip', label: '垂直翻转'}, {value: 'hflip', label: '水平翻转'}],
+            borderColorPicker: false,
+            borderColor: defaultBorderColor,
+            setMore: false
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
@@ -264,6 +397,9 @@ export default {
         },
         styleListHref () {
             return '/bucket/' + this.bucket + '/pictureStyles'
+        },
+        isOpacity () {
+            return this.general.format === 'original' || this.general.format === 'png' || this.general.format === 'webp'
         }
     },
     mounted () {
@@ -402,13 +538,34 @@ const I2J = {
 const defaultFontColor = {
     hex: '#BF4040'
 }
+const defaultBorderColor = {
+    hex: '#BF4040'
+}
 const generalDefult = {
     crop: 'noCrop',
-    sharpen: false,
     quality: 70,
     format: 'original',
-    fitSize: 10,
-    fitStyle: 'width'
+    Width: 200,
+    Height: 400,
+    padType: 'pad',
+    fillType: 'fill',
+    thumbType: 'face',
+    fitType: 'fit',
+    dataType: 'pixel',
+    gravity: 'north_west',
+    opacity: 100,
+    angleType: 'angle',
+    angle: 0,
+    effect: 'noEffect',
+    brightnessValue: 30,
+    blurValue: 100,
+    sharpenValue: 100,
+    oilValue: 4,
+    colorValue: 80,
+    color: 'red',
+    border: false,
+    borderSize: 1,
+    radius: 5
 }
 const watermarkerDefult = {
     open: false,
@@ -506,260 +663,196 @@ const watermarkerConvert2Font = data => {
 const allFontList = [{
     value: 'Songti SC',
     label: '宋体'
-},
-{
+}, {
     value: 'Heiti SC',
     label: '黑体'
-},
-{
+}, {
     value: 'Kaiti SC',
     label: '楷体'
-},
-{
+}, {
     value: 'Microsoft YaHei',
     label: '微软雅黑'
-},
-{
+}, {
     value: 'Adobe Song Std',
     label: 'Adobe Song Std'
-},
-{
+}, {
     value: 'Adobe Heiti Std',
     label: 'Adobe Heiti Std'
-},
-{
+}, {
     value: 'Adobe Kaiti Std',
     label: 'Adobe Kaiti Std'
-},
-{
+}, {
     value: 'Adobe Fangsong Std',
     label: 'Adobe Fangsong Std'
-},
-{
+}, {
     value: 'Batang',
     label: 'Batang'
-},
-{
+}, {
     value: 'Bookshelf Symbol 7',
     label: 'Bookshelf Symbol 7'
-},
-{
+}, {
     value: 'Brush Script MT',
     label: 'Brush Script MT'
-},
-{
+}, {
     value: 'Calibri',
     label: 'Calibri'
-},
-{
+}, {
     value: 'Cambria',
     label: 'Cambria'
-},
-{
+}, {
     value: 'Candara',
     label: 'Candara'
-},
-{
+}, {
     value: 'Candelita',
     label: 'Candelita'
-},
-{
+}, {
     value: 'Consolas',
     label: 'Consolas'
-},
-{
+}, {
     value: 'Constantia',
     label: 'Constantia'
-},
-{
+}, {
     value: 'Corbel',
     label: 'Corbel'
-},
-{
+}, {
     value: 'Franklin Gothic Book',
     label: 'Franklin Gothic Book'
-},
-{
+}, {
     value: 'Franklin Gothic Medium',
     label: 'Franklin Gothic Medium'
-},
-{
+}, {
     value: 'Gill Sans MT',
     label: 'Gill Sans MT'
-},
-{
+}, {
     value: 'Gulim',
     label: 'Gulim'
-},
-{
+}, {
     value: 'Hannotate SC',
     label: 'Hannotate SC'
-},
-{
+}, {
     value: 'Hannotate TC',
     label: 'Hannotate TC'
-},
-{
+}, {
     value: 'HanziPen SC',
     label: 'HanziPen SC'
-},
-{
+}, {
     value: 'HanziPen TC',
     label: 'HanziPen TC'
-},
-{
+}, {
     value: 'Hiragino Sans GB',
     label: 'Hiragino Sans GB'
-},
-{
+}, {
     value: 'Lantinghei SC',
     label: 'Lantinghei SC'
-},
-{
+}, {
     value: 'Lantinghei TC',
     label: 'Lantinghei TC'
-},
-{
+}, {
     value: 'Libian SC',
     label: 'Libian SC'
-},
-{
+}, {
     value: 'Lucida Console',
     label: 'Lucida Console'
-},
-{
+}, {
     value: 'Lucida Sans Unicode',
     label: 'Lucida Sans Unicode'
-},
-{
+}, {
     value: 'MJNgai PRC',
     label: 'MJNgai PRC'
-},
-{
+}, {
     value: 'MS Gothic',
     label: 'MS Gothic'
-},
-{
+}, {
     value: 'MS Mincho',
     label: 'MS Mincho'
-},
-{
+}, {
     value: 'MS PGothic',
     label: 'MS PGothic'
-},
-{
+}, {
     value: 'MS PMincho',
     label: 'MS PMincho'
-},
-{
+}, {
     value: 'MS Reference Sans Serif',
     label: 'MS Reference Sans Serif'
-},
-{
+}, {
     value: 'Marlett',
     label: 'Marlett'
-},
-{
+}, {
     value: 'Meiryo',
     label: 'Meiryo'
-},
-{
+}, {
     value: 'Microsoft YaHei',
     label: 'Microsoft YaHei'
-},
-{
+}, {
     value: 'PMingLiU',
     label: 'PMingLiU'
-},
-{
+}, {
     value: 'Perpetua',
     label: 'Perpetua'
-},
-{
+}, {
     value: 'STFangsong',
     label: 'STFangsong'
-},
-{
+}, {
     value: 'STHeiti',
     label: 'STHeiti'
-},
-{
+}, {
     value: 'STHupo',
     label: 'STHupo'
-},
-{
+}, {
     value: 'STKaiti',
     label: 'STKaiti'
-},
-{
+}, {
     value: 'STLiti',
     label: 'STLiti'
-},
-{
+}, {
     value: 'STSong',
     label: 'STSong'
-},
-{
+}, {
     value: 'STXingkai',
     label: 'STXingkai'
-},
-{
+}, {
     value: 'STXinwei',
     label: 'STXinwei'
-},
-{
+}, {
     value: 'STZhongsong',
     label: 'STZhongsong'
-},
-{
+}, {
     value: 'SentyPaperCut',
     label: 'SentyPaperCut'
-},
-{
+}, {
     value: 'SimHei',
     label: 'SimHei'
-},
-{
+}, {
     value: 'SimSun',
     label: 'SimSun'
-},
-{
+}, {
     value: 'SimSun-ExtB',
     label: 'SimSun-ExtB'
-},
-{
+}, {
     value: 'Songti TC',
     label: 'Songti TC'
-},
-{
+}, {
     value: 'Source Han Sans CN',
     label: 'Source Han Sans CN'
-},
-{
+}, {
     value: 'Tw Cen MT',
     label: 'Tw Cen MT'
-},
-{
+}, {
     value: 'Villasukat',
     label: 'Villasukat'
-},
-{
+}, {
     value: 'Wawati SC',
     label: 'Wawati SC'
-},
-{
+}, {
     value: 'Weibei SC',
     label: 'Weibei SC'
-},
-{
+}, {
     value: 'Xingkai SC',
     label: 'Xingkai SC'
-},
-{
+}, {
     value: 'Yuanti SC',
     label: 'Yuanti SC'
-},
-{
+}, {
     value: 'Yuppy SC',
     label: 'Yuppy SC'
 }]
@@ -873,7 +966,7 @@ const allFontList = [{
     }
 }
 .input-text-box{
-    width:60px;
+    width:100px;
     height:32px;
     border:1px solid #d7dde4;
     border-radius:4px;
@@ -882,7 +975,7 @@ const allFontList = [{
     vertical-align: middle;
     margin-right:10px;
     input{
-        width:25px;
+        width:65px;
         line-height:24px;
         border:none;
         color:#657180;
@@ -943,5 +1036,37 @@ const allFontList = [{
     width:500px;
     display:inline-block;
     vertical-align: text-top;
+}
+.color-selector{
+    width:422px;
+    border:1px solid #d7dde4;
+    border-radius: 4px;
+    display:inline-block;
+    vertical-align:text-top;
+    margin-right:20px;
+    input{
+        appearance:none;
+        -moz-appearance:none; /* Firefox */
+        -webkit-appearance:none; /* Safari 和 Chrome */
+        width:60px;
+        height:30px;
+        border-right:1px solid #d7dde4;
+        float:left;
+        outline:none;
+        cursor: pointer;
+    }
+    input:nth-last-child(1){
+        border-right: #00FFFF;
+    }
+    input:checked , input:hover{
+        border: 1px solid #20a0ff;
+        box-shadow: 0 0 10px #20a0ff;
+    }
+    input:nth-child(1){
+        background-color:#5E2612;
+    }
+    input:nth-last-child(2){
+        background-color:#00FFFF;
+    }
 }
 </style>
