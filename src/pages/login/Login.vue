@@ -479,4 +479,9 @@ export default {
         }
     }
 }
+
+input:-webkit-autofill {
+    box-shadow: 0 0 0 1000px @login-card-bg inset !important;
+    -webkit-text-fill-color: @login-card-login-text-color !important;
+}
 </style>
