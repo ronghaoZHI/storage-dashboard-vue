@@ -416,7 +416,7 @@ export default {
         .tab-register {
             .header {
                 height: 60px;
-                border-bottom: 1px solid @login-card-register-text-color;
+                border-bottom: 1px solid #52626d;
 
                 & > img {
                     position: absolute; 
@@ -440,7 +440,7 @@ export default {
                 flex-wrap: wrap;
                 justify-content: flex-start;
                 align-items: flex-start;
-                padding-top: 10px;
+                padding: 10px 0 0 12px;
 
                 & > div {
                     position: relative;
@@ -448,11 +448,18 @@ export default {
                     background-color: @login-card-register-input-backgrand;
                     border-radius: @common-radius;
                     .sc(16px,#fff);
-                    margin: 6px 3px;
+                    margin: 8px 8px;
                     cursor: pointer;
 
                     &:hover {
                         background-color: @login-card-register-input-backgrand-hover;
+                    }
+
+                    & > span:first-child {
+                        margin-top: 12px;
+                    }
+                    & > span:nth-child(2) {
+                        margin-top: 8px;
                     }
 
                     .info {
@@ -460,8 +467,11 @@ export default {
                         .wh(100%,@login-card-register-item-height / 2 - 15);
                         line-height: @login-card-register-item-height / 2 - 15;
                         vertical-align: bottom;
-                        padding: 6px + 8px 10px;
+                        padding: 0 16px;
                         text-align: left;
+                        text-overflow: ellipsis;
+                        overflow:hidden;
+                        white-space:nowrap;
 
                         i {
                             position: relative;
@@ -473,8 +483,8 @@ export default {
                     .icon {
                         position: absolute;
                         color: #fff;
-                        top: 2px;
-                        right: 6px;
+                        top: 6px;
+                        right: 12px;
                     }
                 }
             }
