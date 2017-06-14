@@ -1,5 +1,5 @@
 <template>
-    <div @click="fontColorPicker = strokeColorPicker = false">
+    <div @click="fontColorPicker = strokeColorPicker = fontBackPicker = borderColorPicker = padColorPicker =false">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
@@ -48,6 +48,11 @@
                             <Select v-model="general.padType" style="width:300px;margin-left:65px;">
                                 <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
+                            <div class="color-box" @click.stop>
+                                <div class="color-trigger" :style="{background: general.padColor.hex}" @click.stop="padColorPicker=!padColorPicker"></div>
+                                <input type='text' v-model="general.padColor.hex">
+                                <slider-picker class="color-picker" v-if="padColorPicker" v-model="general.padColor" @click.stop/>
+                            </div><!--padColor-->
                         </div>
                         <div class="form-item" v-if="general.crop === 'fill'">
                             <Select v-model="general.fillType" style="width:300px;margin-left:65px;">
@@ -97,20 +102,20 @@
                             </Radio-group>
                             <span class="form-label">W : </span>
                             <div class="input-text-box">
-                                <input type='number' v-model="general.Width">
+                                <input type='number' v-model="general.width">
                                 <span v-if="general.dataType==='pixel'" class="form-label">px</span>
                                 <span v-else class="form-label">%</span>
                             </div>
                             <span class="form-label">H : </span>
                             <div class="input-text-box">
-                                <input v-model.number="general.Height">
+                                <input v-model.number="general.height">
                                 <span v-if="general.dataType==='pixel'" class="form-label">px</span>
                                 <span v-else class="form-label">%</span>
                             </div>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_QUALITY")}} : </span>
-                            <Slider class="pic-slider" v-model="general.quality"></Slider>
+                            <Slider class="pic-slider" :min='1' v-model="general.quality"></Slider>
                             <Input v-model="general.quality" class="slider-input" number></Input>
                         </div>
                         <div class="form-item">
@@ -120,15 +125,15 @@
                             </Select>
                         </div>
                         <div class="form-item">
-                            <Button type="ghost" @click="setMore = !setMore">更多设置 <Icon type="chevron-down"></Icon></Button>
+                            <Button type="ghost" @click="setMore = !setMore">更多设置 <Icon type="chevron-down" v-if="!setMore"></Icon><Icon type="chevron-up" v-else></Icon></Button>
                         </div>
                         <div v-if="setMore">
                             <div class="separator-line"></div>
                             <div class="form-item">
                                 <span class="form-label">翻转模式 : </span>
-                                <Select v-model="general.angleType" style="width:500px">
-                                    <Option v-for="item in angleList" :value="item" :key="item">{{ item }}</Option>
-                                </Select>
+                                <Radio-group v-model="general.angleType" style='vertical-align: text-top'>
+                                    <Radio v-for="item in angleList" :label="item.value">{{item.label}}</Radio>
+                                </Radio-group>
                             </div><!--angleType-->
                             <div class="form-item" v-if="general.angleType === 'angle'">
                                 <span class="form-label">角度 : </span>
@@ -190,6 +195,11 @@
                                 <Slider class="pic-slider" :min='1' :max='100' v-model="general.colorValue"></Slider>
                                 <Input v-model="general.colorValue" class="slider-input" number></Input>
                             </div><!--colorValue-->
+                            <div class="form-item" v-if="general.effect === 'pixelate'">
+                                <span class="form-label">像素值 : </span>
+                                <Slider class="pic-slider" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
+                                <Input v-model="general.pixelateValue" class="slider-input" number></Input>
+                            </div><!--colorValue-->
                             <div class="form-item">
                                 <span class="form-label">设置边框 : </span>
                                 <i-switch v-model="general.border" size="large">
@@ -204,15 +214,15 @@
                                     <span>px</span>
                                 </div><!--borderSize-->
                                 <div class="color-box" @click.stop>
-                                    <div class="color-trigger" :style="{background: borderColor.hex}" @click.stop="borderColorPicker=!borderColorPicker"></div>
-                                    <input type='text' v-model="borderColor.hex">
-                                    <slider-picker class="color-picker" v-if="borderColorPicker" v-model="borderColor" @click.stop/>
+                                    <div class="color-trigger" :style="{background: general.borderColor.hex}" @click.stop="borderColorPicker=!borderColorPicker"></div>
+                                    <input type='text' v-model="general.borderColor.hex">
+                                    <slider-picker class="color-picker" v-if="borderColorPicker" v-model="general.borderColor" @click.stop/>
                                 </div><!--borderColor-->
                             </div><!--border-->
                             <div class="form-item">
                                 <span class="form-label">生成圆角 : </span>
-                                <Slider class="pic-slider" :min='1' :max='1000' v-model="general.radius"></Slider>
-                                <Input v-model="general.radius" class="slider-input" number></Input>
+                                <Slider class="pic-slider" :min='0' :max='1001' v-model="radiusSlider" :tip-format="radiusFormater"></Slider>
+                                <Input v-model="radiusValue" class="slider-input" number></Input>
                             </div><!--radius-->
                             <div class="form-item">
                                 <span class="form-label">不透明度 : </span>
@@ -239,16 +249,16 @@
                             <div v-if="watermarker.type == 'text'" class="clearfix">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
-                                    <Input v-model="watermarker.fontStyle.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 500px"></Input>
+                                    <Input v-model="watermarker.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 500px"></Input>
                                     <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
                                 </div><!--text-->
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
-                                    <Select v-model="watermarker.fontStyle.font_family" style="width:135px;margin-right:10px;">
+                                    <Select v-model="fontStyle.font_family" style="width:135px;margin-right:10px;">
                                         <Option v-for="item in fontList" :value="item.value" :key="item">{{ item.label }}</Option>
                                     </Select><!--font_family-->
                                     <div class="input-text-box">
-                                        <input type='number' v-model="watermarker.fontStyle.font_size">
+                                        <input type='number' v-model="fontStyle.font_size">
                                         <span>px</span>
                                     </div><!--font_size-->
                                     <div class="color-box" @click.stop>
@@ -381,9 +391,12 @@ export default {
             fitList: [{value: 'fit', label: '等比例缩放'}, {value: 'mfit', label: '等比例放大'}, {value: 'limit', label: '等比例缩小'}],
             angleList: [{value: 'angle', label: '旋转角度'}, {value: 'vflip', label: '垂直翻转'}, {value: 'hflip', label: '水平翻转'}],
             borderColorPicker: false,
-            borderColor: defaultBorderColor,
             setMore: false,
-            fontBack: defaultTextBack
+            fontBack: defaultTextBack,
+            fontBackPicker: false,
+            radiusSlider: 1001,
+            padColorPicker: false,
+            fontStyle: defaultFontStyle
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
@@ -404,13 +417,16 @@ export default {
             return !(/^[a-z0-9_]{1,20}$/).test(this.transformation)
         },
         textError () {
-            return this.watermarker.open && this.watermarker.type === 'text' && !(/.+/).test(this.watermarker.fontStyle.text)
+            return this.watermarker.open && this.watermarker.type === 'text' && !(/.+/).test(this.watermarker.text)
         },
         styleListHref () {
             return '/bucket/' + this.bucket + '/pictureStyles'
         },
         isOpacity () {
             return this.general.format === 'original' || this.general.format === 'png' || this.general.format === 'webp'
+        },
+        radiusValue () {
+            return this.radiusSlider > 1000 || this.radiusSlider > 1000 ? 'max' : this.radiusSlider
         }
     },
     mounted () {
@@ -419,11 +435,11 @@ export default {
     methods: {
         async submitStyles () {
             if (!this.transformationError && !this.textError) {
-                const generalData = originalConvert2Save(this.general)
-                let watermarkerData = {}
+                const generalData = generalConvert2Save(this.general)
                 let content = []
                 content.push(generalData)
                 if (this.watermarker.open) {
+                    let watermarkerData = {}
                     if (this.watermarker.type === 'text') {
                         this.saveFont()
                         watermarkerData = watermarkerConvert2Save(this.watermarker, this.transformation)
@@ -450,7 +466,7 @@ export default {
                 let fontName = styeItemCheckout(styles).fontName
                 if (!!fontName) {
                     let fontStyle = await this.readFont(fontName)
-                    this.watermarker.fontStyle = fontStyle
+                    this.fontStyle = fontStyle
                     this.fontColor = {hex: fontStyle.font_color}
                 }
             }
@@ -467,9 +483,11 @@ export default {
         },
         async saveFont () {
             let style = {}
-            style = this.watermarker.fontStyle
-            style.font_size = parseInt(this.watermarker.fontStyle.font_size)
+            style = this.fontStyle
+            style.font_size = parseInt(this.fontStyle.font_size)
             style.font_color = this.fontColor.hex.substr(1).toLowerCase()
+            style.text = parseInt(this.watermarker.text)
+            style.background = this.fontBack.hex.substr(1).toLowerCase()
             const fontStyleFile = new Blob([JSON.stringify(style)], {'type': 'application/json'})
             try {
                 await handler('putObject', {
@@ -514,6 +532,9 @@ export default {
         },
         uploadSuccess (fileName) {
             this.imgName = fileName.split('.')[0]
+        },
+        radiusFormater (radiusSlider) {
+            return radiusSlider > 1000 ? 'max' : radiusSlider
         }
     },
     watch: {
@@ -549,9 +570,6 @@ const I2J = {
 const defaultFontColor = {
     hex: '#BF4040'
 }
-const defaultBorderColor = {
-    hex: '#BF4040'
-}
 const defaultTextBack = {
     hex: '#BF4040'
 }
@@ -559,8 +577,8 @@ const generalDefult = {
     crop: 'noCrop',
     quality: 70,
     format: 'original',
-    Width: 200,
-    Height: 400,
+    width: 200,
+    height: 400,
     padType: 'pad',
     fillType: 'fill',
     thumbType: 'face',
@@ -577,40 +595,82 @@ const generalDefult = {
     oilValue: 4,
     colorValue: 80,
     color: 'red',
+    pixelateValue: 5,
     border: false,
     borderSize: 1,
-    radius: 5
+    borderColor: {hex: '#BF4040'},
+    padColor: {hex: '#BF4040'}
 }
 const watermarkerDefult = {
     open: false,
     type: 'text',
     text: '',
-    fontStyle: {
-        text: '',
-        font_family: 'Songti SC',
-        font_size: 16
-    },
     gravity: 'north_west',
     x: 0,
     y: 0,
     opacity: 100
 }
-const originalConvert2Save = (generalData) => {
-    let generalSave = _.cloneDeep(generalData)
-    if (generalSave.crop === 'fit') {
-        generalSave[generalData.fitStyle] = parseInt(generalData.fitSize)
-    } else {
-        delete generalSave.crop
+const defaultFontStyle = {
+    text: '',
+    font_family: 'Songti SC',
+    font_size: 16,
+    background: {hex: '#BF4040'}
+}
+const generalConvert2Save = (generalData) => {
+    let generalSave = {}
+    if (generalData.crop === 'pad') {
+        generalSave.crop = generalData.padType
+        generalSave.background = generalData.padColor.hex.substr(1).toLowerCase()
+    } else if (generalData.crop === 'fill') {
+        generalSave.crop = generalData.fillType
+    } else if (generalData.crop === 'face') {
+        generalSave.crop = generalData.thumbType
+    } else if (generalData.crop === 'fit') {
+        generalSave.crop = generalData.fitType
+    } else if (generalData.crop !== 'noCrop') {
+        generalSave.crop = generalData.crop
+        if (generalData.crop === 'crop') {
+            generalSave.gravity = generalData.gravity
+            generalSave.x = generalData.x
+            generalSave.y = generalData.y
+        }
     }
-    if (generalSave.sharpen) {
-        generalSave.effect = 'sharpen'
+    if (generalData.crop !== 'noCrop') {
+        generalSave.width = generalData.dataType === 'pixel' ? parseInt(generalData.width) : parseFloat(generalData.width / 100)
+        generalSave.height = generalData.dataType === 'pixel' ? parseInt(generalData.height) : parseFloat(generalData.height / 100)
     }
-    if (generalSave.format === 'original') {
-        delete generalSave.format
+    if (generalData.format === 'original' || generalData.format === 'png' || generalData.format === 'webp') {
+        generalSave.quality = generalData.quality
     }
-    delete generalSave.fitStyle
-    delete generalSave.fitSize
-    delete generalSave.sharpen
+    if (generalData.format !== 'original') {
+        generalSave.format = generalData.format
+    }
+    if (generalData.angleType === 'angle' && generalData.angle !== 0) {
+        generalSave.angle = parseInt(generalData.angle)
+    } else if (generalData.angleType === 'vflip' || generalData.angleType === 'hflip') {
+        generalSave.angle = generalData.angleType
+    }
+    if (generalData.effect === 'oil_paint') {
+        generalSave.effect = generalData.effect + ':' + generalData.oilValue
+    } else if (generalData.effect === 'brightness') {
+        generalSave.effect = generalData.effect + ':' + generalData.brightnessValue
+    } else if (generalData.effect === 'blur') {
+        generalSave.effect = generalData.effect + ':' + generalData.blurValue
+    } else if (generalData.effect === 'pixelate') {
+        generalSave.effect = generalData.effect + ':' + generalData.pixelateValue
+    } else if (generalData.effect === 'sharpen') {
+        generalSave.effect = generalData.effect + ':' + generalData.sharpenValue
+    } else if (generalData.effect === 'color') {
+        generalSave.effect = generalData.color + ':' + generalData.colorValue
+    } else if (generalData.effect !== 'noEffect') {
+        generalSave.effect = generalData.effect
+    }
+    if (generalData.border) {
+        generalSave.border = generalData.borderSize + '_' + generalData.borderColor.hex.substr(1).toLowerCase()
+    }
+    if (generalData.opacity !== 100) {
+        generalSave.opacity = generalData.opacity
+    }
     return generalSave
 }
 const watermarkerConvert2Save = (watermarkerData, styleName) => {
@@ -621,7 +681,7 @@ const watermarkerConvert2Save = (watermarkerData, styleName) => {
         opacity: watermarkerData.opacity
     }
     if (watermarkerData.type === 'text') {
-        watermarkerSave.overlay = 'text:' + styleName + '_font:' + watermarkerData.fontStyle.text
+        watermarkerSave.overlay = 'text:' + styleName + '_font:' + watermarkerData.text
     } else if (watermarkerData.type === 'img') {
         watermarkerSave.overlay = styleName
     }
@@ -647,7 +707,7 @@ const styeItemCheckout = styles => {
     })
     return { ganeralData, watermarkerData, fontName }
 }
-const generalKeyArray = ['crop', 'quality', 'radius', 'angle', 'effect', 'format']
+const generalKeyArray = ['crop', 'quality', 'radius', 'angle', 'effect', 'border', 'format']
 const watermarkerKeyArray = ['overlay']
 const generalConvert2Font = fileData => {
     let generalFont = _.cloneDeep(fileData)
@@ -905,7 +965,7 @@ const allFontList = [{
         vertical-align:middle;
     }
     .slider-input{
-        width: 40px;
+        width: 45px;
         margin-left:10px;
     }
     .separator-line{
@@ -1064,13 +1124,9 @@ const allFontList = [{
         -webkit-appearance:none; /* Safari 和 Chrome */
         width:60px;
         height:30px;
-        border-right:1px solid #d7dde4;
         float:left;
         outline:none;
         cursor: pointer;
-    }
-    input:nth-last-child(1){
-        border-right: #00FFFF;
     }
     input:checked , input:hover{
         border: 1px solid #20a0ff;
