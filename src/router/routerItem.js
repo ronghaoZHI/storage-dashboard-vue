@@ -5,6 +5,7 @@ import Upload from '@/pages/bucket/Upload'
 import Dashboard from '@/pages/dashboard/Dashboard'
 import Machine from '@/pages/machine/Machine'
 import Keychain from '@/pages/keychain/Keychain'
+import UserManage from '@/pages/user/UserManage'
 import Login from '@/pages/login/Login'
 import Settings from '@/pages/bucket/Settings'
 import PictureStyles from '@/pages/bucket/PictureStyles'
@@ -65,10 +66,10 @@ const layoutChild = [{
     meta: { title: 'Machine', ali: 'machine' },
     component: Machine
 }, {
-    path: '/partition',
-    name: 'partition',
-    meta: { title: 'Partition', ali: 'partition' },
-    component: Keychain
+    path: '/user',
+    name: 'user',
+    meta: { title: 'User', ali: 'user' },
+    component: UserManage
 }]
 
 const routes = [{

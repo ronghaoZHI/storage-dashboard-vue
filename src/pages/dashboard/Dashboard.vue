@@ -185,35 +185,37 @@ export default {
             };
         },
         async getInitData () {
-            if (!this.dateSelect) {
-                return
-            }
+            if (!this.dateSelect) return
             let self = this
             self.showChart = 0
-            Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
-                self.originOverview = res.data.data.data
-            }), this.$http.get((this.getApiURL('capacity'))).then(res => {
-                self.capacityData = res.data.data
-                self.capacityOptions = InitOptions(self.capacityData)
-            }), this.$http.get((this.getApiURL('upload_space'))).then(res => {
-                self.uploadSpaceData = res.data.data
-                self.uploadTrafficOptions = InitOptions(self.uploadSpaceData)
-            }), this.$http.get((this.getApiURL('download_space'))).then(res => {
-                self.downloadSpaceData = res.data.data
-                self.downloadTrafficOptions = InitOptions(self.downloadSpaceData)
-            }), this.$http.get((this.getApiURL('download_count'))).then(res => {
-                self.downloadCountData = res.data.data
-                self.downloadsOptions = InitOptions(self.downloadCountData)
-            }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
-                self.uploadCountData = res.data.data
-                self.uploadsOptions = InitOptions(self.uploadCountData)
-            })]).then(res => {}, error => {
+
+            try {
+                await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
+                    self.originOverview = res.data.data.data
+                }), this.$http.get((this.getApiURL('capacity'))).then(res => {
+                    self.capacityData = res.data.data
+                    self.capacityOptions = InitOptions(self.capacityData)
+                }), this.$http.get((this.getApiURL('upload_space'))).then(res => {
+                    self.uploadSpaceData = res.data.data
+                    self.uploadTrafficOptions = InitOptions(self.uploadSpaceData)
+                }), this.$http.get((this.getApiURL('download_space'))).then(res => {
+                    self.downloadSpaceData = res.data.data
+                    self.downloadTrafficOptions = InitOptions(self.downloadSpaceData)
+                }), this.$http.get((this.getApiURL('download_count'))).then(res => {
+                    self.downloadCountData = res.data.data
+                    self.downloadsOptions = InitOptions(self.downloadCountData)
+                }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
+                    self.uploadCountData = res.data.data
+                    self.uploadsOptions = InitOptions(self.uploadCountData)
+                })])
+            } catch (error) {
                 self.$Message.warning(error)
+                await this.$store.dispatch('logout')
                 self.$router.push({
                     path: '/login',
                     query: { redirect: '/dashboard' }
                 })
-            })
+            }
         },
         convertData (item) {
             if (!item) {

@@ -40,7 +40,8 @@ export const messages = {
             DASHBOARD: 'Dashboard',
             KEYCHAIN: 'Keychain',
             MACHINE: 'Machine',
-            PARTITION: 'Partition'
+            PARTITION: 'Partition',
+            USER: 'User Management'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
@@ -330,7 +331,8 @@ export const messages = {
             DASHBOARD: '统计分析',
             KEYCHAIN: '密钥管理',
             MACHINE: '机器信息',
-            PARTITION: '磁盘分区'
+            PARTITION: '磁盘分区',
+            USER: '用户管理'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',

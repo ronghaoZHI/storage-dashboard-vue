@@ -5,6 +5,7 @@ import iconBucket from '../../assets/icon-bucket.png'
 import iconDashboard from '../../assets/icon-dashboard.png'
 import iconKey from '../../assets/icon-key.png'
 import iconMachine from '../../assets/icon-machine.png'
+import iconUser from '../../assets/icon-user.png'
 
 const bucket = {
     index: 1,
@@ -30,16 +31,23 @@ const machine = {
     icon: iconMachine
 }
 
+const userManage = {
+    index: 5,
+    name: 'user',
+    icon: iconUser
+}
+
 const ONLINE_NORMAL = [bucket, dashboard, keychain]
-const ONLINE_ADMIN = [bucket, dashboard, keychain, machine]
+const ONLINE_SUPRER = [bucket, dashboard, keychain, userManage]
+const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, userManage]
 
 const state = {
-    menuList: user.state.type === 'admin' ? ONLINE_ADMIN : ONLINE_NORMAL
+    menuList: user.state.type === 'admin' ? ONLINE_ADMIN : user.state.type === 'super' ? ONLINE_SUPRER : ONLINE_NORMAL
 }
 
 const mutations = {
     [types.REFRESH_MENU] (state) {
-        state.menuList = user.state.type === 'admin' ? ONLINE_ADMIN : ONLINE_NORMAL
+        state.menuList = user.state.type === 'admin' ? ONLINE_ADMIN : user.state.type === 'super' ? ONLINE_SUPRER : ONLINE_NORMAL
     }
 }
 
