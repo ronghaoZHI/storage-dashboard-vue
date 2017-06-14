@@ -111,6 +111,8 @@ export default {
             if (res.data.length > 0) {
                 this.subUserList = res.data
                 this.isLogin = false
+            } else {
+                this.toIndex(data)
             }
         },
         selectSubUser (user) {
