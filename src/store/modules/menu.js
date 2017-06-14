@@ -34,12 +34,12 @@ const ONLINE_NORMAL = [bucket, dashboard, keychain]
 const ONLINE_ADMIN = [bucket, dashboard, keychain, machine]
 
 const state = {
-    menuList: user.state.type === 'super' ? ONLINE_ADMIN : ONLINE_NORMAL
+    menuList: user.state.type === 'admin' ? ONLINE_ADMIN : ONLINE_NORMAL
 }
 
 const mutations = {
     [types.REFRESH_MENU] (state) {
-        state.menuList = user.state.type === 'super' ? ONLINE_ADMIN : ONLINE_NORMAL
+        state.menuList = user.state.type === 'admin' ? ONLINE_ADMIN : ONLINE_NORMAL
     }
 }
 
