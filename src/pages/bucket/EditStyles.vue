@@ -7,8 +7,8 @@
                 <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Tabs size="small">
-            <Tab-pane :label='$t("STORAGE.BASIC_EDIT")'>
+        <Tabs size="small" :value='tabValue'>
+            <Tab-pane :label='$t("STORAGE.BASIC_EDIT")' name='primary' :disabled='primaryDisable'>
                 <Row>
                     <Col span="8">
                         <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
@@ -66,17 +66,9 @@
                         </div>
                         <div class="form-item" v-if="general.crop === 'crop'">
                             <span class="form-label">选择位置 : </span>
-                            <div class="gravity-selector">
-                                <input type="radio" value="north_west" v-model="general.gravity"></Radio>
-                                <input type="radio" value="north" v-model="general.gravity"></Radio>
-                                <input type="radio" value="north_east" v-model="general.gravity"></Radio>
-                                <input type="radio" value="west" v-model="general.gravity"></Radio>
-                                <input type="radio" value="center" v-model="general.gravity"></Radio>
-                                <input type="radio" value="east" v-model="general.gravity"></Radio>
-                                <input type="radio" value="south_west" v-model="general.gravity"></Radio>
-                                <input type="radio" value="south" v-model="general.gravity"></Radio>
-                                <input type="radio" value="south_east" v-model="general.gravity"></Radio>
-                            </div>
+                            <Select v-model="general.gravity">
+                                <Option v-for="item in gravityList" :value="item.value" :key="item">{{ item.label }}</Option>
+                            </Select>
                             <div class="padding-setting">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
@@ -262,17 +254,17 @@
                                         <span>px</span>
                                     </div><!--font_size-->
                                     <div class="color-box" @click.stop>
-                                        <div class="color-trigger" :style="{background: fontColor.hex}" @click.stop="fontColorPicker=!fontColorPicker"></div>
-                                        <input type='text' v-model="fontColor.hex">
-                                        <slider-picker class="color-picker" v-if="fontColorPicker" v-model="fontColor" @click.stop/>
+                                        <div class="color-trigger" :style="{background: fontStyle.font_color.hex}" @click.stop="fontColorPicker=!fontColorPicker"></div>
+                                        <input type='text' v-model="fontStyle.font_color.hex">
+                                        <slider-picker class="color-picker" v-if="fontColorPicker" v-model="fontStyle.font_color" @click.stop/>
                                     </div><!--fontColor-->
                                 </div>
                                 <div class="form-item">
                                     <span class="form-label">背景 : </span>
                                     <div class="color-box" @click.stop style="margin-left:25px;">
-                                        <div class="color-trigger" :style="{background: fontBack.hex}" @click.stop="fontBackPicker=!fontBackPicker"></div>
-                                        <input type='text' v-model="fontBack.hex">
-                                        <slider-picker class="color-picker" v-if="fontBackPicker" v-model="fontColor" @click.stop/>
+                                        <div class="color-trigger" :style="{background: fontStyle.background.hex}" @click.stop="fontBackPicker=!fontBackPicker"></div>
+                                        <input type='text' v-model="fontStyle.background.hex">
+                                        <slider-picker class="color-picker" v-if="fontBackPicker" v-model="fontStyle.background" @click.stop/>
                                     </div><!--fontColor-->
                                 </div><!--fontBack-->
                             </div>
@@ -329,7 +321,7 @@
                     </Col>
                 </Row>
             </Tab-pane>
-            <Tab-pane :label='$t("STORAGE.ADV_EDIT")'>
+            <Tab-pane :label='$t("STORAGE.ADV_EDIT")' name='senior'>
                 <Row>
                     <Col span="8">
                         <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
@@ -380,7 +372,6 @@ export default {
             fontColorPicker: false,
             watermarker: watermarkerDefult,
             general: generalDefult,
-            fontColor: defaultFontColor,
             prefix: picStyleOverlayPrefix,
             imgName: '',
             uploadValidation: /^[\x00-\x2b\x2d\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
@@ -396,7 +387,10 @@ export default {
             fontBackPicker: false,
             radiusSlider: 1001,
             padColorPicker: false,
-            fontStyle: defaultFontStyle
+            fontStyle: defaultFontStyle,
+            tabValue: 'primary',
+            primaryDisable: false,
+            gravityList: [{value: 'noGravity', label: '指定坐标'}, {value: 'north_west', label: '旋转角度'}, {value: 'north', label: '垂直翻转'}, {value: 'north_east', label: '水平翻转'}, {value: 'west', label: '旋转角度'}, {value: 'center', label: '垂直翻转'}, {value: 'east', label: '水平翻转'}, {value: 'south_west', label: '旋转角度'}, {value: 'south', label: '垂直翻转'}, {value: 'south_east', label: '水平翻转'}, {value: 'xy_center', label: '旋转角度'}, {value: 'face', label: '垂直翻转'}, {value: 'faces', label: '水平翻转'}, {value: 'face:center', label: '垂直翻转'}, {value: 'faces:center', label: '水平翻转'}]
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
@@ -461,13 +455,20 @@ export default {
                 this.instructions = this.paramsIS
                 let res = await handler('getObject', params)
                 let styles = JSON.parse(new TextDecoder('utf-8').decode(res.Body))
-                this.general = generalConvert2Font(styeItemCheckout(styles).ganeralData)
-                this.watermarker = _.assignIn(watermarkerDefult, watermarkerConvert2Font(styeItemCheckout(styles).watermarkerData))
-                let fontName = styeItemCheckout(styles).fontName
-                if (!!fontName) {
-                    let fontStyle = await this.readFont(fontName)
-                    this.fontStyle = fontStyle
-                    this.fontColor = {hex: fontStyle.font_color}
+                let convertResult = styleItemCheckout(styles)
+                if (convertResult) {
+                    this.general = convertResult.ganeralData
+                    this.watermarker = convertResult.watermarkerData
+                    let fontName = convertResult.fontName
+                    if (!!fontName) {
+                        let fontStyle = await this.readFont(fontName)
+                        this.fontStyle = fontStyle
+                        this.fontStyle.font_color = {hex: '#' + fontStyle.font_color}
+                        this.fontStyle.background = {hex: '#' + fontStyle.background}
+                    }
+                } else {
+                    this.tabValue = 'senior'
+                    this.primaryDisable = true
                 }
             }
         },
@@ -485,7 +486,7 @@ export default {
             let style = {}
             style = this.fontStyle
             style.font_size = parseInt(this.fontStyle.font_size)
-            style.font_color = this.fontColor.hex.substr(1).toLowerCase()
+            style.font_color = this.fontStyle.font_color.hex.substr(1).toLowerCase()
             style.text = parseInt(this.watermarker.text)
             style.background = this.fontBack.hex.substr(1).toLowerCase()
             const fontStyleFile = new Blob([JSON.stringify(style)], {'type': 'application/json'})
@@ -567,9 +568,7 @@ const I2J = {
     v_: 'version',
     t_: 'transformation'
 }
-const defaultFontColor = {
-    hex: '#BF4040'
-}
+
 const defaultTextBack = {
     hex: '#BF4040'
 }
@@ -614,7 +613,8 @@ const defaultFontStyle = {
     text: '',
     font_family: 'Songti SC',
     font_size: 16,
-    background: {hex: '#BF4040'}
+    background: {hex: '#BF4040'},
+    font_color: {hex: '#BF4040'}
 }
 const generalConvert2Save = (generalData) => {
     let generalSave = {}
@@ -650,21 +650,27 @@ const generalConvert2Save = (generalData) => {
     } else if (generalData.angleType === 'vflip' || generalData.angleType === 'hflip') {
         generalSave.angle = generalData.angleType
     }
-    if (generalData.effect === 'oil_paint') {
-        generalSave.effect = generalData.effect + ':' + generalData.oilValue
-    } else if (generalData.effect === 'brightness') {
-        generalSave.effect = generalData.effect + ':' + generalData.brightnessValue
-    } else if (generalData.effect === 'blur') {
-        generalSave.effect = generalData.effect + ':' + generalData.blurValue
-    } else if (generalData.effect === 'pixelate') {
-        generalSave.effect = generalData.effect + ':' + generalData.pixelateValue
-    } else if (generalData.effect === 'sharpen') {
-        generalSave.effect = generalData.effect + ':' + generalData.sharpenValue
-    } else if (generalData.effect === 'color') {
-        generalSave.effect = generalData.color + ':' + generalData.colorValue
-    } else if (generalData.effect !== 'noEffect') {
-        generalSave.effect = generalData.effect
-    }
+
+    const ef = generalData.effect
+    let saved = 'noEffect'
+
+    if (ef === 'oil_paint') {
+        saved = ef + ':' + generalData.oilValue
+    } else if (ef === 'brightness') {
+        saved = ef + ':' + generalData.brightnessValue
+    } else if (ef === 'blur') {
+        saved = ef + ':' + generalData.blurValue
+    } else if (ef === 'pixelate') {
+        saved = ef + ':' + generalData.pixelateValue
+    } else if (ef === 'sharpen') {
+        saved = ef + ':' + generalData.sharpenValue
+    } else if (ef === 'color') {
+        saved = generalData.color + ':' + generalData.colorValue
+    } else if (ef !== 'noEffect') {
+        saved = ef
+    } else {}
+    generalSave.effect = saved
+
     if (generalData.border) {
         generalSave.border = generalData.borderSize + '_' + generalData.borderColor.hex.substr(1).toLowerCase()
     }
@@ -687,50 +693,125 @@ const watermarkerConvert2Save = (watermarkerData, styleName) => {
     }
     return watermarkerSave
 }
-const styeItemCheckout = styles => {
-    let ganeralData = {}
-    let watermarkerData = {}
+const styleItemCheckout = styles => {
+    let ganeralData = generalDefult
+    let watermarkerData = watermarkerDefult
     let fontName = ''
-    _.each(styles, item => {
-        _.forIn(item, (value, key) => {
-            if (generalKeyArray.indexOf(key) !== -1) {
-                ganeralData = item
-                return false
-            } else if (watermarkerKeyArray.indexOf(key) !== -1) {
-                if (key === 'overlay' && value.substr(0, 5) === 'text:') {
-                    fontName = value
-                }
-                watermarkerData = item
-                return false
+    let uniqueArray = []
+    let uniqueSet = new Set()
+    styles.forEach(item => {
+        const keys = Object.keys(item)
+        if (keys.includes('overlay')) {
+            uniqueArray.push('overlay')
+            uniqueSet.add('overlay')
+        }
+        if (keys.includes('crop')) {
+            uniqueArray.push('crop')
+            uniqueSet.add('crop')
+        }
+        if (keys.includes('angle')) {
+            uniqueArray.push('angle')
+            uniqueSet.add('angle')
+        }
+        if (keys.includes('effect')) {
+            uniqueArray.push('effect')
+            uniqueSet.add('effect')
+        }
+    })
+    if (uniqueArray.length > uniqueSet.size) {
+        return false
+    } else {
+        styles.forEach(item => {
+            // checkout watermarker or general
+            if (Object.keys(item).includes('overlay')) {
+                fontName = item.overlay.split(':')[1]
+                watermarkerData = _.assignIn(watermarkerDefult, watermarkerConvert2Font(item))
+            } else {
+                ganeralData = _.assignIn(ganeralData, generalConvert2Font(item))
             }
         })
-    })
-    return { ganeralData, watermarkerData, fontName }
-}
-const generalKeyArray = ['crop', 'quality', 'radius', 'angle', 'effect', 'border', 'format']
-const watermarkerKeyArray = ['overlay']
-const generalConvert2Font = fileData => {
-    let generalFont = _.cloneDeep(fileData)
-    if (generalFont.crop === 'fit') {
-        generalFont.fitStyle = generalFont.width ? 'width' : 'height'
-        generalFont.fitSize = generalFont.width || generalFont.height
+        return { ganeralData, watermarkerData, fontName }
     }
-    generalFont.sharpen = fileData.effect === 'sharpen'
-    generalFont.format = fileData.format || 'original'
-    generalFont.quality = fileData.quality || 0
+}
+const generalConvert2Font = data => {
+    let generalFont = {}
+    Object.assign(generalFont, data)
+    if (data.crop && data.corp === 'mfit' || data.corp === 'fit' || data.corp === 'limit') {
+        generalFont.crop = 'fit'
+        generalFont.fitType = data.corp
+    } else if (data.crop && data.corp === 'pad' || data.corp === 'mpad' || data.corp === 'lpad') {
+        generalFont.crop = 'pad'
+        generalFont.padType = data.corp
+        const backColor = data.background ? '#' + data.background.substr(0, 6) : '#ffffff'
+        generalFont.padColor = {hex: backColor}
+    } else if (data.crop && data.corp === 'fill' || data.corp === 'lfill') {
+        generalFont.crop = 'fill'
+        generalFont.fillType = data.corp
+    }
+    if (data.width) {
+        generalFont.width = data.width > 1 ? data.width : data.width * 100
+        generalFont.dataType = data.width > 1 ? 'pixel' : 'percent'
+    }
+    if (data.height) {
+        generalFont.height = data.height > 1 ? data.height : data.height * 100
+        generalFont.dataType = data.height > 1 ? 'pixel' : 'percent'
+    }
+    if (data.angle) {
+        generalFont.angleType = data.angle === 'vflip' || data.angle === 'hflip' ? data.angle : 'angle'
+        generalFont.angle = data.angle === 'vflip' || data.angle === 'hflip' ? 0 : data.angle
+    }
+    if (data.effect) {
+        const effectArray = ['grayscale', 'oil_paint', 'negate', 'brightness', 'blur', 'pixelate', 'sharpen', 'auto_contrast', 'improve']
+        const colorArray = ['sepia', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta']
+        if (effectArray.includes(data.effect) || effectArray.includes(data.effect.split(':')[0])) {
+            generalFont.effect = data.effect
+            if (data.effect.split('oil_piant:')[1]) {
+                generalFont.oilValue = parseInt(data.effect.split('oil_piant:')[1])
+            } else if (data.effect.split('brightness:')[1]) {
+                generalFont.brightnessValue = parseInt(data.effect.split('brightness:')[1])
+            } else if (data.effect.split('blur:')[1]) {
+                generalFont.blurValue = parseInt(data.effect.split('blur:')[1])
+            } else if (data.effect.split('pixelate:')[1]) {
+                generalFont.pixelateValue = parseInt(data.effect.split('pixelate:')[1])
+            } else if (data.effect.split('sharpen:')[1]) {
+                generalFont.sharpenValue = parseInt(data.effect.split('sharpen:')[1])
+            }
+        } else if (colorArray.includes(data.effect) || colorArray.includes(data.effect.split(':')[0])) {
+            generalFont.effect = 'color'
+            generalFont.color = data.effect.split(':')[0]
+            if (data.effect.split(':')[1]) {
+                generalFont.colorValue = parseInt(data.effect.split(':')[1])
+            }
+        }
+    }
+    if (data.border) {
+        generalFont.border = true
+        generalFont.borderSize = data.border.split('_')[0] || 1
+        const borderColor = '#' + data.border.split('_')[1].substr(0, 6)
+        generalFont.borderColor = {hex: borderColor} || {hex: '#BF4040'}
+    }
+    if (data.quality) {
+        generalFont.quality = parseInt(data.quality)
+    }
+    if (data.opacity) {
+        generalFont.opacity = parseInt(data.opacity)
+    }
     return generalFont
 }
+
 const watermarkerConvert2Font = data => {
-    let watermarkerFont = _.cloneDeep(data)
-    let dataKeys = Object.keys(data)
-    if (dataKeys.length) {
-        watermarkerFont.open = true
-        if (watermarkerFont.overlay && watermarkerFont.overlay.font) {
-            watermarkerFont.type = 'text'
-            watermarkerFont.fontStyle.text = watermarkerFont.overlay.text
-        } else if (watermarkerFont.overlay && watermarkerFont.overlay.image) {
-            watermarkerFont.type = 'img'
-        }
+    let watermarkerFont = watermarkerDefult
+    watermarkerFont.open = true
+    if (data.overlay.substr(0, 5) === 'text:') {
+        watermarkerFont.type = 'text'
+        const textRe = /(text:).*:/g
+        textRe.exec(data.overlay)
+        watermarkerFont.text = data.overlay.substr(textRe.lastIndex)
+    } else {
+        watermarkerFont.type = 'img'
+    }
+    if (data.opacity) {
+        watermarkerFont.opacity = parseInt(data.opacity)
     }
     return watermarkerFont
 }
