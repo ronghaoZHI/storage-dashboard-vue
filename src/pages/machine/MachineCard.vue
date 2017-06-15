@@ -20,7 +20,7 @@
             <span>CPU load: {{data.cpu.load}}</span>
         </div>
         <div class="card-partition" v-if="partitionList.length > 0">
-            <span>磁盘信息</span>
+            <span>磁盘信息</span><span class="ps">Space - IO 单位:%</span>
             <partition-node v-for="node in partitionList" :data="node" :key="node.ts"></partition-node>
         </div>
         <div class="card-ip">
@@ -205,6 +205,10 @@ export default {
         & > span {
             position: absolute;
             top: 10px;
+        }
+
+        .ps {
+            right: 20px;
         }
     }
 
