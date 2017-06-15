@@ -2,7 +2,7 @@
     <div class="bsc-user">
         <Button type="primary" v-show="!isAdmin">新建子账号</Button>
         <Button type="primary" v-show="isAdmin" @click="createUserModal = true">创建账号</Button>
-        <Button type="primary" v-show="isAdmin">关联账号</Button>
+        <Button type="primary" v-show="isAdmin" @click="bindUser">关联账号</Button>
         <Table class="table" :show-header="true" :stripe="true" :context="self" :highlight-row="true" :columns="userHeader" :data="userList" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
         <Modal v-model="createUserModal" title="Add user" @on-ok="createUser" @on-cancel="createBucketValue = ''">
             <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
@@ -17,9 +17,13 @@
                 </Form-item>
                 <Form-item label="Company" prop="company">
                     <Input v-model="createUserForm.company" placeholder="Company"></Input>
+                    <span style="position: absolute;right: 10px;">*必须与工商执照一致</span>
                 </Form-item>
-                <Form-item label="Type" prop="type">
-                    <Input v-model="createUserForm.type" placeholder="Type"></Input>
+                <Form-item label="User type">
+                    <Radio-group v-model="createUserForm.type">
+                        <Radio label="normal">normal</Radio>
+                        <Radio label="super">super</Radio>
+                    </Radio-group>
                 </Form-item>
             </Form>
         </Modal>
@@ -37,12 +41,14 @@
 </template>
 <script>
 import user from '@/store/modules/user'
-import { BOUND_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER } from '@/service/API'
+import { handler } from '@/service/Aws'
+import { BOUND_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL } from '@/service/API'
 export default {
     data () {
         return {
             self: this,
             userList: [],
+            allUserList: [],
             redirectBucketModal: false,
             createUserModal: false,
             isAdmin: user.state && user.state.type === 'admin',
@@ -98,24 +104,55 @@ export default {
                 this.userList = _.each(res.data, (user) => {
                     user.type = this.userType(user)
                 })
+                this.getUserAcl()
             } catch (error) {
                 this.$Message.warning(error)
                 await this.$store.dispatch('logout')
                 this.$router.push({
                     path: '/login',
-                    query: { redirect: '/dashboard' }
+                    query: { redirect: '/user' }
+                })
+            }
+        },
+        async bindUser () {
+            await this.getAllUser()
+        },
+        async getAllUser () {
+            try {
+                let res = await this.$http.get(ALL_USER)
+                console.log(res.data)
+                this.allUserList = res.data
+            } catch (error) {
+                this.$Message.warning(error)
+                await this.$store.dispatch('logout')
+                this.$router.push({
+                    path: '/login',
+                    query: { redirect: '/user' }
                 })
             }
         },
         async getSubUserAcl () {
             await this.$http.get()
         },
+        async getUserAcl () {
+            try {
+                let res = await handler('listBuckets')
+                await Promise.all(Array.map(res.Buckets, (bucket) => {
+                    console.log(bucket)
+                    this.$http.get(SUB_USER_ACL, {params: {bucket: bucket.Name}})
+                }))
+            } catch (error) {
+                console.log(error)
+                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
+            };
+        },
         createUser () {
             let self = this
             this.$refs['createUserForm'].validate((valid) => {
                 if (valid) {
                     self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
-                        self.createUserForm = { username: '', email: '', password: '' }
+                        self.createUserForm = { username: '', email: '', password: '', company: '', type: 'normal' }
+                        this.getUserUser()
                         this.$Message.success('Create user success')
                     }, error => {
                         this.$Message.error(error)
@@ -167,21 +204,15 @@ const headerSetting = [
         key: 'email'
     },
     {
-        title: 'Company',
-        width: 100,
-        align: 'left',
-        key: 'company'
-    },
-    {
         title: 'Acl',
-        width: 250,
+        width: 400,
         align: 'left',
         key: 'company'
     },
     {
         title: 'Actions',
         key: 'actions',
-        width: 170,
+        width: 100,
         align: 'left',
         render (row, column, index) {
             return 'test'

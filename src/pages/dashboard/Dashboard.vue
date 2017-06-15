@@ -182,7 +182,7 @@ export default {
             } catch (error) {
                 console.log(error)
                 this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
-            };
+            }
         },
         async getInitData () {
             if (!this.dateSelect) return
