@@ -64,28 +64,32 @@
                                 <Option v-for="item in thumbList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                         </div>
-                        <div class="form-item" v-if="general.crop === 'crop'">
-                            <span class="form-label">选择位置 : </span>
-                            <Select v-model="general.gravity">
-                                <Option v-for="item in gravityList" :value="item.value" :key="item">{{ item.label }}</Option>
-                            </Select>
-                            <div class="padding-setting">
+                        <div class="gravity-preview clearfix" v-if="general.crop === 'crop'">
+                            <div class="left">
                                 <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
-                                    <div class="input-text-box">
-                                        <input type='number' v-model="general.x">
-                                        <span>px</span>
-                                    </div>
+                                    <span class="form-label">选择位置 : </span>
+                                    <Select v-model="general.gravity" style="width:265px">
+                                        <Option v-for="item in cropGravityList" :value="item.value" :key="item">{{ item.label }}</Option>
+                                    </Select>
                                 </div>
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
-                                    <div class="input-text-box">
-                                        <input type='number' v-model="general.y">
-                                        <span>px</span>
+                                <div class="form-item" v-if="general.gravity === 'xy_center' || general.gravity === 'noGravity'">
+                                    <div class="gravity-xy">
+                                        <span class="form-label">x : </span>
+                                        <div class="input-text-box">
+                                            <input type='number' v-model="general.x">
+                                            <span>px</span>
+                                        </div>
+                                        <span class="form-label">y : </span>
+                                        <div class="input-text-box">
+                                            <input type='number' v-model="general.y">
+                                            <span>px</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="right"></div>
                         </div>
+                        
                         <div class="form-item" v-if="general.crop !== 'noCrop'">
                             <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
                             <Radio-group v-model="general.dataType">
@@ -390,7 +394,7 @@ export default {
             fontStyle: defaultFontStyle,
             tabValue: 'primary',
             primaryDisable: false,
-            gravityList: [{value: 'noGravity', label: '指定坐标'}, {value: 'north_west', label: '旋转角度'}, {value: 'north', label: '垂直翻转'}, {value: 'north_east', label: '水平翻转'}, {value: 'west', label: '旋转角度'}, {value: 'center', label: '垂直翻转'}, {value: 'east', label: '水平翻转'}, {value: 'south_west', label: '旋转角度'}, {value: 'south', label: '垂直翻转'}, {value: 'south_east', label: '水平翻转'}, {value: 'xy_center', label: '旋转角度'}, {value: 'face', label: '垂直翻转'}, {value: 'faces', label: '水平翻转'}, {value: 'face:center', label: '垂直翻转'}, {value: 'faces:center', label: '水平翻转'}]
+            cropGravityList: [{value: 'north_west', label: '左上位置'}, {value: 'north', label: '正上位置，水平方向居中'}, {value: 'north_east', label: '右上位置'}, {value: 'west', label: '左边，垂直方向居中'}, {value: 'center', label: '正中'}, {value: 'east', label: '右边，垂直方向居中'}, {value: 'south_west', label: '左下位置'}, {value: 'south', label: '正下位置'}, {value: 'south_east', label: '右下位置'}, {value: 'noGravity', label: '指定起点坐标'}, {value: 'xy_center', label: '指定的xy为中心点'}, {value: 'face', label: '定位一张最容易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}]
         }
     },
     components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
@@ -598,7 +602,9 @@ const generalDefult = {
     border: false,
     borderSize: 1,
     borderColor: {hex: '#BF4040'},
-    padColor: {hex: '#BF4040'}
+    padColor: {hex: '#BF4040'},
+    x: 0,
+    y: 0
 }
 const watermarkerDefult = {
     open: false,
@@ -623,22 +629,31 @@ const generalConvert2Save = (generalData) => {
         generalSave.background = generalData.padColor.hex.substr(1).toLowerCase()
     } else if (generalData.crop === 'fill') {
         generalSave.crop = generalData.fillType
-    } else if (generalData.crop === 'face') {
-        generalSave.crop = generalData.thumbType
     } else if (generalData.crop === 'fit') {
         generalSave.crop = generalData.fitType
-    } else if (generalData.crop !== 'noCrop') {
+    } else if (generalData.crop === 'thumb') {
+        generalSave.crop = 'thumb'
+        generalSave.gravity = generalData.thumbType
+    } else if (generalData.crop === 'crop') {
         generalSave.crop = generalData.crop
-        if (generalData.crop === 'crop') {
-            generalSave.gravity = generalData.gravity
+        if (generalData.gravity === 'noGravity') {
             generalSave.x = generalData.x
             generalSave.y = generalData.y
+        } else if (generalData.gravity === 'xy_center') {
+            generalSave.gravity === generalData.gravity
+            generalSave.x = generalData.x
+            generalSave.y = generalData.y
+        } else {
+            generalSave.gravity === generalData.gravity
         }
-    }
+    } else if (generalData.crop !== 'noCrop') {
+        generalSave.crop = generalData.crop
+    } else {}
     if (generalData.crop !== 'noCrop') {
         generalSave.width = generalData.dataType === 'pixel' ? parseInt(generalData.width) : parseFloat(generalData.width / 100)
         generalSave.height = generalData.dataType === 'pixel' ? parseInt(generalData.height) : parseFloat(generalData.height / 100)
     }
+
     if (generalData.format === 'original' || generalData.format === 'png' || generalData.format === 'webp') {
         generalSave.quality = generalData.quality
     }
@@ -747,7 +762,24 @@ const generalConvert2Font = data => {
     } else if (data.crop && data.corp === 'fill' || data.corp === 'lfill') {
         generalFont.crop = 'fill'
         generalFont.fillType = data.corp
+    } else if (data.crop && data.corp === 'thumb') {
+        generalFont.crop = 'thumb'
+        generalFont.thumbType = data.gravity
+    } else if (data.crop && data.corp === 'crop') {
+        generalFont.crop = 'crop'
+        if (data.gravity) {
+            generalFont.gravity = data.gravity
+            if (data.x || data.y) {
+                generalFont.x = data.x || 0
+                generalFont.y = data.y || 0
+            }
+        } else if (data.x || data.y) {
+            generalFont.gravity = 'noGravity'
+            generalFont.x = data.x || 0
+            generalFont.y = data.y || 0
+        }
     }
+
     if (data.width) {
         generalFont.width = data.width > 1 ? data.width : data.width * 100
         generalFont.dataType = data.width > 1 ? 'pixel' : 'percent'
@@ -1218,6 +1250,22 @@ const allFontList = [{
     }
     input:nth-last-child(2){
         background-color:#00FFFF;
+    }
+}
+.gravity-xy{
+    margin-left:60px;
+}
+.gravity-preview{
+    &>div{
+        float:left
+    }
+    div.left{
+        width:350px;
+    }
+    div.right{
+        width:100px;
+        height:85px;
+        background:#20a0ff;
     }
 }
 </style>
