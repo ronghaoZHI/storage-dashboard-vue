@@ -3,8 +3,6 @@
         <div class="layout-bsc-toolbar">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">{{$t("STORAGE.ADD_BUCKET")}}</Button>
-                <Button class="button-bsc-add-bucket" type="primary" v-if="adminMode">Add user</Button>
-                <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" v-if="adminMode">{{$t("STORAGE.AUTHORIZATION")}}Authorization</Button></Tooltip>
                 <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button></Tooltip>
                 <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" @click="deleteBucketConfirm()">{{$t("STORAGE.DELETE_BUCKET")}}</Button></Tooltip>
             </div>
@@ -19,34 +17,10 @@
             </Input>
             <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
         </Modal>
-        <Modal v-model="createUserModal" title="Add user" @on-ok="createUser" @on-cancel="createBucketValue = ''">
-            <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
-                <Form-item label="User name" prop="username">
-                    <Input v-model="createUserForm.username" placeholder="User name"></Input>
-                </Form-item>
-                <Form-item label="Email" prop="email">
-                    <Input v-model="createUserForm.email" placeholder="Email"></Input>
-                </Form-item>
-                <Form-item label="Password" prop="password">
-                    <Input v-model="createUserForm.password" placeholder="Password"></Input>
-                </Form-item>
-            </Form>
-        </Modal>
-        <Modal v-model="redirectBucketModal" title="Add a redirect bucket and authorize it to the user" @on-ok="createRedirectBucket" @on-cancel="redirectBucketModal = ''">
-            <Form ref="redirectBucketForm" :model="redirectBucketForm" :rules="redirectBucketRuleValidate" :label-width="90">
-                <Form-item label="Bucket alias" prop="redirect">
-                    <Input v-model="redirectBucketForm.redirect" placeholder="Bucket alias"></Input>
-                </Form-item>
-                <Form-item label="User email" prop="email">
-                    <Input v-model="redirectBucketForm.email" placeholder="User email"></Input>
-                </Form-item>
-            </Form>
-        </Modal>
     </div>
 </template>
 <script>
 import { handler } from '@/service/Aws'
-import { CREATE_USER, REDIRECT_BUCKET } from '@/service/API'
 import { removeItemFromArray } from '@/service/bucketService'
 import moment from 'moment'
 export default {
@@ -55,45 +29,12 @@ export default {
             adminMode: false,
             createBucketValue: '',
             createBucketModal: false,
-            redirectBucketModal: false,
-            createUserModal: false,
             selectedBucket: {},
             inputCheck: false,
             self: this,
             iconSize: 18,
             header: headSetting,
-            bucketList: this.bucketList,
-            createUserForm: {
-                username: '',
-                email: '',
-                password: ''
-            },
-            userRuleValidate: {
-                username: [
-                    { required: true, message: 'Requires user name', trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: 'Requires email', trigger: 'blur' },
-                    { type: 'email', message: 'Email format is incorrect', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: 'Requires password', trigger: 'blur' },
-                    { type: 'string', min: 6, message: 'Requires 6 characters', trigger: 'blur' }
-                ]
-            },
-            redirectBucketForm: {
-                redirect: '',
-                email: ''
-            },
-            redirectBucketRuleValidate: {
-                redirect: [
-                    { required: true, message: 'Requires bucket alias', trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: 'Requires user email', trigger: 'blur' },
-                    { type: 'email', message: 'Email format is incorrect', trigger: 'blur' }
-                ]
-            }
+            bucketList: this.bucketList
         }
     },
     mounted () {
@@ -164,36 +105,6 @@ export default {
                 console.log(error)
                 this.$Message.error(error.message)
             }
-        },
-        createUser () {
-            let self = this
-            this.$refs['createUserForm'].validate((valid) => {
-                if (valid) {
-                    self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
-                        self.createUserForm = { username: '', email: '', password: '' }
-                        this.$Message.success('Create user success')
-                    }, error => {
-                        this.$Message.error(error)
-                    })
-                } else {
-                    this.$Message.error('Input validate failed')
-                }
-            })
-        },
-        createRedirectBucket () {
-            let self = this
-            this.$refs['redirectBucketForm'].validate((valid) => {
-                if (valid) {
-                    self.$http.post(REDIRECT_BUCKET, {...self.redirectBucketForm, original: self.selectedBucket.Name}).then(res => {
-                        self.redirectBucketForm = { redirect: '', email: '' }
-                        this.$Message.success('Create bucket alias success')
-                    }, error => {
-                        this.$Message.error(error)
-                    })
-                } else {
-                    this.$Message.error('Input validate failed')
-                }
-            })
         },
         goBucketSettings () {
             const bucket = this.selectedBucket
