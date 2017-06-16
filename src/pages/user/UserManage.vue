@@ -2,7 +2,7 @@
     <div class="bsc-user">
         <Button type="primary" v-show="!isAdmin">新建子账号</Button>
         <Button type="primary" v-show="isAdmin" @click="createUserModal = true">创建账号</Button>
-        <Button type="primary" v-show="isAdmin" @click="bindUser">关联账号</Button>
+        <Button type="primary" v-show="isAdmin" @click="openBindUserModal">关联账号</Button>
         <Table class="table" :show-header="true" :stripe="true" :context="self" :highlight-row="true" :columns="userHeader" :data="userList" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
         <Modal v-model="createUserModal" title="Add user" @on-ok="createUser" @on-cancel="createBucketValue = ''">
             <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
@@ -37,9 +37,9 @@
                 </Form-item>
             </Form>
         </Modal>
-        <Modal v-model="bindUserModal" title="Bind user" width="860">
+        <Modal v-model="bindUserModal" title="Bind user" width="860" @on-ok="bindUser">
             <div class="bsc-user-box">
-                <div class="user-card" v-for="user in allUserList">
+                <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in allUserList">
                     {{user.email}}
                 </div>
             </div>
@@ -106,10 +106,10 @@ export default {
         }
     },
     mounted () {
-        this.getUserUser()
+        this.getUserList()
     },
     methods: {
-        async getUserUser () {
+        async getUserList () {
             try {
                 console.log(ALL_USER, CREATE_USER, REDIRECT_BUCKET, BIND_USER, UNBIND_USER)
                 let res = await this.$http.get(this.isAdmin ? BOUND_USER : SUB_USER)
@@ -126,9 +126,36 @@ export default {
                 })
             }
         },
+        async openBindUserModal () {
+            try {
+                let res = await this.$http.get(ALL_USER)
+                _.each(res.data, user => {
+                    if (this.userList.indexOf(user) > 0) {
+                        user.show = false
+                    } else {
+                        user.show = true
+                        user.selected = false
+                    }
+                })
+                this.allUserList = res.data
+                this.bindUserModal = true
+            } catch (error) {
+                this.$Message.warning(error)
+                await this.$store.dispatch('logout')
+                this.$router.push({
+                    path: '/login',
+                    query: { redirect: '/user' }
+                })
+            }
+        },
         async bindUser () {
-            this.bindUserModal = true
-            await this.getAllUser()
+            try {
+                await Promise.all(Array.map(this.allUserList, (user) => {
+                    user.selected && this.$http.post(BIND_USER, {email: user.email}) && this.userList.push(this.userType(user))
+                }))
+            } catch (error) {
+                this.$Message.warning(error)
+            }
         },
         unbindUser (user, index) {
             this.$http.post(UNBIND_USER, {email: user.email}).then(res => {
@@ -172,7 +199,7 @@ export default {
                 if (valid) {
                     self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
                         self.createUserForm = { username: '', email: '', password: '', company: '', type: 'normal' }
-                        this.getUserUser()
+                        this.getUserList()
                         this.$Message.success('Create user success')
                     }, error => {
                         this.$Message.error(error)
@@ -289,6 +316,8 @@ const adminHeaderSetting = [
 
 .@{css-prefix}user-box {
     min-height: 100%;
+    max-height: 600px;
+    overflow: scroll;
     width: 100%;
     display: inline-flex;
     flex-direction: row;
@@ -305,10 +334,19 @@ const adminHeaderSetting = [
         text-align: center;
         border-radius: @common-radius;
         margin: 3px 3px 0 0;
+        padding: 0 3px;
+        text-overflow: ellipsis;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor: pointer;
 
         &:hover {
             background-color: @user-card-backgrand-hover;
         }
+    }
+
+    .user-card-selected {
+        background-color: @user-card-backgrand-hover;
     }
 }
 
