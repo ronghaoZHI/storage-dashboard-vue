@@ -1,5 +1,5 @@
 <template>
-    <div @click="fontColorPicker = strokeColorPicker = fontBackPicker = borderColorPicker = padColorPicker =false">
+    <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
@@ -23,7 +23,7 @@
                     <Col span="16" class="page-left">
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
-                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 500px"></Input>
+                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 415px"></Input>
                             <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
                         </div>
                         <div class="form-item">
@@ -33,7 +33,7 @@
                                 <Radio label="scale">{{$t("STORAGE.CROP_SCALE")}}</Radio>
                                 <Radio label="fit">{{$t("STORAGE.CROP_FIT")}}</Radio>
                                 <Radio label="pad">{{$t("STORAGE.CROP_PAD")}}</Radio>
-                                <br style='line-height: 10px;'>
+                                <p style='height: 10px;'></p>
                                 <Radio label="fill">{{$t("STORAGE.CROP_FILL")}}</Radio>
                                 <Radio label="crop">{{$t("STORAGE.CROP_CROP")}}</Radio>
                                 <Radio label="thumb">{{$t("STORAGE.CROP_THUMB")}}</Radio>
@@ -48,10 +48,9 @@
                             <Select v-model="general.padType" style="width:300px;margin-left:65px;">
                                 <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
-                            <div class="color-box" @click.stop>
-                                <div class="color-trigger" :style="{background: general.padColor.hex}" @click.stop="padColorPicker=!padColorPicker"></div>
-                                <input type='text' v-model="general.padColor.hex">
-                                <slider-picker class="color-picker" v-if="padColorPicker" v-model="general.padColor" @click.stop/>
+                            <div class="color-box">
+                                <input type="color" v-model="general.padColor" class="color-trigger">
+                                <input type='text' v-model="general.padColor" class="color-input">
                             </div><!--padColor-->
                         </div>
                         <div class="form-item" v-if="general.crop === 'fill'">
@@ -63,7 +62,7 @@
                             <Select v-model="general.thumbType" style="width:300px;margin-left:65px;">
                                 <Option v-for="item in thumbList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
-                        </div>
+                        </div><!--thumb gravity-->
                         <div class="gravity-preview clearfix" v-if="general.crop === 'crop'">
                             <div class="left">
                                 <div class="form-item">
@@ -88,8 +87,7 @@
                                 </div>
                             </div>
                             <div class="right"></div>
-                        </div>
-                        
+                        </div><!--crop gravity & xy-->
                         <div class="form-item" v-if="general.crop !== 'noCrop'">
                             <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
                             <Radio-group v-model="general.dataType">
@@ -98,28 +96,28 @@
                             </Radio-group>
                             <span class="form-label">W : </span>
                             <div class="input-text-box">
-                                <input type='number' v-model="general.width">
+                                <input type='number' v-model.number="general.width">
                                 <span v-if="general.dataType==='pixel'" class="form-label">px</span>
                                 <span v-else class="form-label">%</span>
                             </div>
                             <span class="form-label">H : </span>
                             <div class="input-text-box">
-                                <input v-model.number="general.height">
+                                <input type='number' v-model.number="general.height">
                                 <span v-if="general.dataType==='pixel'" class="form-label">px</span>
                                 <span v-else class="form-label">%</span>
                             </div>
-                        </div>
+                        </div><!--width & height-->
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_QUALITY")}} : </span>
                             <Slider class="pic-slider" :min='1' v-model="general.quality"></Slider>
                             <Input v-model="general.quality" class="slider-input" number></Input>
-                        </div>
+                        </div><!--quality-->
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_FORMAT")}} : </span>
-                            <Select v-model="general.format" style="width:500px">
+                            <Select v-model="general.format" style="width:415px">
                                 <Option v-for="item in formatList" :value="item" :key="item">{{ item }}</Option>
                             </Select>
-                        </div>
+                        </div><!--format-->
                         <div class="form-item">
                             <Button type="ghost" @click="setMore = !setMore">更多设置 <Icon type="chevron-down" v-if="!setMore"></Icon><Icon type="chevron-up" v-else></Icon></Button>
                         </div>
@@ -143,15 +141,16 @@
                                     <Radio label="noEffect">不添加滤镜或特效</Radio>
                                     <Radio label="grayscale">灰度</Radio>
                                     <Radio label="oil_paint">油画效果</Radio>
-                                    <Radio label="negate">反色</Radio>
-                                    <Radio label="brightness">调整图片亮度</Radio>
-                                    <Radio label="blur">模糊效果</Radio>
-                                    <Radio label="pixelate">像素化</Radio>
-                                    <br style='line-height: 10px;'>
-                                    <Radio label="sharpen">锐化</Radio>
                                     <Radio label="auto_contrast">自动对比度</Radio>
-                                    <Radio label="improve">自动调整图像色彩，对比度和亮度</Radio>
+                                    <Radio label="negate">反色</Radio>
+                                    <p style='height: 10px;'></p>
+                                    <Radio label="sharpen">锐化</Radio>
+                                    <Radio label="blur">模糊效果</Radio>
+                                    <Radio label="brightness">调整图片亮度</Radio>
+                                    <Radio label="pixelate">像素化</Radio>
                                     <Radio label="color">增加颜色</Radio>
+                                    <p style='height: 10px;'></p>
+                                    <Radio label="improve">自动调整图像色彩，对比度和亮度</Radio>
                                 </Radio-group>
                             </div><!--effect-->
                             <div class="form-item" v-if="general.effect === 'brightness'">
@@ -161,22 +160,22 @@
                             </div><!--brightnessValue-->
                             <div class="form-item" v-if="general.effect === 'blur'">
                                 <span class="form-label">模糊值 : </span>
-                                <Slider class="pic-slider" :min='1' :max='2000' v-model="general.blurValue"></Slider>
+                                <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.blurValue"></Slider>
                                 <Input v-model="general.blurValue" class="slider-input" number></Input>
                             </div><!--blurValue-->
                             <div class="form-item" v-if="general.effect === 'sharpen'">
                                 <span class="form-label">锐化值 : </span>
-                                <Slider class="pic-slider" :min='1' :max='2000' v-model="general.sharpenValue"></Slider>
+                                <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.sharpenValue"></Slider>
                                 <Input v-model="general.sharpenValue" class="slider-input" number></Input>
                             </div><!--sharpenValue-->
                             <div class="form-item" v-if="general.effect === 'oil_paint'">
                                 <span class="form-label">油画值 : </span>
-                                <Slider class="pic-slider" :min='1' :max='8' v-model="general.oilValue"></Slider>
+                                <Slider class="pic-slider mar-l15" :min='1' :max='8' v-model="general.oilValue"></Slider>
                                 <Input v-model="general.oilValue" class="slider-input" number></Input>
                             </div><!--oilValue-->
                             <div class="form-item" v-if="general.effect === 'color'">
                                 <span class="form-label">颜色 : </span>
-                                <div class="color-selector">
+                                <div class="color-selector mar-l20">
                                     <input type="radio" value="sepia" v-model="general.color" style="background-color:sepia"></Radio>
                                     <input type="radio" value="red" v-model="general.color" style="background-color:red"></Radio>
                                     <input type="radio" value="green" v-model="general.color" style="background-color:green"></Radio>
@@ -193,9 +192,9 @@
                             </div><!--colorValue-->
                             <div class="form-item" v-if="general.effect === 'pixelate'">
                                 <span class="form-label">像素值 : </span>
-                                <Slider class="pic-slider" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
+                                <Slider class="pic-slider mar-l15" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
                                 <Input v-model="general.pixelateValue" class="slider-input" number></Input>
-                            </div><!--colorValue-->
+                            </div><!--pixelateValue-->
                             <div class="form-item">
                                 <span class="form-label">设置边框 : </span>
                                 <i-switch v-model="general.border" size="large">
@@ -210,15 +209,14 @@
                                     <span>px</span>
                                 </div><!--borderSize-->
                                 <div class="color-box" @click.stop>
-                                    <div class="color-trigger" :style="{background: general.borderColor.hex}" @click.stop="borderColorPicker=!borderColorPicker"></div>
-                                    <input type='text' v-model="general.borderColor.hex">
-                                    <slider-picker class="color-picker" v-if="borderColorPicker" v-model="general.borderColor" @click.stop/>
+                                    <input type="color" v-model="general.borderColor" class="color-trigger">
+                                    <input type='text' v-model="general.borderColor" class="color-input">
                                 </div><!--borderColor-->
                             </div><!--border-->
                             <div class="form-item">
                                 <span class="form-label">生成圆角 : </span>
                                 <Slider class="pic-slider" :min='0' :max='1001' v-model="radiusSlider" :tip-format="radiusFormater"></Slider>
-                                <Input v-model="radiusValue" class="slider-input" number></Input>
+                                <Input v-model="radiusValue" class="slider-input" number :on-change='radiusConvert'></Input>
                             </div><!--radius-->
                             <div class="form-item">
                                 <span class="form-label">不透明度 : </span>
@@ -245,7 +243,7 @@
                             <div v-if="watermarker.type == 'text'" class="clearfix">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
-                                    <Input v-model="watermarker.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 500px"></Input>
+                                    <Input v-model="watermarker.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 415px"></Input>
                                     <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
                                 </div><!--text-->
                                 <div class="form-item">
@@ -257,18 +255,16 @@
                                         <input type='number' v-model="fontStyle.font_size">
                                         <span>px</span>
                                     </div><!--font_size-->
-                                    <div class="color-box" @click.stop>
-                                        <div class="color-trigger" :style="{background: fontStyle.font_color.hex}" @click.stop="fontColorPicker=!fontColorPicker"></div>
-                                        <input type='text' v-model="fontStyle.font_color.hex">
-                                        <slider-picker class="color-picker" v-if="fontColorPicker" v-model="fontStyle.font_color" @click.stop/>
+                                    <div class="color-box">
+                                        <input type="color" v-model="fontStyle.font_color" class="color-trigger">
+                                        <input type='text' v-model="fontStyle.font_color" class="color-input">
                                     </div><!--fontColor-->
                                 </div>
                                 <div class="form-item">
                                     <span class="form-label">背景 : </span>
-                                    <div class="color-box" @click.stop style="margin-left:25px;">
-                                        <div class="color-trigger" :style="{background: fontStyle.background.hex}" @click.stop="fontBackPicker=!fontBackPicker"></div>
-                                        <input type='text' v-model="fontStyle.background.hex">
-                                        <slider-picker class="color-picker" v-if="fontBackPicker" v-model="fontStyle.background" @click.stop/>
+                                    <div class="color-box" style="margin-left:25px;">
+                                        <input type="color" v-model="fontStyle.background" class="color-trigger">
+                                        <input type='text' v-model="fontStyle.background" class="color-input">
                                     </div><!--fontColor-->
                                 </div><!--fontBack-->
                             </div>
@@ -385,12 +381,10 @@ export default {
             thumbList: [{value: 'face', label: '定位一张最易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}],
             fitList: [{value: 'fit', label: '等比例缩放'}, {value: 'mfit', label: '等比例放大'}, {value: 'limit', label: '等比例缩小'}],
             angleList: [{value: 'angle', label: '旋转角度'}, {value: 'vflip', label: '垂直翻转'}, {value: 'hflip', label: '水平翻转'}],
-            borderColorPicker: false,
             setMore: false,
             fontBack: defaultTextBack,
             fontBackPicker: false,
             radiusSlider: 1001,
-            padColorPicker: false,
             fontStyle: defaultFontStyle,
             tabValue: 'primary',
             primaryDisable: false,
@@ -467,8 +461,8 @@ export default {
                     if (!!fontName) {
                         let fontStyle = await this.readFont(fontName)
                         this.fontStyle = fontStyle
-                        this.fontStyle.font_color = {hex: '#' + fontStyle.font_color}
-                        this.fontStyle.background = {hex: '#' + fontStyle.background}
+                        this.fontStyle.font_color = '#' + fontStyle.font_color
+                        this.fontStyle.background = '#' + fontStyle.background
                     }
                 } else {
                     this.tabValue = 'senior'
@@ -488,11 +482,11 @@ export default {
         },
         async saveFont () {
             let style = {}
-            style = this.fontStyle
+            style.font_family = this.fontStyle.font_family
             style.font_size = parseInt(this.fontStyle.font_size)
-            style.font_color = this.fontStyle.font_color.hex.substr(1).toLowerCase()
+            style.font_color = this.fontStyle.font_color.substr(1).toLowerCase()
             style.text = parseInt(this.watermarker.text)
-            style.background = this.fontBack.hex.substr(1).toLowerCase()
+            style.background = this.fontStyle.background.substr(1).toLowerCase()
             const fontStyleFile = new Blob([JSON.stringify(style)], {'type': 'application/json'})
             try {
                 await handler('putObject', {
@@ -546,9 +540,6 @@ export default {
         // the contents array need refresh when the $route value changed
         '$route' (to, from) {
             to.path !== from.path && this.getData()
-        },
-        'watermarker.open' (to, from) {
-            console.log('watermarker', to)
         }
     }
 }
@@ -601,8 +592,8 @@ const generalDefult = {
     pixelateValue: 5,
     border: false,
     borderSize: 1,
-    borderColor: {hex: '#BF4040'},
-    padColor: {hex: '#BF4040'},
+    borderColor: '#BF4040',
+    padColor: '#ffffff',
     x: 0,
     y: 0
 }
@@ -619,14 +610,14 @@ const defaultFontStyle = {
     text: '',
     font_family: 'Songti SC',
     font_size: 16,
-    background: {hex: '#BF4040'},
-    font_color: {hex: '#BF4040'}
+    background: '#BF4040',
+    font_color: '#BF4040'
 }
 const generalConvert2Save = (generalData) => {
     let generalSave = {}
     if (generalData.crop === 'pad') {
         generalSave.crop = generalData.padType
-        generalSave.background = generalData.padColor.hex.substr(1).toLowerCase()
+        generalSave.background = generalData.padColor.substr(1).toLowerCase()
     } else if (generalData.crop === 'fill') {
         generalSave.crop = generalData.fillType
     } else if (generalData.crop === 'fit') {
@@ -667,27 +658,25 @@ const generalConvert2Save = (generalData) => {
     }
 
     const ef = generalData.effect
-    let saved = 'noEffect'
 
     if (ef === 'oil_paint') {
-        saved = ef + ':' + generalData.oilValue
+        generalSave.effect = ef + ':' + generalData.oilValue
     } else if (ef === 'brightness') {
-        saved = ef + ':' + generalData.brightnessValue
+        generalSave.effect = ef + ':' + generalData.brightnessValue
     } else if (ef === 'blur') {
-        saved = ef + ':' + generalData.blurValue
+        generalSave.effect = ef + ':' + generalData.blurValue
     } else if (ef === 'pixelate') {
-        saved = ef + ':' + generalData.pixelateValue
+        generalSave.effect = ef + ':' + generalData.pixelateValue
     } else if (ef === 'sharpen') {
-        saved = ef + ':' + generalData.sharpenValue
+        generalSave.effect = ef + ':' + generalData.sharpenValue
     } else if (ef === 'color') {
-        saved = generalData.color + ':' + generalData.colorValue
+        generalSave.effect = generalData.color + ':' + generalData.colorValue
     } else if (ef !== 'noEffect') {
-        saved = ef
+        generalSave.effect = ef
     } else {}
-    generalSave.effect = saved
 
     if (generalData.border) {
-        generalSave.border = generalData.borderSize + '_' + generalData.borderColor.hex.substr(1).toLowerCase()
+        generalSave.border = generalData.borderSize + '_' + generalData.borderColor.substr(1).toLowerCase()
     }
     if (generalData.opacity !== 100) {
         generalSave.opacity = generalData.opacity
@@ -709,8 +698,8 @@ const watermarkerConvert2Save = (watermarkerData, styleName) => {
     return watermarkerSave
 }
 const styleItemCheckout = styles => {
-    let ganeralData = generalDefult
-    let watermarkerData = watermarkerDefult
+    let ganeralData = _.clone(generalDefult)
+    let watermarkerData = _.clone(watermarkerDefult)
     let fontName = ''
     let uniqueArray = []
     let uniqueSet = new Set()
@@ -751,22 +740,27 @@ const styleItemCheckout = styles => {
 const generalConvert2Font = data => {
     let generalFont = {}
     Object.assign(generalFont, data)
-    if (data.crop && data.corp === 'mfit' || data.corp === 'fit' || data.corp === 'limit') {
-        generalFont.crop = 'fit'
-        generalFont.fitType = data.corp
-    } else if (data.crop && data.corp === 'pad' || data.corp === 'mpad' || data.corp === 'lpad') {
-        generalFont.crop = 'pad'
-        generalFont.padType = data.corp
-        const backColor = data.background ? '#' + data.background.substr(0, 6) : '#ffffff'
-        generalFont.padColor = {hex: backColor}
-    } else if (data.crop && data.corp === 'fill' || data.corp === 'lfill') {
-        generalFont.crop = 'fill'
-        generalFont.fillType = data.corp
-    } else if (data.crop && data.corp === 'thumb') {
-        generalFont.crop = 'thumb'
+
+    const cr = data.crop
+    let fontC
+
+    if (cr && (cr === 'mfit' || cr === 'fit' || cr === 'limit')) {
+        fontC = 'fit'
+        generalFont.fitType = cr
+    } else if (cr && (cr === 'pad' || cr === 'mpad' || cr === 'lpad')) {
+        fontC = 'pad'
+        generalFont.padType = cr
+        if (data.background) {
+            generalFont.padColor = '#' + data.background.substr(0, 6)
+        }
+    } else if (cr && (cr === 'fill' || cr === 'lfill')) {
+        fontC = 'fill'
+        generalFont.fillType = cr
+    } else if (cr && cr === 'thumb') {
+        fontC = 'thumb'
         generalFont.thumbType = data.gravity
-    } else if (data.crop && data.corp === 'crop') {
-        generalFont.crop = 'crop'
+    } else if (cr && cr === 'crop') {
+        fontC = 'crop'
         if (data.gravity) {
             generalFont.gravity = data.gravity
             if (data.x || data.y) {
@@ -778,7 +772,12 @@ const generalConvert2Font = data => {
             generalFont.x = data.x || 0
             generalFont.y = data.y || 0
         }
+    } else if (cr) {
+        fontC = cr
+    } else {
+        fontC = 'noCrop'
     }
+    generalFont.crop = fontC
 
     if (data.width) {
         generalFont.width = data.width > 1 ? data.width : data.width * 100
@@ -820,7 +819,7 @@ const generalConvert2Font = data => {
         generalFont.border = true
         generalFont.borderSize = data.border.split('_')[0] || 1
         const borderColor = '#' + data.border.split('_')[1].substr(0, 6)
-        generalFont.borderColor = {hex: borderColor} || {hex: '#BF4040'}
+        generalFont.borderColor = borderColor || '#BF4040'
     }
     if (data.quality) {
         generalFont.quality = parseInt(data.quality)
@@ -1058,23 +1057,24 @@ const allFontList = [{
     }
 }
 .form-label{
-    font-size: 12px;
+    font-size: 14px;
     padding-right:5px;
     line-height:30px;
 }
 .page-left{
+    width:520px;
     padding-left:30px;
     .form-item{
         margin-bottom:20px;
     }
     .style-name-info{
-        padding:5px 0 0 60px;
+        padding:5px 0 0 75px;
         color:#8492a6;
         font-size: 12px;
     }
     .pic-slider{
         display:inline-block;
-        width:310px;
+        width:355px;
         vertical-align:middle;
     }
     .slider-input{
@@ -1183,15 +1183,21 @@ const allFontList = [{
     position:relative;
     display:inline-block;
     vertical-align: middle;
-    .color-trigger{
+    input.color-trigger{
+        appearance:none;
+        -moz-appearance:none; /* Firefox */
+        -webkit-appearance:none; /* Safari 和 Chrome */
         width:30px;
         height:30px;
         float:left;
+        border:none;
         border-top-left-radius: 4px;
         border-bottom-left-radius: 4px;
         border-right:1px solid #d7dde4;
+        background-color:#fff;
+        outline: none;
     }
-    input{
+    input.color-input{
         border:none;
         line-height:30px;
         width:70px;
@@ -1202,16 +1208,6 @@ const allFontList = [{
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px;
     }
-    .color-picker{
-        position:absolute;
-        top:35px;
-        left:-180px;
-        z-index:2;
-        background: #fff;
-        border:1px solid #d7dde4;
-        border-radius:4px;
-        padding:15px;
-    }
 }
 .red{
     color:red !important;
@@ -1220,22 +1216,22 @@ const allFontList = [{
     display:inline
 }
 .upload-box{
-    width:500px;
+    width:415px;
     display:inline-block;
     vertical-align: text-top;
 }
 .color-selector{
-    width:422px;
+    width:387px;
     border:1px solid #d7dde4;
     border-radius: 4px;
     display:inline-block;
-    vertical-align:text-top;
+    vertical-align:middle;
     margin-right:20px;
     input{
         appearance:none;
         -moz-appearance:none; /* Firefox */
         -webkit-appearance:none; /* Safari 和 Chrome */
-        width:60px;
+        width:55px;
         height:30px;
         float:left;
         outline:none;
@@ -1267,5 +1263,11 @@ const allFontList = [{
         height:85px;
         background:#20a0ff;
     }
+}
+.mar-l15{
+    margin-left:15px;
+}
+.mar-l20{
+    margin-left:20px;
 }
 </style>
