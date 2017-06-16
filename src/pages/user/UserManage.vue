@@ -37,12 +37,19 @@
                 </Form-item>
             </Form>
         </Modal>
+        <Modal v-model="bindUserModal" title="Bind user" width="860">
+            <div class="bsc-user-box">
+                <div class="user-card" v-for="user in allUserList">
+                    {{user.email}}
+                </div>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
 import user from '@/store/modules/user'
 import { handler } from '@/service/Aws'
-import { BOUND_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL } from '@/service/API'
+import { BOUND_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, BIND_USER, UNBIND_USER } from '@/service/API'
 export default {
     data () {
         return {
@@ -51,8 +58,9 @@ export default {
             allUserList: [],
             redirectBucketModal: false,
             createUserModal: false,
+            bindUserModal: false,
+            iconSize: 18,
             isAdmin: user.state && user.state.type === 'admin',
-            userHeader: headerSetting,
             createUserForm: {
                 username: '',
                 email: '',
@@ -92,19 +100,23 @@ export default {
             }
         }
     },
+    computed: {
+        userHeader: function () {
+            return this.isAdmin ? adminHeaderSetting : superHeaderSetting
+        }
+    },
     mounted () {
         this.getUserUser()
     },
     methods: {
         async getUserUser () {
             try {
-                console.log(ALL_USER, CREATE_USER, REDIRECT_BUCKET)
+                console.log(ALL_USER, CREATE_USER, REDIRECT_BUCKET, BIND_USER, UNBIND_USER)
                 let res = await this.$http.get(this.isAdmin ? BOUND_USER : SUB_USER)
                 console.log(res)
                 this.userList = _.each(res.data, (user) => {
                     user.type = this.userType(user)
                 })
-                this.getUserAcl()
             } catch (error) {
                 this.$Message.warning(error)
                 await this.$store.dispatch('logout')
@@ -115,7 +127,15 @@ export default {
             }
         },
         async bindUser () {
+            this.bindUserModal = true
             await this.getAllUser()
+        },
+        unbindUser (user, index) {
+            this.$http.post(UNBIND_USER, {email: user.email}).then(res => {
+                this.userList.splice(index, 1)
+            }, error => {
+                this.$Message.error(error)
+            })
         },
         async getAllUser () {
             try {
@@ -184,7 +204,7 @@ export default {
     }
 }
 
-const headerSetting = [
+const superHeaderSetting = [
     {
         title: 'User name',
         width: 150,
@@ -219,14 +239,77 @@ const headerSetting = [
         }
     }
 ]
+
+const adminHeaderSetting = [
+    {
+        title: 'User name',
+        width: 150,
+        align: 'left',
+        key: 'username'
+    },
+    {
+        title: 'Type',
+        width: 80,
+        align: 'left',
+        key: 'type'
+    },
+    {
+        title: 'Email',
+        width: 250,
+        align: 'left',
+        key: 'email'
+    },
+    {
+        title: 'Actions',
+        key: 'actions',
+        width: 50,
+        align: 'left',
+        render (row, column, index) {
+            return `<Tooltip content='unbind' placement="top"><i-button size="small" @click="unbindUser(row,${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
+        }
+    }
+]
 </script>
 <style lang="less" scoped>
 
 @import '../../styles/index.less';
+
+@user-card-width: 200px;
+@user-card-height: 25px;
+@user-card-text-color: #657180;
+@user-card-border-color: #d7dde4;
+@user-card-backgrand: #f5f7f9;
+@user-card-backgrand-hover: #d9d9d9;
 
 .@{css-prefix}user {
     & > div.table {
         margin-top: 16px;
     }
 }
+
+.@{css-prefix}user-box {
+    min-height: 100%;
+    width: 100%;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .user-card {
+        width: @user-card-width;
+        height: @user-card-height;
+        color: @user-card-text-color;
+        background-color: @user-card-backgrand;
+        line-height: @user-card-height;
+        text-align: center;
+        border-radius: @common-radius;
+        margin: 3px 3px 0 0;
+
+        &:hover {
+            background-color: @user-card-backgrand-hover;
+        }
+    }
+}
+
 </style>
