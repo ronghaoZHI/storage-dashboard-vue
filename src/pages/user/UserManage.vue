@@ -151,7 +151,10 @@ export default {
         async bindUser () {
             try {
                 await Promise.all(Array.map(this.allUserList, (user) => {
-                    user.selected && this.$http.post(BIND_USER, {email: user.email}) && this.userList.push(this.userType(user))
+                    if (user.selected) {
+                        this.$http.post(BIND_USER, {email: user.email})
+                        this.userList.push({...user, type: this.userType(user)})
+                    }
                 }))
             } catch (error) {
                 this.$Message.warning(error)
@@ -167,7 +170,6 @@ export default {
         async getAllUser () {
             try {
                 let res = await this.$http.get(ALL_USER)
-                console.log(res.data)
                 this.allUserList = res.data
             } catch (error) {
                 this.$Message.warning(error)
