@@ -110,55 +110,30 @@ export default {
     },
     methods: {
         async getUserList () {
-            try {
-                console.log(ALL_USER, CREATE_USER, REDIRECT_BUCKET, BIND_USER, UNBIND_USER)
-                let res = await this.$http.get(this.isAdmin ? BOUND_USER : SUB_USER)
-                console.log(res)
-                this.userList = _.each(res.data, (user) => {
-                    user.type = this.userType(user)
-                })
-            } catch (error) {
-                this.$Message.warning(error)
-                await this.$store.dispatch('logout')
-                this.$router.push({
-                    path: '/login',
-                    query: { redirect: '/user' }
-                })
-            }
+            this.userList = _.each(await this.$http.get(this.isAdmin ? BOUND_USER : SUB_USER), (user) => {
+                user.type = this.userType(user)
+            })
         },
         async openBindUserModal () {
-            try {
-                let res = await this.$http.get(ALL_USER)
-                _.each(res.data, user => {
-                    if (this.userList.indexOf(user) > 0) {
-                        user.show = false
-                    } else {
-                        user.show = true
-                        user.selected = false
-                    }
-                })
-                this.allUserList = res.data
-                this.bindUserModal = true
-            } catch (error) {
-                this.$Message.warning(error)
-                await this.$store.dispatch('logout')
-                this.$router.push({
-                    path: '/login',
-                    query: { redirect: '/user' }
-                })
-            }
+            let res = await this.$http.get(ALL_USER)
+            _.each(res, user => {
+                if (this.userList.indexOf(user) > 0) {
+                    user.show = false
+                } else {
+                    user.show = true
+                    user.selected = false
+                }
+            })
+            this.allUserList = res
+            this.bindUserModal = true
         },
         async bindUser () {
-            try {
-                await Promise.all(Array.map(this.allUserList, (user) => {
-                    if (user.selected) {
-                        this.$http.post(BIND_USER, {email: user.email})
-                        this.userList.push({...user, type: this.userType(user)})
-                    }
-                }))
-            } catch (error) {
-                this.$Message.warning(error)
-            }
+            await Promise.all(Array.map(this.allUserList, (user) => {
+                if (user.selected) {
+                    this.$http.post(BIND_USER, { email: user.email })
+                    this.userList.push({ ...user, type: this.userType(user) })
+                }
+            }))
         },
         unbindUser (user, index) {
             this.$http.post(UNBIND_USER, {email: user.email}).then(res => {
@@ -168,17 +143,7 @@ export default {
             })
         },
         async getAllUser () {
-            try {
-                let res = await this.$http.get(ALL_USER)
-                this.allUserList = res.data
-            } catch (error) {
-                this.$Message.warning(error)
-                await this.$store.dispatch('logout')
-                this.$router.push({
-                    path: '/login',
-                    query: { redirect: '/user' }
-                })
-            }
+            this.allUserList = await this.$http.get(ALL_USER)
         },
         async getSubUserAcl () {
             await this.$http.get()
@@ -187,11 +152,9 @@ export default {
             try {
                 let res = await handler('listBuckets')
                 await Promise.all(Array.map(res.Buckets, (bucket) => {
-                    console.log(bucket)
                     this.$http.get(SUB_USER_ACL, {params: {bucket: bucket.Name}})
                 }))
             } catch (error) {
-                console.log(error)
                 this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
             };
         },

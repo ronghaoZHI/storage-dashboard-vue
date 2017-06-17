@@ -28,8 +28,7 @@ export default {
                 if (user.state.type === 'admin') {
                     keys = user.state.subUser.keys
                 } else {
-                    let res = await this.$http.get(ACCESSKEY)
-                    keys = res.data
+                    keys = await this.$http.get(ACCESSKEY)
                 }
                 this.data = await _.forEach(keys, (item) => {
                     item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')

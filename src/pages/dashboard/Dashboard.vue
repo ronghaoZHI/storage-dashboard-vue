@@ -191,21 +191,21 @@ export default {
 
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
-                    self.originOverview = res.data.data.data
+                    self.originOverview = res.data.data
                 }), this.$http.get((this.getApiURL('capacity'))).then(res => {
-                    self.capacityData = res.data.data
+                    self.capacityData = res.data
                     self.capacityOptions = InitOptions(self.capacityData)
                 }), this.$http.get((this.getApiURL('upload_space'))).then(res => {
-                    self.uploadSpaceData = res.data.data
+                    self.uploadSpaceData = res.data
                     self.uploadTrafficOptions = InitOptions(self.uploadSpaceData)
                 }), this.$http.get((this.getApiURL('download_space'))).then(res => {
-                    self.downloadSpaceData = res.data.data
+                    self.downloadSpaceData = res.data
                     self.downloadTrafficOptions = InitOptions(self.downloadSpaceData)
                 }), this.$http.get((this.getApiURL('download_count'))).then(res => {
-                    self.downloadCountData = res.data.data
+                    self.downloadCountData = res.data
                     self.downloadsOptions = InitOptions(self.downloadCountData)
                 }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
-                    self.uploadCountData = res.data.data
+                    self.uploadCountData = res.data
                     self.uploadsOptions = InitOptions(self.uploadCountData)
                 })])
             } catch (error) {

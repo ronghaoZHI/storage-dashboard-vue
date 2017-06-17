@@ -95,7 +95,7 @@ export default {
                 // save user email
                 this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
                 this.$http.post(LOGIN, { ...this.loginForm }).then(res => {
-                    res.data.type === 'admin' ? this.adminMode(res.data) : this.toIndex(res.data)
+                    res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
                     this.$Loading.finish()
                 }, error => {
                     this.$Loading.error()
@@ -108,8 +108,8 @@ export default {
         async adminMode (data) {
             let res = await this.$http.get(BOUND_USER)
             this.userInfo = data
-            if (res.data.length > 0) {
-                this.subUserList = res.data
+            if (res.length > 0) {
+                this.subUserList = res
                 this.isLogin = false
             } else {
                 this.toIndex(data)

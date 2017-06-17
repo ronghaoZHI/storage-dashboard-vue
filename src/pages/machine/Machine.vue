@@ -24,9 +24,7 @@ export default {
         async getMachineList () {
             this.$Loading.start()
             try {
-                const res = await this.$http.get(NODE)
-                this.machineList = res.data
-                console.log(res)
+                this.machineList = await this.$http.get(NODE)
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
