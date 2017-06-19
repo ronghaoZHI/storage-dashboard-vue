@@ -209,12 +209,7 @@ export default {
                     self.uploadsOptions = InitOptions(self.uploadCountData)
                 })])
             } catch (error) {
-                self.$Message.warning(error)
-                await this.$store.dispatch('logout')
-                self.$router.push({
-                    path: '/login',
-                    query: { redirect: '/dashboard' }
-                })
+                self.$Message.warning('Get data error')
             }
         },
         convertData (item) {
