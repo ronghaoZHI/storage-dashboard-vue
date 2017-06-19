@@ -135,6 +135,14 @@ export default {
                 }
             }))
         },
+        unbindUserConfirm (user, index) {
+            this.$Modal.confirm({
+                content: this.$t('STORAGE.UNBIND_CONFIRMED', {fileName: user.email}),
+                okText: this.$t('PUBLIC.CONFIRMED'),
+                cancelText: this.$t('PUBLIC.CANCLE'),
+                onOk: () => this.unbindUser(user, index)
+            })
+        },
         unbindUser (user, index) {
             this.$http.post(UNBIND_USER, {email: user.email}).then(res => {
                 this.userList.splice(index, 1)
@@ -257,7 +265,7 @@ const adminHeaderSetting = [
         width: 50,
         align: 'left',
         render (row, column, index) {
-            return `<Tooltip content='unbind' placement="top"><i-button size="small" @click="unbindUser(row,${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
+            return `<Tooltip content='unbind' placement="top"><i-button size="small" @click="unbindUserConfirm(row,${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
         }
     }
 ]
