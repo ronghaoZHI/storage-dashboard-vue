@@ -13,10 +13,9 @@
                     <Col span="8">
                         <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
                         <div class="test-img">
-                            <img class='' src="../../assets/logo.png">
+                            <img :src='previewUrl'>
                             <div class="img-button">
-                                <Button type="primary" @click="">新窗口显示</Button>
-                                <Button type="primary" @click="">图片对比</Button>
+                                <Button type="primary" @click="previewFn">效果预览</Button>
                             </div>
                         </div>
                     </Col>
@@ -216,7 +215,7 @@
                             <div class="form-item">
                                 <span class="form-label">生成圆角 : </span>
                                 <Slider class="pic-slider" :min='0' :max='1001' v-model="radiusSlider" :tip-format="radiusFormater"></Slider>
-                                <Input v-model="radiusValue" class="slider-input" number :on-change='radiusConvert'></Input>
+                                <Input v-model="radiusValue" class="slider-input" number></Input>
                             </div><!--radius-->
                             <div class="form-item">
                                 <span class="form-label">不透明度 : </span>
@@ -359,10 +358,11 @@
     </div>
 </template>
 <script>
-import {Slider, Compact, Photoshop, Swatches} from 'vue-color'
-import { handler } from '@/service/Aws'
+import { handler, config } from '@/service/Aws'
 import { picStyleRulesPrefix, picStyleOverlayPrefix } from '@/service/BucketService'
 import upload from '@/components/bucket/upload'
+import * as styleList from '@/pages/bucket/PictureStyles'
+import iView from 'iview'
 export default {
     data () {
         return {
@@ -388,10 +388,11 @@ export default {
             fontStyle: defaultFontStyle,
             tabValue: 'primary',
             primaryDisable: false,
+            previewUrl: 'http://imgx-ss.bscstorage.com/image-example/q_100/dashboard.jpg',
             cropGravityList: [{value: 'north_west', label: '左上位置'}, {value: 'north', label: '正上位置，水平方向居中'}, {value: 'north_east', label: '右上位置'}, {value: 'west', label: '左边，垂直方向居中'}, {value: 'center', label: '正中'}, {value: 'east', label: '右边，垂直方向居中'}, {value: 'south_west', label: '左下位置'}, {value: 'south', label: '正下位置'}, {value: 'south_east', label: '右下位置'}, {value: 'noGravity', label: '指定起点坐标'}, {value: 'xy_center', label: '指定的xy为中心点'}, {value: 'face', label: '定位一张最容易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}]
         }
     },
-    components: { 'photoshop-picker': Photoshop, 'slider-picker': Slider, 'compact-picker': Compact, 'swatches-picker': Swatches, upload },
+    components: { upload },
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -459,10 +460,13 @@ export default {
                     this.watermarker = convertResult.watermarkerData
                     let fontName = convertResult.fontName
                     if (!!fontName) {
-                        let fontStyle = await this.readFont(fontName)
+                        let fontFile = await this.readFont(fontName)
+                        let fontStyle = JSON.parse(new TextDecoder('utf-8').decode(fontFile))
                         this.fontStyle = fontStyle
                         this.fontStyle.font_color = '#' + fontStyle.font_color
                         this.fontStyle.background = '#' + fontStyle.background
+                        await putFontFile(fontName + '.json', fontFile)
+                        this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.paramsIS + '/dashboard.jpg?' + Date.now()
                     }
                 } else {
                     this.tabValue = 'senior'
@@ -477,27 +481,31 @@ export default {
                     Key: picStyleOverlayPrefix + fileName + '.json'
                 }
                 let res = await handler('getObject', params)
-                return JSON.parse(new TextDecoder('utf-8').decode(res.Body))
+                return res.Body
             }
         },
-        async saveFont () {
+        convertFont2Save () {
             let style = {}
             style.font_family = this.fontStyle.font_family
             style.font_size = parseInt(this.fontStyle.font_size)
             style.font_color = this.fontStyle.font_color.substr(1).toLowerCase()
             style.text = parseInt(this.watermarker.text)
             style.background = this.fontStyle.background.substr(1).toLowerCase()
-            const fontStyleFile = new Blob([JSON.stringify(style)], {'type': 'application/json'})
+            return new Blob([JSON.stringify(style)], {'type': 'application/json'})
+        },
+        async saveFont () {
+            const file = this.convertFont2Save()
             try {
                 await handler('putObject', {
                     Bucket: this.bucket,
                     Key: picStyleOverlayPrefix + this.transformation + '_font.json',
                     ContentType: 'application/json',
-                    Body: fontStyleFile
+                    Body: file
                 })
             } catch (error) {
                 this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
             }
+            return file
         },
         submitInsStyles () {
             const insArray = this.instructions.split('--')
@@ -534,6 +542,30 @@ export default {
         },
         radiusFormater (radiusSlider) {
             return radiusSlider > 1000 ? 'max' : radiusSlider
+        },
+        async previewFn () {
+            let watermarker, ISw, overlayName
+            const generalJson = generalConvert2Save(this.general)
+            let ISg = styleList.methods.json2instruction(generalJson)[0]
+            let IS = ISg
+            let fontFile
+            if (this.watermarker.open) {
+                if (this.watermarker.type === 'text') {
+                    fontFile = this.convertFont2Save()
+                    watermarker = watermarkerConvert2Save(this.watermarker, this.transformation)
+                } else if (this.watermarker.type === 'img') {
+                    watermarker = watermarkerConvert2Save(this.watermarker, this.imgName)
+                }
+                ISw = styleList.methods.json2instruction(watermarker)[0]
+                overlayName = styleList.methods.json2instruction(watermarker)[1]
+                IS += '--' + ISw
+            }
+            if (!!overlayName) {
+                await putFontFile(overlayName, fontFile)
+                this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg?' + Date.now()
+            } else {
+                this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg'
+            }
         }
     },
     watch: {
@@ -543,7 +575,21 @@ export default {
         }
     }
 }
-
+const putFontFile = (name, body) => {
+    const s3 = config({ previewAccessKey, previewSecretKey })
+    return new Promise((resolve, reject) => s3.putObject({
+        Bucket: 'image-example',
+        Key: picStyleOverlayPrefix + name,
+        ContentType: 'application/json',
+        Body: body
+    }, (error, data) => {
+        console.log('in .   ...')
+        error && iView.Message.error(error, 5)
+        return error ? reject(error) : resolve(data)
+    }))
+}
+const previewAccessKey = 'acc_drdrxp'
+const previewSecretKey = '11111111111111111111'
 const I2J = {
     c_: 'crop',
     w_: 'width',
@@ -565,7 +611,7 @@ const I2J = {
 }
 
 const defaultTextBack = {
-    hex: '#BF4040'
+    hex: '#ffffff'
 }
 const generalDefult = {
     crop: 'noCrop',
@@ -592,7 +638,7 @@ const generalDefult = {
     pixelateValue: 5,
     border: false,
     borderSize: 1,
-    borderColor: '#BF4040',
+    borderColor: '#ffffff',
     padColor: '#ffffff',
     x: 0,
     y: 0
@@ -610,8 +656,8 @@ const defaultFontStyle = {
     text: '',
     font_family: 'Songti SC',
     font_size: 16,
-    background: '#BF4040',
-    font_color: '#BF4040'
+    background: '#ffffff',
+    font_color: '#ffffff'
 }
 const generalConvert2Save = (generalData) => {
     let generalSave = {}
@@ -729,9 +775,9 @@ const styleItemCheckout = styles => {
             // checkout watermarker or general
             if (Object.keys(item).includes('overlay')) {
                 fontName = item.overlay.split(':')[1]
-                watermarkerData = _.assignIn(watermarkerDefult, watermarkerConvert2Font(item))
+                _.assignIn(watermarkerData, watermarkerConvert2Font(item))
             } else {
-                ganeralData = _.assignIn(ganeralData, generalConvert2Font(item))
+                _.assignIn(ganeralData, generalConvert2Font(item))
             }
         })
         return { ganeralData, watermarkerData, fontName }
@@ -831,7 +877,7 @@ const generalConvert2Font = data => {
 }
 
 const watermarkerConvert2Font = data => {
-    let watermarkerFont = watermarkerDefult
+    let watermarkerFont = _.clone(watermarkerDefult)
     watermarkerFont.open = true
     if (data.overlay.substr(0, 5) === 'text:') {
         watermarkerFont.type = 'text'
@@ -1050,10 +1096,11 @@ const allFontList = [{
     max-width:450px;
     margin:15px 0;
     img{
-        width:100%;
+        max-width:100%;
         height:300px;
         margin-bottom:15px;
         background:#000;
+        display:block
     }
 }
 .form-label{

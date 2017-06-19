@@ -163,8 +163,7 @@ export default {
                 })
                 await Promise.all(promises)
             }
-            console.log(style.IS)
-            this.clipUrl = 'http://imgx-ss.bscstorage.com/image-example/' + style.IS + '/dashboard.jpg'
+            this.clipUrl = 'http://imgx-ss.bscstorage.com/image-example/' + style.IS + '/dashboard.jpg?' + Date.now()
             this.selectedStyleName = style.ruleName
             this.showImageModal = true
             this.$Loading.finish()
