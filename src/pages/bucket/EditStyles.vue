@@ -22,7 +22,7 @@
                     <Col span="16" class="page-left">
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
-                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 415px"></Input>
+                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' class="line-width"></Input>
                             <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
                         </div>
                         <div class="form-item">
@@ -39,12 +39,12 @@
                             </Radio-group>
                         </div>
                         <div class="form-item" v-if="general.crop === 'fit'">
-                            <Select v-model="general.fitType" style="width:300px;margin-left:65px;">
+                            <Select v-model="general.fitType" style="width:300px;margin-left:73px;">
                                 <Option v-for="item in fitList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                         </div>
                         <div class="form-item" v-if="general.crop === 'pad'">
-                            <Select v-model="general.padType" style="width:300px;margin-left:65px;">
+                            <Select v-model="general.padType" style="width:300px;margin-left:73px;margin-right:8px">
                                 <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                             <div class="color-box">
@@ -53,12 +53,12 @@
                             </div><!--padColor-->
                         </div>
                         <div class="form-item" v-if="general.crop === 'fill'">
-                            <Select v-model="general.fillType" style="width:300px;margin-left:65px;">
+                            <Select v-model="general.fillType" style="width:300px;margin-left:73px;">
                                 <Option v-for="item in fillList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                         </div>
                         <div class="form-item" v-if="general.crop === 'thumb'">
-                            <Select v-model="general.thumbType" style="width:300px;margin-left:65px;">
+                            <Select v-model="general.thumbType" style="width:300px;margin-left:73px;">
                                 <Option v-for="item in thumbList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                         </div><!--thumb gravity-->
@@ -113,7 +113,7 @@
                         </div><!--quality-->
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_FORMAT")}} : </span>
-                            <Select v-model="general.format" style="width:415px">
+                            <Select v-model="general.format" class="line-width">
                                 <Option v-for="item in formatList" :value="item" :key="item">{{ item }}</Option>
                             </Select>
                         </div><!--format-->
@@ -242,7 +242,7 @@
                             <div v-if="watermarker.type == 'text'" class="clearfix">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
-                                    <Input v-model="watermarker.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' style="width: 415px"></Input>
+                                    <Input v-model="watermarker.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
                                     <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
                                 </div><!--text-->
                                 <div class="form-item">
@@ -311,7 +311,7 @@
                                 <Input v-model="watermarker.opacity" class="slider-input" number></Input>
                             </div><!--opacity-->
                         </div>
-                        <div class="form-item clearfix" style="width:415px;">
+                        <div class="form-item clearfix line-width">
                             <div class="img-button">
                                 <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
                                 <Button type="primary" @click="submitStyles" :disabled="transformationError || textError">{{$t("PUBLIC.CONFIRMED")}}</Button>
@@ -344,7 +344,7 @@
                             <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
                             <p class="style-name-info dis-inline">参数说明，</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">见文档</a>
                         </div>
-                        <div class="form-item clearfix" style="width:415px;">
+                        <div class="form-item clearfix line-width">
                             <div class="img-button">
                                 <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
                                 <Button type="primary" @click="submitInsStyles" :disabled="transformationError">{{$t("PUBLIC.CONFIRMED")}}</Button>
@@ -540,7 +540,7 @@ export default {
             }
         },
         uploadSuccess (fileName) {
-            this.imgName = fileName.split('.')[0]
+            this.imgName = fileName
         },
         radiusFormater (radiusSlider) {
             return radiusSlider > 1000 ? 'max' : radiusSlider
@@ -1146,7 +1146,7 @@ const allFontList = [{
     line-height:30px;
 }
 .page-left{
-    width:520px;
+    width:600px;
     padding-left:30px;
     .form-item{
         margin-bottom:20px;
@@ -1158,7 +1158,7 @@ const allFontList = [{
     }
     .pic-slider{
         display:inline-block;
-        width:355px;
+        width:420px;
         vertical-align:middle;
     }
     .slider-input{
@@ -1300,7 +1300,7 @@ const allFontList = [{
     display:inline
 }
 .upload-box{
-    width:415px;
+    width:475px;
     display:inline-block;
     vertical-align: text-top;
 }
@@ -1353,5 +1353,11 @@ const allFontList = [{
 }
 .mar-l20{
     margin-left:20px;
+}
+.ivu-radio-wrapper {
+    font-size: 14px;
+}
+.line-width {
+    width: 475px;
 }
 </style>
