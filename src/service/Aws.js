@@ -12,7 +12,7 @@ let key = {}
 export const clear = () => key = {}
 
 export const getKey = () => {
-    return axios.get(ACCESSKEY).then(res => key = res.data[0], error => {
+    return axios.get(ACCESSKEY).then(res => key = res[0], error => {
         iView.Message.warning(error.message)
         store.dispatch('logout').then(res => {
             router.push({
