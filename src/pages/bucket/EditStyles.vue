@@ -458,15 +458,18 @@ export default {
                 if (convertResult) {
                     this.general = convertResult.ganeralData
                     this.watermarker = convertResult.watermarkerData
-                    let fontName = convertResult.fontName
-                    if (!!fontName) {
-                        let fontFile = await this.readFont(fontName)
-                        console.log('fontFile', fontFile)
-                        let fontStyle = JSON.parse(new TextDecoder('utf-8').decode(fontFile))
-                        this.fontStyle = fontStyle
-                        this.fontStyle.font_color = '#' + fontStyle.font_color
-                        this.fontStyle.background = '#' + fontStyle.background
-                        await putFontFile(fontName + '.json', fontFile)
+                    let overlayName = convertResult.overlayName
+                    if (!!overlayName) {
+                        let file = await this.readOverlayFile(overlayName)
+                        if (/.+\.json$/.test(overlayName)) {
+                            let fontStyle = JSON.parse(new TextDecoder('utf-8').decode(file))
+                            this.fontStyle = fontStyle
+                            this.fontStyle.font_color = '#' + fontStyle.font_color
+                            this.fontStyle.background = '#' + fontStyle.background
+                        } else {
+                            this.imgName = overlayName
+                        }
+                        await putOverlayFile(overlayName, file)
                         this.seniorUrl = this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.paramsIS + '/dashboard.jpg?' + Date.now()
                     }
                 } else {
@@ -475,15 +478,13 @@ export default {
                 }
             }
         },
-        async readFont (fileName) {
-            if (!!fileName) {
-                let params = {
-                    Bucket: this.bucket,
-                    Key: picStyleOverlayPrefix + fileName + '.json'
-                }
-                let res = await handler('getObject', params)
-                return res.Body
+        async readOverlayFile (name) {
+            let params = {
+                Bucket: this.bucket,
+                Key: picStyleOverlayPrefix + name
             }
+            let res = await handler('getObject', params)
+            return res.Body
         },
         convertFont2Save () {
             let style = {}
@@ -555,14 +556,16 @@ export default {
                     fontFile = this.convertFont2Save()
                     watermarker = watermarkerConvert2Save(this.watermarker, this.transformation)
                 } else if (this.watermarker.type === 'img') {
+                    fontFile = await this.readOverlayFile(this.imgName)
                     watermarker = watermarkerConvert2Save(this.watermarker, this.imgName)
                 }
-                ISw = styleList.methods.json2instruction(watermarker)[0]
-                overlayName = styleList.methods.json2instruction(watermarker)[1]
+                const wInfo = styleList.methods.json2instruction(watermarker)
+                ISw = wInfo[0]
+                overlayName = wInfo[1]
                 IS += '--' + ISw
             }
             if (!!overlayName) {
-                await putFontFile(overlayName, fontFile)
+                await putOverlayFile(overlayName, fontFile)
                 this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg?' + Date.now()
             } else {
                 this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg'
@@ -570,22 +573,20 @@ export default {
         },
         async seniorPreview () {
             let fontName, imgName
-
             let st = this.instructions.split('l_text:')[1]
             let si = this.instructions.split('l_')[1]
             if (!!st) {
                 fontName = st.split(':')[0]
                 const file = await this.readFont(fontName)
-                await putFontFile(fontName + '.json', file)
+                await putOverlayFile(fontName + '.json', file)
                 this.seniorUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.instructions + '/dashboard.jpg?' + Date.now()
             } else if (!!si) {
                 imgName = si.split(',')[0] + '.png'
-
                 const file = await handler('getObject', {
                     Bucket: this.bucket,
                     Key: picStyleOverlayPrefix + imgName
                 })
-                await putImgFile(imgName, file.Body)
+                await putOverlayFile(imgName, file.Body)
                 this.seniorUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.instructions + '/dashboard.jpg?' + Date.now()
             }
         }
@@ -597,12 +598,13 @@ export default {
         }
     }
 }
-const putFontFile = (name, body) => {
+const putOverlayFile = (name, body) => {
+    const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
     const s3 = config({ previewAccessKey, previewSecretKey })
     return new Promise((resolve, reject) => s3.putObject({
         Bucket: 'image-example',
         Key: picStyleOverlayPrefix + name,
-        ContentType: 'application/json',
+        ContentType: type,
         Body: body
     }, (error, data) => {
         error && iView.Message.error(error, 5)
@@ -610,18 +612,6 @@ const putFontFile = (name, body) => {
     }))
 }
 
-const putImgFile = (name, body) => {
-    const s3 = config({ previewAccessKey, previewSecretKey })
-    return new Promise((resolve, reject) => s3.putObject({
-        Bucket: 'image-example',
-        Key: picStyleOverlayPrefix + name,
-        ContentType: 'application/x-png',
-        Body: body
-    }, (error, data) => {
-        error && iView.Message.error(error, 5)
-        return error ? reject(error) : resolve(data)
-    }))
-}
 const previewAccessKey = 'acc_drdrxp'
 const previewSecretKey = '11111111111111111111'
 const I2J = {
@@ -763,24 +753,24 @@ const generalConvert2Save = (generalData) => {
     }
     return generalSave
 }
-const watermarkerConvert2Save = (watermarkerData, styleName) => {
-    let watermarkerSave = {
-        x: parseInt(watermarkerData.x),
-        y: parseInt(watermarkerData.y),
-        gravity: watermarkerData.gravity,
-        opacity: watermarkerData.opacity
+const watermarkerConvert2Save = (data, name) => {
+    let saved = {
+        x: parseInt(data.x),
+        y: parseInt(data.y),
+        gravity: data.gravity,
+        opacity: data.opacity
     }
-    if (watermarkerData.type === 'text') {
-        watermarkerSave.overlay = 'text:' + styleName + '_font:' + watermarkerData.text
-    } else if (watermarkerData.type === 'img') {
-        watermarkerSave.overlay = styleName
+    if (data.type === 'text') {
+        saved.overlay = 'text:' + name + '_font:' + data.text
+    } else if (data.type === 'img') {
+        saved.overlay = name.split('.png')[0]
     }
-    return watermarkerSave
+    return saved
 }
 const styleItemCheckout = styles => {
     let ganeralData = _.clone(generalDefult)
     let watermarkerData = _.clone(watermarkerDefult)
-    let fontName = ''
+    let overlayName = ''
     let uniqueArray = []
     let uniqueSet = new Set()
     styles.forEach(item => {
@@ -808,13 +798,17 @@ const styleItemCheckout = styles => {
         styles.forEach(item => {
             // checkout watermarker or general
             if (Object.keys(item).includes('overlay')) {
-                fontName = item.overlay.split(':')[1]
+                if (/^text:.+/.test(item.overlay)) {
+                    overlayName = item.overlay.split(':')[1] + '.json'
+                } else {
+                    overlayName = item.overlay + '.png'
+                }
                 _.assignIn(watermarkerData, watermarkerConvert2Font(item))
             } else {
                 _.assignIn(ganeralData, generalConvert2Font(item))
             }
         })
-        return { ganeralData, watermarkerData, fontName }
+        return { ganeralData, watermarkerData, overlayName }
     }
 }
 const generalConvert2Font = data => {
@@ -923,6 +917,15 @@ const watermarkerConvert2Font = data => {
     }
     if (data.opacity) {
         watermarkerFont.opacity = parseInt(data.opacity)
+    }
+    if (data.gravity) {
+        watermarkerFont.gravity = data.gravity
+    }
+    if (data.x) {
+        watermarkerFont.x = data.x
+    }
+    if (data.y) {
+        watermarkerFont.y = data.y
     }
     return watermarkerFont
 }
