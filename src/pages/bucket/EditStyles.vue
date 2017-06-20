@@ -325,10 +325,9 @@
                     <Col span="8">
                         <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
                         <div class="test-img">
-                            <img class='' src="../../assets/logo.png">
+                            <img :src='seniorUrl'>
                             <div class="img-button">
-                                <Button type="primary" @click="">新窗口显示</Button>
-                                <Button type="primary" @click="">图片对比</Button>
+                                <Button type="primary" @click="seniorPreview">效果预览</Button>
                             </div>
                         </div>
                     </Col>
@@ -389,6 +388,7 @@ export default {
             tabValue: 'primary',
             primaryDisable: false,
             previewUrl: 'http://imgx-ss.bscstorage.com/image-example/q_100/dashboard.jpg',
+            seniorUrl: 'http://imgx-ss.bscstorage.com/image-example/q_100/dashboard.jpg',
             cropGravityList: [{value: 'north_west', label: '左上位置'}, {value: 'north', label: '正上位置，水平方向居中'}, {value: 'north_east', label: '右上位置'}, {value: 'west', label: '左边，垂直方向居中'}, {value: 'center', label: '正中'}, {value: 'east', label: '右边，垂直方向居中'}, {value: 'south_west', label: '左下位置'}, {value: 'south', label: '正下位置'}, {value: 'south_east', label: '右下位置'}, {value: 'noGravity', label: '指定起点坐标'}, {value: 'xy_center', label: '指定的xy为中心点'}, {value: 'face', label: '定位一张最容易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}]
         }
     },
@@ -461,12 +461,13 @@ export default {
                     let fontName = convertResult.fontName
                     if (!!fontName) {
                         let fontFile = await this.readFont(fontName)
+                        console.log('fontFile', fontFile)
                         let fontStyle = JSON.parse(new TextDecoder('utf-8').decode(fontFile))
                         this.fontStyle = fontStyle
                         this.fontStyle.font_color = '#' + fontStyle.font_color
                         this.fontStyle.background = '#' + fontStyle.background
                         await putFontFile(fontName + '.json', fontFile)
-                        this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.paramsIS + '/dashboard.jpg?' + Date.now()
+                        this.seniorUrl = this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.paramsIS + '/dashboard.jpg?' + Date.now()
                     }
                 } else {
                     this.tabValue = 'senior'
@@ -566,6 +567,27 @@ export default {
             } else {
                 this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg'
             }
+        },
+        async seniorPreview () {
+            let fontName, imgName
+
+            let st = this.instructions.split('l_text:')[1]
+            let si = this.instructions.split('l_')[1]
+            if (!!st) {
+                fontName = st.split(':')[0]
+                const file = await this.readFont(fontName)
+                await putFontFile(fontName + '.json', file)
+                this.seniorUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.instructions + '/dashboard.jpg?' + Date.now()
+            } else if (!!si) {
+                imgName = si.split(',')[0] + '.png'
+
+                const file = await handler('getObject', {
+                    Bucket: this.bucket,
+                    Key: picStyleOverlayPrefix + imgName
+                })
+                await putImgFile(imgName, file.Body)
+                this.seniorUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.instructions + '/dashboard.jpg?' + Date.now()
+            }
         }
     },
     watch: {
@@ -583,7 +605,19 @@ const putFontFile = (name, body) => {
         ContentType: 'application/json',
         Body: body
     }, (error, data) => {
-        console.log('in .   ...')
+        error && iView.Message.error(error, 5)
+        return error ? reject(error) : resolve(data)
+    }))
+}
+
+const putImgFile = (name, body) => {
+    const s3 = config({ previewAccessKey, previewSecretKey })
+    return new Promise((resolve, reject) => s3.putObject({
+        Bucket: 'image-example',
+        Key: picStyleOverlayPrefix + name,
+        ContentType: 'application/x-png',
+        Body: body
+    }, (error, data) => {
         error && iView.Message.error(error, 5)
         return error ? reject(error) : resolve(data)
     }))
