@@ -314,7 +314,7 @@
                         <div class="form-item clearfix line-width">
                             <div class="img-button">
                                 <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
-                                <Button type="primary" @click="submitStyles" :disabled="transformationError || textError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                <Button type="primary" @click="submitStyles" :disabled="transformationError || textError || imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
                             </div>
                         </div>
                     </Col>
@@ -334,12 +334,12 @@
                     <Col span="16" class="page-left">
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
-                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 500px"></Input>
+                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 475px"></Input>
                             <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.PROSCESS_PARAM")}} : </span>
-                            <Input v-model="instructions" type="textarea" :rows="6" placeholder="使用高级编辑之前，建议先阅读Imgx图片处理服务使用说明" style="width: 500px"></Input>
+                            <Input v-model="instructions" type="textarea" :rows="6" placeholder="使用高级编辑之前，建议先阅读Imgx图片处理服务使用说明" style="width: 475px"></Input>
                             <p class="style-name-info">示例（图片缩放+图片水印）</p>
                             <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
                             <p class="style-name-info dis-inline">参数说明，</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">见文档</a>
@@ -347,7 +347,7 @@
                         <div class="form-item clearfix line-width">
                             <div class="img-button">
                                 <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
-                                <Button type="primary" @click="submitInsStyles" :disabled="transformationError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                <Button type="primary" @click="submitStyles" :disabled="transformationError">{{$t("PUBLIC.CONFIRMED")}}</Button>
                             </div>
                         </div>
                     </Col>
@@ -358,7 +358,7 @@
 </template>
 <script>
 import { handler, config } from '@/service/Aws'
-import { picStyleRulesPrefix, picStyleOverlayPrefix } from '@/service/BucketService'
+import { prefix } from '@/service/BucketService'
 import upload from '@/components/bucket/upload'
 import * as styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
@@ -371,7 +371,7 @@ export default {
             fontColorPicker: false,
             watermarker: watermarkerDefult,
             general: generalDefult,
-            prefix: picStyleOverlayPrefix,
+            prefix: prefix.overlay,
             imgName: '',
             uploadValidation: /^[\x00-\x2b\x2d\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
             instructions: this.instructions,
@@ -387,8 +387,8 @@ export default {
             fontStyle: defaultFontStyle,
             tabValue: 'primary',
             primaryDisable: false,
-            previewUrl: 'http://imgx-ss.bscstorage.com/image-example/q_100/dashboard.jpg',
-            seniorUrl: 'http://imgx-ss.bscstorage.com/image-example/q_100/dashboard.jpg',
+            previewUrl: getImgxUrl('q_100'),
+            seniorUrl: getImgxUrl('q_100'),
             cropGravityList: [{value: 'north_west', label: '左上位置'}, {value: 'north', label: '正上位置，水平方向居中'}, {value: 'north_east', label: '右上位置'}, {value: 'west', label: '左边，垂直方向居中'}, {value: 'center', label: '正中'}, {value: 'east', label: '右边，垂直方向居中'}, {value: 'south_west', label: '左下位置'}, {value: 'south', label: '正下位置'}, {value: 'south_east', label: '右下位置'}, {value: 'noGravity', label: '指定起点坐标'}, {value: 'xy_center', label: '指定的xy为中心点'}, {value: 'face', label: '定位一张最容易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}]
         }
     },
@@ -404,13 +404,16 @@ export default {
             return this.$route.params.IS === 'noIS' ? '' : this.$route.params.IS
         },
         key () {
-            return this.$route.params.ruleName ? picStyleRulesPrefix + this.$route.params.ruleName + '.json' : ''
+            return this.$route.params.ruleName ? prefix.rules + this.$route.params.ruleName + '.json' : ''
         },
         transformationError () {
             return !(/^[a-z0-9_]{1,20}$/).test(this.transformation)
         },
         textError () {
             return this.watermarker.open && this.watermarker.type === 'text' && !(/.+/).test(this.watermarker.text)
+        },
+        imgError () {
+            return this.watermarker.open && this.watermarker.type === 'img' && !(this.imgName)
         },
         styleListHref () {
             return '/bucket/' + this.bucket + '/pictureStyles'
@@ -426,51 +429,33 @@ export default {
         this.readStyles()
     },
     methods: {
-        async submitStyles () {
-            if (!this.transformationError && !this.textError) {
-                const generalData = generalConvert2Save(this.general)
-                let content = []
-                content.push(generalData)
-                if (this.watermarker.open) {
-                    let watermarkerData = {}
-                    if (this.watermarker.type === 'text') {
-                        this.saveFont()
-                        watermarkerData = watermarkerConvert2Save(this.watermarker, this.transformation)
-                    } else if (this.watermarker.type === 'img') {
-                        watermarkerData = watermarkerConvert2Save(this.watermarker, this.imgName)
-                    }
-                    content.push(watermarkerData)
-                }
-                this.saveJSON2Bucket(content)
-            }
-        },
         async readStyles () {
             if (!!this.ruleName && this.ruleName !== 'noRuleName') {
-                let params = {
-                    Bucket: this.bucket,
-                    Key: this.key
-                }
                 this.transformation = this.ruleName
                 this.instructions = this.paramsIS
-                let res = await handler('getObject', params)
+                let res = await handler('getObject', {
+                    Bucket: this.bucket,
+                    Key: this.key
+                })
                 let styles = JSON.parse(new TextDecoder('utf-8').decode(res.Body))
-                let convertResult = styleItemCheckout(styles)
-                if (convertResult) {
-                    this.general = convertResult.ganeralData
-                    this.watermarker = convertResult.watermarkerData
-                    let overlayName = convertResult.overlayName
-                    if (!!overlayName) {
-                        let file = await this.readOverlayFile(overlayName)
-                        if (/.+\.json$/.test(overlayName)) {
+                if (isPrimary(styles)) {
+                    let front = styles2Front(styles)
+                    this.general = front.ganeral
+                    this.watermarker = front.watermarker
+                    let overlay = front.overlay
+                    // is watermarker here
+                    if (!!overlay) {
+                        let file = await this.readOverlayFile(overlay)
+                        if (/.+\.json$/.test(overlay)) {
                             let fontStyle = JSON.parse(new TextDecoder('utf-8').decode(file))
                             this.fontStyle = fontStyle
                             this.fontStyle.font_color = '#' + fontStyle.font_color
                             this.fontStyle.background = '#' + fontStyle.background
                         } else {
-                            this.imgName = overlayName
+                            this.imgName = overlay
                         }
-                        await putOverlayFile(overlayName, file)
-                        this.seniorUrl = this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.paramsIS + '/dashboard.jpg?' + Date.now()
+                        await putOverlayFile(overlay, file)
+                        this.seniorUrl = this.previewUrl = getImgxUrl(this.paramsIS)
                     }
                 } else {
                     this.tabValue = 'senior'
@@ -478,97 +463,37 @@ export default {
                 }
             }
         },
-        async readOverlayFile (name) {
-            let params = {
-                Bucket: this.bucket,
-                Key: picStyleOverlayPrefix + name
+        async submitStyles () {
+            if (!this.transformationError && !this.textError) {
+                const file = new Blob([JSON.stringify(this.styles2Save())], {'type': 'application/json'})
+                try {
+                    await handler('putObject', {
+                        Bucket: this.bucket,
+                        Key: prefix.rules + this.transformation + '.json',
+                        ContentType: 'application/json',
+                        Body: file
+                    })
+                } catch (error) {}
             }
-            let res = await handler('getObject', params)
-            return res.Body
-        },
-        convertFont2Save () {
-            let style = {}
-            style.font_family = this.fontStyle.font_family
-            style.font_size = parseInt(this.fontStyle.font_size)
-            style.font_color = this.fontStyle.font_color.substr(1).toLowerCase()
-            style.text = parseInt(this.watermarker.text)
-            style.background = this.fontStyle.background.substr(1).toLowerCase()
-            return new Blob([JSON.stringify(style)], {'type': 'application/json'})
-        },
-        async saveFont () {
-            const file = this.convertFont2Save()
-            try {
-                await handler('putObject', {
-                    Bucket: this.bucket,
-                    Key: picStyleOverlayPrefix + this.transformation + '_font.json',
-                    ContentType: 'application/json',
-                    Body: file
-                })
-            } catch (error) {
-                this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
-            }
-            return file
-        },
-        submitInsStyles () {
-            const insArray = this.instructions.split('--')
-            const insJSON = []
-            insArray.forEach(instruction => {
-                const item = {}
-                const instructionArray = instruction.split(',')
-                instructionArray.forEach(ins => {
-                    const reg = /^[a-z0-9]+_/g
-                    const insKey = I2J[reg.exec(ins)[0]]
-                    const insValue = ins.substr(reg.lastIndex)
-                    item[insKey] = insValue
-                })
-                insJSON.push(item)
-            })
-            this.saveJSON2Bucket(insJSON)
-        },
-        async saveJSON2Bucket (jsonObj) {
-            const file = new Blob([JSON.stringify(jsonObj)], {'type': 'application/json'})
-            try {
-                await handler('putObject', {
-                    Bucket: this.bucket,
-                    Key: picStyleRulesPrefix + this.transformation + '.json',
-                    ContentType: 'application/json',
-                    Body: file
-                })
-                this.$Message.success(this.$t('STORAGE.ADD_STYLE_SUCCESS'))
-            } catch (error) {
-                this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
-            }
-        },
-        uploadSuccess (fileName) {
-            this.imgName = fileName
-        },
-        radiusFormater (radiusSlider) {
-            return radiusSlider > 1000 ? 'max' : radiusSlider
         },
         async previewFn () {
-            let watermarker, ISw, overlayName
-            const generalJson = generalConvert2Save(this.general)
-            let ISg = styleList.methods.json2instruction(generalJson)[0]
-            let IS = ISg
-            let fontFile
+            let watermarker, ISw, overlay, file
+            const general = general2Save(this.general)
+            let IS = styleList.methods.json2instruction(general)[0]
             if (this.watermarker.open) {
                 if (this.watermarker.type === 'text') {
-                    fontFile = this.convertFont2Save()
-                    watermarker = watermarkerConvert2Save(this.watermarker, this.transformation)
+                    file = new Blob([JSON.stringify(this.font2Save(this.fontStyle))], {'type': 'application/json'})
+                    watermarker = watermarker2Save(this.watermarker, this.transformation)
                 } else if (this.watermarker.type === 'img') {
-                    fontFile = await this.readOverlayFile(this.imgName)
-                    watermarker = watermarkerConvert2Save(this.watermarker, this.imgName)
+                    file = await this.readOverlayFile(this.imgName)
+                    watermarker = watermarker2Save(this.watermarker, this.imgName)
                 }
-                const wInfo = styleList.methods.json2instruction(watermarker)
-                ISw = wInfo[0]
-                overlayName = wInfo[1]
+                [ISw, overlay] = styleList.methods.json2instruction(watermarker)
                 IS += '--' + ISw
-            }
-            if (!!overlayName) {
-                await putOverlayFile(overlayName, fontFile)
-                this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg?' + Date.now()
+                await putOverlayFile(overlay, file)
+                this.previewUrl = getImgxUrl(IS)
             } else {
-                this.previewUrl = 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg'
+                this.previewUrl = getImgxUrl(IS)
             }
         },
         async seniorPreview () {
@@ -576,19 +501,85 @@ export default {
             let st = this.instructions.split('l_text:')[1]
             let si = this.instructions.split('l_')[1]
             if (!!st) {
-                fontName = st.split(':')[0]
-                const file = await this.readFont(fontName)
-                await putOverlayFile(fontName + '.json', file)
-                this.seniorUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.instructions + '/dashboard.jpg?' + Date.now()
+                fontName = st.split(':')[0] + '.json'
+                const file = await this.readOverlayFile(fontName)
+                await putOverlayFile(fontName, file)
+                this.seniorUrl = getImgxUrl(this.instructions)
             } else if (!!si) {
                 imgName = si.split(',')[0] + '.png'
                 const file = await handler('getObject', {
                     Bucket: this.bucket,
-                    Key: picStyleOverlayPrefix + imgName
+                    Key: prefix.overlay + imgName
                 })
                 await putOverlayFile(imgName, file.Body)
-                this.seniorUrl = 'http://imgx-ss.bscstorage.com/image-example/' + this.instructions + '/dashboard.jpg?' + Date.now()
+                this.seniorUrl = getImgxUrl(this.instructions)
             }
+        },
+        styles2Save () {
+            let data = []
+            if (this.tabValue === 'primary') {
+                const general = general2Save(this.general)
+                data.push(general)
+                if (this.watermarker.open) {
+                    let watermarkerData = {}
+                    if (this.watermarker.type === 'text') {
+                        this.saveFont(this.fontStyle)
+                        watermarkerData = watermarker2Save(this.watermarker, this.transformation)
+                    } else if (this.watermarker.type === 'img') {
+                        watermarkerData = watermarker2Save(this.watermarker, this.imgName)
+                    }
+                    data.push(watermarkerData)
+                }
+            } else {
+                const insArray = this.instructions.split('--')
+                insArray.forEach(instruction => {
+                    const item = {}
+                    instruction.split(',').forEach(ins => {
+                        const reg = /^[a-z0-9]+_/g
+                        const insKey = I2J[reg.exec(ins)[0]]
+                        const insValue = ins.substr(reg.lastIndex)
+                        item[insKey] = insValue
+                    })
+                    data.push(item)
+                })
+            }
+            return data
+        },
+        async readOverlayFile (name) {
+            let params = {
+                Bucket: this.bucket,
+                Key: prefix.overlay + name
+            }
+            let res = await handler('getObject', params)
+            return res.Body
+        },
+        async saveFont (data) {
+            const file = new Blob([JSON.stringify(this.font2Save(data))], {'type': 'application/json'})
+            try {
+                await handler('putObject', {
+                    Bucket: this.bucket,
+                    Key: prefix.overlay + this.transformation + '_font.json',
+                    ContentType: 'application/json',
+                    Body: file
+                })
+            } catch (error) {
+                this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
+            }
+        },
+        font2Save (data) {
+            let saved = {}
+            saved.font_family = data.font_family
+            saved.font_size = parseInt(data.font_size)
+            saved.font_color = data.font_color.substr(1).toLowerCase()
+            saved.text = parseInt(this.watermarker.text)
+            saved.background = data.background.substr(1).toLowerCase()
+            return saved
+        },
+        uploadSuccess (fileName) {
+            this.imgName = fileName
+        },
+        radiusFormater (radiusSlider) {
+            return radiusSlider > 1000 ? 'max' : radiusSlider
         }
     },
     watch: {
@@ -603,7 +594,7 @@ const putOverlayFile = (name, body) => {
     const s3 = config({ previewAccessKey, previewSecretKey })
     return new Promise((resolve, reject) => s3.putObject({
         Bucket: 'image-example',
-        Key: picStyleOverlayPrefix + name,
+        Key: prefix.overlay + name,
         ContentType: type,
         Body: body
     }, (error, data) => {
@@ -611,7 +602,9 @@ const putOverlayFile = (name, body) => {
         return error ? reject(error) : resolve(data)
     }))
 }
-
+const getImgxUrl = IS => {
+    return 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg?' + Date.now()
+}
 const previewAccessKey = 'acc_drdrxp'
 const previewSecretKey = '11111111111111111111'
 const I2J = {
@@ -683,77 +676,77 @@ const defaultFontStyle = {
     background: '#ffffff',
     font_color: '#ffffff'
 }
-const generalConvert2Save = (generalData) => {
-    let generalSave = {}
-    if (generalData.crop === 'pad') {
-        generalSave.crop = generalData.padType
-        generalSave.background = generalData.padColor.substr(1).toLowerCase()
-    } else if (generalData.crop === 'fill') {
-        generalSave.crop = generalData.fillType
-    } else if (generalData.crop === 'fit') {
-        generalSave.crop = generalData.fitType
-    } else if (generalData.crop === 'thumb') {
-        generalSave.crop = 'thumb'
-        generalSave.gravity = generalData.thumbType
-    } else if (generalData.crop === 'crop') {
-        generalSave.crop = generalData.crop
-        if (generalData.gravity === 'noGravity') {
-            generalSave.x = generalData.x
-            generalSave.y = generalData.y
-        } else if (generalData.gravity === 'xy_center') {
-            generalSave.gravity === generalData.gravity
-            generalSave.x = generalData.x
-            generalSave.y = generalData.y
+const general2Save = data => {
+    let saved = {}
+    if (data.crop === 'pad') {
+        saved.crop = data.padType
+        saved.background = data.padColor.substr(1).toLowerCase()
+    } else if (data.crop === 'fill') {
+        saved.crop = data.fillType
+    } else if (data.crop === 'fit') {
+        saved.crop = data.fitType
+    } else if (data.crop === 'thumb') {
+        saved.crop = 'thumb'
+        saved.gravity = data.thumbType
+    } else if (data.crop === 'crop') {
+        saved.crop = data.crop
+        if (data.gravity === 'noGravity') {
+            saved.x = data.x
+            saved.y = data.y
+        } else if (data.gravity === 'xy_center') {
+            saved.gravity === data.gravity
+            saved.x = data.x
+            saved.y = data.y
         } else {
-            generalSave.gravity === generalData.gravity
+            saved.gravity === data.gravity
         }
-    } else if (generalData.crop !== 'noCrop') {
-        generalSave.crop = generalData.crop
+    } else if (data.crop !== 'noCrop') {
+        saved.crop = data.crop
     } else {}
-    if (generalData.crop !== 'noCrop') {
-        generalSave.width = generalData.dataType === 'pixel' ? parseInt(generalData.width) : parseFloat(generalData.width / 100)
-        generalSave.height = generalData.dataType === 'pixel' ? parseInt(generalData.height) : parseFloat(generalData.height / 100)
+    if (data.crop !== 'noCrop') {
+        saved.width = data.dataType === 'pixel' ? parseInt(data.width) : parseFloat(data.width / 100)
+        saved.height = data.dataType === 'pixel' ? parseInt(data.height) : parseFloat(data.height / 100)
     }
 
-    if (generalData.format === 'original' || generalData.format === 'png' || generalData.format === 'webp') {
-        generalSave.quality = generalData.quality
+    if (data.format === 'original' || data.format === 'png' || data.format === 'webp') {
+        saved.quality = data.quality
     }
-    if (generalData.format !== 'original') {
-        generalSave.format = generalData.format
+    if (data.format !== 'original') {
+        saved.format = data.format
     }
-    if (generalData.angleType === 'angle' && generalData.angle !== 0) {
-        generalSave.angle = parseInt(generalData.angle)
-    } else if (generalData.angleType === 'vflip' || generalData.angleType === 'hflip') {
-        generalSave.angle = generalData.angleType
+    if (data.angleType === 'angle' && data.angle !== 0) {
+        saved.angle = parseInt(data.angle)
+    } else if (data.angleType === 'vflip' || data.angleType === 'hflip') {
+        saved.angle = data.angleType
     }
 
-    const ef = generalData.effect
+    const ef = data.effect
 
     if (ef === 'oil_paint') {
-        generalSave.effect = ef + ':' + generalData.oilValue
+        saved.effect = ef + ':' + data.oilValue
     } else if (ef === 'brightness') {
-        generalSave.effect = ef + ':' + generalData.brightnessValue
+        saved.effect = ef + ':' + data.brightnessValue
     } else if (ef === 'blur') {
-        generalSave.effect = ef + ':' + generalData.blurValue
+        saved.effect = ef + ':' + data.blurValue
     } else if (ef === 'pixelate') {
-        generalSave.effect = ef + ':' + generalData.pixelateValue
+        saved.effect = ef + ':' + data.pixelateValue
     } else if (ef === 'sharpen') {
-        generalSave.effect = ef + ':' + generalData.sharpenValue
+        saved.effect = ef + ':' + data.sharpenValue
     } else if (ef === 'color') {
-        generalSave.effect = generalData.color + ':' + generalData.colorValue
+        saved.effect = data.color + ':' + data.colorValue
     } else if (ef !== 'noEffect') {
-        generalSave.effect = ef
+        saved.effect = ef
     } else {}
 
-    if (generalData.border) {
-        generalSave.border = generalData.borderSize + '_' + generalData.borderColor.substr(1).toLowerCase()
+    if (data.border) {
+        saved.border = data.borderSize + '_' + data.borderColor.substr(1).toLowerCase()
     }
-    if (generalData.opacity !== 100) {
-        generalSave.opacity = generalData.opacity
+    if (data.opacity !== 100) {
+        saved.opacity = data.opacity
     }
-    return generalSave
+    return saved
 }
-const watermarkerConvert2Save = (data, name) => {
+const watermarker2Save = (data, name) => {
     let saved = {
         x: parseInt(data.x),
         y: parseInt(data.y),
@@ -767,10 +760,7 @@ const watermarkerConvert2Save = (data, name) => {
     }
     return saved
 }
-const styleItemCheckout = styles => {
-    let ganeralData = _.clone(generalDefult)
-    let watermarkerData = _.clone(watermarkerDefult)
-    let overlayName = ''
+const isPrimary = styles => {
     let uniqueArray = []
     let uniqueSet = new Set()
     styles.forEach(item => {
@@ -792,142 +782,149 @@ const styleItemCheckout = styles => {
             uniqueSet.add('effect')
         }
     })
-    if (uniqueArray.length > uniqueSet.size) {
-        return false
-    } else {
-        styles.forEach(item => {
-            // checkout watermarker or general
-            if (Object.keys(item).includes('overlay')) {
-                if (/^text:.+/.test(item.overlay)) {
-                    overlayName = item.overlay.split(':')[1] + '.json'
-                } else {
-                    overlayName = item.overlay + '.png'
-                }
-                _.assignIn(watermarkerData, watermarkerConvert2Font(item))
-            } else {
-                _.assignIn(ganeralData, generalConvert2Font(item))
-            }
-        })
-        return { ganeralData, watermarkerData, overlayName }
-    }
+    return uniqueArray.length === uniqueSet.size
 }
-const generalConvert2Font = data => {
-    let generalFont = {}
-    Object.assign(generalFont, data)
+const styles2Front = styles => {
+    let ganeral = _.clone(generalDefult)
+    let watermarker = _.clone(watermarkerDefult)
+    let overlay = ''
+    styles.forEach(item => {
+        // checkout watermarker or general
+        if (Object.keys(item).includes('overlay')) {
+            if (/^text:.+/.test(item.overlay)) {
+                overlay = item.overlay.split(':')[1] + '.json'
+            } else {
+                overlay = item.overlay + '.png'
+            }
+            _.assignIn(watermarker, watermarker2Front(item))
+        } else {
+            _.assignIn(ganeral, general2Front(item))
+        }
+    })
+    return { ganeral, watermarker, overlay }
+}
+const general2Front = data => {
+    let front = {}
+    Object.assign(front, data)
 
     const cr = data.crop
-    let fontC
+    let frontC
 
     if (cr && (cr === 'mfit' || cr === 'fit' || cr === 'limit')) {
-        fontC = 'fit'
-        generalFont.fitType = cr
+        frontC = 'fit'
+        front.fitType = cr
     } else if (cr && (cr === 'pad' || cr === 'mpad' || cr === 'lpad')) {
-        fontC = 'pad'
-        generalFont.padType = cr
+        frontC = 'pad'
+        front.padType = cr
         if (data.background) {
-            generalFont.padColor = '#' + data.background.substr(0, 6)
+            front.padColor = '#' + data.background.substr(0, 6)
         }
     } else if (cr && (cr === 'fill' || cr === 'lfill')) {
-        fontC = 'fill'
-        generalFont.fillType = cr
+        frontC = 'fill'
+        front.fillType = cr
     } else if (cr && cr === 'thumb') {
-        fontC = 'thumb'
-        generalFont.thumbType = data.gravity
+        frontC = 'thumb'
+        front.thumbType = data.gravity
     } else if (cr && cr === 'crop') {
-        fontC = 'crop'
+        frontC = 'crop'
         if (data.gravity) {
-            generalFont.gravity = data.gravity
+            front.gravity = data.gravity
             if (data.x || data.y) {
-                generalFont.x = data.x || 0
-                generalFont.y = data.y || 0
+                front.x = data.x || 0
+                front.y = data.y || 0
             }
         } else if (data.x || data.y) {
-            generalFont.gravity = 'noGravity'
-            generalFont.x = data.x || 0
-            generalFont.y = data.y || 0
+            front.gravity = 'noGravity'
+            front.x = data.x || 0
+            front.y = data.y || 0
         }
     } else if (cr) {
-        fontC = cr
+        frontC = cr
     } else {
-        fontC = 'noCrop'
+        frontC = 'noCrop'
     }
-    generalFont.crop = fontC
+    front.crop = frontC
 
     if (data.width) {
-        generalFont.width = data.width > 1 ? data.width : data.width * 100
-        generalFont.dataType = data.width > 1 ? 'pixel' : 'percent'
+        front.width = data.width > 1 ? data.width : data.width * 100
+        front.dataType = data.width > 1 ? 'pixel' : 'percent'
     }
     if (data.height) {
-        generalFont.height = data.height > 1 ? data.height : data.height * 100
-        generalFont.dataType = data.height > 1 ? 'pixel' : 'percent'
+        front.height = data.height > 1 ? data.height : data.height * 100
+        front.dataType = data.height > 1 ? 'pixel' : 'percent'
     }
     if (data.angle) {
-        generalFont.angleType = data.angle === 'vflip' || data.angle === 'hflip' ? data.angle : 'angle'
-        generalFont.angle = data.angle === 'vflip' || data.angle === 'hflip' ? 0 : data.angle
+        front.angleType = data.angle === 'vflip' || data.angle === 'hflip' ? data.angle : 'angle'
+        front.angle = data.angle === 'vflip' || data.angle === 'hflip' ? 0 : data.angle
     }
-    if (data.effect) {
+
+    const ef = data.effect
+    if (ef) {
         const effectArray = ['grayscale', 'oil_paint', 'negate', 'brightness', 'blur', 'pixelate', 'sharpen', 'auto_contrast', 'improve']
         const colorArray = ['sepia', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta']
-        if (effectArray.includes(data.effect) || effectArray.includes(data.effect.split(':')[0])) {
-            generalFont.effect = data.effect
-            if (data.effect.split('oil_piant:')[1]) {
-                generalFont.oilValue = parseInt(data.effect.split('oil_piant:')[1])
-            } else if (data.effect.split('brightness:')[1]) {
-                generalFont.brightnessValue = parseInt(data.effect.split('brightness:')[1])
-            } else if (data.effect.split('blur:')[1]) {
-                generalFont.blurValue = parseInt(data.effect.split('blur:')[1])
-            } else if (data.effect.split('pixelate:')[1]) {
-                generalFont.pixelateValue = parseInt(data.effect.split('pixelate:')[1])
-            } else if (data.effect.split('sharpen:')[1]) {
-                generalFont.sharpenValue = parseInt(data.effect.split('sharpen:')[1])
+        if (effectArray.includes(ef) || effectArray.includes(ef.split(':')[0])) {
+            front.effect = ef
+            if (ef.split('oil_piant:')[1]) {
+                front.oilValue = parseInt(ef.split('oil_piant:')[1])
+            } else if (ef.split('brightness:')[1]) {
+                front.brightnessValue = parseInt(ef.split('brightness:')[1])
+            } else if (ef.split('blur:')[1]) {
+                front.blurValue = parseInt(ef.split('blur:')[1])
+            } else if (ef.split('pixelate:')[1]) {
+                front.pixelateValue = parseInt(ef.split('pixelate:')[1])
+            } else if (ef.split('sharpen:')[1]) {
+                front.sharpenValue = parseInt(ef.split('sharpen:')[1])
             }
-        } else if (colorArray.includes(data.effect) || colorArray.includes(data.effect.split(':')[0])) {
-            generalFont.effect = 'color'
-            generalFont.color = data.effect.split(':')[0]
-            if (data.effect.split(':')[1]) {
-                generalFont.colorValue = parseInt(data.effect.split(':')[1])
+        } else if (colorArray.includes(ef) || colorArray.includes(ef.split(':')[0])) {
+            front.effect = 'color'
+            front.color = ef.split(':')[0]
+            if (ef.split(':')[1]) {
+                front.colorValue = parseInt(ef.split(':')[1])
             }
         }
     }
-    if (data.border) {
-        generalFont.border = true
-        generalFont.borderSize = data.border.split('_')[0] || 1
-        const borderColor = '#' + data.border.split('_')[1].substr(0, 6)
-        generalFont.borderColor = borderColor || '#BF4040'
+
+    const bo = data.border
+    if (bo) {
+        front.border = true
+        front.borderSize = bo.split('_')[0] || 1
+        const borderColor = '#' + bo.split('_')[1].substr(0, 6)
+        front.borderColor = borderColor || '#BF4040'
     }
     if (data.quality) {
-        generalFont.quality = parseInt(data.quality)
+        front.quality = parseInt(data.quality)
     }
     if (data.opacity) {
-        generalFont.opacity = parseInt(data.opacity)
+        front.opacity = parseInt(data.opacity)
     }
-    return generalFont
+    return front
 }
 
-const watermarkerConvert2Font = data => {
-    let watermarkerFont = _.clone(watermarkerDefult)
-    watermarkerFont.open = true
+const watermarker2Front = data => {
+    let front = _.clone(watermarkerDefult)
+    front.open = true
     if (data.overlay.substr(0, 5) === 'text:') {
-        watermarkerFont.type = 'text'
+        front.type = 'text'
         const textRe = /(text:).*:/g
         textRe.exec(data.overlay)
-        watermarkerFont.text = data.overlay.substr(textRe.lastIndex)
+        front.text = data.overlay.substr(textRe.lastIndex)
     } else {
-        watermarkerFont.type = 'img'
+        front.type = 'img'
     }
+
     if (data.opacity) {
-        watermarkerFont.opacity = parseInt(data.opacity)
+        front.opacity = parseInt(data.opacity)
     }
     if (data.gravity) {
-        watermarkerFont.gravity = data.gravity
+        front.gravity = data.gravity
     }
     if (data.x) {
-        watermarkerFont.x = data.x
+        front.x = data.x
     }
     if (data.y) {
-        watermarkerFont.y = data.y
+        front.y = data.y
     }
-    return watermarkerFont
+    return front
 }
 const allFontList = [{
     value: 'Songti SC',

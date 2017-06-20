@@ -29,7 +29,7 @@
 
 <script>
 import { getAWS, handler, config } from '@/service/Aws'
-import { picStyleRulesPrefix, picStyleOverlayPrefix, Utf8ArrayToStr } from '@/service/BucketService'
+import { prefix, Utf8ArrayToStr } from '@/service/BucketService'
 import upload from '@/components/bucket/upload'
 import iView from 'iview'
 export default {
@@ -45,7 +45,7 @@ export default {
             clipUrl: '',
             selectedStyleName: '',
             showUploadModal: false,
-            prefix: picStyleRulesPrefix,
+            prefix: prefix.rules,
             uploadValidation: /\.(json|JSON)$/
         }
     },
@@ -67,7 +67,7 @@ export default {
                 this.$Loading.start()
                 let res = await handler('listObjects', {
                     Bucket: this.bucket,
-                    Prefix: picStyleRulesPrefix
+                    Prefix: prefix.rules
                 })
                 const fileList = res.Contents
                 _.each(fileList, file => {
@@ -88,7 +88,7 @@ export default {
             }
             let res = await handler('getObject', params)
             let fileJson = JSON.parse(Utf8ArrayToStr(res.Body))
-            let ruleName = file.Key.split(picStyleRulesPrefix)[1].split('.json')[0]
+            let ruleName = file.Key.split(prefix.rules)[1].split('.json')[0]
             this.styleList.push({'ruleName': ruleName, ...this.convert2list(fileJson)})
         },
         deleteStyleConfirm (style) {
@@ -103,7 +103,7 @@ export default {
             try {
                 await handler('deleteObject', {
                     Bucket: this.bucket,
-                    Key: picStyleRulesPrefix + style.ruleName + '.json'
+                    Key: prefix.rules + style.ruleName + '.json'
                 })
                 this.styleList.splice(style._index, 1)
                 this.$Message.success(this.$t('STORAGE.DELETE_STYLE_SUCCESS'))
@@ -112,7 +112,7 @@ export default {
             }
         },
         async exportStyle (style) {
-            let url = await getURL(this.bucket, picStyleRulesPrefix + style.ruleName + '.json')
+            let url = await getURL(this.bucket, prefix.rules + style.ruleName + '.json')
             document.querySelector('#element-download').href = url
             document.querySelector('#span-download').click()
         },
@@ -171,12 +171,12 @@ export default {
         async putOverlayObject (fileName) {
             const file = await handler('getObject', {
                 Bucket: this.bucket,
-                Key: picStyleOverlayPrefix + fileName
+                Key: prefix.overlay + fileName
             })
             const s3 = config({ previewAccessKey, previewSecretKey })
             return await new Promise((resolve, reject) => s3.putObject({
                 Bucket: 'image-example',
-                Key: picStyleOverlayPrefix + fileName,
+                Key: prefix.overlay + fileName,
                 ContentType: file.ContentType,
                 Body: file.Body
             }, (error, data) => {
@@ -188,7 +188,7 @@ export default {
             this.showUploadModal = true
         },
         uploadSuccess (fileName) {
-            const file = {Key: picStyleRulesPrefix + fileName}
+            const file = {Key: prefix.rules + fileName}
             this.getObject(file)
         }
     },
