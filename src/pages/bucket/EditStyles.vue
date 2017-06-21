@@ -7,7 +7,7 @@
                 <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Tabs size="small" :value='tabValue'>
+        <Tabs size="small" v-model='tabValue'>
             <Tab-pane :label='$t("STORAGE.BASIC_EDIT")' name='primary' :disabled='primaryDisable'>
                 <Row>
                     <Col span="8">
@@ -139,13 +139,13 @@
                                 <Radio-group v-model="general.effect" style='vertical-align: text-top'>
                                     <Radio label="noEffect">不添加滤镜或特效</Radio>
                                     <Radio label="grayscale">灰度</Radio>
-                                    <Radio label="oil_paint">油画效果</Radio>
                                     <Radio label="auto_contrast">自动对比度</Radio>
+                                    <Radio label="brightness">调整图片亮度</Radio>
                                     <Radio label="negate">反色</Radio>
                                     <p style='height: 10px;'></p>
                                     <Radio label="sharpen">锐化</Radio>
                                     <Radio label="blur">模糊效果</Radio>
-                                    <Radio label="brightness">调整图片亮度</Radio>
+                                    <Radio label="oil_paint">油画效果</Radio>
                                     <Radio label="pixelate">像素化</Radio>
                                     <Radio label="color">增加颜色</Radio>
                                     <p style='height: 10px;'></p>
@@ -271,7 +271,7 @@
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
                                     <div class="upload-box">
-                                        <upload :bucket="bucket" :prefix="prefix" accept="image/png" validationInfo='支持png格式文件，文件名为不包含“/:,”的ascii' :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
+                                        <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" validationInfo='支持png格式文件，文件名为不包含“/:,-”的ascii字符' :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
                                     </div>
                                 </div><!--image-->
                             </div>
@@ -311,7 +311,7 @@
                                 <Input v-model="watermarker.opacity" class="slider-input" number></Input>
                             </div><!--opacity-->
                         </div>
-                        <div class="form-item clearfix line-width">
+                        <div class="form-item clearfix line-button">
                             <div class="img-button">
                                 <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
                                 <Button type="primary" @click="submitStyles" :disabled="transformationError || textError || imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
@@ -344,7 +344,7 @@
                             <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
                             <p class="style-name-info dis-inline">参数说明，</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">见文档</a>
                         </div>
-                        <div class="form-item clearfix line-width">
+                        <div class="form-item clearfix line-button">
                             <div class="img-button">
                                 <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
                                 <Button type="primary" @click="submitStyles" :disabled="transformationError">{{$t("PUBLIC.CONFIRMED")}}</Button>
@@ -368,12 +368,11 @@ export default {
             transformation: '',
             formatList: ['original', 'png', 'webp', 'jpeg', 'jpg'],
             fontList: allFontList,
-            fontColorPicker: false,
             watermarker: watermarkerDefult,
             general: generalDefult,
-            prefix: prefix.overlay,
             imgName: '',
-            uploadValidation: /^[\x00-\x2b\x2d\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
+            uploadPrefix: prefix.overlay,
+            uploadValidation: /^[\x00-\x2b\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
             instructions: this.instructions,
             padList: [{value: 'pad', label: '背景填充等比例缩放'}, {value: 'lpad', label: '背景填充等比例缩小'}, {value: 'mpad', label: '背景填充等比例放大'}],
             fillList: [{value: 'fill', label: '等比例裁剪'}, {value: 'lfill', label: '不放大原图的等比例裁剪'}],
@@ -381,8 +380,6 @@ export default {
             fitList: [{value: 'fit', label: '等比例缩放'}, {value: 'mfit', label: '等比例放大'}, {value: 'limit', label: '等比例缩小'}],
             angleList: [{value: 'angle', label: '旋转角度'}, {value: 'vflip', label: '垂直翻转'}, {value: 'hflip', label: '水平翻转'}],
             setMore: false,
-            fontBack: defaultTextBack,
-            fontBackPicker: false,
             radiusSlider: 1001,
             fontStyle: defaultFontStyle,
             tabValue: 'primary',
@@ -455,16 +452,18 @@ export default {
                             this.imgName = overlay
                         }
                         await putOverlayFile(overlay, file)
-                        this.seniorUrl = this.previewUrl = getImgxUrl(this.paramsIS)
                     }
                 } else {
                     this.tabValue = 'senior'
                     this.primaryDisable = true
                 }
+                this.seniorUrl = this.previewUrl = getImgxUrl(this.paramsIS)
+                console.log(this.previewUrl)
             }
         },
         async submitStyles () {
-            if (!this.transformationError && !this.textError) {
+            console.log(this.styles2Save())
+            if (!this.transformationError && !this.textError && this.styles2Save()) {
                 const file = new Blob([JSON.stringify(this.styles2Save())], {'type': 'application/json'})
                 try {
                     await handler('putObject', {
@@ -473,7 +472,10 @@ export default {
                         ContentType: 'application/json',
                         Body: file
                     })
-                } catch (error) {}
+                    this.$Message.success('保存成功')
+                } catch (error) {
+                    this.$Message.success('保存失败')
+                }
             }
         },
         async previewFn () {
@@ -506,7 +508,7 @@ export default {
                 await putOverlayFile(fontName, file)
                 this.seniorUrl = getImgxUrl(this.instructions)
             } else if (!!si) {
-                imgName = si.split(',')[0] + '.png'
+                imgName = si.split(',')[0].length < si.split('-')[0].length ? si.split(',')[0] + '.png' : si.split('-')[0] + '.png'
                 const file = await handler('getObject', {
                     Bucket: this.bucket,
                     Key: prefix.overlay + imgName
@@ -532,6 +534,10 @@ export default {
                 }
             } else {
                 const insArray = this.instructions.split('--')
+                if (insArray.length > 4) {
+                    this.$Message.error('指令条目不能超过4条')
+                    return false
+                }
                 insArray.forEach(instruction => {
                     const item = {}
                     instruction.split(',').forEach(ins => {
@@ -563,17 +569,17 @@ export default {
                     Body: file
                 })
             } catch (error) {
-                this.$Message.error(this.$t('STORAGE.ADD_STYLE_FAILED'))
+                this.$Message.error('字体文件保存失败')
             }
         },
         font2Save (data) {
-            let saved = {}
-            saved.font_family = data.font_family
-            saved.font_size = parseInt(data.font_size)
-            saved.font_color = data.font_color.substr(1).toLowerCase()
-            saved.text = parseInt(this.watermarker.text)
-            saved.background = data.background.substr(1).toLowerCase()
-            return saved
+            return {
+                font_family: data.font_family,
+                font_size: parseInt(data.font_size),
+                font_color: data.font_color.substr(1).toLowerCase(),
+                text: this.watermarker.text,
+                background: data.background.substr(1).toLowerCase()
+            }
         },
         uploadSuccess (fileName) {
             this.imgName = fileName
@@ -627,9 +633,6 @@ const I2J = {
     t_: 'transformation'
 }
 
-const defaultTextBack = {
-    hex: '#ffffff'
-}
 const generalDefult = {
     crop: 'noCrop',
     quality: 70,
@@ -788,6 +791,7 @@ const styles2Front = styles => {
     let ganeral = _.clone(generalDefult)
     let watermarker = _.clone(watermarkerDefult)
     let overlay = ''
+    console.log(watermarkerDefult)
     styles.forEach(item => {
         // checkout watermarker or general
         if (Object.keys(item).includes('overlay')) {
@@ -1356,5 +1360,8 @@ const allFontList = [{
 }
 .line-width {
     width: 475px;
+}
+.line-button {
+    width: 550px;
 }
 </style>

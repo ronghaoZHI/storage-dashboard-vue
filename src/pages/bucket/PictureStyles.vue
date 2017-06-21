@@ -72,13 +72,13 @@ export default {
                 const fileList = res.Contents
                 _.each(fileList, file => {
                     // make sure this is a json file
-                    if (file.Key.split('.json').length === 2) {
+                    if (/.json$/.test(file.Key)) {
                         this.getObject(file)
                     }
                 })
                 this.$Loading.finish()
             } catch (error) {
-                this.$Message.error(this.$t('STORAGE.ADD_FOLDER_FAILED'))
+                this.$Message.error('获取列表失败')
             }
         },
         async getObject (file) {
@@ -90,6 +90,28 @@ export default {
             let fileJson = JSON.parse(Utf8ArrayToStr(res.Body))
             let ruleName = file.Key.split(prefix.rules)[1].split('.json')[0]
             this.styleList.push({'ruleName': ruleName, ...this.convert2list(fileJson)})
+        },
+        convert2list (data) {
+            const listItem = {
+                quality: '--',
+                format: '原图格式'
+            }
+            const ISArry = []
+            const overlayList = new Set()
+            _.each(data, item => {
+                const itemConvert = this.json2instruction(item)
+                ISArry.push(itemConvert[0])
+                if (!!itemConvert[1]) {
+                    overlayList.add(itemConvert[1])
+                }
+                if (!!item.format) {
+                    listItem.quality = item.quality || ''
+                    listItem.format = item.format
+                }
+            })
+            listItem.overlayList = overlayList
+            listItem.IS = ISArry.join('--')
+            return listItem
         },
         deleteStyleConfirm (style) {
             this.$Modal.confirm({
@@ -125,34 +147,12 @@ export default {
             _.each(jsonData, (value, key) => {
                 let item = ''
                 if (key === 'overlay') {
-                    overlayFileName = value.substr(0, 5) === 'text:' ? value.split('text:')[1].split(':')[0] + '.json' : value + '.png'
+                    overlayFileName = /^text:.*/.test(value) ? /^text:(.*):(.*)/.exec(value)[1] + '.json' : value + '.png'
                 }
                 item = J2I[key] + value
                 instructionArray.push(item)
             })
             return [instructionArray.join(','), overlayFileName]
-        },
-        convert2list (data) {
-            const listItem = {
-                quality: '--',
-                format: '原图格式'
-            }
-            const ISArry = []
-            const overlayList = new Set()
-            _.each(data, item => {
-                const itemConvert = this.json2instruction(item)
-                ISArry.push(itemConvert[0])
-                if (!!itemConvert[1]) {
-                    overlayList.add(itemConvert[1])
-                }
-                if (!!item.format) {
-                    listItem.quality = item.quality
-                    listItem.format = item.format
-                }
-            })
-            listItem.overlayList = overlayList
-            listItem.IS = ISArry.join('--')
-            return listItem
         },
         async previewModal (style) {
             this.$Loading.start()
