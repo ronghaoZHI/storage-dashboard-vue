@@ -15,7 +15,7 @@
                         <div class="test-img">
                             <img :src='previewUrl'>
                             <div class="img-button">
-                                <Button type="primary" @click="previewFn">效果预览</Button>
+                                <Button type="primary" @click="primaryPreview">效果预览</Button>
                             </div>
                         </div>
                     </Col>
@@ -96,13 +96,13 @@
                             <span class="form-label">W : </span>
                             <div class="input-text-box">
                                 <input type='number' v-model.number="general.width">
-                                <span v-if="general.dataType==='pixel'" class="form-label">px</span>
+                                <span v-if="general.dataType === 'pixel'" class="form-label">px</span>
                                 <span v-else class="form-label">%</span>
                             </div>
                             <span class="form-label">H : </span>
                             <div class="input-text-box">
                                 <input type='number' v-model.number="general.height">
-                                <span v-if="general.dataType==='pixel'" class="form-label">px</span>
+                                <span v-if="general.dataType === 'pixel'" class="form-label">px</span>
                                 <span v-else class="form-label">%</span>
                             </div>
                         </div><!--width & height-->
@@ -226,23 +226,23 @@
                         <div class="separator-line"></div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_WATERMARKER")}} : </span>
-                            <i-switch v-model="watermarker.open" size="large">
+                            <i-switch v-model="mark.open" size="large">
                                 <span slot="open">ON</span>
                                 <span slot="close">OFF</span>
                             </i-switch>
                         </div><!--watermarkerOpen-->
-                        <div v-if="watermarker.open">
+                        <div v-if="mark.open">
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.WATERMARKER_TYPE")}} : </span>
-                                <Radio-group v-model="watermarker.type">
+                                <Radio-group v-model="mark.type">
                                     <Radio label="text">{{$t("STORAGE.TEXT_WATERMARKER")}}</Radio>
                                     <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
                                 </Radio-group>
                             </div><!--watermarkerType-->
-                            <div v-if="watermarker.type == 'text'" class="clearfix">
+                            <div v-if="mark.type == 'text'" class="clearfix">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
-                                    <Input v-model="watermarker.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
+                                    <Input v-model="mark.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
                                     <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
                                 </div><!--text-->
                                 <div class="form-item">
@@ -267,7 +267,7 @@
                                     </div><!--fontColor-->
                                 </div><!--fontBack-->
                             </div>
-                            <div v-if="watermarker.type == 'img'">
+                            <div v-if="mark.type == 'img'">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
                                     <div class="upload-box">
@@ -278,28 +278,28 @@
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
                                 <div class="gravity-selector">
-                                    <input type="radio" value="north_west" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="north" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="north_east" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="west" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="center" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="east" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="south_west" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="south" v-model="watermarker.gravity"></Radio>
-                                    <input type="radio" value="south_east" v-model="watermarker.gravity"></Radio>
+                                    <input type="radio" value="north_west" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="north" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="north_east" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="west" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="center" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="east" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="south_west" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="south" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="south_east" v-model="mark.gravity"></Radio>
                                 </div>
                                 <div class="padding-setting">
                                     <div class="form-item">
                                         <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
                                         <div class="input-text-box">
-                                            <input type='number' v-model="watermarker.x">
+                                            <input type='number' v-model="mark.x">
                                             <span>px</span>
                                         </div>
                                     </div>
                                     <div class="form-item">
                                         <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
                                         <div class="input-text-box">
-                                            <input type='number' v-model="watermarker.y">
+                                            <input type='number' v-model="mark.y">
                                             <span>px</span>
                                         </div>
                                     </div>
@@ -307,8 +307,8 @@
                             </div><!--location-->
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
-                                <Slider class="pic-slider" v-model="watermarker.opacity"></Slider>
-                                <Input v-model="watermarker.opacity" class="slider-input" number></Input>
+                                <Slider class="pic-slider" v-model="mark.opacity"></Slider>
+                                <Input v-model="mark.opacity" class="slider-input" number></Input>
                             </div><!--opacity-->
                         </div>
                         <div class="form-item clearfix line-button">
@@ -358,27 +358,23 @@
 </template>
 <script>
 import { handler, config } from '@/service/Aws'
-import { prefix } from '@/service/BucketService'
+import { prefix } from '@/service/bucketService'
 import upload from '@/components/bucket/upload'
 import * as styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
+import {editStylesConsts, allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
     data () {
         return {
             transformation: '',
             formatList: ['original', 'png', 'webp', 'jpeg', 'jpg'],
             fontList: allFontList,
-            watermarker: watermarkerDefult,
+            mark: markerDefult,
             general: generalDefult,
             imgName: '',
             uploadPrefix: prefix.overlay,
             uploadValidation: /^[\x00-\x2b\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
-            instructions: this.instructions,
-            padList: [{value: 'pad', label: '背景填充等比例缩放'}, {value: 'lpad', label: '背景填充等比例缩小'}, {value: 'mpad', label: '背景填充等比例放大'}],
-            fillList: [{value: 'fill', label: '等比例裁剪'}, {value: 'lfill', label: '不放大原图的等比例裁剪'}],
-            thumbList: [{value: 'face', label: '定位一张最易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}],
-            fitList: [{value: 'fit', label: '等比例缩放'}, {value: 'mfit', label: '等比例放大'}, {value: 'limit', label: '等比例缩小'}],
-            angleList: [{value: 'angle', label: '旋转角度'}, {value: 'vflip', label: '垂直翻转'}, {value: 'hflip', label: '水平翻转'}],
+            instructions: '',
             setMore: false,
             radiusSlider: 1001,
             fontStyle: defaultFontStyle,
@@ -386,7 +382,7 @@ export default {
             primaryDisable: false,
             previewUrl: getImgxUrl('q_100'),
             seniorUrl: getImgxUrl('q_100'),
-            cropGravityList: [{value: 'north_west', label: '左上位置'}, {value: 'north', label: '正上位置，水平方向居中'}, {value: 'north_east', label: '右上位置'}, {value: 'west', label: '左边，垂直方向居中'}, {value: 'center', label: '正中'}, {value: 'east', label: '右边，垂直方向居中'}, {value: 'south_west', label: '左下位置'}, {value: 'south', label: '正下位置'}, {value: 'south_east', label: '右下位置'}, {value: 'noGravity', label: '指定起点坐标'}, {value: 'xy_center', label: '指定的xy为中心点'}, {value: 'face', label: '定位一张最容易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}]
+            ...editStylesConsts
         }
     },
     components: { upload },
@@ -407,13 +403,13 @@ export default {
             return !(/^[a-z0-9_]{1,20}$/).test(this.transformation)
         },
         textError () {
-            return this.watermarker.open && this.watermarker.type === 'text' && !(/.+/).test(this.watermarker.text)
+            return this.mark.open && this.mark.type === 'text' && !(/.+/).test(this.mark.text)
         },
         imgError () {
-            return this.watermarker.open && this.watermarker.type === 'img' && !(this.imgName)
+            return this.mark.open && this.mark.type === 'img' && !(this.imgName)
         },
         styleListHref () {
-            return '/bucket/' + this.bucket + '/pictureStyles'
+            return `/bucket/${this.bucket}/pictureStyles`
         },
         isOpacity () {
             return this.general.format === 'original' || this.general.format === 'png' || this.general.format === 'webp'
@@ -438,9 +434,9 @@ export default {
                 if (isPrimary(styles)) {
                     let front = styles2Front(styles)
                     this.general = front.ganeral
-                    this.watermarker = front.watermarker
+                    this.mark = front.mark
                     let overlay = front.overlay
-                    // is watermarker here
+                    // is mark here
                     if (!!overlay) {
                         let file = await this.readOverlayFile(overlay)
                         if (/.+\.json$/.test(overlay)) {
@@ -458,11 +454,9 @@ export default {
                     this.primaryDisable = true
                 }
                 this.seniorUrl = this.previewUrl = getImgxUrl(this.paramsIS)
-                console.log(this.previewUrl)
             }
         },
         async submitStyles () {
-            console.log(this.styles2Save())
             if (!this.transformationError && !this.textError && this.styles2Save()) {
                 const file = new Blob([JSON.stringify(this.styles2Save())], {'type': 'application/json'})
                 try {
@@ -478,37 +472,35 @@ export default {
                 }
             }
         },
-        async previewFn () {
-            let watermarker, ISw, overlay, file
+        async primaryPreview () {
             const general = general2Save(this.general)
-            let IS = styleList.methods.json2instruction(general)[0]
-            if (this.watermarker.open) {
-                if (this.watermarker.type === 'text') {
+            let IS = styleList.methods.json2instruction(general).instruction
+            if (this.mark.open) {
+                let markValue, file
+                if (this.mark.type === 'text') {
                     file = new Blob([JSON.stringify(this.font2Save(this.fontStyle))], {'type': 'application/json'})
-                    watermarker = watermarker2Save(this.watermarker, this.transformation)
-                } else if (this.watermarker.type === 'img') {
+                    markValue = mark2Save(this.mark, this.transformation)
+                } else {
                     file = await this.readOverlayFile(this.imgName)
-                    watermarker = watermarker2Save(this.watermarker, this.imgName)
+                    markValue = mark2Save(this.mark, this.imgName)
                 }
-                [ISw, overlay] = styleList.methods.json2instruction(watermarker)
-                IS += '--' + ISw
-                await putOverlayFile(overlay, file)
-                this.previewUrl = getImgxUrl(IS)
+                let instruction = styleList.methods.json2instruction(markValue)
+                await putOverlayFile(instruction.overlayFileName, file)
+                this.previewUrl = getImgxUrl(`${IS}--${instruction.instruction}`)
             } else {
                 this.previewUrl = getImgxUrl(IS)
             }
         },
         async seniorPreview () {
-            let fontName, imgName
-            let st = this.instructions.split('l_text:')[1]
-            let si = this.instructions.split('l_')[1]
-            if (!!st) {
-                fontName = st.split(':')[0] + '.json'
+            let texts = /.*l_text:(.*):.*/.exec(this.instructions)
+            let imgs = this.instructions.split('l_')[1]
+            if (!!texts) {
+                let fontName = texts[1] + '.json'
                 const file = await this.readOverlayFile(fontName)
                 await putOverlayFile(fontName, file)
                 this.seniorUrl = getImgxUrl(this.instructions)
-            } else if (!!si) {
-                imgName = si.split(',')[0].length < si.split('-')[0].length ? si.split(',')[0] + '.png' : si.split('-')[0] + '.png'
+            } else if (!!imgs) {
+                let imgName = imgs.split(',')[0].length < imgs.split('-')[0].length ? imgs.split(',')[0] + '.png' : imgs.split('-')[0] + '.png'
                 const file = await handler('getObject', {
                     Bucket: this.bucket,
                     Key: prefix.overlay + imgName
@@ -522,15 +514,15 @@ export default {
             if (this.tabValue === 'primary') {
                 const general = general2Save(this.general)
                 data.push(general)
-                if (this.watermarker.open) {
-                    let watermarkerData = {}
-                    if (this.watermarker.type === 'text') {
+                if (this.mark.open) {
+                    let markData = {}
+                    if (this.mark.type === 'text') {
                         this.saveFont(this.fontStyle)
-                        watermarkerData = watermarker2Save(this.watermarker, this.transformation)
-                    } else if (this.watermarker.type === 'img') {
-                        watermarkerData = watermarker2Save(this.watermarker, this.imgName)
+                        markData = mark2Save(this.mark, this.transformation)
+                    } else if (this.mark.type === 'img') {
+                        markData = mark2Save(this.mark, this.imgName)
                     }
-                    data.push(watermarkerData)
+                    data.push(markData)
                 }
             } else {
                 const insArray = this.instructions.split('--')
@@ -577,7 +569,7 @@ export default {
                 font_family: data.font_family,
                 font_size: parseInt(data.font_size),
                 font_color: data.font_color.substr(1).toLowerCase(),
-                text: this.watermarker.text,
+                text: this.mark.text,
                 background: data.background.substr(1).toLowerCase()
             }
         },
@@ -597,7 +589,8 @@ export default {
 }
 const putOverlayFile = (name, body) => {
     const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
-    const s3 = config({ previewAccessKey, previewSecretKey })
+    const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
+    console.log(s3)
     return new Promise((resolve, reject) => s3.putObject({
         Bucket: 'image-example',
         Key: prefix.overlay + name,
@@ -610,74 +603,6 @@ const putOverlayFile = (name, body) => {
 }
 const getImgxUrl = IS => {
     return 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg?' + Date.now()
-}
-const previewAccessKey = 'acc_drdrxp'
-const previewSecretKey = '11111111111111111111'
-const I2J = {
-    c_: 'crop',
-    w_: 'width',
-    h_: 'height',
-    g_: 'gravity',
-    x_: 'x',
-    y_: 'y',
-    q_: 'quality',
-    r_: 'radius',
-    a_: 'angle',
-    e_: 'effect',
-    o_: 'opacity',
-    bo_: 'border',
-    b_: 'background',
-    l_: 'overlay',
-    f_: 'format',
-    v_: 'version',
-    t_: 'transformation'
-}
-
-const generalDefult = {
-    crop: 'noCrop',
-    quality: 70,
-    format: 'original',
-    width: 200,
-    height: 400,
-    padType: 'pad',
-    fillType: 'fill',
-    thumbType: 'face',
-    fitType: 'fit',
-    dataType: 'pixel',
-    gravity: 'north_west',
-    opacity: 100,
-    angleType: 'angle',
-    angle: 0,
-    effect: 'noEffect',
-    brightnessValue: 30,
-    blurValue: 100,
-    sharpenValue: 100,
-    oilValue: 4,
-    colorValue: 80,
-    color: 'red',
-    pixelateValue: 5,
-    border: false,
-    borderSize: 1,
-    borderColor: '#ffffff',
-    padColor: '#ffffff',
-    x: 0,
-    y: 0
-}
-const watermarkerDefult = {
-    open: false,
-    type: 'text',
-    text: '',
-    gravity: 'north_west',
-    x: 0,
-    y: 0,
-    opacity: 100
-}
-const defaultFontStyle = {
-    text: '',
-    font_family: 'Songti SC',
-    font_size: 16,
-    background: '#ffffff',
-    font_color: '#ffffff'
 }
 const general2Save = data => {
     let saved = {}
@@ -697,11 +622,11 @@ const general2Save = data => {
             saved.x = data.x
             saved.y = data.y
         } else if (data.gravity === 'xy_center') {
-            saved.gravity === data.gravity
+            saved.gravity = data.gravity
             saved.x = data.x
             saved.y = data.y
         } else {
-            saved.gravity === data.gravity
+            saved.gravity = data.gravity
         }
     } else if (data.crop !== 'noCrop') {
         saved.crop = data.crop
@@ -723,22 +648,22 @@ const general2Save = data => {
         saved.angle = data.angleType
     }
 
-    const ef = data.effect
+    const effect = data.effect
 
-    if (ef === 'oil_paint') {
-        saved.effect = ef + ':' + data.oilValue
-    } else if (ef === 'brightness') {
-        saved.effect = ef + ':' + data.brightnessValue
-    } else if (ef === 'blur') {
-        saved.effect = ef + ':' + data.blurValue
-    } else if (ef === 'pixelate') {
-        saved.effect = ef + ':' + data.pixelateValue
-    } else if (ef === 'sharpen') {
-        saved.effect = ef + ':' + data.sharpenValue
-    } else if (ef === 'color') {
+    if (effect === 'oil_paint') {
+        saved.effect = effect + ':' + data.oilValue
+    } else if (effect === 'brightness') {
+        saved.effect = effect + ':' + data.brightnessValue
+    } else if (effect === 'blur') {
+        saved.effect = effect + ':' + data.blurValue
+    } else if (effect === 'pixelate') {
+        saved.effect = effect + ':' + data.pixelateValue
+    } else if (effect === 'sharpen') {
+        saved.effect = effect + ':' + data.sharpenValue
+    } else if (effect === 'color') {
         saved.effect = data.color + ':' + data.colorValue
-    } else if (ef !== 'noEffect') {
-        saved.effect = ef
+    } else if (effect !== 'noEffect') {
+        saved.effect = effect
     } else {}
 
     if (data.border) {
@@ -749,7 +674,7 @@ const general2Save = data => {
     }
     return saved
 }
-const watermarker2Save = (data, name) => {
+const mark2Save = (data, name) => {
     let saved = {
         x: parseInt(data.x),
         y: parseInt(data.y),
@@ -789,67 +714,59 @@ const isPrimary = styles => {
 }
 const styles2Front = styles => {
     let ganeral = _.clone(generalDefult)
-    let watermarker = _.clone(watermarkerDefult)
+    let mark = _.clone(markerDefult)
     let overlay = ''
-    console.log(watermarkerDefult)
     styles.forEach(item => {
-        // checkout watermarker or general
+        // checkout mark or general
         if (Object.keys(item).includes('overlay')) {
             if (/^text:.+/.test(item.overlay)) {
                 overlay = item.overlay.split(':')[1] + '.json'
             } else {
                 overlay = item.overlay + '.png'
             }
-            _.assignIn(watermarker, watermarker2Front(item))
+            _.assignIn(mark, mark2Front(item))
         } else {
             _.assignIn(ganeral, general2Front(item))
         }
     })
-    return { ganeral, watermarker, overlay }
+    return { ganeral, mark, overlay }
 }
 const general2Front = data => {
-    let front = {}
-    Object.assign(front, data)
+    let front = _.clone(data)
+    const crop = data.crop
+    let frontCrop
 
-    const cr = data.crop
-    let frontC
-
-    if (cr && (cr === 'mfit' || cr === 'fit' || cr === 'limit')) {
-        frontC = 'fit'
-        front.fitType = cr
-    } else if (cr && (cr === 'pad' || cr === 'mpad' || cr === 'lpad')) {
-        frontC = 'pad'
-        front.padType = cr
-        if (data.background) {
-            front.padColor = '#' + data.background.substr(0, 6)
-        }
-    } else if (cr && (cr === 'fill' || cr === 'lfill')) {
-        frontC = 'fill'
-        front.fillType = cr
-    } else if (cr && cr === 'thumb') {
-        frontC = 'thumb'
-        front.thumbType = data.gravity
-    } else if (cr && cr === 'crop') {
-        frontC = 'crop'
-        if (data.gravity) {
-            front.gravity = data.gravity
-            if (data.x || data.y) {
-                front.x = data.x || 0
-                front.y = data.y || 0
+    if (crop) {
+        if (crop === 'mfit' || crop === 'fit' || crop === 'limit') {
+            frontCrop = 'fit'
+            front.fitType = crop
+        } else if (crop === 'pad' || crop === 'mpad' || crop === 'lpad') {
+            frontCrop = 'pad'
+            front.padType = crop
+            if (data.background) {
+                front.padColor = '#' + data.background.substr(0, 6)
             }
-        } else if (data.x || data.y) {
-            front.gravity = 'noGravity'
+        } else if (crop === 'fill' || crop === 'lfill') {
+            frontCrop = 'fill'
+            front.fillType = crop
+        } else if (crop === 'thumb') {
+            frontCrop = 'thumb'
+            front.thumbType = data.gravity
+        } else if (crop === 'crop') {
+            frontCrop = 'crop'
             front.x = data.x || 0
             front.y = data.y || 0
+            front.gravity = data.gravity ? data.gravity : 'noGravity'
+        } else {
+            frontCrop = crop
         }
-    } else if (cr) {
-        frontC = cr
     } else {
-        frontC = 'noCrop'
+        frontCrop = 'noCrop'
     }
-    front.crop = frontC
 
-    if (data.width) {
+    front.crop = frontCrop
+
+    if (data.width < 1) {
         front.width = data.width > 1 ? data.width : data.width * 100
         front.dataType = data.width > 1 ? 'pixel' : 'percent'
     }
@@ -862,38 +779,37 @@ const general2Front = data => {
         front.angle = data.angle === 'vflip' || data.angle === 'hflip' ? 0 : data.angle
     }
 
-    const ef = data.effect
-    if (ef) {
+    const effect = data.effect
+    if (effect) {
         const effectArray = ['grayscale', 'oil_paint', 'negate', 'brightness', 'blur', 'pixelate', 'sharpen', 'auto_contrast', 'improve']
         const colorArray = ['sepia', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta']
-        if (effectArray.includes(ef) || effectArray.includes(ef.split(':')[0])) {
-            front.effect = ef
-            if (ef.split('oil_piant:')[1]) {
-                front.oilValue = parseInt(ef.split('oil_piant:')[1])
-            } else if (ef.split('brightness:')[1]) {
-                front.brightnessValue = parseInt(ef.split('brightness:')[1])
-            } else if (ef.split('blur:')[1]) {
-                front.blurValue = parseInt(ef.split('blur:')[1])
-            } else if (ef.split('pixelate:')[1]) {
-                front.pixelateValue = parseInt(ef.split('pixelate:')[1])
-            } else if (ef.split('sharpen:')[1]) {
-                front.sharpenValue = parseInt(ef.split('sharpen:')[1])
+        if (effectArray.includes(effect) || effectArray.includes(effect.split(':')[0])) {
+            front.effect = effect
+            if (effect.split('oil_piant:')[1]) {
+                front.oilValue = parseInt(effect.split('oil_piant:')[1])
+            } else if (effect.split('brightness:')[1]) {
+                front.brightnessValue = parseInt(effect.split('brightness:')[1])
+            } else if (effect.split('blur:')[1]) {
+                front.blurValue = parseInt(effect.split('blur:')[1])
+            } else if (effect.split('pixelate:')[1]) {
+                front.pixelateValue = parseInt(effect.split('pixelate:')[1])
+            } else if (effect.split('sharpen:')[1]) {
+                front.sharpenValue = parseInt(effect.split('sharpen:')[1])
             }
-        } else if (colorArray.includes(ef) || colorArray.includes(ef.split(':')[0])) {
+        } else if (colorArray.includes(effect) || colorArray.includes(effect.split(':')[0])) {
             front.effect = 'color'
-            front.color = ef.split(':')[0]
-            if (ef.split(':')[1]) {
-                front.colorValue = parseInt(ef.split(':')[1])
+            front.color = effect.split(':')[0]
+            if (effect.split(':')[1]) {
+                front.colorValue = parseInt(effect.split(':')[1])
             }
         }
     }
 
-    const bo = data.border
-    if (bo) {
+    const border = data.border
+    if (border) {
         front.border = true
-        front.borderSize = bo.split('_')[0] || 1
-        const borderColor = '#' + bo.split('_')[1].substr(0, 6)
-        front.borderColor = borderColor || '#BF4040'
+        front.borderSize = border.split('_')[0] || 1
+        front.borderColor = border.split('_')[1].substr(0, 6) ? '#' + border.split('_')[1].substr(0, 6) : '#BF4040'
     }
     if (data.quality) {
         front.quality = parseInt(data.quality)
@@ -904,8 +820,8 @@ const general2Front = data => {
     return front
 }
 
-const watermarker2Front = data => {
-    let front = _.clone(watermarkerDefult)
+const mark2Front = data => {
+    let front = _.clone(markerDefult)
     front.open = true
     if (data.overlay.substr(0, 5) === 'text:') {
         front.type = 'text'
@@ -930,202 +846,7 @@ const watermarker2Front = data => {
     }
     return front
 }
-const allFontList = [{
-    value: 'Songti SC',
-    label: '宋体'
-}, {
-    value: 'Heiti SC',
-    label: '黑体'
-}, {
-    value: 'Kaiti SC',
-    label: '楷体'
-}, {
-    value: 'Microsoft YaHei',
-    label: '微软雅黑'
-}, {
-    value: 'Adobe Song Std',
-    label: 'Adobe Song Std'
-}, {
-    value: 'Adobe Heiti Std',
-    label: 'Adobe Heiti Std'
-}, {
-    value: 'Adobe Kaiti Std',
-    label: 'Adobe Kaiti Std'
-}, {
-    value: 'Adobe Fangsong Std',
-    label: 'Adobe Fangsong Std'
-}, {
-    value: 'Batang',
-    label: 'Batang'
-}, {
-    value: 'Bookshelf Symbol 7',
-    label: 'Bookshelf Symbol 7'
-}, {
-    value: 'Brush Script MT',
-    label: 'Brush Script MT'
-}, {
-    value: 'Calibri',
-    label: 'Calibri'
-}, {
-    value: 'Cambria',
-    label: 'Cambria'
-}, {
-    value: 'Candara',
-    label: 'Candara'
-}, {
-    value: 'Candelita',
-    label: 'Candelita'
-}, {
-    value: 'Consolas',
-    label: 'Consolas'
-}, {
-    value: 'Constantia',
-    label: 'Constantia'
-}, {
-    value: 'Corbel',
-    label: 'Corbel'
-}, {
-    value: 'Franklin Gothic Book',
-    label: 'Franklin Gothic Book'
-}, {
-    value: 'Franklin Gothic Medium',
-    label: 'Franklin Gothic Medium'
-}, {
-    value: 'Gill Sans MT',
-    label: 'Gill Sans MT'
-}, {
-    value: 'Gulim',
-    label: 'Gulim'
-}, {
-    value: 'Hannotate SC',
-    label: 'Hannotate SC'
-}, {
-    value: 'Hannotate TC',
-    label: 'Hannotate TC'
-}, {
-    value: 'HanziPen SC',
-    label: 'HanziPen SC'
-}, {
-    value: 'HanziPen TC',
-    label: 'HanziPen TC'
-}, {
-    value: 'Hiragino Sans GB',
-    label: 'Hiragino Sans GB'
-}, {
-    value: 'Lantinghei SC',
-    label: 'Lantinghei SC'
-}, {
-    value: 'Lantinghei TC',
-    label: 'Lantinghei TC'
-}, {
-    value: 'Libian SC',
-    label: 'Libian SC'
-}, {
-    value: 'Lucida Console',
-    label: 'Lucida Console'
-}, {
-    value: 'Lucida Sans Unicode',
-    label: 'Lucida Sans Unicode'
-}, {
-    value: 'MJNgai PRC',
-    label: 'MJNgai PRC'
-}, {
-    value: 'MS Gothic',
-    label: 'MS Gothic'
-}, {
-    value: 'MS Mincho',
-    label: 'MS Mincho'
-}, {
-    value: 'MS PGothic',
-    label: 'MS PGothic'
-}, {
-    value: 'MS PMincho',
-    label: 'MS PMincho'
-}, {
-    value: 'MS Reference Sans Serif',
-    label: 'MS Reference Sans Serif'
-}, {
-    value: 'Marlett',
-    label: 'Marlett'
-}, {
-    value: 'Meiryo',
-    label: 'Meiryo'
-}, {
-    value: 'Microsoft YaHei',
-    label: 'Microsoft YaHei'
-}, {
-    value: 'PMingLiU',
-    label: 'PMingLiU'
-}, {
-    value: 'Perpetua',
-    label: 'Perpetua'
-}, {
-    value: 'STFangsong',
-    label: 'STFangsong'
-}, {
-    value: 'STHeiti',
-    label: 'STHeiti'
-}, {
-    value: 'STHupo',
-    label: 'STHupo'
-}, {
-    value: 'STKaiti',
-    label: 'STKaiti'
-}, {
-    value: 'STLiti',
-    label: 'STLiti'
-}, {
-    value: 'STSong',
-    label: 'STSong'
-}, {
-    value: 'STXingkai',
-    label: 'STXingkai'
-}, {
-    value: 'STXinwei',
-    label: 'STXinwei'
-}, {
-    value: 'STZhongsong',
-    label: 'STZhongsong'
-}, {
-    value: 'SentyPaperCut',
-    label: 'SentyPaperCut'
-}, {
-    value: 'SimHei',
-    label: 'SimHei'
-}, {
-    value: 'SimSun',
-    label: 'SimSun'
-}, {
-    value: 'SimSun-ExtB',
-    label: 'SimSun-ExtB'
-}, {
-    value: 'Songti TC',
-    label: 'Songti TC'
-}, {
-    value: 'Source Han Sans CN',
-    label: 'Source Han Sans CN'
-}, {
-    value: 'Tw Cen MT',
-    label: 'Tw Cen MT'
-}, {
-    value: 'Villasukat',
-    label: 'Villasukat'
-}, {
-    value: 'Wawati SC',
-    label: 'Wawati SC'
-}, {
-    value: 'Weibei SC',
-    label: 'Weibei SC'
-}, {
-    value: 'Xingkai SC',
-    label: 'Xingkai SC'
-}, {
-    value: 'Yuanti SC',
-    label: 'Yuanti SC'
-}, {
-    value: 'Yuppy SC',
-    label: 'Yuppy SC'
-}]
+
 </script>
 
 <style lang="less" scoped>

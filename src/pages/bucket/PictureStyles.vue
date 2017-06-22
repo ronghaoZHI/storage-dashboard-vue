@@ -100,9 +100,9 @@ export default {
             const overlayList = new Set()
             _.each(data, item => {
                 const itemConvert = this.json2instruction(item)
-                ISArry.push(itemConvert[0])
-                if (!!itemConvert[1]) {
-                    overlayList.add(itemConvert[1])
+                ISArry.push(itemConvert.instruction)
+                if (!!itemConvert.overlayFileName) {
+                    overlayList.add(itemConvert.overlayFileName)
                 }
                 if (!!item.format) {
                     listItem.quality = item.quality || ''
@@ -152,7 +152,10 @@ export default {
                 item = J2I[key] + value
                 instructionArray.push(item)
             })
-            return [instructionArray.join(','), overlayFileName]
+            return {
+                instruction: instructionArray.join(','),
+                overlayFileName
+            }
         },
         async previewModal (style) {
             this.$Loading.start()
