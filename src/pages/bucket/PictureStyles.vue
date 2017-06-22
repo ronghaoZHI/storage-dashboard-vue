@@ -30,6 +30,7 @@
 <script>
 import { getAWS, handler, config } from '@/service/Aws'
 import { prefix, Utf8ArrayToStr } from '@/service/BucketService'
+import { J2I, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/bucket/upload'
 import iView from 'iview'
 export default {
@@ -72,9 +73,7 @@ export default {
                 const fileList = res.Contents
                 _.each(fileList, file => {
                     // make sure this is a json file
-                    if (/.json$/.test(file.Key)) {
-                        this.getObject(file)
-                    }
+                    /.json$/.test(file.Key) && this.getObject(file)
                 })
                 this.$Loading.finish()
             } catch (error) {
@@ -168,7 +167,7 @@ export default {
             }
             this.clipUrl = 'http://imgx-ss.bscstorage.com/image-example/' + style.IS + '/dashboard.jpg?' + Date.now()
             this.selectedStyleName = style.ruleName
-            this.showImageModal = true
+            this.showImageModal = true 
             this.$Loading.finish()
         },
         async putOverlayObject (fileName) {
@@ -176,7 +175,7 @@ export default {
                 Bucket: this.bucket,
                 Key: prefix.overlay + fileName
             })
-            const s3 = config({ previewAccessKey, previewSecretKey })
+            const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
             return await new Promise((resolve, reject) => s3.putObject({
                 Bucket: 'image-example',
                 Key: prefix.overlay + fileName,
@@ -196,14 +195,12 @@ export default {
         }
     },
     watch: {
-        // the contents array need refresh when the $route value changed
         '$route' (to, from) {
             to.path !== from.path && this.getData()
         }
     }
 }
-const previewAccessKey = 'acc_drdrxp'
-const previewSecretKey = '11111111111111111111'
+
 const getURL = async (bucket, key) => {
     try {
         let params = { Bucket: bucket, Key: key }
@@ -216,25 +213,7 @@ const getURL = async (bucket, key) => {
         console.log(error)
     }
 }
-const J2I = {
-    crop: 'c_',
-    width: 'w_',
-    height: 'h_',
-    gravity: 'g_',
-    x: 'x_',
-    y: 'y_',
-    quality: 'q_',
-    radius: 'r_',
-    angle: 'a_',
-    effect: 'e_',
-    opacity: 'o_',
-    border: 'bo_',
-    background: 'b_',
-    format: 'f_',
-    version: 'v_',
-    transformation: 't_',
-    overlay: 'l_'
-}
+
 const styleHeaderSetting = [{
     title: 'Rule name(规则名)',
     key: 'ruleName',

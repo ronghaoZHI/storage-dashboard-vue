@@ -224,6 +224,8 @@ export const I2J = {
     t_: 'transformation'
 }
 
+export const J2I = _.invert(I2J)
+
 export const generalDefult = {
     crop: 'noCrop',
     quality: 70,

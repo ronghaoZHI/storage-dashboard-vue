@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bsc-upload">
         <div class="layout-bsc-toolbar">
             <div>
                 <Button @click="back">{{$t("PUBLIC.BACK")}}</Button>
@@ -152,68 +152,75 @@ export default {
 
 </script>
 <style lang="less" scoped>
-.section-file-upload {
-    width: 100%;
-    height: 200px;
-    border: 2px dashed #d7dde4;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color .2s ease;
-    .ivu-upload-input {
-        display: none;
-    }
-    p {
-        font-size: 16px;
-    }
-}
+@import '../../styles/index.less';
 
-.section-file-list {
-    margin-top: 5px;
-}
-
-.section-file-upload:hover {
-    border: 2px dashed #39f;
-}
-
-.upload-hover{
-    border: 2px dashed #39f;
-}
-
-.list-file {
-    width: 100%;
-    height: 50px;
-    background: #e9e9e9;
-    padding: 0 8px;
-    margin: 3px 0;
-    border-radius: 3px;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    .upload-span-name {
-        flex: 5;
-    }
-    .upload-span-size {
-        width: 60px;
-        text-align: right;
-        margin-right: 40px;
-    }
-    .upload-span-status {
-        width: 100px;
-    }
-    button {
-        width: 22px;
-        border: 0;
-        background: 0;
+.@{css-prefix}upload {
+    .section-file-upload {
+        .wh(100%,200px);
+        border: 2px dashed #d7dde4;
+        border-radius: 5px;
+        text-align: center;
         cursor: pointer;
+        transition: border-color .2s ease;
+
+        .ivu-upload-input {
+            display: none;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        &:hover {
+            border: 2px dashed #39f;
+        }
     }
-    button:focus {
-        background: #d9d9d9;
-        outline: 0
-    }
-    div {
-        flex: 6;
+
+    .section-file-list {
+        margin-top: 5px;
+
+        .list-file {
+            width: 100%;
+            height: 50px;
+            background: #e9e9e9;
+            padding: 0 8px;
+            margin: 3px 0;
+            border-radius: 3px;
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            .upload-span-name {
+                flex: 5;
+            }
+
+            .upload-span-size {
+                width: 60px;
+                text-align: right;
+                margin-right: 40px;
+            }
+
+            .upload-span-status {
+                width: 100px;
+            }
+
+            button {
+                width: 22px;
+                border: 0;
+                background: 0;
+                cursor: pointer;
+            }
+
+            button:focus {
+                background: #d9d9d9;
+                outline: 0
+            }
+            
+            div {
+                flex: 6;
+            }
+        }
     }
 }
 </style>
