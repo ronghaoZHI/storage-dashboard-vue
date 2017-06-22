@@ -1,6 +1,6 @@
 <template>
     <div class="bsc-user">
-        <Button type="primary" v-show="!isAdmin" @click="createSubUserModal = true">新建子账号</Button>
+        <Button type="primary" v-show="!isAdmin" @click="openCreateSubUserModal">新建子账号</Button>
         <Button type="primary" v-show="isAdmin" @click="createUserModal = true">创建账号</Button>
         <Button type="primary" v-show="isAdmin" @click="openBindUserModal">关联账号</Button>
         <Table class="table" :show-header="true" :stripe="true" :context="self" :highlight-row="true" :columns="userHeader" :data="userList" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
@@ -57,7 +57,22 @@
                 <span class="separator-icon"></span>
                 <span class="separator-info">权限分配</span>
             </div>
-            <Table class="table" :show-header="true" :stripe="true" :context="self" :highlight-row="true" :columns="bucketHeader" :data="createSubUserForm.acl" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
+            <table class="table-bucket-acl">
+                <thead>
+                    <tr>
+                        <th>Bucket name</th>
+                        <th>Bucekt permission</th>
+                        <th>File permission</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in createSubUserForm.acl">
+                        <td>{{row.bucket}}</td>
+                        <td><Checkbox v-model="row.bucket_acl_obj.READ">Read</Checkbox> <Checkbox v-model="row.bucket_acl_obj.WRITE">Write</Checkbox></td>
+                        <td><Checkbox v-model="row.file_acl_obj.READ">Read</Checkbox> <Checkbox v-model="row.file_acl_obj.WRITE">Write</Checkbox></td>
+                    </tr>
+                </tbody>
+            </table>
         </Modal>
     </div>
 </template>
@@ -76,7 +91,6 @@ export default {
             createUserModal: false,
             bindUserModal: false,
             isEditSubUser: false,
-            bucketHeader: bucketHeaderSetting,
             iconSize: 18,
             isAdmin: user.state && user.state.type === 'admin',
             createUserForm: {
@@ -103,17 +117,7 @@ export default {
                     { type: 'string', message: 'Email format is incorrect', trigger: 'blur' }
                 ]
             },
-            createSubUserForm: {
-                username: '',
-                email: '',
-                password: '',
-                company: '',
-                acl: [{
-                    bucket: '',
-                    bucket_acl_obj: {READ: false, WRITE: false},
-                    file_acl_obj: {READ: false, WRITE: false}
-                }]
-            },
+            createSubUserForm: initSubUser(),
             subUserRuleValidate: {
                 username: [
                     { required: true, message: 'Requires user name', trigger: 'blur' }
@@ -143,17 +147,19 @@ export default {
     },
     methods: {
         async getUserList () {
-            if (this.isAdmin) {
-                this.userList = _.each(await this.$http.get(BOUND_USER), (user) => {
-                    user.type = this.userType(user)
-                })
-            } else {
-                try {
+            this.$Loading.start()
+            try {
+                if (this.isAdmin) {
+                    this.userList = _.each(await this.$http.get(BOUND_USER), (user) => {
+                        user.type = this.userType(user)
+                    })
+                    this.$Loading.finish()
+                } else {
                     let res = await handler('listBuckets')
                     let users = await this.$http.get(SUB_USER)
                     Promise.all(Array.map(res.Buckets, (bucket) => {
-                        return this.$http.get(SUB_USER_ACL, {params: {bucket: bucket.Name}}).then(acl => {
-                            return {bucket: bucket.Name, acl: acl}
+                        return this.$http.get(SUB_USER_ACL, { params: { bucket: bucket.Name } }).then(acl => {
+                            return { bucket: bucket.Name, acl: acl }
                         })
                     })).then(res => {
                         this.userList = _.each(users, (user) => {
@@ -161,7 +167,6 @@ export default {
                             user.type = this.userType(user)
                             _.each(res, (bucket) => {
                                 _.each(bucket.acl, (acl) => {
-                                    convertObject2String({})
                                     if (user.email === acl.email && (acl.bucket_acl.length !== 0 || acl.file_acl.length !== 0)) {
                                         user.acl.push({
                                             bucket: bucket.bucket,
@@ -176,10 +181,11 @@ export default {
                         })
                     })
                     this.bucketList = res.Buckets
-                } catch (error) {
-                    console.log(error)
-                    this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
+                    this.$Loading.finish()
                 }
+            } catch (error) {
+                this.$Loading.error()
+                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
             }
         },
         async openBindUserModal () {
@@ -196,12 +202,18 @@ export default {
             this.bindUserModal = true
         },
         async bindUser () {
-            await Promise.all(Array.map(this.allUserList, (user) => {
-                if (user.selected) {
-                    this.$http.post(BIND_USER, { email: user.email })
-                    this.userList.push({ ...user, type: this.userType(user) })
-                }
-            }))
+            this.$Loading.start()
+            try {
+                await Promise.all(Array.map(this.allUserList, (user) => {
+                    if (user.selected) {
+                        this.$http.post(BIND_USER, { email: user.email })
+                        this.userList.push({ ...user, type: this.userType(user) })
+                    }
+                }))
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+            }
         },
         unbindUserConfirm (user, index) {
             this.$Modal.confirm({
@@ -221,25 +233,18 @@ export default {
         async getAllUser () {
             this.allUserList = await this.$http.get(ALL_USER)
         },
-        async getUserAcl () {
-            try {
-                let res = await handler('listBuckets')
-                await Promise.all(Array.map(res.Buckets, (bucket) => {
-                    this.$http.get(SUB_USER_ACL, {params: {bucket: bucket.Name}})
-                }))
-            } catch (error) {
-                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
-            };
-        },
         createUser () {
             let self = this
             this.$refs['createUserForm'].validate((valid) => {
                 if (valid) {
+                    this.$Loading.start()
                     self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
                         self.createUserForm = { username: '', email: '', password: '', company: '', type: 'normal' }
                         this.getUserList()
                         this.$Message.success('Create user success')
+                        this.$Loading.finish()
                     }, error => {
+                        this.$Loading.error()
                         this.$Message.error(error)
                     })
                 } else {
@@ -247,17 +252,31 @@ export default {
                 }
             })
         },
+        openCreateSubUserModal () {
+            _.extend(this, {
+                isEditSubUser: false,
+                createSubUserModal: true,
+                createSubUserForm: initSubUser(Array.map(this.bucketList, (bucket) => {
+                    return {
+                        bucket: bucket.Name,
+                        bucket_acl_obj: { READ: false, WRITE: false },
+                        file_acl_obj: { READ: false, WRITE: false }
+                    }
+                }))
+            })
+        },
         async createSubUser () {
-            if (this.editSubUser) {
+            if (this.isEditSubUser) {
                 this.editSubUser()
             } else {
                 try {
+                    this.$Loading.start()
                     let user = await this.$http.post(CREATE_SUB_USER, {...this.createSubUserForm, type: 'sub'})
-                    Promise.all(Array.map(this.bucketList, (bucket) => {
+                    Promise.all(Array.map(this.createSubUserForm.acl, (bucket) => {
                         return this.$http.post(REDIRECT_BUCKET, {
-                            original: bucket.Name,
+                            original: bucket.bucket,
                             email: user.email,
-                            redirect: bucket.Name + '-' + user.email.replace(/\W|_/g, '').toLowerCase(),
+                            redirect: bucket.bucket + '-' + user.username.replace(/\W|_/g, '').toLowerCase(),
                             bucket_acl: ['READ'],
                             file_acl: ['READ']
                         })
@@ -265,46 +284,43 @@ export default {
                         this.getUserList()
                         this.$Message.success('Create sub user success')
                     })
-                } catch (error) {}
+                } catch (error) {
+                    this.$Loading.error()
+                }
             }
         },
         editSubUserModal (user) {
-            this.createSubUserForm = user
-            this.isEditSubUser = true
-            this.createSubUserModal = true
+            _.extend(this, {
+                isEditSubUser: true,
+                createSubUserModal: true,
+                createSubUserForm: user.acl.length > 0 ? user : _.extend(user, {acl: (Array.map(this.bucketList, (bucket) => {
+                    return {
+                        bucket: bucket.Name,
+                        bucket_acl_obj: { READ: false, WRITE: false },
+                        file_acl_obj: { READ: false, WRITE: false }
+                    }
+                }))})
+            })
         },
         async editSubUser () {
-            console.log(this.createSubUserForm)
             try {
+                this.$Loading.start()
                 Promise.all(Array.map(this.createSubUserForm.acl, (acl) => {
+                    console.log('acls', this.createSubUserForm.acl)
                     return this.$http.post(UPDATE_SUB_USER_ACL, {
                         email: this.createSubUserForm.email,
                         bucket: acl.bucket,
-                        bucket_acl: ['READ'],
-                        file_acl: ['READ']
+                        bucket_acl: convertObject2Array(acl.bucket_acl_obj),
+                        file_acl: convertObject2Array(acl.file_acl_obj)
                     })
                 })).then(res => {
                     this.getUserList()
-                    this.$Message.success('Create sub user success')
+                    this.$Message.success('Update sub user success')
                 })
             } catch (error) {
-
+                this.$Loading.error()
             }
-        },
-        createRedirectBucket () {
-            let self = this
-            this.$refs['redirectBucketForm'].validate((valid) => {
-                if (valid) {
-                    self.$http.post(REDIRECT_BUCKET, {...self.redirectBucketForm, original: self.selectedBucket.Name}).then(res => {
-                        self.redirectBucketForm = { redirect: '', email: '' }
-                        this.$Message.success('Create bucket alias success')
-                    }, error => {
-                        this.$Message.error(error)
-                    })
-                } else {
-                    this.$Message.error('Input validate failed')
-                }
-            })
+            this.isEditSubUser = false
         },
         userType (user) {
             let type = user.info.type
@@ -384,44 +400,35 @@ const adminHeaderSetting = [
     }
 ]
 
-const bucketHeaderSetting = [
-    {
-        title: 'Bucket name',
-        width: 150,
-        align: 'left',
-        key: 'bucket'
-    },
-    {
-        title: 'Bucekt permission',
-        width: 200,
-        align: 'left',
-        key: 'bucket_acl',
-        render (row, column, index) {
-            return `<Checkbox v-model="row.bucket_acl_obj.READ">Read</Checkbox>    <Checkbox v-model="row.bucket_acl_obj.WRITE">Write</Checkbox>`
-        }
-    },
-    {
-        title: 'File permission',
-        width: 200,
-        align: 'left',
-        key: 'file_acl',
-        render (row, column, index) {
-            return `<Checkbox v-model="row.file_acl_obj.READ">Read</Checkbox>    <Checkbox v-model="row.file_acl_obj.WRITE">Write</Checkbox>`
-        }
+const initSubUser = (acls) => {
+    return {
+        username: '',
+        email: '',
+        password: '',
+        company: '',
+        acl: acls || [{
+            bucket: '',
+            bucket_acl_obj: { READ: false, WRITE: false },
+            file_acl_obj: { READ: false, WRITE: false }
+        }]
     }
-]
+}
 
-const convertObject2String = (object) => {
+const convertObject2Array = (object) => {
     if (!object) { return }
     let truePermission = {}
     _.each(object, function (value, key) {
         if (value) { truePermission[key] = true }
     })
-    return _.keys(truePermission).toString()
+    console.log(object, truePermission)
+    return _.keys(truePermission)
 }
 
 const convertArray2Object = (array) => {
-    let aclObj = {}
+    let aclObj = {
+        READ: false,
+        WRITE: false
+    }
     if (array.length) {
         _.each(array, item => {
             aclObj[item] = true
@@ -482,5 +489,27 @@ const convertArray2Object = (array) => {
         background-color: @user-card-backgrand-hover;
     }
 }
+
+
+.table-bucket-acl {
+    width: 100%;    
+    border: 1px solid #d7dde4;
+    border-collapse:collapse;
+
+    th,td {
+        width: 33%;
+        height: 40px;
+        line-height: 40px;
+        text-align: left;
+        padding-left: 12px;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        border-bottom: 1px solid #e3e8ee;
+    }
+
+    tr {
+    }
+}
+
 
 </style>
