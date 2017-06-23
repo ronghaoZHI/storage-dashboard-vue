@@ -506,7 +506,7 @@ export const messages = {
             PROSCESS_PARAM: '处理参数',
             CROP: '裁剪',
             CROP_SCALE: '固定宽高缩放',
-            CROP_FILL: '原比例裁剪',
+            CROP_FILL: '等比例裁剪',
             CROP_PAD: '背景填充等比例缩放',
             CROP_CROP: '指定尺寸位置裁剪',
             CROP_THUMB: '定位人脸裁剪',

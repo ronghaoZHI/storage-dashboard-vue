@@ -226,7 +226,7 @@ export const I2J = {
 
 export const generalDefult = {
     crop: 'noCrop',
-    quality: 70,
+    quality: 100,
     format: 'original',
     width: 200,
     height: 400,

@@ -31,20 +31,20 @@
                                 <Radio label="noCrop">{{$t("STORAGE.CROP_NONE")}}</Radio>
                                 <Radio label="scale">{{$t("STORAGE.CROP_SCALE")}}</Radio>
                                 <Radio label="fit">{{$t("STORAGE.CROP_FIT")}}</Radio>
-                                <Radio label="pad">{{$t("STORAGE.CROP_PAD")}}</Radio>
-                                <p style='height: 10px;'></p>
                                 <Radio label="fill">{{$t("STORAGE.CROP_FILL")}}</Radio>
+                                <p style='height: 10px;'></p>
                                 <Radio label="crop">{{$t("STORAGE.CROP_CROP")}}</Radio>
                                 <Radio label="thumb">{{$t("STORAGE.CROP_THUMB")}}</Radio>
+                                <Radio label="pad">{{$t("STORAGE.CROP_PAD")}}</Radio>
                             </Radio-group>
                         </div>
                         <div class="form-item" v-if="general.crop === 'fit'">
-                            <Select v-model="general.fitType" style="width:300px;margin-left:73px;">
+                            <Select v-model="general.fitType" class="sub-select">
                                 <Option v-for="item in fitList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                         </div>
                         <div class="form-item" v-if="general.crop === 'pad'">
-                            <Select v-model="general.padType" style="width:300px;margin-left:73px;margin-right:8px">
+                            <Select v-model="general.padType" class="sub-select" style="margin-right:8px">
                                 <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                             <div class="color-box">
@@ -53,12 +53,12 @@
                             </div><!--padColor-->
                         </div>
                         <div class="form-item" v-if="general.crop === 'fill'">
-                            <Select v-model="general.fillType" style="width:300px;margin-left:73px;">
+                            <Select v-model="general.fillType" class="sub-select">
                                 <Option v-for="item in fillList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                         </div>
                         <div class="form-item" v-if="general.crop === 'thumb'">
-                            <Select v-model="general.thumbType" style="width:300px;margin-left:73px;">
+                            <Select v-model="general.thumbType" class="sub-select">
                                 <Option v-for="item in thumbList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                         </div><!--thumb gravity-->
@@ -93,17 +93,17 @@
                                 <Radio label="pixel">像素(px)</Radio>
                                 <Radio label="percent">百分比(%)</Radio>
                             </Radio-group>
-                            <span class="form-label">W : </span>
+                            <span>W : </span>
                             <div class="input-text-box">
                                 <input type='number' v-model.number="general.width">
-                                <span v-if="general.dataType === 'pixel'" class="form-label">px</span>
-                                <span v-else class="form-label">%</span>
+                                <span v-if="general.dataType === 'pixel'">px</span>
+                                <span v-else>%</span>
                             </div>
-                            <span class="form-label">H : </span>
+                            <span>H : </span>
                             <div class="input-text-box">
                                 <input type='number' v-model.number="general.height">
-                                <span v-if="general.dataType === 'pixel'" class="form-label">px</span>
-                                <span v-else class="form-label">%</span>
+                                <span v-if="general.dataType === 'pixel'">px</span>
+                                <span v-else>%</span>
                             </div>
                         </div><!--width & height-->
                         <div class="form-item">
@@ -117,11 +117,11 @@
                                 <Option v-for="item in formatList" :value="item" :key="item">{{ item }}</Option>
                             </Select>
                         </div><!--format-->
+                        <div class="separator-line"></div>
                         <div class="form-item">
                             <Button type="ghost" @click="setMore = !setMore">更多设置 <Icon type="chevron-down" v-if="!setMore"></Icon><Icon type="chevron-up" v-else></Icon></Button>
                         </div>
                         <div v-if="setMore">
-                            <div class="separator-line"></div>
                             <div class="form-item">
                                 <span class="form-label">翻转模式 : </span>
                                 <Radio-group v-model="general.angleType" style='vertical-align: text-top'>
@@ -130,7 +130,7 @@
                             </div><!--angleType-->
                             <div class="form-item" v-if="general.angleType === 'angle'">
                                 <span class="form-label">角度 : </span>
-                                <div class="input-text-box" style="margin-left:25px;">
+                                <div class="input-text-box">
                                     <input type='number' v-model="general.angle">
                                 </div>
                             </div><!--angle-->
@@ -174,7 +174,7 @@
                             </div><!--oilValue-->
                             <div class="form-item" v-if="general.effect === 'color'">
                                 <span class="form-label">颜色 : </span>
-                                <div class="color-selector mar-l20">
+                                <div class="color-selector">
                                     <input type="radio" value="sepia" v-model="general.color" style="background-color:sepia"></Radio>
                                     <input type="radio" value="red" v-model="general.color" style="background-color:red"></Radio>
                                     <input type="radio" value="green" v-model="general.color" style="background-color:green"></Radio>
@@ -191,7 +191,7 @@
                             </div><!--colorValue-->
                             <div class="form-item" v-if="general.effect === 'pixelate'">
                                 <span class="form-label">像素值 : </span>
-                                <Slider class="pic-slider mar-l15" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
+                                <Slider class="pic-slider" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
                                 <Input v-model="general.pixelateValue" class="slider-input"></Input>
                             </div><!--pixelateValue-->
                             <div class="form-item">
@@ -261,7 +261,7 @@
                                 </div>
                                 <div class="form-item">
                                     <span class="form-label">背景 : </span>
-                                    <div class="color-box" style="margin-left:25px;">
+                                    <div class="color-box">
                                         <input type="color" v-model="fontStyle.background" class="color-trigger">
                                         <input type='text' v-model="fontStyle.background" class="color-input">
                                     </div><!--fontColor-->
@@ -456,6 +456,11 @@ export default {
             }
         },
         async submitStyles () {
+            let ruleList = await this.getRuleList()
+            if (ruleList.includes(this.transformation)) {
+                this.$Message.warning('规则名已存在！')
+                return
+            }
             if (!this.transformationError && !this.textError && this.styles2Save()) {
                 const file = new Blob([JSON.stringify(this.styles2Save())], {'type': 'application/json'})
                 try {
@@ -465,7 +470,7 @@ export default {
                         ContentType: 'application/json',
                         Body: file
                     })
-                    this.$Message.success('保存成功')
+                    this.$router.push({ name: 'pictureStyles', params: { bucket: this.bucket } })
                 } catch (error) {
                     this.$Message.success('保存失败')
                 }
@@ -585,10 +590,26 @@ export default {
             } else {
                 this.general.radius = Date.now()
             }
+        },
+        async getRuleList () {
+            let ruleList = []
+            let res = await handler('listObjects', {
+                Bucket: this.bucket,
+                Prefix: prefix.rules
+            })
+            const rules = res.Contents
+            _.each(rules, item => {
+                if (/\.json$/.test(item.Key)) {
+                    const name = /.*\/(.*)\.json/.exec(item.Key)[1]
+                    if (name !== this.ruleName) {
+                        ruleList.push(name)
+                    }
+                }
+            })
+            return ruleList
         }
     },
     watch: {
-        // the contents array need refresh when the $route value changed
         '$route' (to, from) {
             to.path !== from.path && this.getData()
         }
@@ -679,9 +700,9 @@ const general2Save = data => {
     if (data.opacity !== 100) {
         saved.opacity = data.opacity
     }
-    if (data.radius >= 0 && data.radius <= 1000) {
+    if (data.radius > 0 && data.radius <= 1000) {
         saved.radius = parseInt(data.radius)
-    } else {
+    } else if (data.radius === 0) {} else {
         saved.radius = 'max'
     }
     return saved
@@ -873,9 +894,12 @@ const mark2Front = data => {
     .page-left,
     .page-right {
         .form-label {
+            display: inline-block;
+            width: 85px;
             font-size: 14px;
             padding-right: 5px;
             line-height: 30px;
+            text-align: right;
         }
     }
 
@@ -903,7 +927,7 @@ const mark2Front = data => {
             margin-bottom: 20px;
 
             .style-name-info {
-                padding: 5px 0 0 75px;
+                padding: 5px 0 0 90px;
                 .sc(12px,#8492a6);
             }
 
@@ -1097,14 +1121,6 @@ const mark2Front = data => {
                 }
             }
 
-            .mar-l15 {
-                margin-left: 15px;
-            }
-
-            .mar-l20 {
-                margin-left: 20px;
-            }
-
             .ivu-radio-wrapper {
                 font-size: 14px;
             }
@@ -1115,6 +1131,15 @@ const mark2Front = data => {
 
             .line-button {
                 width: 550px;
+            }
+
+            .pullRight{
+                float: right;
+            }
+
+            .sub-select{
+                width: 300px;
+                margin-left: 90px;
             }
         }
 
