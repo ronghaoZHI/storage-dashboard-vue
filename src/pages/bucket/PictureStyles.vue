@@ -29,8 +29,8 @@
 
 <script>
 import { getAWS, handler, config } from '@/service/Aws'
-import { prefix, Utf8ArrayToStr } from '@/service/BucketService'
-import { J2I, previewAccessKey, previewSecretKey } from './Consts'
+import { prefix, Utf8ArrayToStr } from '@/service/bucketService'
+import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/bucket/upload'
 import iView from 'iview'
 export default {
@@ -148,7 +148,7 @@ export default {
                 if (key === 'overlay') {
                     overlayFileName = /^text:.*/.test(value) ? /^text:(.*):(.*)/.exec(value)[1] + '.json' : value + '.png'
                 }
-                item = J2I[key] + value
+                item = _.invert(I2J)[key] + value
                 instructionArray.push(item)
             })
             return {
@@ -167,7 +167,7 @@ export default {
             }
             this.clipUrl = 'http://imgx-ss.bscstorage.com/image-example/' + style.IS + '/dashboard.jpg?' + Date.now()
             this.selectedStyleName = style.ruleName
-            this.showImageModal = true 
+            this.showImageModal = true
             this.$Loading.finish()
         },
         async putOverlayObject (fileName) {

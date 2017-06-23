@@ -125,7 +125,7 @@
                             <div class="form-item">
                                 <span class="form-label">翻转模式 : </span>
                                 <Radio-group v-model="general.angleType" style='vertical-align: text-top'>
-                                    <Radio v-for="item in angleList" :label="item.value">{{item.label}}</Radio>
+                                    <Radio v-for="item in angleList" :label="item.value" :key="item.value">{{item.label}}</Radio>
                                 </Radio-group>
                             </div><!--angleType-->
                             <div class="form-item" v-if="general.angleType === 'angle'">

@@ -464,7 +464,7 @@ export default {
 
                     .info {
                         display: inline-block;
-                        .wh(100%,@login-card-register-item-height / 2 - 15);
+                        .wh(98%,@login-card-register-item-height / 2 - 15);
                         line-height: @login-card-register-item-height / 2 - 15;
                         vertical-align: bottom;
                         padding: 0 16px;
