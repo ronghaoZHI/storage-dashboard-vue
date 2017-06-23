@@ -31,7 +31,7 @@ export const messages = {
         NAV: {
             DOC: 'Documentation',
             LOGOUT: 'Logout',
-            RESELECT_USER: 'Re-select user',
+            RESELECT_USER: 'Switch user',
             CHANGE_PASSWORD: 'Change password',
             NEW_PASSWORD: 'New password',
             CHANGE_PASSWORD_FAILED: 'Change password failed',
@@ -326,7 +326,7 @@ export const messages = {
             REQUIRE_COMPANY: 'Requires company name',
             GENERAL_USER: 'General user',
             SUB_USER: 'Sub user',
-            ADMIN: 'administrator',
+            ADMIN: 'Administrator',
             SUPER_USER: 'Super user',
             USER_TYPE: 'User type'
         },
