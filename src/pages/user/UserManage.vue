@@ -1,25 +1,25 @@
 <template>
     <div class="bsc-user">
-        <Button type="primary" v-show="!isAdmin" @click="openCreateSubUserModal">新建子账号</Button>
-        <Button type="primary" v-show="isAdmin" @click="createUserModal = true">创建账号</Button>
-        <Button type="primary" v-show="isAdmin" @click="openBindUserModal">关联账号</Button>
-        <Table class="table" :show-header="true" :stripe="true" :context="self" :highlight-row="true" :columns="userHeader" :data="userList" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
-        <Modal v-model="createUserModal" title="Add user" @on-ok="createUser" @on-cancel="createBucketValue = ''">
+        <Button type="primary" v-show="!isAdmin" @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
+        <Button type="primary" v-show="isAdmin" @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
+        <Button type="primary" v-show="isAdmin" @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
+        <Table class="table" :show-header="true" :stripe="true" :context="self" :highlight-row="true" :columns="userHeader" :data="userList" :no-data-text='$t("USER.NO_USER")'></Table>
+        <Modal v-model="createUserModal" :title='$t("USER.CREATE_USER")' @on-ok="createUser" @on-cancel="createBucketValue = ''">
             <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
-                <Form-item label="User name" prop="username">
+                <Form-item :label='$t("USER.USER_NAME")' prop="username">
                     <Input v-model="createUserForm.username" placeholder="User name"></Input>
                 </Form-item>
-                <Form-item label="Email" prop="email">
+                <Form-item :label='$t("USER.EMAILL")' prop="email">
                     <Input v-model="createUserForm.email" placeholder="Email"></Input>
                 </Form-item>
-                <Form-item label="Password" prop="password">
+                <Form-item :label='$t("USER.PASSWORD")' prop="password">
                     <Input v-model="createUserForm.password" placeholder="Password"></Input>
                 </Form-item>
-                <Form-item label="Company" prop="company">
+                <Form-item :label='$t("USER.COMPANY")' prop="company">
                     <Input v-model="createUserForm.company" placeholder="Company"></Input>
                     <span style="position: absolute;right: 10px;">*必须与工商执照一致</span>
                 </Form-item>
-                <Form-item label="User type">
+                <Form-item :label='$t("USER.USER_TYPE")'>
                     <Radio-group v-model="createUserForm.type">
                         <Radio label="normal">normal</Radio>
                         <Radio label="super">super</Radio>
@@ -34,42 +34,42 @@
                 </div>
             </div>
         </Modal>
-        <Modal v-model="createSubUserModal" title="add subUser" width="600" @on-ok="createSubUser">
+        <Modal v-model="createSubUserModal" :title='$t("USER.CREATE_SUB_USER")' width="600" @on-ok="createSubUser">
             <div class="section-separator" v-show="!isEditSubUser">
                 <span class="separator-icon"></span>
-                <span class="separator-info">基础信息</span>
+                <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
             </div>
             <Form ref="createSubUserForm" :model="createSubUserForm" :rules="subUserRuleValidate" :label-width="85" v-show="!isEditSubUser">
-                <Form-item label="User name" prop="username">
-                    <Input v-model="createSubUserForm.username" placeholder="User name"></Input>
+                <Form-item :label='$t("USER.USER_NAME")' prop="username">
+                    <Input v-model="createSubUserForm.username" :placeholder='$t("USER.REQUIRE_USER_NAME")'></Input>
                 </Form-item>
-                <Form-item label="Email" prop="email">
-                    <Input v-model="createSubUserForm.email" placeholder="Email"></Input>
+                <Form-item :label='$t("USER.EMAILL")' prop="email">
+                    <Input v-model="createSubUserForm.email" :placeholder='$t("LOGIN.EMAILL_ALERT")'></Input>
                 </Form-item>
-                <Form-item label="Password" prop="password">
-                    <Input v-model="createSubUserForm.password" placeholder="Password"></Input>
+                <Form-item :label='$t("USER.PASSWORD")' prop="password">
+                    <Input v-model="createSubUserForm.password" :placeholder='$t("LOGIN.KEY_ALERT")'></Input>
                 </Form-item>
-                <Form-item label="Company" prop="company">
-                    <Input v-model="createSubUserForm.company" placeholder="Company"></Input>
+                <Form-item :label='$t("USER.COMPANY")' prop="company">
+                    <Input v-model="createSubUserForm.company" :placeholder='$t("USER.REQUIRE_COMPANY")'></Input>
                 </Form-item>
             </Form>
             <div class="section-separator">
                 <span class="separator-icon"></span>
-                <span class="separator-info">权限分配</span>
+                <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
             </div>
             <table class="table-bucket-acl">
                 <thead>
                     <tr>
-                        <th>Bucket name</th>
-                        <th>Bucekt permission</th>
-                        <th>File permission</th>
+                        <th>{{$t("USER.BUCKET_NAME")}}</th>
+                        <th>{{$t("USER.BUCKET_PERMISSON")}}</th>
+                        <th>{{$t("USER.FILE_PERMISSON")}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="row in createSubUserForm.acl">
                         <td>{{row.bucket}}</td>
-                        <td><Checkbox v-model="row.bucket_acl_obj.READ">Read</Checkbox> <Checkbox v-model="row.bucket_acl_obj.WRITE">Write</Checkbox></td>
-                        <td><Checkbox v-model="row.file_acl_obj.READ">Read</Checkbox> <Checkbox v-model="row.file_acl_obj.WRITE">Write</Checkbox></td>
+                        <td><Checkbox v-model="row.bucket_acl_obj.READ">{{$t("USER.READ")}}</Checkbox> <Checkbox v-model="row.bucket_acl_obj.WRITE">{{$t("USER.WRITE")}}</Checkbox></td>
+                        <td><Checkbox v-model="row.file_acl_obj.READ">{{$t("USER.READ")}}</Checkbox> <Checkbox v-model="row.file_acl_obj.WRITE">{{$t("USER.WRITE")}}</Checkbox></td>
                     </tr>
                 </tbody>
             </table>
@@ -158,11 +158,12 @@ export default {
                     let res = await handler('listBuckets')
                     let users = await this.$http.get(SUB_USER)
                     Promise.all(Array.map(res.Buckets, (bucket) => {
+                        this.bucketList = res.Buckets
                         return this.$http.get(SUB_USER_ACL, { params: { bucket: bucket.Name } }).then(acl => {
                             return { bucket: bucket.Name, acl: acl }
                         })
                     })).then(res => {
-                        this.userList = _.each(users, (user) => {
+                        return this.userList = _.each(users, (user) => {
                             user.acl = []
                             user.type = this.userType(user)
                             _.each(res, (bucket) => {
@@ -179,9 +180,9 @@ export default {
                                 })
                             })
                         })
+                    }).then(res => {
+                        this.$Loading.finish()
                     })
-                    this.bucketList = res.Buckets
-                    this.$Loading.finish()
                 }
             } catch (error) {
                 this.$Loading.error()
@@ -285,6 +286,7 @@ export default {
                         this.$Message.success('Create sub user success')
                     })
                 } catch (error) {
+                    this.$Message.error('Create sub user error')
                     this.$Loading.error()
                 }
             }
@@ -318,13 +320,14 @@ export default {
                     this.$Message.success('Update sub user success')
                 })
             } catch (error) {
+                this.$Message.error('Update sub user error')
                 this.$Loading.error()
             }
             this.isEditSubUser = false
         },
         userType (user) {
             let type = user.info.type
-            return type === 'normal' ? '普通账号' : type === 'sub' ? '子账号' : type === 'admin' ? '管理员账号' : '超级账号'
+            return type === 'normal' ? this.$t('USER.GENERAL_USER') : type === 'sub' ? this.$t('USER.SUB_USER') : type === 'admin' ? this.$t('USER.ADMIN') : this.$t('USER.SUPER_USER')
         }
     }
 }
@@ -395,7 +398,7 @@ const adminHeaderSetting = [
         width: 50,
         align: 'left',
         render (row, column, index) {
-            return `<Tooltip content='unbind' placement="top"><i-button size="small" @click="unbindUserConfirm(row,${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
+            return `<i-button size="small" @click="unbindUserConfirm(row,${index})">Unbind</i-button>`
         }
     }
 ]

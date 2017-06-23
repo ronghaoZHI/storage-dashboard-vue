@@ -43,7 +43,7 @@
             <div class="tab-register" v-if="!isLogin">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
-                    <a>用户管理</a>
+                    <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
                 </div>
                 <div class="body">
                     <div v-for="user in subUserList" @click="selectSubUser(user)">
@@ -63,7 +63,7 @@ import Vue from 'vue'
 export default {
     data () {
         return {
-            lang: 'cn',
+            lang: localStorage.getItem('lang'),
             selectedCustomer: '',
             isLogin: !(!!user.state && user.state.type === 'admin'),
             keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
@@ -131,6 +131,7 @@ export default {
         },
         changeLang (lang) {
             Vue.config.lang = lang
+            this.lang = lang
             sessionStorage.removeItem('lang')
             sessionStorage.setItem('lang', lang)
         },
@@ -158,6 +159,9 @@ export default {
         },
         keep () {
             localStorage.setItem('keepEmail', this.keepEmail)
+        },
+        toUserMange () {
+            this.$router.push('user')
         }
     }
 }

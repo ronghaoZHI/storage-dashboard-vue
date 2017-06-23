@@ -17,7 +17,7 @@
                     <Icon type="chevron-down"
                           class="icon-top-down"></Icon>
                     <Dropdown-menu slot="list">
-                        <Dropdown-item v-show="isAdminMode" name="selectSubUser">切换子账号</Dropdown-item>
+                        <Dropdown-item v-show="isAdminMode" name="selectSubUser">{{$t("NAV.RESELECT_USER")}}</Dropdown-item>
                         <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
                         <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
                     </Dropdown-menu>

@@ -25,11 +25,13 @@ export const messages = {
             LOGIN_FAILED: 'Login failed',
             VALIDATE_FAILED: 'Input validate failed',
             LOGIN_AGAIN: 'Need to login again',
-            KEEP_EMAIL: 'Remember my email'
+            KEEP_EMAIL: 'Remember my email',
+            USER_MANAGE: 'User management'
         },
         NAV: {
             DOC: 'Documentation',
             LOGOUT: 'Logout',
+            RESELECT_USER: 'Re-select user',
             CHANGE_PASSWORD: 'Change password',
             NEW_PASSWORD: 'New password',
             CHANGE_PASSWORD_FAILED: 'Change password failed',
@@ -216,6 +218,30 @@ export const messages = {
             UNIT: 'unit',
             GET_BUCKET_FAILED: 'Get bucket list fail'
         },
+        USER: {
+            CREATE_SUB_USER: 'Create sub user',
+            CREATE_USER: 'Create user',
+            BIND_USER: 'Bind user',
+            NO_USER: 'No user',
+            BASE_INFO: 'Base information',
+            USER_NAME: 'User name',
+            EMAILL: 'Email',
+            PASSWORD: 'Password',
+            COMPANY: 'Company',
+            PERMISSON_MANAGE: 'Permissions',
+            BUCKET_NAME: 'Bucket name',
+            BUCKET_PERMISSON: 'Bucket permisson',
+            FILE_PERMISSON: 'File permisson',
+            READ: 'Read',
+            WRITE: 'Write',
+            REQUIRE_USER_NAME: 'Requires user name',
+            REQUIRE_COMPANY: 'Requires company name',
+            GENERAL_USER: 'General user',
+            SUB_USER: 'Sub user',
+            ADMIN: 'administrator',
+            SUPER_USER: 'Super user',
+            USER_TYPE: 'User type'
+        },
         i: {
             select: {
                 placeholder: 'Select',
@@ -336,11 +362,13 @@ export const messages = {
             LOGIN_FAILED: '登录失败',
             VALIDATE_FAILED: '验证失败',
             LOGIN_AGAIN: '请重新登录',
-            KEEP_EMAIL: '记住邮箱'
+            KEEP_EMAIL: '记住邮箱',
+            USER_MANAGE: '用户管理'
         },
         NAV: {
             DOC: '帮助文档',
             LOGOUT: '退出登录',
+            RESELECT_USER: '切换子账号',
             CHANGE_PASSWORD: '修改密码',
             NEW_PASSWORD: '新密码',
             CHANGE_PASSWORD_FAILED: '修改密码失败',
@@ -525,6 +553,30 @@ export const messages = {
             DOWNLOAD_COUNT_INFO: '某天的读请求数',
             UPLOAD_COUNT_INFO: '某天的写请求数',
             GET_BUCKET_FAILED: '获取Bucket列表失败'
+        },
+        USER: {
+            CREATE_SUB_USER: '新建子账号',
+            CREATE_USER: '新建帐号',
+            BIND_USER: '绑定账号',
+            NO_USER: '没有用户',
+            BASE_INFO: '基本信息',
+            USER_NAME: '用户名',
+            EMAILL: '邮箱',
+            PASSWORD: '密码',
+            COMPANY: '公司名',
+            PERMISSON_MANAGE: '权限管理',
+            BUCKET_NAME: '桶',
+            BUCKET_PERMISSON: '桶权限',
+            FILE_PERMISSON: '文件权限',
+            READ: '读',
+            WRITE: '写',
+            REQUIRE_USER_NAME: '请填写用户名',
+            REQUIRE_COMPANY: '请填写公司名',
+            GENERAL_USER: '普通账号',
+            SUB_USER: '子账号',
+            ADMIN: '管理员',
+            SUPER_USER: '超级账号',
+            USER_TYPE: '账号类型'
         },
         i: {
             select: {

@@ -17,7 +17,6 @@ export default {
         pinter: {
             inserted: function (el, binding) {
                 const data = binding.value
-                console.log(data.space / data.capacity)
                 const nodeWidth = Math.floor((data.space / data.capacity) * 30)
                 if (data.ioutil !== undefined) {
                     const colorList = ['#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#F1A4A4']

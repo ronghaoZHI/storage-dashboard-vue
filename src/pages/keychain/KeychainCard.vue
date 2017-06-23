@@ -62,6 +62,7 @@ export default {
         white-space:nowrap;
 
         i {
+            text-align: center;
             position: relative;
             top: 1px;
             padding-right: 10px;
