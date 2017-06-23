@@ -252,7 +252,8 @@ export const generalDefult = {
     borderColor: '#ffffff',
     padColor: '#ffffff',
     x: 0,
-    y: 0
+    y: 0,
+    radius: 0
 }
 export const markerDefult = {
     open: false,

@@ -14,8 +14,8 @@
                         <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
                         <div class="test-img">
                             <img :src='previewUrl'>
-                            <div class="img-button">
-                                <Button type="primary" @click="primaryPreview">效果预览</Button>
+                            <div>
+                                <Button type="primary" @click="primaryPreview" :disabled="textError">效果预览</Button>
                             </div>
                         </div>
                     </Col>
@@ -192,7 +192,7 @@
                             <div class="form-item" v-if="general.effect === 'pixelate'">
                                 <span class="form-label">像素值 : </span>
                                 <Slider class="pic-slider mar-l15" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
-                                <Input v-model="general.pixelateValue" class="slider-input" number></Input>
+                                <Input v-model="general.pixelateValue" class="slider-input"></Input>
                             </div><!--pixelateValue-->
                             <div class="form-item">
                                 <span class="form-label">设置边框 : </span>
@@ -207,15 +207,15 @@
                                     <input type='number' v-model="general.borderSize">
                                     <span>px</span>
                                 </div><!--borderSize-->
-                                <div class="color-box" @click.stop>
+                                <div class="color-box">
                                     <input type="color" v-model="general.borderColor" class="color-trigger">
                                     <input type='text' v-model="general.borderColor" class="color-input">
                                 </div><!--borderColor-->
                             </div><!--border-->
                             <div class="form-item">
                                 <span class="form-label">生成圆角 : </span>
-                                <Slider class="pic-slider" :min='0' :max='1001' v-model="radiusSlider" :tip-format="radiusFormater"></Slider>
-                                <Input v-model="radiusValue" class="slider-input" number></Input>
+                                <Slider class="pic-slider" :min='0' :max='1001' v-model="general.radius" :tip-format="radiusFormater"></Slider>
+                                <Input v-model="radiusValue" class="slider-input" @on-change="radiusChange"></Input>
                             </div><!--radius-->
                             <div class="form-item">
                                 <span class="form-label">不透明度 : </span>
@@ -311,9 +311,9 @@
                                 <Input v-model="mark.opacity" class="slider-input" number></Input>
                             </div><!--opacity-->
                         </div>
+                        <div class="separator-line"></div>
                         <div class="form-item clearfix line-button">
                             <div class="img-button">
-                                <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
                                 <Button type="primary" @click="submitStyles" :disabled="transformationError || textError || imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
                             </div>
                         </div>
@@ -322,7 +322,7 @@
             </Tab-pane>
             <Tab-pane :label='$t("STORAGE.ADV_EDIT")' name='senior'>
                 <Row>
-                    <Col span="8">
+                    <Col span="8" class="page-left">
                         <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
                         <div class="test-img">
                             <img :src='seniorUrl'>
@@ -344,9 +344,9 @@
                             <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
                             <p class="style-name-info dis-inline">参数说明，</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">见文档</a>
                         </div>
+                        <div class="separator-line"></div>
                         <div class="form-item clearfix line-button">
                             <div class="img-button">
-                                <Button type="ghost" @click="">{{$t("PUBLIC.CANCLE")}}</Button>
                                 <Button type="primary" @click="submitStyles" :disabled="transformationError">{{$t("PUBLIC.CONFIRMED")}}</Button>
                             </div>
                         </div>
@@ -369,15 +369,14 @@ export default {
             transformation: '',
             formatList: ['original', 'png', 'webp', 'jpeg', 'jpg'],
             fontList: allFontList,
-            mark: markerDefult,
-            general: generalDefult,
+            mark: _.clone(markerDefult),
+            general: _.clone(generalDefult),
             imgName: '',
             uploadPrefix: prefix.overlay,
             uploadValidation: /^[\x00-\x2b\x2e\x30-\x39\x3b-\xff]+\.(png|PNG)$/,
             instructions: '',
             setMore: false,
-            radiusSlider: 1001,
-            fontStyle: defaultFontStyle,
+            fontStyle: _.clone(defaultFontStyle),
             tabValue: 'primary',
             primaryDisable: false,
             previewUrl: getImgxUrl('q_100'),
@@ -415,7 +414,7 @@ export default {
             return this.general.format === 'original' || this.general.format === 'png' || this.general.format === 'webp'
         },
         radiusValue () {
-            return this.radiusSlider > 1000 || this.radiusSlider > 1000 ? 'max' : this.radiusSlider
+            return (this.general.radius >= 0 && this.general.radius <= 1000) ? this.general.radius : 'max'
         }
     },
     mounted () {
@@ -576,8 +575,16 @@ export default {
         uploadSuccess (fileName) {
             this.imgName = fileName
         },
-        radiusFormater (radiusSlider) {
-            return radiusSlider > 1000 ? 'max' : radiusSlider
+        radiusFormater (value) {
+            return value > 1000 ? 'max' : value
+        },
+        radiusChange (event) {
+            const value = parseInt(event.target.value)
+            if (value >= 1 && value <= 1000) {
+                this.general.radius = value
+            } else {
+                this.general.radius = Date.now()
+            }
         }
     },
     watch: {
@@ -659,7 +666,7 @@ const general2Save = data => {
     } else if (effect === 'pixelate') {
         saved.effect = effect + ':' + data.pixelateValue
     } else if (effect === 'sharpen') {
-        saved.effect = effect + ':' + data.sharpenValue
+        saved.effect = data.sharpenValue >= 1 && data.sharpenValue <= 400 ? `${effect}:${data.sharpenValue}` : `${effect}:100`
     } else if (effect === 'color') {
         saved.effect = data.color + ':' + data.colorValue
     } else if (effect !== 'noEffect') {
@@ -671,6 +678,11 @@ const general2Save = data => {
     }
     if (data.opacity !== 100) {
         saved.opacity = data.opacity
+    }
+    if (data.radius >= 0 && data.radius <= 1000) {
+        saved.radius = parseInt(data.radius)
+    } else {
+        saved.radius = 'max'
     }
     return saved
 }
@@ -783,8 +795,8 @@ const general2Front = data => {
     if (effect) {
         const effectArray = ['grayscale', 'oil_paint', 'negate', 'brightness', 'blur', 'pixelate', 'sharpen', 'auto_contrast', 'improve']
         const colorArray = ['sepia', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta']
-        if (effectArray.includes(effect) || effectArray.includes(effect.split(':')[0])) {
-            front.effect = effect
+        if (effectArray.includes(effect.split(':')[0])) {
+            front.effect = effect.split(':')[0]
             if (effect.split('oil_piant:')[1]) {
                 front.oilValue = parseInt(effect.split('oil_piant:')[1])
             } else if (effect.split('brightness:')[1]) {
@@ -796,7 +808,7 @@ const general2Front = data => {
             } else if (effect.split('sharpen:')[1]) {
                 front.sharpenValue = parseInt(effect.split('sharpen:')[1])
             }
-        } else if (colorArray.includes(effect) || colorArray.includes(effect.split(':')[0])) {
+        } else if (colorArray.includes(effect.split(':')[0])) {
             front.effect = 'color'
             front.color = effect.split(':')[0]
             if (effect.split(':')[1]) {
@@ -816,6 +828,9 @@ const general2Front = data => {
     }
     if (data.opacity) {
         front.opacity = parseInt(data.opacity)
+    }
+    if (data.radius) {
+        front.radius = (data.radius >= 1 && data.radius <= 1000) ? parseInt(data.radius) : 1001
     }
     return front
 }
@@ -877,10 +892,6 @@ const mark2Front = data => {
                 margin-bottom: 15px;
                 background: #000;
             }
-
-            .img-button {
-                float: right;
-            }
         }
     }
 
@@ -905,11 +916,6 @@ const mark2Front = data => {
             .slider-input {
                 width: 45px;
                 margin-left: 10px;
-            }
-
-            .separator-line {
-                margin: 10px 0 30px -20px;
-                border-bottom: 1px solid @edit-styles-border-color;
             }
 
             .font-styles {
@@ -1110,6 +1116,14 @@ const mark2Front = data => {
             .line-button {
                 width: 550px;
             }
+        }
+
+        .separator-line {
+            margin: 10px 0 30px -20px;
+            border-bottom: 1px solid @edit-styles-border-color;
+        }
+        .img-button {
+            margin-left: 250px;
         }
     }
 }
