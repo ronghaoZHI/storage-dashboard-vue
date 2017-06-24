@@ -18,7 +18,7 @@
             <div slot="footer"></div>
         </Modal>
         <Modal v-model="showUploadModal" :title='$t("STORAGE.FILE_PERMISSION")' width="700">
-            <upload accept="application/json" v-if="showUploadModal" v-on:uploadSuccess="uploadSuccess" validationInfo='只支持json文件' :validation="uploadValidation" :bucket="bucket" :prefix="prefix"></upload>
+            <upload accept="application/json" v-if="showUploadModal" v-on:uploadSuccess="uploadSuccess" :validationInfo='$t("STORAGE.PIC_UPLOAD_INFO")' :validation="uploadValidation" :bucket="bucket" :prefix="prefix"></upload>
             <div slot="footer" class="copy-modal-footer">
                  <Button style="visibility:hidden" type="primary"></Button>
             </div>
@@ -77,7 +77,7 @@ export default {
                 })
                 this.$Loading.finish()
             } catch (error) {
-                this.$Message.error('获取列表失败')
+                this.$Message.error($t('STORAGE.GET_RULES_FAILED'))
             }
         },
         async getObject (file) {
@@ -93,7 +93,7 @@ export default {
         convert2list (data) {
             const listItem = {
                 quality: '--',
-                format: '原图格式'
+                format: this.$t('STORAGE.FORMAT_ORIGINAL')
             }
             const ISArry = []
             const overlayList = new Set()
@@ -215,24 +215,24 @@ const getURL = async (bucket, key) => {
 }
 
 const styleHeaderSetting = [{
-    title: 'Rule name(规则名)',
+    title: 'Name',
     key: 'ruleName',
     width: 150
 }, {
-    title: 'Picture styles(图片样式)',
+    title: 'Styles',
     width: 300,
     ellipsis: true,
     key: 'IS'
 }, {
-    title: 'Quality(图片质量)',
+    title: 'Quality',
     key: 'quality',
     width: 150
 }, {
-    title: 'Format(图片格式)',
+    title: 'Format',
     key: 'format',
     width: 150
 }, {
-    title: 'Operate(操作)',
+    title: 'Actions',
     key: 'actions',
     width: 170,
     align: 'right',

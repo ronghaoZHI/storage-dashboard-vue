@@ -11,11 +11,11 @@
             <Tab-pane :label='$t("STORAGE.BASIC_EDIT")' name='primary' :disabled='primaryDisable'>
                 <Row>
                     <Col span="8" class="page-left">
-                        <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
+                        <span class="preview-span">{{$t("STORAGE.PREVIEW")}}:</span>
                         <div class="test-img">
                             <img :src='previewUrl'>
                             <div>
-                                <Button type="primary" @click="primaryPreview" :disabled="textError">效果预览</Button>
+                                <Button type="primary" @click="primaryPreview" :disabled="primaryPreviewError">{{$t("STORAGE.PREVIEW")}}</Button>
                             </div>
                         </div>
                     </Col>
@@ -23,7 +23,7 @@
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
                             <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' class="line-width"></Input>
-                            <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
+                            <p class="style-name-info" :class="{'red':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_CROP")}} : </span>
@@ -65,7 +65,7 @@
                         <div class="gravity-preview clearfix" v-if="general.crop === 'crop'">
                             <div class="left">
                                 <div class="form-item">
-                                    <span class="form-label">选择位置 : </span>
+                                    <span class="form-label">{{$t('STORAGE.SELECT_LOCATION')}} : </span>
                                     <Select v-model="general.gravity" style="width:265px">
                                         <Option v-for="item in cropGravityList" :value="item.value" :key="item">{{ item.label }}</Option>
                                     </Select>
@@ -90,8 +90,8 @@
                         <div class="form-item" v-if="general.crop !== 'noCrop'">
                             <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
                             <Radio-group v-model="general.dataType">
-                                <Radio label="pixel">像素(px)</Radio>
-                                <Radio label="percent">百分比(%)</Radio>
+                                <Radio label="pixel">{{$t("STORAGE.PIXEL")}}(px)</Radio>
+                                <Radio label="percent">{{$t("STORAGE.PERCENT")}}(%)</Radio>
                             </Radio-group>
                             <span>W : </span>
                             <div class="input-text-box">
@@ -119,61 +119,61 @@
                         </div><!--format-->
                         <div class="separator-line"></div>
                         <div class="form-item">
-                            <Button type="ghost" @click="setMore = !setMore">更多设置 <Icon type="chevron-down" v-if="!setMore"></Icon><Icon type="chevron-up" v-else></Icon></Button>
+                            <Button type="ghost" @click="setMore = !setMore">{{$t("STORAGE.MORE_SET")}} <Icon type="chevron-down" v-if="!setMore"></Icon><Icon type="chevron-up" v-else></Icon></Button>
                         </div>
                         <div v-if="setMore">
                             <div class="form-item">
-                                <span class="form-label">翻转模式 : </span>
+                                <span class="form-label">{{$t("STORAGE.FLIP_MODE")}} : </span>
                                 <Radio-group v-model="general.angleType" style='vertical-align: text-top'>
                                     <Radio v-for="item in angleList" :label="item.value" :key="item.value">{{item.label}}</Radio>
                                 </Radio-group>
                             </div><!--angleType-->
                             <div class="form-item" v-if="general.angleType === 'angle'">
-                                <span class="form-label">角度 : </span>
+                                <span class="form-label">{{$t("STORAGE.ANGLE")}} : </span>
                                 <div class="input-text-box">
                                     <input type='number' v-model="general.angle">
                                 </div>
                             </div><!--angle-->
                             <div class="form-item">
-                                <span class="form-label">滤镜与特效 : </span>
+                                <span class="form-label">{{$t("STORAGE.FILTER_EFFECTS")}}</span>
                                 <Radio-group v-model="general.effect" style='vertical-align: text-top'>
-                                    <Radio label="noEffect">不添加滤镜或特效</Radio>
-                                    <Radio label="grayscale">灰度</Radio>
-                                    <Radio label="auto_contrast">自动对比度</Radio>
-                                    <Radio label="brightness">调整图片亮度</Radio>
-                                    <Radio label="negate">反色</Radio>
+                                    <Radio label="noEffect">{{$t("STORAGE.FILTER_EFFECTS_NONE")}}</Radio>
+                                    <Radio label="grayscale">{{$t("STORAGE.GRAYSCALE")}}</Radio>
+                                    <Radio label="auto_contrast">{{$t("STORAGE.AUTO_CONTRAST")}}</Radio>
+                                    <Radio label="brightness">{{$t("STORAGE.BRIGHTNESS")}}</Radio>
+                                    <Radio label="negate">{{$t("STORAGE.NEGATE")}}</Radio>
                                     <p style='height: 10px;'></p>
-                                    <Radio label="sharpen">锐化</Radio>
-                                    <Radio label="blur">模糊效果</Radio>
-                                    <Radio label="oil_paint">油画效果</Radio>
-                                    <Radio label="pixelate">像素化</Radio>
-                                    <Radio label="color">增加颜色</Radio>
+                                    <Radio label="sharpen">{{$t("STORAGE.SHARPEN")}}</Radio>
+                                    <Radio label="blur">{{$t("STORAGE.BLUR")}}</Radio>
+                                    <Radio label="oil_paint">{{$t("STORAGE.OIL_PAINT")}}</Radio>
+                                    <Radio label="pixelate">{{$t("STORAGE.PIXELATE")}}</Radio>
+                                    <Radio label="color">{{$t("STORAGE.ADD_COLOR")}}</Radio>
                                     <p style='height: 10px;'></p>
-                                    <Radio label="improve">自动调整图像色彩，对比度和亮度</Radio>
+                                    <Radio label="improve">{{$t("STORAGE.IMPROVE")}}</Radio>
                                 </Radio-group>
                             </div><!--effect-->
                             <div class="form-item" v-if="general.effect === 'brightness'">
-                                <span class="form-label">图片亮度 : </span>
+                                <span class="form-label">{{$t("STORAGE.BRIGHTNESS_VALUE")}} : </span>
                                 <Slider class="pic-slider" :min='-300' :max='300' v-model="general.brightnessValue"></Slider>
                                 <Input v-model="general.brightnessValue" class="slider-input" number></Input>
                             </div><!--brightnessValue-->
                             <div class="form-item" v-if="general.effect === 'blur'">
-                                <span class="form-label">模糊值 : </span>
+                                <span class="form-label">{{$t("STORAGE.BLUR_VALUE")}} : </span>
                                 <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.blurValue"></Slider>
                                 <Input v-model="general.blurValue" class="slider-input" number></Input>
                             </div><!--blurValue-->
                             <div class="form-item" v-if="general.effect === 'sharpen'">
-                                <span class="form-label">锐化值 : </span>
+                                <span class="form-label">{{$t("STORAGE.SHARPEN_VALUE")}} : </span>
                                 <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.sharpenValue"></Slider>
                                 <Input v-model="general.sharpenValue" class="slider-input" number></Input>
                             </div><!--sharpenValue-->
                             <div class="form-item" v-if="general.effect === 'oil_paint'">
-                                <span class="form-label">油画值 : </span>
+                                <span class="form-label">{{$t("STORAGE.OIL_VALUE")}}: </span>
                                 <Slider class="pic-slider mar-l15" :min='1' :max='8' v-model="general.oilValue"></Slider>
                                 <Input v-model="general.oilValue" class="slider-input" number></Input>
                             </div><!--oilValue-->
                             <div class="form-item" v-if="general.effect === 'color'">
-                                <span class="form-label">颜色 : </span>
+                                <span class="form-label">{{$t("STORAGE.COLOR")}} : </span>
                                 <div class="color-selector">
                                     <input type="radio" value="sepia" v-model="general.color" style="background-color:sepia"></Radio>
                                     <input type="radio" value="red" v-model="general.color" style="background-color:red"></Radio>
@@ -185,40 +185,37 @@
                                 </div>
                             </div><!--color-->
                             <div class="form-item" v-if="general.effect === 'color'">
-                                <span class="form-label">颜色取值 : </span>
+                                <span class="form-label">{{$t("STORAGE.COLOR_VALUE")}} : </span>
                                 <Slider class="pic-slider" :min='1' :max='100' v-model="general.colorValue"></Slider>
                                 <Input v-model="general.colorValue" class="slider-input" number></Input>
                             </div><!--colorValue-->
                             <div class="form-item" v-if="general.effect === 'pixelate'">
-                                <span class="form-label">像素值 : </span>
+                                <span class="form-label">{{$t("STORAGE.PX_VALUE")}} : </span>
                                 <Slider class="pic-slider" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
                                 <Input v-model="general.pixelateValue" class="slider-input"></Input>
                             </div><!--pixelateValue-->
                             <div class="form-item">
-                                <span class="form-label">设置边框 : </span>
+                                <span class="form-label">{{$t("STORAGE.BORDER")}} : </span>
                                 <i-switch v-model="general.border" size="large">
-                                    <span slot="open">ON</span>
-                                    <span slot="close">OFF</span>
+                                    <span slot="open">{{$t("STORAGE.ON")}}</span>
+                                    <span slot="close">{{$t("STORAGE.OFF")}}</span>
                                 </i-switch>
-                            </div><!--border-->
-                            <div class="form-item" v-if="general.border">
-                                <span class="form-label">边框设置 : </span>
-                                <div class="input-text-box">
+                                <div class="input-text-box" v-if="general.border">
                                     <input type='number' v-model="general.borderSize">
                                     <span>px</span>
                                 </div><!--borderSize-->
-                                <div class="color-box">
+                                <div class="color-box" v-if="general.border">
                                     <input type="color" v-model="general.borderColor" class="color-trigger">
                                     <input type='text' v-model="general.borderColor" class="color-input">
                                 </div><!--borderColor-->
                             </div><!--border-->
                             <div class="form-item">
-                                <span class="form-label">生成圆角 : </span>
+                                <span class="form-label">{{$t("STORAGE.RADIUS")}} : </span>
                                 <Slider class="pic-slider" :min='0' :max='1001' v-model="general.radius" :tip-format="radiusFormater"></Slider>
                                 <Input v-model="radiusValue" class="slider-input" @on-change="radiusChange"></Input>
                             </div><!--radius-->
                             <div class="form-item">
-                                <span class="form-label">不透明度 : </span>
+                                <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
                                 <Slider class="pic-slider" v-model="general.opacity" :disabled="!isOpacity"></Slider>
                                 <Input v-model="general.opacity" class="slider-input" number></Input>
                             </div><!--opacity-->
@@ -227,8 +224,8 @@
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_WATERMARKER")}} : </span>
                             <i-switch v-model="mark.open" size="large">
-                                <span slot="open">ON</span>
-                                <span slot="close">OFF</span>
+                                <span slot="open">{{$t("STORAGE.ON")}}</span>
+                                <span slot="close">{{$t("STORAGE.OFF")}}</span>
                             </i-switch>
                         </div><!--watermarkerOpen-->
                         <div v-if="mark.open">
@@ -243,7 +240,7 @@
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
                                     <Input v-model="mark.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
-                                    <p class="red style-name-info" v-if="textError">请输入水印文字内容</p>
+                                    <p class="red style-name-info" v-if="textError">{{$t("STORAGE.TEXT_CONTENT_INFO")}}</p>
                                 </div><!--text-->
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
@@ -260,7 +257,7 @@
                                     </div><!--fontColor-->
                                 </div>
                                 <div class="form-item">
-                                    <span class="form-label">背景 : </span>
+                                    <span class="form-label">{{$t("STORAGE.BACKGROUBD")}} : </span>
                                     <div class="color-box">
                                         <input type="color" v-model="fontStyle.background" class="color-trigger">
                                         <input type='text' v-model="fontStyle.background" class="color-input">
@@ -271,7 +268,7 @@
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
                                     <div class="upload-box">
-                                        <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" validationInfo='支持png格式文件，文件名为不包含“/:,-”的ascii字符' :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
+                                        <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" :validationInfo="$t('STORAGE.WATER_PNG_VALID_INFO')" :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
                                     </div>
                                 </div><!--image-->
                             </div>
@@ -327,7 +324,7 @@
                         <div class="test-img">
                             <img :src='seniorUrl'>
                             <div class="img-button">
-                                <Button type="primary" @click="seniorPreview">效果预览</Button>
+                                <Button type="primary" @click="seniorPreview">{{$t("STORAGE.PREVIEW")}}</Button>
                             </div>
                         </div>
                     </Col>
@@ -335,14 +332,14 @@
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
                             <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 475px"></Input>
-                            <p class="style-name-info" :class="{'red':transformationError}">名称使用数字、小写字母、下划线，不超过20个字符</p>
+                            <p class="style-name-info" :class="{'red':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.PROSCESS_PARAM")}} : </span>
-                            <Input v-model="instructions" type="textarea" :rows="6" placeholder="使用高级编辑之前，建议先阅读Imgx图片处理服务使用说明" style="width: 475px"></Input>
-                            <p class="style-name-info">示例（图片缩放+图片水印）</p>
+                            <Input v-model="instructions" type="textarea" :rows="6" :placeholder='$t("STORAGE.SENIOR_INFO")' style="width: 475px"></Input>
+                            <p class="style-name-info">{{$t("STORAGE.PIC_EXAMPLE")}}</p>
                             <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
-                            <p class="style-name-info dis-inline">参数说明，</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">见文档</a>
+                            <p class="style-name-info dis-inline">{{$t("STORAGE.PARA_DESC")}}</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">{{$t("STORAGE.SEE_COCUMENT")}}</a>
                         </div>
                         <div class="separator-line"></div>
                         <div class="form-item clearfix line-button">
@@ -362,7 +359,7 @@ import { prefix } from '@/service/bucketService'
 import upload from '@/components/bucket/upload'
 import * as styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
-import {editStylesConsts, allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
+import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
     data () {
         return {
@@ -381,7 +378,12 @@ export default {
             primaryDisable: false,
             previewUrl: getImgxUrl('q_100'),
             seniorUrl: getImgxUrl('q_100'),
-            ...editStylesConsts
+            padList: [{value: 'pad', label: this.$t('STORAGE.CROP_PAD')}, {value: 'lpad', label: this.$t('STORAGE.CROP_LPAD')}, {value: 'mpad', label: this.$t('STORAGE.CROP_MPAD')}],
+            fillList: [{value: 'fill', label: this.$t('STORAGE.CROP_FILL')}, {value: 'lfill', label: this.$t('STORAGE.CROP_LFILL')}],
+            thumbList: [{value: 'face', label: this.$t('STORAGE.CROP_FACE')}, {value: 'faces', label: this.$t('STORAGE.CROP_FACES')}, {value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER')}, {value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER')}],
+            fitList: [{value: 'fit', label: this.$t('STORAGE.CROP_FIT')}, {value: 'mfit', label: this.$t('STORAGE.CROP_MFIT')}, {value: 'limit', label: this.$t('STORAGE.CROP_LFIT')}],
+            angleList: [{value: 'angle', label: this.$t('STORAGE.ANGLE_ROTATION')}, {value: 'vflip', label: this.$t('STORAGE.ANGLE_VFLIP')}, {value: 'hflip', label: this.$t('STORAGE.ANGLE_HFLIP')}],
+            cropGravityList: [{value: 'north_west', label: this.$t('STORAGE.GRAVITY_NORTH_WEST')}, {value: 'north', label: this.$t('STORAGE.GRAVITY_NORTH')}, {value: 'north_east', label: this.$t('STORAGE.GRAVITY_NORTH_EAST')}, {value: 'west', label: this.$t('STORAGE.GRAVITY_WEST')}, {value: 'center', label: this.$t('STORAGE.GRAVITY_CENTER')}, {value: 'east', label: this.$t('STORAGE.GRAVITY_EAST')}, {value: 'south_west', label: this.$t('STORAGE.GRAVITY_SOUTH_WEST')}, {value: 'south', label: this.$t('STORAGE.GRAVITY_SOUTH')}, {value: 'south_east', label: this.$t('STORAGE.GRAVITY_SOUTH_EAST')}, {value: 'noGravity', label: this.$t('STORAGE.GRAVITY_NOGRAVITY')}, {value: 'xy_center', label: this.$t('STORAGE.GRAVITY_XY_CENTER')}, {value: 'face', label: this.$t('STORAGE.CROP_FACE')}, {value: 'faces', label: this.$t('STORAGE.CROP_FACES')}, {value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER')}, {value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER')}]
         }
     },
     components: { upload },
@@ -415,6 +417,9 @@ export default {
         },
         radiusValue () {
             return (this.general.radius >= 0 && this.general.radius <= 1000) ? this.general.radius : 'max'
+        },
+        primaryPreviewError () {
+            return this.textError || (this.mark.open && this.mark.type === 'img' && !this.imgName)
         }
     },
     mounted () {
@@ -458,7 +463,7 @@ export default {
         async submitStyles () {
             let ruleList = await this.getRuleList()
             if (ruleList.includes(this.transformation)) {
-                this.$Message.warning('规则名已存在！')
+                this.$Message.warning($t('STERAGE.RULE_NAME_EXISTS'))
                 return
             }
             if (!this.transformationError && !this.textError && this.styles2Save()) {
@@ -472,7 +477,7 @@ export default {
                     })
                     this.$router.push({ name: 'pictureStyles', params: { bucket: this.bucket } })
                 } catch (error) {
-                    this.$Message.success('保存失败')
+                    this.$Message.success($t('STERAGE.SAVE_FAILED'))
                 }
             }
         },
@@ -531,7 +536,7 @@ export default {
             } else {
                 const insArray = this.instructions.split('--')
                 if (insArray.length > 4) {
-                    this.$Message.error('指令条目不能超过4条')
+                    this.$Message.error($t('STORAGE.NO_MORE_4'))
                     return false
                 }
                 insArray.forEach(instruction => {
@@ -565,7 +570,7 @@ export default {
                     Body: file
                 })
             } catch (error) {
-                this.$Message.error('字体文件保存失败')
+                this.$Message.error($t('STERAGE.SAVE_FAILED'))
             }
         },
         font2Save (data) {
@@ -895,7 +900,7 @@ const mark2Front = data => {
     .page-right {
         .form-label {
             display: inline-block;
-            width: 85px;
+            width: 90px;
             font-size: 14px;
             padding-right: 5px;
             line-height: 30px;
@@ -917,10 +922,15 @@ const mark2Front = data => {
                 background: #000;
             }
         }
+
+        .preview-span {
+            font-size: 14px;
+            line-height: 30px;
+        }
     }
 
     .page-right {
-        width: 600px;
+        width: 610px;
         padding-left: 30px;
 
         .form-item {
@@ -933,7 +943,7 @@ const mark2Front = data => {
 
             .pic-slider {
                 display: inline-block;
-                width: 420px;
+                width: 415px;
                 vertical-align: middle;
             }
 

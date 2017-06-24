@@ -1,11 +1,3 @@
-export const editStylesConsts = {
-    padList: [{value: 'pad', label: '背景填充等比例缩放'}, {value: 'lpad', label: '背景填充等比例缩小'}, {value: 'mpad', label: '背景填充等比例放大'}],
-    fillList: [{value: 'fill', label: '等比例裁剪'}, {value: 'lfill', label: '不放大原图的等比例裁剪'}],
-    thumbList: [{value: 'face', label: '定位一张最易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}],
-    fitList: [{value: 'fit', label: '等比例缩放'}, {value: 'mfit', label: '等比例放大'}, {value: 'limit', label: '等比例缩小'}],
-    angleList: [{value: 'angle', label: '旋转角度'}, {value: 'vflip', label: '垂直翻转'}, {value: 'hflip', label: '水平翻转'}],
-    cropGravityList: [{value: 'north_west', label: '左上位置'}, {value: 'north', label: '正上位置，水平方向居中'}, {value: 'north_east', label: '右上位置'}, {value: 'west', label: '左边，垂直方向居中'}, {value: 'center', label: '正中'}, {value: 'east', label: '右边，垂直方向居中'}, {value: 'south_west', label: '左下位置'}, {value: 'south', label: '正下位置'}, {value: 'south_east', label: '右下位置'}, {value: 'noGravity', label: '指定起点坐标'}, {value: 'xy_center', label: '指定的xy为中心点'}, {value: 'face', label: '定位一张最容易识别的人脸'}, {value: 'faces', label: '定位多张人脸'}, {value: 'face:center', label: '定位一张人脸，若无人脸定位到原图中心'}, {value: 'faces:center', label: '定位多张人脸，若无人脸定位到原图中心'}]
-}
 export const allFontList = [{
     value: 'Songti SC',
     label: '宋体'
