@@ -1,16 +1,16 @@
 <template>
     <div>
         <div class="setting-box">
-            <span>{{$t('STORAGE.ISOPEN')}}</span>
+            <span class="setting-name">{{$t('STORAGE.ISOPEN')}}</span>
             <Tooltip placement="bottom" :content='$t("STORAGE.ADULT_OPEN_INFO")' :disabled="!enabledVertify">
                 <i-switch size="large" :disabled='enabledVertify' v-model="adultPolify.enabled">
-                    <span slot="open">{{$t('STORAGE.OPEN')}}</span>
-                    <span slot="close">{{$t('STORAGE.ISOPEN')}}</span>
+                    <span slot="open">{{$t('STORAGE.ON')}}</span>
+                    <span slot="close">{{$t('STORAGE.OFF')}}</span>
                 </i-switch>
             </Tooltip>
         </div>
         <div class="setting-box">
-            <span>{{$t('STORAGE.ADULT_SAVE')}}</span>
+            <span class="setting-name">{{$t('STORAGE.ADULT_SAVE')}}</span>
             <Select v-model="adultPolify.isolate_bucket" class="my-select" style="">
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
@@ -19,7 +19,7 @@
             </p>
         </div>
         <div class="setting-box">
-            <span class="last-title">{{$t('STORAGE.ADULT_RULE')}}</span>
+            <span class="setting-name last-title">{{$t('STORAGE.ADULT_RULE')}}</span>
             <Radio-group v-model="adultPolify.delete" vertical>
                 <Radio label="F">
                     <span>{{$t('STORAGE.ADULT_RULE_SAVE')}}</span>
@@ -193,6 +193,12 @@
         span.last-title {
             vertical-align: top;
             line-height: 30px;
+        }
+        span.setting-name {
+            display: inline-block;
+            width: 75px;
+            text-align: right;
+            padding-right: 5px;
         }
         .my-select {
             width: 400px
