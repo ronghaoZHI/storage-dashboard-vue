@@ -46,11 +46,12 @@
                     <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
                 </div>
                 <div class="body">
-                    <div v-for="user in subUserList" @click="selectSubUser(user)">
+                    <div v-if="subUserList.length > 0" class="card-user" v-for="user in subUserList" :key="user.ts" @click="selectSubUser(user)">
                         <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
                         <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
                         <span class="icon" v-show="user.info.type === 'super'"><Icon type="star"></Icon></span>
                     </div>
+                    <div v-if="subUserList.length <= 0" class="warning" @click="toUserMange()">暂无绑定用户,<span>点击绑定或新增用户</span></div>
                 </div>
             </div>
         </div>
@@ -63,7 +64,7 @@ import Vue from 'vue'
 export default {
     data () {
         return {
-            lang: localStorage.getItem('lang'),
+            lang: localStorage.getItem('lang') || 'cn',
             selectedCustomer: '',
             isLogin: !(!!user.state && user.state.type === 'admin'),
             keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
@@ -111,8 +112,12 @@ export default {
             if (res.length > 0) {
                 this.subUserList = res
                 this.isLogin = false
+                await this.$store.dispatch('setUserInfo', {
+                    ...data,
+                    subUserList: this.subUserList
+                })
             } else {
-                this.toIndex(data)
+                this.toIndex(data, 'user')
             }
         },
         selectSubUser (user) {
@@ -122,11 +127,11 @@ export default {
                 subUserList: this.subUserList
             })
         },
-        async toIndex (data) {
+        async toIndex (data, router = '/') {
             await this.$store.dispatch('setUserInfo', data)
             await this.refreshMenu()
             let redirect = this.$route.query.redirect // get redirect path
-            !!redirect ? this.$router.push(redirect) : this.$router.push('/')
+            !!redirect ? this.$router.push(redirect) : this.$router.push(router)
             Vue.config.lang = this.lang
         },
         changeLang (lang) {
@@ -446,7 +451,7 @@ export default {
                 align-items: flex-start;
                 padding: 10px 0 0 12px;
 
-                & > div {
+                & > .card-user {
                     position: relative;
                     .wh(@login-card-register-item-width,@login-card-register-item-height);
                     background-color: @login-card-register-input-backgrand;
@@ -489,6 +494,15 @@ export default {
                         color: #fff;
                         top: 6px;
                         right: 12px;
+                    }
+                }
+
+                .warning {
+                    .sc(16px, #fff);
+
+                    span {
+                        color: @primary-color;
+                        cursor: pointer;
                     }
                 }
             }

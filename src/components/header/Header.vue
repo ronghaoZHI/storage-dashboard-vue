@@ -62,7 +62,7 @@ export default {
     },
     computed: {
         uname: function () {
-            return user.state.type === 'admin' ? `${this.username} -- ${user.state.subUser.username}` : this.username
+            return user.state.type === 'admin' && user.state.subUser ? `${this.username} -- ${user.state.subUser.username}` : this.username
         }
     },
     props: ['username'],

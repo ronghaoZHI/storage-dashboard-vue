@@ -153,10 +153,13 @@ export default {
                     this.userList = _.each(await this.$http.get(BOUND_USER), (user) => {
                         user.type = this.userType(user)
                     })
-                    this.$Loading.finish()
+                    await this.$Loading.finish()
+                    await this.$store.dispatch('setUserInfo', {
+                        ...user.state,
+                        subUserList: this.userList
+                    })
                 } else {
-                    let res = await handler('listBuckets')
-                    let users = await this.$http.get(SUB_USER)
+                    let [res, users] = await Promise.all([handler('listBuckets'), this.$http.get(SUB_USER)])
                     Promise.all(Array.map(res.Buckets, (bucket) => {
                         this.bucketList = res.Buckets
                         return this.$http.get(SUB_USER_ACL, { params: { bucket: bucket.Name } }).then(acl => {
@@ -274,13 +277,15 @@ export default {
                     this.$Loading.start()
                     let user = await this.$http.post(CREATE_SUB_USER, {...this.createSubUserForm, type: 'sub'})
                     Promise.all(Array.map(this.createSubUserForm.acl, (bucket) => {
-                        return this.$http.post(REDIRECT_BUCKET, {
-                            original: bucket.bucket,
-                            email: user.email,
-                            redirect: bucket.bucket + '-' + user.username.replace(/\W|_/g, '').toLowerCase(),
-                            bucket_acl: ['READ'],
-                            file_acl: ['READ']
-                        })
+                        if (convertObject2Array(bucket.bucket_acl_obj).length > 0 || convertObject2Array(bucket.file_acl_obj).length > 0) {
+                            return this.$http.post(REDIRECT_BUCKET, {
+                                original: bucket.bucket,
+                                email: user.email,
+                                redirect: bucket.bucket + '-' + user.username.replace(/\W|_/g, '').toLowerCase(),
+                                bucket_acl: convertObject2Array(bucket.bucket_acl_obj),
+                                file_acl: convertObject2Array(bucket.file_acl_obj)
+                            })
+                        }
                     })).then(res => {
                         this.getUserList()
                         this.$Message.success('Create sub user success')
@@ -295,7 +300,7 @@ export default {
             _.extend(this, {
                 isEditSubUser: true,
                 createSubUserModal: true,
-                createSubUserForm: user.acl.length > 0 ? user : _.extend(user, {acl: (Array.map(this.bucketList, (bucket) => {
+                createSubUserForm: user.acl.length > 0 ? convertBucketList(user, this.bucketList) : _.extend(user, {acl: (Array.map(this.bucketList, (bucket) => {
                     return {
                         bucket: bucket.Name,
                         bucket_acl_obj: { READ: false, WRITE: false },
@@ -417,13 +422,31 @@ const initSubUser = (acls) => {
     }
 }
 
+const convertBucketList = (user, bucketList) => {
+    if (user.acl.length !== bucketList.length) {
+        let bucketNameArray = Array.map(user.acl, bucket => {
+            return bucket.bucket
+        })
+        _.each(bucketList, (bucket) => {
+            if (bucketNameArray.indexOf(bucket.Name) === -1) {
+                user.acl.push({
+                    bucket: bucket.Name,
+                    bucket_acl_obj: { READ: false, WRITE: false },
+                    file_acl_obj: { READ: false, WRITE: false },
+                    redirect: false
+                })
+            }
+        })
+    }
+    return user
+}
+
 const convertObject2Array = (object) => {
     if (!object) { return }
     let truePermission = {}
     _.each(object, function (value, key) {
         if (value) { truePermission[key] = true }
     })
-    console.log(object, truePermission)
     return _.keys(truePermission)
 }
 

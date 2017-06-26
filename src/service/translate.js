@@ -456,7 +456,7 @@ export const messages = {
         NAV: {
             DOC: '帮助文档',
             LOGOUT: '退出登录',
-            RESELECT_USER: '切换子账号',
+            RESELECT_USER: '切换账号',
             CHANGE_PASSWORD: '修改密码',
             NEW_PASSWORD: '新密码',
             CHANGE_PASSWORD_FAILED: '修改密码失败',
