@@ -1,5 +1,5 @@
 import Vue from 'vue'
-const bytes = (bytes) => {
+const bytes = (bytes, digit = 1) => {
     if (typeof bytes !== 'number') {
         bytes = parseFloat(bytes)
     }
@@ -12,7 +12,7 @@ const bytes = (bytes) => {
 
     const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
     const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
-    const number = (bytes / Math.pow(1024, Math.floor(exponent))).toFixed(1)
+    const number = (bytes / Math.pow(1024, Math.floor(exponent))).toFixed(digit)
 
     return number + ' ' + units[exponent]
 }

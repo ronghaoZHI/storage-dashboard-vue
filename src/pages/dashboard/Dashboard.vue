@@ -354,7 +354,7 @@ const InitOptions = data => {
                 let res = '时间 : ' + date(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/>' + item.seriesName + ' : '
-                    res += data.unit === 'byte' ? bytes(item.value[1]) : times(item.value[1])
+                    res += data.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
                 })
                 return res
             }
