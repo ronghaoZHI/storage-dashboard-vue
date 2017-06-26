@@ -23,7 +23,7 @@
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
                             <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' class="line-width"></Input>
-                            <p class="style-name-info" :class="{'red':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
+                            <p class="style-name-info" :class="{'redFont':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_CROP")}} : </span>
@@ -72,12 +72,12 @@
                                 </div>
                                 <div class="form-item" v-if="general.gravity === 'xy_center' || general.gravity === 'noGravity'">
                                     <div class="gravity-xy">
-                                        <span class="form-label">x : </span>
+                                        <span class="input-box-label">x : </span>
                                         <div class="input-text-box">
                                             <input type='number' v-model="general.x">
                                             <span>px</span>
                                         </div>
-                                        <span class="form-label">y : </span>
+                                        <span class="input-box-label">y : </span>
                                         <div class="input-text-box">
                                             <input type='number' v-model="general.y">
                                             <span>px</span>
@@ -85,7 +85,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="right"></div>
+                            <div :class="['right', gravityImg]"></div>
                         </div><!--crop gravity & xy-->
                         <div class="form-item" v-if="general.crop !== 'noCrop'">
                             <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
@@ -136,21 +136,12 @@
                             </div><!--angle-->
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.FILTER_EFFECTS")}}</span>
-                                <Radio-group v-model="general.effect" style='vertical-align: text-top'>
-                                    <Radio label="noEffect">{{$t("STORAGE.FILTER_EFFECTS_NONE")}}</Radio>
-                                    <Radio label="grayscale">{{$t("STORAGE.GRAYSCALE")}}</Radio>
-                                    <Radio label="auto_contrast">{{$t("STORAGE.AUTO_CONTRAST")}}</Radio>
-                                    <Radio label="brightness">{{$t("STORAGE.BRIGHTNESS")}}</Radio>
-                                    <Radio label="negate">{{$t("STORAGE.NEGATE")}}</Radio>
-                                    <p style='height: 10px;'></p>
-                                    <Radio label="sharpen">{{$t("STORAGE.SHARPEN")}}</Radio>
-                                    <Radio label="blur">{{$t("STORAGE.BLUR")}}</Radio>
-                                    <Radio label="oil_paint">{{$t("STORAGE.OIL_PAINT")}}</Radio>
-                                    <Radio label="pixelate">{{$t("STORAGE.PIXELATE")}}</Radio>
-                                    <Radio label="color">{{$t("STORAGE.ADD_COLOR")}}</Radio>
-                                    <p style='height: 10px;'></p>
-                                    <Radio label="improve">{{$t("STORAGE.IMPROVE")}}</Radio>
-                                </Radio-group>
+                                <div class="form-item-right">
+                                    <div class="effect-radio-box" v-for="item in effectList">
+                                        <input type='radio' :value="item.value" :name="item.value" :class="['effect-radio', item.value]" v-model="general.effect">
+                                        <label :for="item.value"><span class="effect-span-center">{{item.name}}</span></label>
+                                    </div>
+                                </div>
                             </div><!--effect-->
                             <div class="form-item" v-if="general.effect === 'brightness'">
                                 <span class="form-label">{{$t("STORAGE.BRIGHTNESS_VALUE")}} : </span>
@@ -174,14 +165,11 @@
                             </div><!--oilValue-->
                             <div class="form-item" v-if="general.effect === 'color'">
                                 <span class="form-label">{{$t("STORAGE.COLOR")}} : </span>
-                                <div class="color-selector">
-                                    <input type="radio" value="sepia" v-model="general.color" style="background-color:sepia"></Radio>
-                                    <input type="radio" value="red" v-model="general.color" style="background-color:red"></Radio>
-                                    <input type="radio" value="green" v-model="general.color" style="background-color:green"></Radio>
-                                    <input type="radio" value="blue" v-model="general.color" style="background-color:blue"></Radio>
-                                    <input type="radio" value="yellow" v-model="general.color" style="background-color:yellow"></Radio>
-                                    <input type="radio" value="cyan" v-model="general.color" style="background-color:sepcyania"></Radio>
-                                    <input type="radio" value="magenta" v-model="general.color" style="background-color:magenta"></Radio>
+                                <div class="form-item-right">
+                                    <div class="effect-radio-box" v-for="item in colorList">
+                                        <input type='radio' :value="item.value" :name="item.value" :class="['effect-radio', item.value]" v-model="general.color">
+                                        <label :for="item.value"><span class="effect-span-center">{{item.name}}</span></label>
+                                    </div>
                                 </div>
                             </div><!--color-->
                             <div class="form-item" v-if="general.effect === 'color'">
@@ -240,7 +228,7 @@
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
                                     <Input v-model="mark.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
-                                    <p class="red style-name-info" v-if="textError">{{$t("STORAGE.TEXT_CONTENT_INFO")}}</p>
+                                    <p class="redFont style-name-info" v-if="textError">{{$t("STORAGE.TEXT_CONTENT_INFO")}}</p>
                                 </div><!--text-->
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
@@ -332,7 +320,7 @@
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
                             <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 475px"></Input>
-                            <p class="style-name-info" :class="{'red':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
+                            <p class="style-name-info" :class="{'redFont':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
                         </div>
                         <div class="form-item">
                             <span class="form-label">{{$t("STORAGE.PROSCESS_PARAM")}} : </span>
@@ -383,7 +371,9 @@ export default {
             thumbList: [{value: 'face', label: this.$t('STORAGE.CROP_FACE')}, {value: 'faces', label: this.$t('STORAGE.CROP_FACES')}, {value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER')}, {value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER')}],
             fitList: [{value: 'fit', label: this.$t('STORAGE.CROP_FIT')}, {value: 'mfit', label: this.$t('STORAGE.CROP_MFIT')}, {value: 'limit', label: this.$t('STORAGE.CROP_LFIT')}],
             angleList: [{value: 'angle', label: this.$t('STORAGE.ANGLE_ROTATION')}, {value: 'vflip', label: this.$t('STORAGE.ANGLE_VFLIP')}, {value: 'hflip', label: this.$t('STORAGE.ANGLE_HFLIP')}],
-            cropGravityList: [{value: 'north_west', label: this.$t('STORAGE.GRAVITY_NORTH_WEST')}, {value: 'north', label: this.$t('STORAGE.GRAVITY_NORTH')}, {value: 'north_east', label: this.$t('STORAGE.GRAVITY_NORTH_EAST')}, {value: 'west', label: this.$t('STORAGE.GRAVITY_WEST')}, {value: 'center', label: this.$t('STORAGE.GRAVITY_CENTER')}, {value: 'east', label: this.$t('STORAGE.GRAVITY_EAST')}, {value: 'south_west', label: this.$t('STORAGE.GRAVITY_SOUTH_WEST')}, {value: 'south', label: this.$t('STORAGE.GRAVITY_SOUTH')}, {value: 'south_east', label: this.$t('STORAGE.GRAVITY_SOUTH_EAST')}, {value: 'noGravity', label: this.$t('STORAGE.GRAVITY_NOGRAVITY')}, {value: 'xy_center', label: this.$t('STORAGE.GRAVITY_XY_CENTER')}, {value: 'face', label: this.$t('STORAGE.CROP_FACE')}, {value: 'faces', label: this.$t('STORAGE.CROP_FACES')}, {value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER')}, {value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER')}]
+            cropGravityList: [{value: 'north_west', label: this.$t('STORAGE.GRAVITY_NORTH_WEST')}, {value: 'north', label: this.$t('STORAGE.GRAVITY_NORTH')}, {value: 'north_east', label: this.$t('STORAGE.GRAVITY_NORTH_EAST')}, {value: 'west', label: this.$t('STORAGE.GRAVITY_WEST')}, {value: 'center', label: this.$t('STORAGE.GRAVITY_CENTER')}, {value: 'east', label: this.$t('STORAGE.GRAVITY_EAST')}, {value: 'south_west', label: this.$t('STORAGE.GRAVITY_SOUTH_WEST')}, {value: 'south', label: this.$t('STORAGE.GRAVITY_SOUTH')}, {value: 'south_east', label: this.$t('STORAGE.GRAVITY_SOUTH_EAST')}, {value: 'noGravity', label: this.$t('STORAGE.GRAVITY_NOGRAVITY')}, {value: 'xy_center', label: this.$t('STORAGE.GRAVITY_XY_CENTER')}, {value: 'face', label: this.$t('STORAGE.CROP_FACE')}, {value: 'faces', label: this.$t('STORAGE.CROP_FACES')}, {value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER')}, {value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER')}],
+            effectList: [{name: this.$t('STORAGE.FILTER_EFFECTS_NONE'), value: 'noEffect'}, {name: this.$t('STORAGE.GRAYSCALE'), value: 'grayscale'}, {name: this.$t('STORAGE.AUTO_CONTRAST'), value: 'auto_contrast'}, {name: this.$t('STORAGE.BRIGHTNESS'), value: 'brightness'}, {name: this.$t('STORAGE.NEGATE'), value: 'negate'}, {name: this.$t('STORAGE.SHARPEN'), value: 'sharpen'}, {name: this.$t('STORAGE.BLUR'), value: 'blur'}, {name: this.$t('STORAGE.OIL_PAINT'), value: 'oil_paint'}, {name: this.$t('STORAGE.PIXELATE'), value: 'pixelate'}, {name: this.$t('STORAGE.ADD_COLOR'), value: 'color'}, {name: this.$t('STORAGE.IMPROVE'), value: 'improve'}],
+            colorList: [{name: this.$t('STORAGE.SEPIA'), value: 'sepia'}, {name: this.$t('STORAGE.RED'), value: 'red'}, {name: this.$t('STORAGE.GREEN'), value: 'green'}, {name: this.$t('STORAGE.BLUE'), value: 'blue'}, {name: this.$t('STORAGE.YELLOW'), value: 'yellow'}, {name: this.$t('STORAGE.CYAN'), value: 'cyan'}, {name: this.$t('STORAGE.MAGENTA'), value: 'magenta'}]
         }
     },
     components: { upload },
@@ -420,6 +410,9 @@ export default {
         },
         primaryPreviewError () {
             return this.textError || (this.mark.open && this.mark.type === 'img' && !this.imgName)
+        },
+        gravityImg () {
+            return this.general.gravity.split(':')[0]
         }
     },
     mounted () {
@@ -894,6 +887,7 @@ const mark2Front = data => {
 @import '../../styles/index.less';
 
 @edit-styles-border-color: #d7dde4;
+@edit-styles-border-blue: #20a0ff;
 
 .@{css-prefix}edit-styles {
     .page-left,
@@ -905,6 +899,12 @@ const mark2Front = data => {
             padding-right: 5px;
             line-height: 30px;
             text-align: right;
+            vertical-align: top;
+        }
+
+        .form-item-right {
+            display: inline-block;
+            width:480px;
         }
     }
 
@@ -1007,7 +1007,7 @@ const mark2Front = data => {
                 }
 
                 input:checked {
-                    background-color: #20a0ff;
+                    background-color: @edit-styles-border-blue;
                 }
             }
 
@@ -1036,6 +1036,12 @@ const mark2Front = data => {
                 span {
                     line-height: 24px;
                 }
+            }
+
+            .input-box-label{
+                padding: 0 5px;
+                .sc(14px,#8492a6);
+                line-height:30px;
             }
 
             .color-box {
@@ -1071,7 +1077,7 @@ const mark2Front = data => {
                 }
             }
 
-            .red {
+            .redFont {
                 color: red !important;
             }
 
@@ -1102,8 +1108,8 @@ const mark2Front = data => {
                 }
                 input:checked,
                 input:hover {
-                    border: 1px solid #20a0ff;
-                    box-shadow: 0 0 10px #20a0ff;
+                    border: 1px solid @edit-styles-border-blue;
+                    box-shadow: 0 0 10px @edit-styles-border-blue;
                 }
                 input:nth-child(1) {
                     background-color: #5E2612;
@@ -1115,20 +1121,6 @@ const mark2Front = data => {
 
             .gravity-xy {
                 margin-left: 60px;
-            }
-
-            .gravity-preview {
-                & > div {
-                    float: left
-                }
-                div.left {
-                    width: 350px;
-                }
-                div.right {
-                    width: 100px;
-                    height: 85px;
-                    background: #20a0ff;
-                }
             }
 
             .ivu-radio-wrapper {
@@ -1151,7 +1143,168 @@ const mark2Front = data => {
                 width: 300px;
                 margin-left: 90px;
             }
+
+            .noEffect {
+                .bgi('noEffect.png')
+            }
+
+            .grayscale {
+                .bgi('grayscale.png')
+            }
+
+            .auto_contrast {
+                .bgi('auto_contrast.png')
+            }
+
+            .brightness {
+                .bgi('brightness.png')
+            }
+
+            .negate {
+                .bgi('negate.png')
+            }
+
+            .sharpen {
+                .bgi('sharpen.png')
+            }
+
+            .blur {
+                .bgi('blur.png')
+            }
+
+            .oil_paint {
+                .bgi('oil_paint.png')
+            }
+
+            .pixelate {
+                .bgi('pixelate.png')
+            }
+
+            .color {
+                .bgi('color.png')
+            }
+
+            .improve {
+                .bgi('improve.png')
+            }
+
+            .sepia {
+                .bgi('sepia.png')
+            }
+
+            .red {
+                .bgi('red.png')
+            }
+
+            .green {
+                .bgi('green.png')
+            }
+
+            .blue {
+                .bgi('blue.png')
+            }
+
+            .yellow {
+                .bgi('yellow.png')
+            }
+
+            .cyan {
+                .bgi('cyan.png')
+            }
+
+            .magenta {
+                .bgi('magenta.png')
+            }
+
+            .effect-radio-box {
+                display: inline-block;
+                width: 100px;
+                margin-bottom: 10px;
+                margin-right: 10px;
+                .effect-span-center {
+                    display: inline-block;
+                    width: 94px;
+                    text-align: center;
+                }
+            }
+
+            .effect-radio{
+                appearance:none;
+                .wh(94px,94px);
+                outline:none;
+            }
+            .effect-radio:checked,
+            .effect-radio:hover{
+                border: 1px solid @edit-styles-border-blue;
+                box-shadow: 0 0 10px @edit-styles-border-blue;
+            }
         }
+
+        .gravity-preview {
+                & > div {
+                    float: left
+                }
+
+                div.left {
+                    width: 380px;
+                }
+
+                div.right {
+                    .wh(94px, 94px);
+                    margin-bottom: 20px;
+                    border-radius: 4px;
+                }
+
+                .north_west {
+                    .bgi('north_west.png')
+                }
+
+                .north {
+                    .bgi('north.png')
+                }
+
+                .north_east {
+                    .bgi('north_east.png')
+                }
+
+                .west {
+                    .bgi('west.png')
+                }
+                
+                .center {
+                    .bgi('center.png')
+                }
+                .east {
+                    .bgi('east.png')
+                }
+                .south_west {
+                    .bgi('south_west.png')
+                }
+
+                .south {
+                    .bgi('south.png')
+                }
+
+                .south_east {
+                    .bgi('south_east.png')
+                }
+
+                .noGravity {
+                    .bgi('noGravity.png')
+                }
+
+                .xy_center {
+                    .bgi('xy_center.png')
+                }
+                
+                .face {
+                    .bgi('face.png')
+                }
+
+                .faces {
+                    .bgi('faces.png')
+                }
+            }
 
         .separator-line {
             margin: 10px 0 30px -20px;
