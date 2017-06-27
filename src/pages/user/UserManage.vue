@@ -177,7 +177,8 @@ export default {
                                             bucket_acl: acl.bucket_acl,
                                             bucket_acl_obj: convertArray2Object(acl.bucket_acl),
                                             file_acl: acl.file_acl,
-                                            file_acl_obj: convertArray2Object(acl.file_acl)
+                                            file_acl_obj: convertArray2Object(acl.file_acl),
+                                            redirect: true
                                         })
                                     }
                                 })
@@ -304,7 +305,8 @@ export default {
                     return {
                         bucket: bucket.Name,
                         bucket_acl_obj: { READ: false, WRITE: false },
-                        file_acl_obj: { READ: false, WRITE: false }
+                        file_acl_obj: { READ: false, WRITE: false },
+                        redirect: false
                     }
                 }))})
             })
@@ -313,10 +315,15 @@ export default {
             try {
                 this.$Loading.start()
                 Promise.all(Array.map(this.createSubUserForm.acl, (acl) => {
-                    console.log('acls', this.createSubUserForm.acl)
-                    return this.$http.post(UPDATE_SUB_USER_ACL, {
+                    return acl.redirect ? this.$http.post(UPDATE_SUB_USER_ACL, {
                         email: this.createSubUserForm.email,
                         bucket: acl.bucket,
+                        bucket_acl: convertObject2Array(acl.bucket_acl_obj),
+                        file_acl: convertObject2Array(acl.file_acl_obj)
+                    }) : this.$http.post(REDIRECT_BUCKET, {
+                        email: this.createSubUserForm.email,
+                        original: acl.bucket,
+                        redirect: acl.bucket + '-' + this.createSubUserForm.username.replace(/\W|_/g, '').toLowerCase(),
                         bucket_acl: convertObject2Array(acl.bucket_acl_obj),
                         file_acl: convertObject2Array(acl.file_acl_obj)
                     })
@@ -532,10 +539,6 @@ const convertArray2Object = (array) => {
         vertical-align: middle;
         border-bottom: 1px solid #e3e8ee;
     }
-
-    tr {
-    }
 }
-
 
 </style>
