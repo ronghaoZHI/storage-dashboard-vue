@@ -225,7 +225,7 @@ export default {
             }
             path += '?custom_range=' + this.dateRange
             if (user.state.type === 'admin') {
-                path += '&customer=' + user.state.subUser.email
+                path += '&customer=' + user.state.subUser.username
             }
             return getAnalysisUrl(path)
         },
