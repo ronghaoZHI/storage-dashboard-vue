@@ -307,7 +307,7 @@ export const messages = {
             GET_BUCKET_FAILED: 'Get bucket list fail'
         },
         USER: {
-            CREATE_SUB_USER: 'Create sub user',
+            CREATE_SUB_USER: 'Create user',
             CREATE_USER: 'Create user',
             BIND_USER: 'Bind user',
             NO_USER: 'No user',
@@ -731,7 +731,7 @@ export const messages = {
             GET_BUCKET_FAILED: '获取Bucket列表失败'
         },
         USER: {
-            CREATE_SUB_USER: '新建子账号',
+            CREATE_SUB_USER: '新建账号',
             CREATE_USER: '新建帐号',
             BIND_USER: '绑定账号',
             NO_USER: '没有用户',
