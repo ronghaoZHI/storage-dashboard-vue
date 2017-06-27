@@ -237,7 +237,7 @@ export const generalDefult = {
     sharpenValue: 100,
     oilValue: 4,
     colorValue: 80,
-    color: 'red',
+    color: 'sepia',
     pixelateValue: 5,
     border: false,
     borderSize: 1,
