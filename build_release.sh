@@ -2,6 +2,8 @@
 cnpm install || exit 1
 npm run build || exit 1
 
+cp .gitignore dist/ || exit 1
+
 git add --force dist || exit 1
 tree=$(git write-tree --prefix=dist/) || exit 1
 
