@@ -165,7 +165,9 @@ export default {
         keep () {
             localStorage.setItem('keepEmail', this.keepEmail)
         },
-        toUserMange () {
+        async toUserMange () {
+            await this.refreshMenu()
+            Vue.config.lang = this.lang
             this.$router.push('user')
         }
     }

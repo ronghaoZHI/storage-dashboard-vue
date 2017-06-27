@@ -11,10 +11,11 @@ import Settings from '@/pages/bucket/Settings'
 import PictureStyles from '@/pages/bucket/PictureStyles'
 import EditStyles from '@/pages/bucket/EditStyles'
 import FilePermissions from '@/pages/bucket/FilePermissions'
+import user from '@/store/modules/user'
 
 const layoutChild = [{
     path: '',
-    redirect: '/bucket'
+    redirect: user.state.type === 'admin' && !user.state.subUser ? '/user' : '/bucket'
 }, {
     path: '/bucket',
     name: 'bucket',
