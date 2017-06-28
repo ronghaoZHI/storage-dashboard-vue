@@ -177,15 +177,15 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/index.less';
 
-@login-card-height: 640px;
-@login-card-width: 1000px;
+@login-card-height: 600px;
+@login-card-width: 900px;
 @login-card-padding: 48px;
 @login-card-bg: #2e373e;
 @login-card-language-select-background: #384549;
 @login-card-login-text-color: #8492a6;
 @login-card-login-input-invalid-text-color: #d75000;
 @login-card-login-input-width: 380px;
-@login-card-register-item-width: 160px;
+@login-card-register-item-width: 180px;
 @login-card-register-item-height: 80px;
 @login-card-register-text-color: #c0ccda;
 @login-card-register-input-backgrand: #414d56;

@@ -27,7 +27,7 @@
                 </Form-item>
             </Form>
         </Modal>
-        <Modal v-model="bindUserModal" :title='$t("USER.BIND_USER")' width="860" @on-ok="bindUser">
+        <Modal v-model="bindUserModal" :title='$t("USER.BIND_USER")' width="880" @on-ok="bindUser">
             <div class="bsc-user-box">
                 <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in boundUserList">
                     {{user.email}}
