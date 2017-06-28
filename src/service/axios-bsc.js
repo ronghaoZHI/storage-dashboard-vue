@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true
 axios.interceptors.request.use(config => config, error => Promise.reject(error))
 axios.interceptors.response.use(response => response.data, error => {
     if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
-        iView.Message.warning(error.message)
+        iView.Message.warning(error.response ? error.message : 'Need login again')
         store.dispatch('logout').then(res => {
             router.push({
                 path: '/login',

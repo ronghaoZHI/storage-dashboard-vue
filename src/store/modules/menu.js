@@ -38,17 +38,18 @@ const userManage = {
 }
 
 const ONLINE_ADMIN_NO_SUBSUER = [userManage]
+const ONLINE_SUB = [bucket, keychain]
 const ONLINE_NORMAL = [bucket, dashboard, keychain]
 const ONLINE_SUPRER = [bucket, dashboard, keychain, userManage]
 const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, userManage]
 
 const state = {
-    menuList: user.state.type === 'admin' ? (user.state.subUser ? ONLINE_ADMIN : ONLINE_ADMIN_NO_SUBSUER) : (user.state.type === 'super' ? ONLINE_SUPRER : ONLINE_NORMAL)
+    menuList: user.state.type === 'admin' ? (user.state.subUser ? ONLINE_ADMIN : ONLINE_ADMIN_NO_SUBSUER) : (user.state.type === 'super' ? ONLINE_SUPRER : (user.state.type === 'sub' ? ONLINE_SUB : ONLINE_NORMAL))
 }
 
 const mutations = {
     [types.REFRESH_MENU] (state) {
-        state.menuList = user.state.type === 'admin' ? (user.state.subUser ? ONLINE_ADMIN : ONLINE_ADMIN_NO_SUBSUER) : (user.state.type === 'super' ? ONLINE_SUPRER : ONLINE_NORMAL)
+        state.menuList = user.state.type === 'admin' ? (user.state.subUser ? ONLINE_ADMIN : ONLINE_ADMIN_NO_SUBSUER) : (user.state.type === 'super' ? ONLINE_SUPRER : (user.state.type === 'sub' ? ONLINE_SUB : ONLINE_NORMAL))
     }
 }
 

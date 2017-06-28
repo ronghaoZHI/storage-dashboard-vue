@@ -160,37 +160,35 @@ export default {
                     })
                 } else {
                     let [res, users] = await Promise.all([handler('listBuckets'), this.$http.get(SUB_USER)])
-                    Promise.all(Array.map(res.Buckets, (bucket) => {
+                    let buckets = await Promise.all(Array.map(res.Buckets, (bucket) => {
                         this.bucketList = res.Buckets
                         return this.$http.get(SUB_USER_ACL, { params: { bucket: bucket.Name } }).then(acl => {
                             return { bucket: bucket.Name, acl: acl }
                         })
-                    })).then(res => {
-                        return this.userList = _.each(users, (user) => {
-                            user.acl = []
-                            user.type = this.userType(user)
-                            _.each(res, (bucket) => {
-                                _.each(bucket.acl, (acl) => {
-                                    if (user.email === acl.email && (acl.bucket_acl.length !== 0 || acl.file_acl.length !== 0)) {
-                                        user.acl.push({
-                                            bucket: bucket.bucket,
-                                            bucket_acl: acl.bucket_acl,
-                                            bucket_acl_obj: convertArray2Object(acl.bucket_acl),
-                                            file_acl: acl.file_acl,
-                                            file_acl_obj: convertArray2Object(acl.file_acl),
-                                            redirect: true
-                                        })
-                                    }
-                                })
+                    }))
+                    this.userList = _.each(users, (user) => {
+                        user.acl = []
+                        user.type = this.userType(user)
+                        _.each(buckets, (bucket) => {
+                            _.each(bucket.acl, (acl) => {
+                                if (user.email === acl.email && (acl.bucket_acl.length !== 0 || acl.file_acl.length !== 0)) {
+                                    user.acl.push({
+                                        bucket: bucket.bucket,
+                                        bucket_acl: acl.bucket_acl,
+                                        bucket_acl_obj: convertArray2Object(acl.bucket_acl),
+                                        file_acl: acl.file_acl,
+                                        file_acl_obj: convertArray2Object(acl.file_acl),
+                                        redirect: true
+                                    })
+                                }
                             })
                         })
-                    }).then(res => {
-                        this.$Loading.finish()
                     })
+                    this.$Loading.finish()
                 }
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
+                console.log(error)
             }
         },
         async openBindUserModal () {
@@ -278,7 +276,7 @@ export default {
                 try {
                     this.$Loading.start()
                     let user = await this.$http.post(CREATE_SUB_USER, {...this.createSubUserForm, type: 'sub'})
-                    Promise.all(Array.map(this.createSubUserForm.acl, (bucket) => {
+                    await Promise.all(Array.map(this.createSubUserForm.acl, (bucket) => {
                         if (convertObject2Array(bucket.bucket_acl_obj).length > 0 || convertObject2Array(bucket.file_acl_obj).length > 0) {
                             return this.$http.post(REDIRECT_BUCKET, {
                                 original: bucket.bucket,
@@ -288,10 +286,9 @@ export default {
                                 file_acl: convertObject2Array(bucket.file_acl_obj)
                             })
                         }
-                    })).then(res => {
-                        this.getUserList()
-                        this.$Message.success('Create sub user success')
-                    })
+                    }))
+                    this.getUserList()
+                    this.$Message.success('Create sub user success')
                 } catch (error) {
                     this.$Message.error('Create sub user error')
                     this.$Loading.error()
@@ -315,7 +312,7 @@ export default {
         async editSubUser () {
             try {
                 this.$Loading.start()
-                Promise.all(Array.map(this.createSubUserForm.acl, (acl) => {
+                await Promise.all(Array.map(this.createSubUserForm.acl, (acl) => {
                     return acl.redirect ? this.$http.post(UPDATE_SUB_USER_ACL, {
                         email: this.createSubUserForm.email,
                         bucket: acl.bucket,
@@ -328,10 +325,9 @@ export default {
                         bucket_acl: convertObject2Array(acl.bucket_acl_obj),
                         file_acl: convertObject2Array(acl.file_acl_obj)
                     })
-                })).then(res => {
-                    this.getUserList()
-                    this.$Message.success('Update sub user success')
-                })
+                }))
+                this.getUserList()
+                this.$Message.success('Update sub user success')
             } catch (error) {
                 this.$Message.error('Update sub user error')
                 this.$Loading.error()
@@ -370,9 +366,9 @@ const superHeaderSetting = [
         align: 'left',
         key: 'acl',
         render (row, column, index) {
-            return Array.map(row.acl, (acl) => {
+            return row.acl ? Array.map(row.acl, (acl) => {
                 return `${acl.bucket} - bucket:${acl.bucket_acl} - file:${acl.file_acl}`
-            })
+            }) : ''
         }
     },
     {
