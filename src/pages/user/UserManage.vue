@@ -29,7 +29,7 @@
         </Modal>
         <Modal v-model="bindUserModal" :title='$t("USER.BIND_USER")' width="860" @on-ok="bindUser">
             <div class="bsc-user-box">
-                <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in allUserList">
+                <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in boundUserList">
                     {{user.email}}
                 </div>
             </div>
@@ -85,7 +85,7 @@ export default {
         return {
             self: this,
             userList: [],
-            allUserList: [],
+            boundUserList: [],
             bucketList: [],
             createSubUserModal: false,
             createUserModal: false,
@@ -194,22 +194,26 @@ export default {
             }
         },
         async openBindUserModal () {
-            let res = await this.$http.get(ALL_USER)
-            _.each(res, user => {
-                if (this.userList.indexOf(user) > 0) {
+            let [allUser, boundUser] = await Promise.all([this.$http.get(ALL_USER), this.$http.get(BOUND_USER)])
+            let boundUserEmailList = []
+            _.each(boundUser, user => {
+                boundUserEmailList.push(user.email)
+            })
+            _.each(allUser, user => {
+                if (boundUserEmailList.indexOf(user.email) > 0) {
                     user.show = false
                 } else {
                     user.show = true
                     user.selected = false
                 }
             })
-            this.allUserList = res
+            this.boundUserList = allUser
             this.bindUserModal = true
         },
         async bindUser () {
             this.$Loading.start()
             try {
-                await Promise.all(Array.map(this.allUserList, (user) => {
+                await Promise.all(Array.map(this.boundUserList, (user) => {
                     if (user.selected) {
                         this.$http.post(BIND_USER, { email: user.email })
                         this.userList.push({ ...user, type: this.userType(user) })
@@ -234,9 +238,6 @@ export default {
             }, error => {
                 this.$Message.error(error)
             })
-        },
-        async getAllUser () {
-            this.allUserList = await this.$http.get(ALL_USER)
         },
         createUser () {
             let self = this
