@@ -451,7 +451,9 @@ const convertObject2Array = (object) => {
     _.each(object, function (value, key) {
         if (value) { truePermission[key] = true }
     })
-    return _.keys(truePermission)
+    let keys = _.keys(truePermission)
+    keys.indexOf('READ_ACP') === -1 && keys.push('READ_ACP')
+    return keys
 }
 
 const convertArray2Object = (array) => {

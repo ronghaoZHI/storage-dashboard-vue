@@ -10,8 +10,8 @@
         <Row class="toolbar-nav">
             <Col span="10">
                 <div>
-                    <Button type="primary" @click="upload">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
-                    <Button type="primary" @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
+                    <Button type="primary" v-show="canUpload" @click="upload">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
+                    <Button type="primary" v-show="canUpload" @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
                     <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
                     <Button @click="batchDeleteFileConfirm" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
                 </div>
@@ -68,6 +68,7 @@ import { getAWS, handler } from '@/service/Aws'
 import { bytes, keyFilter, convertPrefix2Router } from '@/service/bucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
 import Clipboard from 'clipboard'
+import user from '@/store/modules/user'
 import moment from 'moment'
 import filePermission from './FilePermissions'
 export default {
@@ -92,7 +93,8 @@ export default {
             iconSize: 18,
             fileHeader: fileHeaderSetting,
             permissionKey: '',
-            searchInputFocus: false
+            searchInputFocus: false,
+            canUpload: false
         }
     },
     components: {
@@ -111,6 +113,7 @@ export default {
     },
     mounted () {
         this.getData()
+        this.checkCanUpload()
     },
     methods: {
         async getData (nextMarker, searchValue = '') {
@@ -256,8 +259,20 @@ export default {
         getUrl (prefix) {
             return '/bucket/' + this.bucket + '/prefix/' + repliceAllString(prefix, '/', '%2F')
         },
-        upload () {
+        async upload () {
             this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
+        },
+        async checkCanUpload () {
+            if (user.state.type === 'sub') {
+                let acl = await handler('getBucketAcl', { Bucket: this.bucket })
+                _.each(acl.Grants, grant => {
+                    if ((grant.Grantee.ID === user.state.username) && (grant.Permission === 'FULL_CONTROL' || _.keys(grant.Permission).indexOf('READ_ACP') !== -1)) {
+                        this.canUpload = true
+                    }
+                })
+            } else {
+                this.canUpload = true
+            }
         },
         check () {
             this.inputCheck = !this.createFolderValue.length > 0
