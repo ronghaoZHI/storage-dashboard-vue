@@ -14,6 +14,7 @@ import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
 import Video from '@/pages/video/Video'
 import user from '@/store/modules/user'
+import Video from '@/pages/video/Video'
 
 const layoutChild = [{
     path: '',
