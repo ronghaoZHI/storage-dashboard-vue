@@ -54,3 +54,25 @@ export const handler = async(method, params = '') => {
         return Promise.reject(error)
     }
 }
+
+export const transcoder = async(method, params = '') => {
+    if (user.state.type === 'admin') {
+        key = user.state.subUser.keys[0]
+    } else if (!key.accesskey) {
+        key = await getKey()
+    }
+    AWS.config.update({ accessKeyId: key.accesskey, secretAccessKey: key.secretkey })
+    AWS.config.region = 'us-west-1'
+    AWS.config.httpOptions = { timeout: 10000 }
+    AWS.config.endpoint = 'http://' + HOST.transcoderHOST
+    try {
+        let elastictranscoder = new AWS.ElasticTranscoder({paramValidation: false, convertResponseTypes: false})
+        return await new Promise((resolve, reject) => elastictranscoder[method](params, (error, data) => {
+            error && iView.Message.error(error.message, 5)
+            return error ? reject(error) : resolve(data)
+        }))
+    } catch (error) {
+        iView.Message.error(error.message, 5)
+        return Promise.reject(error)
+    }
+}

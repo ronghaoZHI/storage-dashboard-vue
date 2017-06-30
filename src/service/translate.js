@@ -41,6 +41,7 @@ export const messages = {
             BUCKET: 'My Storage',
             DASHBOARD: 'Dashboard',
             KEYCHAIN: 'Keychain',
+            VIDEO: 'Video',
             MACHINE: 'Machine',
             PARTITION: 'Partition',
             USER: 'User Management'
@@ -261,6 +262,7 @@ export const messages = {
             YELLOW: 'yellow',
             CYAN: 'cyan',
             MAGENTA: 'magenta',
+            NO_LIST: 'No data',
 
             TITLE: 'My Storage',
             FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
@@ -466,6 +468,7 @@ export const messages = {
             BUCKET: '我的存储',
             DASHBOARD: '统计分析',
             KEYCHAIN: '密钥管理',
+            VIDEO: '视频处理',
             MACHINE: '机器信息',
             PARTITION: '磁盘分区',
             USER: '用户管理'
@@ -686,6 +689,7 @@ export const messages = {
             YELLOW: '黄色',
             CYAN: '青色',
             MAGENTA: '粉色',
+            NO_LIST: '列表为空',
 
             TITLE: '我的存储',
             FILE_UPLOAD_LIM: '点击或拖拽上传',

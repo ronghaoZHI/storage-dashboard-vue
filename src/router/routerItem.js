@@ -12,6 +12,7 @@ import PictureStyles from '@/pages/bucket/PictureStyles'
 import EditStyles from '@/pages/bucket/EditStyles'
 import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
+import Video from '@/pages/video/Video'
 
 const layoutChild = [{
     path: '',
@@ -61,6 +62,11 @@ const layoutChild = [{
     name: 'FilePermissions',
     meta: { title: 'File Permissions', ali: 'bucket' },
     component: FilePermissions
+}, {
+    path: '/video',
+    name: 'video',
+    meta: { title: 'Video', ali: 'video' },
+    component: Video
 }, {
     path: '/machine',
     name: 'machine',
