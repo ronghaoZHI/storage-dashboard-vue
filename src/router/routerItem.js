@@ -67,12 +67,16 @@ const layoutChild = [{
     path: '/video',
     name: 'video',
     meta: { title: 'Video', ali: 'video' },
+<<<<<<< HEAD
     component: TemplateList
 }, {
     path: '/video/TemplateEdit/id/:id',
     name: 'TemplateEdit',
     meta: { title: 'Video', ali: 'video' },
     component: TemplateEdit
+=======
+    component: Video
+>>>>>>> add rule list
 }, {
     path: '/machine',
     name: 'machine',
