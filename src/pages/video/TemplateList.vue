@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            
         </div>
         <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
     </div>
@@ -22,18 +21,6 @@ export default {
     mounted () {
         this.listPresets()
     },
-    directives: {
-        cbutton: {
-            bind: function (el, binding) {
-                el.onclick = (e) => {
-                    el.classList.toggle('bucket-selected')
-                    _.each(el.parentNode.childNodes, (node) => {
-                        node !== el && node.classList.remove('bucket-selected')
-                    })
-                }
-            }
-        }
-    },
     methods: {
         async createPreset () {
             try {
@@ -48,7 +35,6 @@ export default {
             try {
                 this.$Loading.start()
                 let res = await transcoder('listPresets')
-                console.log('res', res)
                 this.templateList = this.convert2Front(res.Presets)
             } catch (error) {
                 console.log(error)
@@ -156,13 +142,15 @@ const headerSetting = [{
     title: 'Video',
     width: 140,
     render (row, column, index) {
-        let line, tips
+        let line = ''
+        let tips = ''
         _.forEach(row.video, item => {
             line += `<span>${item.name}:${item.value}</span></br>`
         })
         _.forEach(row.videoDetails, item => {
             tips += `<span>${item.name}:${item.value}</span></br>`
         })
+        console.log('line', line)
         return `<Poptip placement="right" trigger='hover'>
             <div>${line}</div>
             <div class="api" slot="content">
@@ -174,7 +162,8 @@ const headerSetting = [{
     title: 'Audio',
     width: 140,
     render (row, column, index) {
-        let line, tips
+        let line = ''
+        let tips = ''
         _.forEach(row.audio, item => {
             line += `<span>${item.name}:${item.value}</span></br>`
         })

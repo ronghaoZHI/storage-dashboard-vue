@@ -14,9 +14,7 @@ import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
 import Video from '@/pages/video/Video'
 import user from '@/store/modules/user'
-import Video from '@/pages/video/Video'
-import user from '@/store/modules/user'
-import Video from '@/pages/video/Video'
+import TemplateList from '@/pages/video/TemplateList'
 
 const layoutChild = [{
     path: '',
@@ -70,7 +68,7 @@ const layoutChild = [{
     path: '/video',
     name: 'video',
     meta: { title: 'Video', ali: 'video' },
-    component: Video
+    component: TemplateList
 }, {
     path: '/machine',
     name: 'machine',
