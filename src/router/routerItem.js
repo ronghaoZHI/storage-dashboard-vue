@@ -12,13 +12,8 @@ import PictureStyles from '@/pages/bucket/PictureStyles'
 import EditStyles from '@/pages/bucket/EditStyles'
 import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
-import Video from '@/pages/video/Video'
-import user from '@/store/modules/user'
-<<<<<<< HEAD
 import TemplateList from '@/pages/video/TemplateList'
-=======
 import TemplateEdit from '@/pages/video/TemplateEdit'
->>>>>>> add templateEdit
 
 const layoutChild = [{
     path: '',
