@@ -14,7 +14,11 @@ import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
 import Video from '@/pages/video/Video'
 import user from '@/store/modules/user'
+<<<<<<< HEAD
 import TemplateList from '@/pages/video/TemplateList'
+=======
+import TemplateEdit from '@/pages/video/TemplateEdit'
+>>>>>>> add templateEdit
 
 const layoutChild = [{
     path: '',
@@ -69,6 +73,11 @@ const layoutChild = [{
     name: 'video',
     meta: { title: 'Video', ali: 'video' },
     component: TemplateList
+}, {
+    path: '/video/TemplateEdit/id/:id',
+    name: 'TemplateEdit',
+    meta: { title: 'Video', ali: 'video' },
+    component: TemplateEdit
 }, {
     path: '/machine',
     name: 'machine',

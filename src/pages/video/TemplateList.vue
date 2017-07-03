@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
+            <Button class="button-bsc-add-bucket" type="primary" @click="goTemplateEdit">新建模版</Button>
         </div>
         <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
     </div>
@@ -39,6 +40,9 @@ export default {
             } catch (error) {
                 console.log(error)
             }
+        },
+        goTemplateEdit () {
+            this.$router.push({ name: 'TemplateEdit', params: { id: 'none' } })
         },
         async readPreset () {
             try {
