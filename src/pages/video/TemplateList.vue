@@ -27,18 +27,24 @@ export default {
             try {
                 this.$Loading.start()
                 let res = await transcoder('createPreset', transcoderData)
+                this.$Loading.finish()
                 console.log('res', res)
             } catch (error) {
                 console.log(error)
+                this.$Message.error(error)
+                this.$Loading.error()
             }
         },
         async listPresets () {
             try {
                 this.$Loading.start()
                 let res = await transcoder('listPresets')
-                this.templateList = this.convert2Front(res.Presets)
+                this.templateList = await this.convert2Front(res.Presets)
+                this.$Loading.finish()
             } catch (error) {
                 console.log(error)
+                this.$Message.error(error)
+                this.$Loading.error()
             }
         },
         goTemplateEdit () {
@@ -48,7 +54,10 @@ export default {
             try {
                 this.$Loading.start()
                 await transcoder('readPreset', {Id: '153'})
+                this.$Loading.finish()
             } catch (error) {
+                this.$Message.error(error)
+                this.$Loading.error()
             }
         },
         async deletePreset (rule) {
@@ -56,9 +65,12 @@ export default {
                 this.$Loading.start()
                 await transcoder('deletePreset', {Id: rule.id})
                 this.templateList.splice(rule._index, 1)
+                this.$Loading.finish()
                 this.$Message.success('删除成功')
             } catch (error) {
                 this.$Message.error('删除失败！')
+                this.$Message.error(error)
+                this.$Loading.error()
             }
         },
         convert2Front (data) {
@@ -146,14 +158,8 @@ const headerSetting = [{
     title: 'Video',
     width: 140,
     render (row, column, index) {
-        let line = ''
-        let tips = ''
-        _.forEach(row.video, item => {
-            line += `<span>${item.name}:${item.value}</span></br>`
-        })
-        _.forEach(row.videoDetails, item => {
-            tips += `<span>${item.name}:${item.value}</span></br>`
-        })
+        let line = row.video.map(item => { `<span>${item.name}:${item.value}</span></br>` })
+        let tips = row.videoDetails.map(item => { `<span>${item.name}:${item.value}</span></br>` })
         console.log('line', line)
         return `<Poptip placement="right" trigger='hover'>
             <div>${line}</div>
@@ -166,14 +172,8 @@ const headerSetting = [{
     title: 'Audio',
     width: 140,
     render (row, column, index) {
-        let line = ''
-        let tips = ''
-        _.forEach(row.audio, item => {
-            line += `<span>${item.name}:${item.value}</span></br>`
-        })
-        _.forEach(row.audioDetails, item => {
-            tips += `<span>${item.name}:${item.value}</span></br>`
-        })
+        let line = row.audio.map(item => { `<span>${item.name}:${item.value}</span></br>` })
+        let tips = row.audioDetails.map(item => { `<span>${item.name}:${item.value}</span></br>` })
         return `<Poptip placement="right" trigger='hover'>
             <div>${line}</div>
             <div class="api" slot="content">
@@ -192,31 +192,31 @@ const headerSetting = [{
 }]
 
 const transcoderData = {
-    'Name': '模板名称',
-    'Description': '模板描述',
-    'FastStart': 'true',
-    'Container': 'mp4',
-    'Audio': {
-        'Codec': 'AAC',
-        'CodecOptions': {
-            'Profile': 'auto'
+    Name: '模板名称',
+    Description: '模板描述',
+    FastStart: 'true',
+    Container: 'mp4',
+    Audio: {
+        Codec: 'AAC',
+        CodecOptions: {
+            Profile: 'auto'
         },
-        'SampleRate': '22050',
-        'BitRate': '64',
-        'Channels': '0'
+        SampleRate: '22050',
+        BitRate: '64',
+        Channels: '0'
     },
-    'Video': {
-        'Codec': 'H.264',
-        'CodecOptions': {
-            'Profile': 'baseline',
-            'Level': '1'
+    Video: {
+        Codec: 'H.264',
+        CodecOptions: {
+            Profile: 'baseline',
+            Level: '1'
         },
-        'KeyframesMaxDist': '1',
-        'FixedGOP': 'true',
-        'BitRate': '64',
-        'FrameRate': '23.97',
-        'Resolution': '1024x900',
-        'AspectRatio': '1:1'
+        KeyframesMaxDist: '1',
+        FixedGOP: 'true',
+        BitRate: '64',
+        FrameRate: '23.97',
+        Resolution: '1024x900',
+        AspectRatio: '1:1'
     }
 }
 </script>

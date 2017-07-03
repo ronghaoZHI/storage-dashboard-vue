@@ -194,6 +194,7 @@ export default {
                 this.$Loading.finish()
                 this.$Message.success('创建成功')
             } catch (error) {
+                this.$Message.error(error)
                 this.$Loading.error()
             }
         },
@@ -202,7 +203,10 @@ export default {
                 try {
                     this.$Loading.start()
                     await transcoder('readPreset', {Id: '153'})
+                    this.$Loading.finish()
                 } catch (error) {
+                    this.$Message.error(error)
+                    this.$Loading.error()
                 }
             }
         }
@@ -251,31 +255,31 @@ const auxiliaryDefult = {
 }
 
 const templateDefult = {
-    'Name': '模板名称',
-    'Description': '模板描述',
-    'FastStart': true,
-    'Container': 'mp4',
-    'Audio': {
-        'Codec': 'AAC',
-        'CodecOptions': {
-            'Profile': 'auto'
+    Name: '模板名称',
+    Description: '模板描述',
+    FastStart: true,
+    Container: 'mp4',
+    Audio: {
+        Codec: 'AAC',
+        CodecOptions: {
+            Profile: 'auto'
         },
-        'SampleRate': '22050',
-        'BitRate': '64',
-        'Channels': 'auto'
+        SampleRate: '22050',
+        BitRate: '64',
+        Channels: 'auto'
     },
-    'Video': {
-        'Codec': 'H.264',
-        'CodecOptions': {
-            'Profile': 'baseline',
-            'Level': '1'
+    Video: {
+        Codec: 'H.264',
+        CodecOptions: {
+            Profile: 'baseline',
+            Level: '1'
         },
-        'KeyframesMaxDist': '1',
-        'FixedGOP': true,
-        'BitRate': '64',
-        'FrameRate': '23.97',
-        'Resolution': 'auto',
-        'AspectRatio': '1:1'
+        KeyframesMaxDist: '1',
+        FixedGOP: true,
+        BitRate: '64',
+        FrameRate: '23.97',
+        Resolution: 'auto',
+        AspectRatio: '1:1'
     }
 }
 </script>
