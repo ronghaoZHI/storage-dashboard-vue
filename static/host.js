@@ -1,5 +1,4 @@
-// for ansible build
-// this way is very ugly
+// shit
 window.domain = 'bscstorage.com'
 window.dashboard_conf = {
     apiHost: 'frontendapi-stats.bscstorage.com:9090',

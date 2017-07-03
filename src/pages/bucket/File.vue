@@ -91,7 +91,199 @@ export default {
             self: this,
             showHeader: true,
             iconSize: 18,
-            fileHeader: fileHeaderSetting,
+            fileHeader: [{
+                type: 'selection',
+                width: 30,
+                align: 'center'
+            },
+            {
+                title: 'Key',
+                key: 'Key',
+                width: 240,
+                ellipsis: true,
+                sortable: true,
+                render: (h, params) => {
+                    return h('div', [
+                        h('Icon', {
+                            props: {
+                                type: params.row.Type === 'file' ? 'document' : 'folder',
+                                size: 16
+                            },
+                            style: {
+                                position: 'relative',
+                                top: '1px',
+                                paddingRight: '4px'
+                            }
+                        }),
+                        h('strong', {
+                            'class': {
+                                'link-folder': params.row.Type !== 'file'
+                            },
+                            on: {
+                                click: () => {
+                                    params.row.Type !== 'file' && this.openFolder(params.row)
+                                }
+                            }
+                        }, params.row.Key)
+                    ])
+                }
+            }, {
+                title: 'Size',
+                width: 90,
+                align: 'right',
+                key: 'convertSize'
+            }, {
+                title: 'Create time',
+                key: 'LastModified',
+                align: 'right',
+                width: 140,
+                sortable: true
+            }, {
+                title: 'Actions',
+                key: 'actions',
+                width: 170,
+                align: 'right',
+                render: (h, params) => {
+                    return params.row.Type === 'folder' ? h('Tooltip', {
+                        props: {
+                            content: this.$t('STORAGE.DELETE_FOLDER'),
+                            delay: 1000,
+                            placement: 'top'
+                        }
+                    }, [h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.deleteFileConfirm(params.row)
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'ios-trash',
+                            size: this.iconSize
+                        }
+                    })
+                    ])
+                    ]) : h('div', [
+                        h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.FILE_PERMISSIONS'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.permissionModal(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'gear-a',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]),
+                        h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.DOWNLOAD_FILE'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.downloadFile(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'ios-cloud-download',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]), h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.IMG_PREVIEW'),
+                                delay: 1000,
+                                disabled: params.row && !params.row.isImage,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.imageModal(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'eye',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]), h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.COPY_FILE_LINK'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.clipModal(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'link',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]), h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.DELETE_FILE'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.deleteFileConfirm(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'ios-trash',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ])
+                    ])
+                }
+            }
+            ],
             permissionKey: '',
             searchInputFocus: false,
             canUpload: false
@@ -324,47 +516,6 @@ const getURL = async (bucket, file, prefix) => {
         console.log(error)
     }
 }
-
-const fileHeaderSetting = [{
-    type: 'selection',
-    width: 30,
-    align: 'center'
-},
-{
-    title: 'Key',
-    key: 'Key',
-    width: 240,
-    ellipsis: true,
-    sortable: true,
-    render (row, column, index) {
-        return row.Type === 'file' ? `<Icon type="document" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong>${row.Key}</strong>` : `<Icon type="folder" style="position: relative;top: 1px;padding-right:4px" size="16"></Icon> <strong class="link-folder" @click="openFolder(row)">${row.Key}</strong>`
-    }
-}, {
-    title: 'Size',
-    width: 90,
-    align: 'right',
-    key: 'convertSize'
-}, {
-    title: 'Create time',
-    key: 'LastModified',
-    align: 'right',
-    width: 140,
-    sortable: true
-}, {
-    title: 'Actions',
-    key: 'actions',
-    width: 170,
-    align: 'right',
-    render (row, column, index) {
-        return row.Type === 'folder' ? `<Tooltip :content='$t("STORAGE.DELETE_FOLDER")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
-            : `<Tooltip :content='$t("STORAGE.FILE_PERMISSIONS")' :delay="1000" placement="top"><i-button @click="permissionModal(row)" size="small"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.DOWNLOAD_FILE")' :delay="1000" placement="top"><i-button size="small" @click="downloadFile(row)"><Icon type="ios-cloud-download" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.IMG_PREVIEW")' :delay="1000" placement="top"><i-button size="small" :disabled="row && !row.isImage" @click="imageModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.COPY_FILE_LINK")' :delay="1000" placement="top"><i-button size="small" @click="clipModal(row)"><Icon type="link" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.DELETE_FILE")' :delay="1000" placement="top"><i-button size="small" @click="deleteFileConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
-    }
-}
-]
 
 </script>
 <style lang="less" scoped>

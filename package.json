@@ -1,8 +1,8 @@
 {
   "name": "storage-dashboard-vue",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "wu <adwerrd@hotmail.com>",
+  "description": "CWN Dashboard",
+  "author": "@baishancloud.com",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -14,7 +14,7 @@
     "bluebird": "^3.5.0",
     "clipboard": "^1.6.1",
     "core-js": "^2.4.1",
-    "iview": "^2.0.0-rc.13",
+    "iview": "2.0.0-rc.18",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",

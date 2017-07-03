@@ -34,7 +34,6 @@ export default {
             inputCheck: false,
             self: this,
             iconSize: 18,
-            header: headSetting,
             bucketList: this.bucketList
         }
     },
@@ -154,27 +153,6 @@ const batchDeletion = (list, bucket) => {
         })
     }))
 }
-
-const headSetting = [
-    {
-        title: 'Bucket name',
-        key: 'Name'
-    }, {
-        title: 'Create time',
-        align: 'right',
-        key: 'CreationDate'
-    }, {
-        title: 'Actions',
-        key: 'actions',
-        width: 200,
-        align: 'center',
-        render (row, column, index) {
-            return `<Tooltip :content='$t("STORAGE.FILE_LIST")' :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small"><Icon type="ios-list" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.BUCKET_SETTING")' :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="goBucketSettings(${index})"><Icon type="gear-a" :size="iconSize"></Icon></i-button></Tooltip>
-                        <Tooltip :content='$t("STORAGE.DELETE_BUCKET")' content="Delete bucket" :delay="1000" placement="top"><i-button style="margin: 0 6px;" size="small" @click.stop="deleteBucketConfirm(${index})"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
-        }
-    }
-]
 
 </script>
 <style lang="less" scoped>

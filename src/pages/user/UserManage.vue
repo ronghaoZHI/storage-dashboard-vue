@@ -134,12 +134,99 @@ export default {
                     { required: true, message: 'Requires company', trigger: 'blur' },
                     { type: 'string', message: 'Email format is incorrect', trigger: 'blur' }
                 ]
-            }
-        }
-    },
-    computed: {
-        userHeader: function () {
-            return this.isAdmin ? adminHeaderSetting : superHeaderSetting
+            },
+            userHeader: this.isAdmin ? [
+                {
+                    title: 'User name',
+                    width: 150,
+                    align: 'left',
+                    key: 'username'
+                },
+                {
+                    title: 'Type',
+                    width: 80,
+                    align: 'left',
+                    key: 'type'
+                },
+                {
+                    title: 'Email',
+                    width: 250,
+                    align: 'left',
+                    key: 'email'
+                },
+                {
+                    title: 'Actions',
+                    key: 'actions',
+                    width: 50,
+                    align: 'left',
+                    render: (h, params) => {
+                        return h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.unbindUserConfirm(params.row, params.index)
+                                }
+                            }
+                        }, 'Unbind')
+                    }
+                }
+            ] : [
+                {
+                    title: 'User name',
+                    width: 150,
+                    align: 'left',
+                    key: 'username'
+                },
+                {
+                    title: 'Type',
+                    width: 80,
+                    align: 'left',
+                    key: 'type'
+                },
+                {
+                    title: 'Email',
+                    width: 250,
+                    align: 'left',
+                    key: 'email'
+                },
+                {
+                    title: 'Acl',
+                    width: 400,
+                    align: 'left',
+                    key: 'acl',
+                    render: (h, params) => {
+                        return params.row.acl ? Array.map(params.row.acl, (acl) => {
+                            return `${acl.bucket} - bucket:${acl.bucket_acl} - file:${acl.file_acl}`
+                        }) : ''
+                    }
+                },
+                {
+                    title: 'Actions',
+                    key: 'actions',
+                    width: 80,
+                    align: 'left',
+                    render: (h, params) => {
+                        return h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.editSubUserModal(params.row, params.index)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'compose',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                    }
+                }
+            ]
         }
     },
     mounted () {
@@ -340,77 +427,6 @@ export default {
         }
     }
 }
-
-const superHeaderSetting = [
-    {
-        title: 'User name',
-        width: 150,
-        align: 'left',
-        key: 'username'
-    },
-    {
-        title: 'Type',
-        width: 80,
-        align: 'left',
-        key: 'type'
-    },
-    {
-        title: 'Email',
-        width: 250,
-        align: 'left',
-        key: 'email'
-    },
-    {
-        title: 'Acl',
-        width: 400,
-        align: 'left',
-        key: 'acl',
-        render (row, column, index) {
-            return row.acl ? Array.map(row.acl, (acl) => {
-                return `${acl.bucket} - bucket:${acl.bucket_acl} - file:${acl.file_acl}`
-            }) : ''
-        }
-    },
-    {
-        title: 'Actions',
-        key: 'actions',
-        width: 80,
-        align: 'left',
-        render (row, column, index) {
-            return `<i-button size="small" @click="editSubUserModal(row, ${index})"><Icon type="compose" :size="iconSize"></Icon></i-button>`
-        }
-    }
-]
-
-const adminHeaderSetting = [
-    {
-        title: 'User name',
-        width: 150,
-        align: 'left',
-        key: 'username'
-    },
-    {
-        title: 'Type',
-        width: 80,
-        align: 'left',
-        key: 'type'
-    },
-    {
-        title: 'Email',
-        width: 250,
-        align: 'left',
-        key: 'email'
-    },
-    {
-        title: 'Actions',
-        key: 'actions',
-        width: 50,
-        align: 'left',
-        render (row, column, index) {
-            return `<i-button size="small" @click="unbindUserConfirm(row,${index})">Unbind</i-button>`
-        }
-    }
-]
 
 const initSubUser = (acls) => {
     return {
