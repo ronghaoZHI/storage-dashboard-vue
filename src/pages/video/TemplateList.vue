@@ -158,9 +158,8 @@ const headerSetting = [{
     title: 'Video',
     width: 140,
     render (row, column, index) {
-        let line = row.video.map(item => { `<span>${item.name}:${item.value}</span></br>` })
-        let tips = row.videoDetails.map(item => { `<span>${item.name}:${item.value}</span></br>` })
-        console.log('line', line)
+        let line = row.video.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
+        let tips = row.videoDetails.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
         return `<Poptip placement="right" trigger='hover'>
             <div>${line}</div>
             <div class="api" slot="content">
@@ -172,8 +171,8 @@ const headerSetting = [{
     title: 'Audio',
     width: 140,
     render (row, column, index) {
-        let line = row.audio.map(item => { `<span>${item.name}:${item.value}</span></br>` })
-        let tips = row.audioDetails.map(item => { `<span>${item.name}:${item.value}</span></br>` })
+        let line = row.audio.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
+        let tips = row.audioDetails.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
         return `<Poptip placement="right" trigger='hover'>
             <div>${line}</div>
             <div class="api" slot="content">
@@ -184,7 +183,7 @@ const headerSetting = [{
 }, {
     title: 'Actions',
     key: 'actions',
-    width: 100,
+    width: 60,
     align: 'right',
     render (row, column, index) {
         return `<Tooltip :content='$t("PUBLIC.DELETE")' :delay="1000" placement="top"><i-button size="small" @click="deletePresetConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
