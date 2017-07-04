@@ -21,7 +21,7 @@
             <div class="form-item">
                 <span class="form-label">输出封装格式 : </span>
                 <Radio-group v-model="template.Container">
-                    <Radio v-for='con in containerList' :label='con'>{{con}}</Radio>
+                    <Radio v-for='con in containerList' :key="con" :label='con'>{{con}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Container === 'mp4'" >
@@ -41,19 +41,19 @@
             <div class="form-item">
                 <span class="form-label">编码方式 : </span>
                 <Radio-group v-model="template.Video.Codec">
-                    <Radio v-for='codec in videoCodecList' :label='codec'>{{codec}}</Radio>
+                    <Radio v-for='codec in videoCodecList' :key="codec" :label='codec'>{{codec}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Video.Codec === 'H.264'">
                 <span class="form-label">编码Profile : </span>
                 <Radio-group v-model="template.Video.CodecOptions.Profile">
-                    <Radio v-for='pro in videoProfileList' :label='pro'>{{pro}}</Radio>
+                    <Radio v-for='pro in videoProfileList' :key="pro" :label='pro'>{{pro}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Video.Codec === 'H.264'">
                 <span class="form-label">编码Level : </span>
                 <Radio-group v-model="template.Video.CodecOptions.Level">
-                    <Radio v-for='level in videoLevelList' :label='level'>{{level}}</Radio>
+                    <Radio v-for='level in videoLevelList' :key="level" :label='level'>{{level}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Video.Codec === 'H.264' || template.Video.Codec === 'H.265'">
@@ -93,7 +93,7 @@
             <div class="form-item" v-if="template.Video.Codec !== 'auto'">
                 <span class="form-label">宽高比 : </span>
                 <Radio-group v-model="template.Video.AspectRatio">
-                    <Radio v-for='asp in aspectRatioLkist' :label='asp'>{{asp}}</Radio>
+                    <Radio v-for='asp in aspectRatioLkist' :key="asp" :label='asp'>{{asp}}</Radio>
                 </Radio-group>
             </div>
         </div>
@@ -106,19 +106,19 @@
             <div class="form-item">
                 <span class="form-label">编码方式 : </span>
                 <Radio-group v-model="template.Audio.Codec">
-                    <Radio v-for='codec in audioCodecList' :label='codec'>{{codec}}</Radio>
+                    <Radio v-for='codec in audioCodecList' :key="codec" :label='codec'>{{codec}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Audio.Codec !== 'AAC'">
                 <span class="form-label">编码质量 : </span>
                 <Radio-group v-model="template.Audio.CodecOptions.Profile">
-                    <Radio v-for='pro in audioProfileList' :label='pro'>{{pro}}</Radio>
+                    <Radio v-for='pro in audioProfileList' :key="pro" :label='pro'>{{pro}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
                 <span class="form-label">采样率(HZ) : </span>
                 <Radio-group v-model="template.Audio.SampleRate">
-                    <Radio v-for='sam in audioSampleRateList' :label='sam'>{{sam}}</Radio>
+                    <Radio v-for='sam in audioSampleRateList' :key="sam" :label='sam'>{{sam}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
