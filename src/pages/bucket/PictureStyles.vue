@@ -39,7 +39,6 @@ export default {
             iconSize: 18,
             self: this,
             showHeader: true,
-            styleHeader: styleHeaderSetting,
             styleList: [],
             fontName: this.fontName,
             showImageModal: false,
@@ -47,7 +46,124 @@ export default {
             selectedStyleName: '',
             showUploadModal: false,
             prefix: prefix.rules,
-            uploadValidation: /\.(json|JSON)$/
+            uploadValidation: /\.(json|JSON)$/,
+            styleHeader: [{
+                title: 'Name',
+                key: 'ruleName',
+                width: 150
+            }, {
+                title: 'Styles',
+                width: 300,
+                ellipsis: true,
+                key: 'IS'
+            }, {
+                title: 'Quality',
+                key: 'quality',
+                width: 150
+            }, {
+                title: 'Format',
+                key: 'format',
+                width: 150
+            }, {
+                title: 'Actions',
+                key: 'actions',
+                width: 170,
+                align: 'right',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.IMG_PREVIEW'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.previewModal(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'eye',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]),
+                        h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.EXPORT_STYLE'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.exportStyle(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'share',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]), h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.EDIT'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.goEdit(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'compose',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]), h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.DELETE_STYLE'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.deleteStyleConfirm(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'ios-trash',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ])
+                    ])
+                }
+            }]
         }
     },
     computed: {
@@ -213,36 +329,6 @@ const getURL = async (bucket, key) => {
         console.log(error)
     }
 }
-
-const styleHeaderSetting = [{
-    title: 'Name',
-    key: 'ruleName',
-    width: 150
-}, {
-    title: 'Styles',
-    width: 300,
-    ellipsis: true,
-    key: 'IS'
-}, {
-    title: 'Quality',
-    key: 'quality',
-    width: 150
-}, {
-    title: 'Format',
-    key: 'format',
-    width: 150
-}, {
-    title: 'Actions',
-    key: 'actions',
-    width: 170,
-    align: 'right',
-    render (row, column, index) {
-        return `<Tooltip :content='$t("STORAGE.IMG_PREVIEW")' :delay="1000" placement="top"><i-button size="small" @click="previewModal(row)"><Icon type="eye" :size="iconSize"></Icon></i-button></Tooltip>
-                <Tooltip :content='$t("STORAGE.EXPORT_STYLE")' :delay="1000" placement="top"><i-button size="small" @click="exportStyle(row)"><Icon type="share" :size="iconSize"></Icon></i-button></Tooltip>
-                <Tooltip :content='$t("STORAGE.EDIT")' :delay="1000" placement="top"><i-button @click="goEdit(row)" size="small"><Icon type="compose" :size="iconSize"></Icon></i-button></Tooltip>
-                <Tooltip :content='$t("STORAGE.DELETE_STYLE")' :delay="1000" placement="top"><i-button size="small" @click="deleteStyleConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
-    }
-}]
 </script>
 
 <style lang="less" scoped>
