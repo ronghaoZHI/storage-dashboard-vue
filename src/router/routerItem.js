@@ -93,6 +93,8 @@ const routes = [{
 }, {
     path: '/login',
     component: Login
+}, {
+    path: '*', redirect: '/'
 }]
 
 export default routes
