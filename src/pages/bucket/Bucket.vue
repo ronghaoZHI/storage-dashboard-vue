@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="layout-bsc-toolbar">
+        <div class="layout-bsc-toolbar" v-if="!isSubUser">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">{{$t("STORAGE.ADD_BUCKET")}}</Button>
                 <Tooltip :content='$t("STORAGE.FOLDER_INFO")' :disabled="!!selectedBucket.Name" placement="top"><Button class="button-bsc-add-bucket" :disabled="!selectedBucket.Name" type="primary" @click="goBucketSettings()">{{$t("STORAGE.BUCKET_SETTING")}}</Button></Tooltip>
@@ -24,10 +24,12 @@
 import { handler } from '@/service/Aws'
 import { removeItemFromArray } from '@/service/bucketService'
 import moment from 'moment'
+import user from '@/store/modules/user'
 export default {
     data () {
         return {
             adminMode: false,
+            isSubUser: user.state.type === 'sub',
             createBucketValue: '',
             createBucketModal: false,
             selectedBucket: {},
