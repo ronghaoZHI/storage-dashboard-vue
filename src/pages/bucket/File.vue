@@ -41,6 +41,9 @@
             <Input v-model="createFolderValue" @on-change="check" :placeholder='$t("STORAGE.FOLDER_PLACEHOLDER")'></Input>
             <span class="info-input-error">{{inputCheck ? $t("STORAGE.FOLDER_CHECKINFO") : ''}}</span>
         </Modal>
+        <Modal v-model="renameModal" :title='$t("STORAGE.RENAME")' @on-ok="rename" @on-cancel="renameKey = ''">
+            <Input v-model="renameKey" @on-change="check" :placeholder='$t("STORAGE.RENAME_PLACEHOLDER")'></Input>
+        </Modal>
         <Modal v-model="showImageModal" :title='selectedFileKey || $t("STORAGE.NO_TITLE")'  width="900">
             <div class="section-img">
                 <img :src="clipUrl" />
@@ -82,9 +85,11 @@ export default {
             showImageModal: false,
             showPermissonModal: false,
             createFolderModal: false,
+            renameModal: false,
             searchMode: false,
             createFolderValue: '',
             selectedFileKey: '',
+            renameKey: '',
             selectedFileList: [],
             inputCheck: false,
             fileList: [],
@@ -167,6 +172,30 @@ export default {
                     })
                     ])
                     ]) : h('div', [
+                        h('Tooltip', {
+                            props: {
+                                content: this.$t('STORAGE.RENAME'),
+                                delay: 1000,
+                                placement: 'top'
+                            }
+                        }, [h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.selectedFileKey = params.row.Key
+                                    this.renameModal = true
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'compose',
+                                size: this.iconSize
+                            }
+                        })
+                        ])
+                        ]),
                         h('Tooltip', {
                             props: {
                                 content: this.$t('STORAGE.FILE_PERMISSIONS'),
@@ -338,6 +367,20 @@ export default {
             } catch (error) {
                 this.$Loading.error()
                 console.log(error)
+            }
+        },
+        async rename () {
+            if (this.renameKey.length > 0) {
+                try {
+                    await handler('copyObject', { Bucket: this.bucket, CopySource: this.bucket + '/' + this.prefix + this.selectedFileKey, Key: this.prefix + this.renameKey })
+                    await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + this.selectedFileKey })
+                    this.getData()
+                } catch (error) {
+                    this.$Message.error('Rename file fail')
+                }
+            } else {
+                this.$Message.error(this.$t('STORAGE.RENAME_PLACEHOLDER'))
+                this.renameModal = true
             }
         },
         previousPage () {
