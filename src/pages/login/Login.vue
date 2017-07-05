@@ -444,8 +444,9 @@ export default {
             }
 
             .body {
-                min-height: 100%;
                 width: 100%;
+                height: 460px;
+                overflow-y: scroll;
                 display: inline-flex;
                 flex-direction: row;
                 flex-wrap: wrap;
