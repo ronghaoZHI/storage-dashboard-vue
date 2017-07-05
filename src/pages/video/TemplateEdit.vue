@@ -12,11 +12,12 @@
             <div class="form-item">
                 <span class="form-label">模版名称 : </span>
                 <Input v-model="template.Name" placeholder="模版名称" class="line-width"></Input>
-                <p class="style-name-info" :class="{'redFont':nameError}">不超过128个字符</p>
+                <p class="style-name-info redFont" v-if="nameError" >不超过20个字符</p>
             </div>
             <div class="form-item">
                 <span class="form-label">模版描述 : </span>
                 <Input v-model="template.Description" placeholder='输入模版描述文字' type="textarea" :autosize="true" class="line-width"></Input>
+                <p class="style-name-info redFont" v-if="descriptionError">不超过100个字符</p>
             </div>
             <div class="form-item">
                 <span class="form-label">输出封装格式 : </span>
@@ -138,7 +139,7 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="createPreset">保存</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="createPreset" :disabled="submitDisabled">保存</Button>
         </div>
     </div>
 </template>
@@ -166,7 +167,10 @@ export default {
             return this.$route.params.id
         },
         nameError () {
-            return this.template.Name.length > 20
+            return (new TextEncoder('utf-8').encode(this.template.Name)).length > 20
+        },
+        descriptionError () {
+            return (new TextEncoder('utf-8').encode(this.template.Description)).length > 100
         },
         KeyframesError () {
             let frames = Number(this.template.Video.KeyframesMaxDist)
@@ -179,7 +183,7 @@ export default {
             return this.auxiliary.resolution === 'value' && (nonPositiveInt(this.auxiliary.width) || nonPositiveInt(this.auxiliary.height))
         },
         submitDisabled () {
-            return this.nameError || this.KeyframesError || this.videoBitError || this.videoResolutionError
+            return this.nameError || this.descriptionError || this.KeyframesError || this.videoBitError || this.videoResolutionError
         }
     },
     mounted () {
