@@ -13,10 +13,95 @@ export default {
         return {
             iconSize: 18,
             self: this,
-            listHeader: headerSetting,
             templateList: this.templateList,
             videoNames: {Codec: '编码方式', Profile: '编码Profile', Level: '编码Level', KeyframesMaxDist: '固定关键帧间距', BitRate: '码率', FrameRate: '帧率', Resolution: '分辨率', AspectRatio: '宽高比'},
-            audioNames: {Codec: '编码方式', Profile: '编码质量', SampleRate: '采样率', BitRate: '码率', Channels: '声道数'}
+            audioNames: {Codec: '编码方式', Profile: '编码质量', SampleRate: '采样率', BitRate: '码率', Channels: '声道数'},
+            listHeader: [{
+                title: 'ID',
+                key: 'id',
+                width: 100
+            }, {
+                title: 'Name',
+                width: 100,
+                render: (h, params) => {
+                    return h('Poptip', {
+                        props: {
+                            placement: 'right',
+                            trigger: 'hover'
+                        }
+                    }, [h('div', [params.row.name, h('Icon', {
+                        type: 'ios-information-outline',
+                        size: '14'
+                    })]), h('div', {
+                        class: 'api',
+                        slot: 'content'
+                    }, params.row.description)])
+                }
+            }, {
+                title: 'Container',
+                width: 90,
+                key: 'container'
+            }, {
+                title: 'Video',
+                width: 140,
+                render: (h, params) => {
+                    return h('Poptip', {
+                        props: {
+                            placement: 'right',
+                            trigger: 'hover'
+                        }
+                    }, [h('div', params.row.video.map(item => h('p', `${item.name}:${item.value}`))),
+                        h('div', {
+                            class: 'api',
+                            slot: 'content'
+                        }, params.row.videoDetails.map(item => h('p', `${item.name}:${item.value}`)))]
+                    )
+                }
+            }, {
+                title: 'Audio',
+                width: 140,
+                render: (h, params) => {
+                    return h('Poptip', {
+                        props: {
+                            placement: 'right',
+                            trigger: 'hover'
+                        }
+                    }, [h('div', params.row.audio.map(item => h('p', `${item.name}:${item.value}`))),
+                        h('div', {
+                            class: 'api',
+                            slot: 'content'
+                        }, params.row.audioDetails.map(item => h('p', `${item.name}:${item.value}`)))]
+                    )
+                }
+            }, {
+                title: 'Actions',
+                key: 'actions',
+                width: 60,
+                align: 'right',
+                render: (h, params) => {
+                    return h('Tooltip', {
+                        props: {
+                            content: this.$t('PUBLIC.DELETE'),
+                            delay: 1000,
+                            placement: 'top'
+                        }
+                    }, [h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.deletePresetConfirm(params.row)
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'ios-trash',
+                            size: this.iconSize
+                        }
+                    })])])
+                }
+            }]
         }
     },
     mounted () {
@@ -135,60 +220,6 @@ export default {
 }
 const videoMust = ['Codec', 'FrameRate', 'Resolution', 'BitRate', 'AspectRatio']
 const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
-const headerSetting = [{
-    title: 'ID',
-    key: 'id',
-    width: 100
-}, {
-    title: 'Name',
-    width: 100,
-    render (row, column, index) {
-        return `<Poptip placement="right" trigger='hover'>
-            <div>${row.name}  <Icon type="ios-information-outline" size="14"></Icon></div>
-            <div class="api" slot="content">
-                ${row.description}
-            </div>
-        </Poptip>`
-    }
-}, {
-    title: 'Container',
-    width: 90,
-    key: 'container'
-}, {
-    title: 'Video',
-    width: 140,
-    render (row, column, index) {
-        let line = row.video.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
-        let tips = row.videoDetails.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
-        return `<Poptip placement="right" trigger='hover'>
-            <div>${line}</div>
-            <div class="api" slot="content">
-                ${tips}
-            </div>
-        </Poptip>`
-    }
-}, {
-    title: 'Audio',
-    width: 140,
-    render (row, column, index) {
-        let line = row.audio.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
-        let tips = row.audioDetails.map(item => `<span>${item.name}:${item.value}</span></br>`).join(' ')
-        return `<Poptip placement="right" trigger='hover'>
-            <div>${line}</div>
-            <div class="api" slot="content">
-                ${tips}
-            </div>
-        </Poptip>`
-    }
-}, {
-    title: 'Actions',
-    key: 'actions',
-    width: 60,
-    align: 'right',
-    render (row, column, index) {
-        return `<Tooltip :content='$t("PUBLIC.DELETE")' :delay="1000" placement="top"><i-button size="small" @click="deletePresetConfirm(row)"><Icon type="ios-trash" :size="iconSize"></Icon></i-button></Tooltip>`
-    }
-}]
 
 const transcoderData = {
     Name: '模板名称',
