@@ -67,7 +67,6 @@ export default {
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                console.log(error)
             }
         },
         deleteBucketConfirm () {
@@ -81,6 +80,7 @@ export default {
         },
         async deleteBucket (bucket) {
             try {
+                this.$Loading.start()
                 let buckets = await handler('listObjects', { Bucket: bucket.Name })
                 let response = await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
                 // the bucket has cache when the objects just deleted
@@ -94,9 +94,9 @@ export default {
                 _.each(document.querySelector('.bsc-flex-section').childNodes, (node) => {
                     node.classList.remove('bucket-selected')
                 })
+                this.$Loading.finish()
             } catch (error) {
-                console.log(error)
-                this.$Message.error(error.message)
+                this.$Loading.error()
             }
         },
         goBucketSettings () {
@@ -120,8 +120,6 @@ export default {
                     self.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
                     self.getBucketList()
                     self.createBucketValue = ''
-                }, error => {
-                    self.$Message.error(error.message)
                 })
             } else {
                 this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
