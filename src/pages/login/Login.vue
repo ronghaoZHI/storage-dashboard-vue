@@ -45,13 +45,15 @@
                     <img src="../../assets/logo.png" alt="logo" />
                     <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
                 </div>
-                <div class="body">
-                    <div v-if="subUserList.length > 0" class="card-user" v-for="user in subUserList" :key="user.ts" @click="selectSubUser(user)">
-                        <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
-                        <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
-                        <span class="icon" v-show="user.info.type === 'super'"><Icon type="star"></Icon></span>
+                <div class="wrap">
+                    <div class="body">
+                        <div v-if="subUserList.length > 0" class="card-user" v-for="user in subUserList" :key="user.ts" @click="selectSubUser(user)">
+                            <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
+                            <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
+                            <span class="icon" v-show="user.info.type === 'super'"><Icon type="star"></Icon></span>
+                        </div>
+                        <div v-if="subUserList.length <= 0" class="warning" @click="toUserMange()">暂无绑定用户,<span>点击绑定或新增用户</span></div>
                     </div>
-                    <div v-if="subUserList.length <= 0" class="warning" @click="toUserMange()">暂无绑定用户,<span>点击绑定或新增用户</span></div>
                 </div>
             </div>
         </div>
@@ -443,72 +445,76 @@ export default {
                 }
             }
 
-            .body {
-                width: 100%;
+            .wrap {
                 height: 460px;
                 overflow-y: scroll;
-                display: inline-flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: flex-start;
-                align-items: flex-start;
-                padding: 10px 0 0 12px;
 
-                & > .card-user {
-                    position: relative;
-                    .wh(@login-card-register-item-width,@login-card-register-item-height);
-                    background-color: @login-card-register-input-backgrand;
-                    border-radius: @common-radius;
-                    .sc(16px,#fff);
-                    margin: 8px 8px;
-                    cursor: pointer;
+                .body {
+                    width: 100%;
+                    display: inline-flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    padding: 10px 0 0 12px;
 
-                    &:hover {
-                        background-color: @login-card-register-input-backgrand-hover;
-                    }
+                    & > .card-user {
+                        position: relative;
+                        .wh(@login-card-register-item-width,@login-card-register-item-height);
+                        background-color: @login-card-register-input-backgrand;
+                        border-radius: @common-radius;
+                        .sc(16px,#fff);
+                        margin: 8px 8px;
+                        cursor: pointer;
 
-                    & > span:first-child {
-                        margin-top: 12px;
-                    }
-                    & > span:nth-child(2) {
-                        margin-top: 8px;
-                    }
+                        &:hover {
+                            background-color: @login-card-register-input-backgrand-hover;
+                        }
 
-                    .info {
-                        display: inline-block;
-                        .wh(98%,@login-card-register-item-height / 2 - 15);
-                        line-height: @login-card-register-item-height / 2 - 15;
-                        vertical-align: bottom;
-                        padding: 0 16px;
-                        text-align: left;
-                        text-overflow: ellipsis;
-                        overflow:hidden;
-                        white-space:nowrap;
+                        & > span:first-child {
+                            margin-top: 12px;
+                        }
+                        & > span:nth-child(2) {
+                            margin-top: 8px;
+                        }
 
-                        i {
-                            position: relative;
-                            top: 1px;
-                            padding-right: 4px;
+                        .info {
+                            display: inline-block;
+                            .wh(98%,@login-card-register-item-height / 2 - 15);
+                            line-height: @login-card-register-item-height / 2 - 15;
+                            vertical-align: bottom;
+                            padding: 0 16px;
+                            text-align: left;
+                            text-overflow: ellipsis;
+                            overflow:hidden;
+                            white-space:nowrap;
+
+                            i {
+                                position: relative;
+                                top: 1px;
+                                padding-right: 4px;
+                            }
+                        }
+                        
+                        .icon {
+                            position: absolute;
+                            color: #fff;
+                            top: 6px;
+                            right: 12px;
                         }
                     }
-                    
-                    .icon {
-                        position: absolute;
-                        color: #fff;
-                        top: 6px;
-                        right: 12px;
-                    }
-                }
 
-                .warning {
-                    .sc(16px, #fff);
+                    .warning {
+                        .sc(16px, #fff);
 
-                    span {
-                        color: @primary-color;
-                        cursor: pointer;
+                        span {
+                            color: @primary-color;
+                            cursor: pointer;
+                        }
                     }
                 }
             }
+            
         }
     }
 }
