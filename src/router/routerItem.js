@@ -64,8 +64,13 @@ const layoutChild = [{
     meta: { title: 'File Permissions', ali: 'bucket' },
     component: FilePermissions
 }, {
-    path: '/video',
+    path: '/video/template',
     name: 'video',
+    meta: { title: 'Video', ali: 'video' },
+    component: TemplateList
+}, {
+    path: '/video/template',
+    name: 'template',
     meta: { title: 'Video', ali: 'video' },
     component: TemplateList
 }, {

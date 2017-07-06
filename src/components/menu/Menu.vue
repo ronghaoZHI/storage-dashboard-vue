@@ -4,10 +4,19 @@
             <div class="layout-logo-left">
                 <img class="logo-big" src="../../assets/logo.png" height="30px" />
             </div>
-            <Menu-item v-for="item in menuList" :name="item.name" :key="item.index">
+            <Menu-item v-for="item in menuList" :name="item.name" :key="item.index" v-if="!item.children">
                 <img v-bind:src="item.icon" class="icon-menu" height="15px" />
                 <span class="layout-text">{{$t("SIDEBAR."+ item.name.toUpperCase())}}</span>
             </Menu-item>
+            <Submenu v-for="item in menuList" :name="item.name" :key="item.index" v-if="item.children">
+                <template slot="title">
+                    <img v-bind:src="item.icon" class="icon-menu" height="15px" />
+                    <span class="layout-text">{{$t("SIDEBAR."+ item.name.toUpperCase())}}</span>
+                </template>
+                <Menu-item v-for="child in item.children" :name="child.name" :key="child.index">
+                    <span class="layout-text">{{$t("SIDEBAR."+ child.name.toUpperCase())}}</span>
+                </Menu-item>
+            </Submenu>
         </Menu>
     </div>
 </template>
@@ -45,9 +54,15 @@ export default {
     .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover {
         border-left: 4px solid #39f;
         border-right: 0;
-        background: @menu-background-active;
+        background: @menu-background-active !important;
         color: #fff;
     }
+
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item,
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item:hover {
+        background: #2e373e !important;
+    }
+
 }
 
 .layout-logo-left {
@@ -72,4 +87,18 @@ export default {
         padding-right: 6px;
     }
 }
+
+.ivu-menu-submenu {
+    border-left: 4px solid #2e373e;
+    text-align: left;
+
+    .icon-menu {
+        margin-top: 4px;
+        padding-right: 6px;
+    }
+    span {
+        vertical-align: top;
+    }
+}
+
 </style>

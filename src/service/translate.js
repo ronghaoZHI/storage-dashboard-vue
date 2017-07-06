@@ -44,7 +44,9 @@ export const messages = {
             VIDEO: 'Video',
             MACHINE: 'Machine',
             PARTITION: 'Partition',
-            USER: 'User Management'
+            USER: 'User Management',
+            TEMPLATE: 'Template',
+            OUTPUT: 'Output'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
@@ -474,7 +476,9 @@ export const messages = {
             VIDEO: '视频处理',
             MACHINE: '机器信息',
             PARTITION: '磁盘分区',
-            USER: '用户管理'
+            USER: '用户管理',
+            TEMPLATE: '转码模版',
+            OUTPUT: '转码输出'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',
