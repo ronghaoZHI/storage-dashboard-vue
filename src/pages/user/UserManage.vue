@@ -468,7 +468,7 @@ const convertObject2Array = (object) => {
         if (value) { truePermission[key] = true }
     })
     let keys = _.keys(truePermission)
-    keys.length > 0 && keys.indexOf('READ_ACP') === -1 && keys.push('READ_ACP')
+    keys.indexOf('READ_ACP') === -1 && keys.push('READ_ACP')
     return keys
 }
 
