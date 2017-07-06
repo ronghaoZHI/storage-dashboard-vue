@@ -29,7 +29,7 @@
         </Modal>
         <Modal v-model="bindUserModal" :title='$t("USER.BIND_USER")' width="880" @on-ok="bindUser">
             <div class="bsc-user-box">
-                <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in boundUserList">
+                <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in boundUserList" :key="user.username">
                     {{user.email}}
                 </div>
             </div>
@@ -135,7 +135,7 @@ export default {
                     { type: 'string', message: 'Email format is incorrect', trigger: 'blur' }
                 ]
             },
-            userHeader: this.isAdmin ? [
+            userHeader: user.state && user.state.type === 'admin' ? [
                 {
                     title: 'User name',
                     width: 150,
