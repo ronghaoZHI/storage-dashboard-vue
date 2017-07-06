@@ -4,19 +4,10 @@
             <div class="layout-logo-left">
                 <img class="logo-big" src="../../assets/logo.png" height="30px" />
             </div>
-            <Menu-item v-for="item in menuList" :name="item.name" :key="item.index" v-if="!item.children">
+            <Menu-item v-for="item in menuList" :name="item.name" :key="item.index">
                 <img v-bind:src="item.icon" class="icon-menu" height="15px" />
                 <span class="layout-text">{{$t("SIDEBAR."+ item.name.toUpperCase())}}</span>
             </Menu-item>
-            <Submenu v-for="item in menuList" :name="item.name" :key="item.index" v-if="item.children">
-                <template slot="title">
-                    <img v-bind:src="item.icon" class="icon-menu" height="15px" />
-                    <span class="layout-text">{{$t("SIDEBAR."+ item.name.toUpperCase())}}</span>
-                </template>
-                <Menu-item v-for="child in item.children" :name="child.name" :key="child.index">
-                    <span class="layout-text">{{$t("SIDEBAR."+ child.name.toUpperCase())}}</span>
-                </Menu-item>
-            </Submenu>
         </Menu>
     </div>
 </template>
