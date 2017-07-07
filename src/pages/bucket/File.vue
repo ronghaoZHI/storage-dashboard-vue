@@ -245,11 +245,11 @@ export default {
                             props: {
                                 content: this.$t('STORAGE.IMG_PREVIEW'),
                                 delay: 1000,
-                                disabled: params.row && !params.row.isImage,
                                 placement: 'top'
                             }
                         }, [h('i-button', {
                             props: {
+                                disabled: params.row && !params.row.isImage,
                                 size: 'small'
                             },
                             on: {
@@ -372,15 +372,16 @@ export default {
         async rename () {
             if (this.renameKey.length > 0) {
                 try {
+                    this.$Loading.start()
                     await handler('copyObject', { Bucket: this.bucket, CopySource: this.bucket + '/' + this.prefix + this.selectedFileKey, Key: this.prefix + this.renameKey })
                     await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + this.selectedFileKey })
+                    this.renameKey = ''
                     this.getData()
                 } catch (error) {
-                    this.$Message.error('Rename file fail')
+                    this.$Loading.error()
                 }
             } else {
                 this.$Message.error(this.$t('STORAGE.RENAME_PLACEHOLDER'))
-                this.renameModal = true
             }
         },
         previousPage () {
@@ -556,7 +557,8 @@ const getURL = async (bucket, file, prefix) => {
         let isAllUser = _.find(acl.Grants, (item) => item.Grantee.URI && item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers')
         return isAllUser ? url.split('?')[0] : url
     } catch (error) {
-        console.log(error)
+        this.$Loading.error()
+        return Promise.reject(error)
     }
 }
 
