@@ -544,6 +544,10 @@ const convertArray2Object = (array) => {
     border: 1px solid #d7dde4;
     border-collapse:collapse;
 
+    th {
+        background: #eff3f7;
+    }
+
     th,td {
         width: 33%;
         height: 40px;
