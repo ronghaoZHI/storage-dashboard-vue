@@ -14,6 +14,7 @@ import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
 import TemplateList from '@/pages/video/TemplateList'
 import TemplateEdit from '@/pages/video/TemplateEdit'
+import Notfound from '@/pages/404/404'
 
 const layoutChild = [{
     path: '',
@@ -99,7 +100,8 @@ const routes = [{
     path: '/login',
     component: Login
 }, {
-    path: '*', redirect: '/'
+    path: '*',
+    component: Notfound
 }]
 
 export default routes
