@@ -10,7 +10,6 @@
         <Row class="toolbar-nav">
             <Col span="10">
                 <div>
-                    <Button type="primary" v-show="canUpload" @click="upload">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
                     <Button type="primary" v-show="canUpload" @click="openUploadModal">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
                     <Button type="primary" v-show="canUpload" @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
                     <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
@@ -505,9 +504,6 @@ export default {
         },
         getUrl (prefix) {
             return '/bucket/' + this.bucket + '/prefix/' + repliceAllString(prefix, '/', '%2F')
-        },
-        async upload () {
-            this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
         },
         async fileUpload (item) {
             let file = item.file

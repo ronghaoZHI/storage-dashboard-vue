@@ -1,7 +1,6 @@
 import Layout from '@/components/layout'
 import Bucket from '@/pages/bucket/Bucket'
 import File from '@/pages/bucket/File'
-import Upload from '@/pages/bucket/Upload'
 import Dashboard from '@/pages/dashboard/Dashboard'
 import Machine from '@/pages/machine/Machine'
 import Keychain from '@/pages/keychain/Keychain'
@@ -29,11 +28,6 @@ const layoutChild = [{
     name: 'file',
     meta: { title: 'My storage', ali: 'bucket' },
     component: File
-}, {
-    path: '/upload/:bucket/prefix/:prefix',
-    name: 'upload',
-    meta: { title: 'My storage', ali: 'bucket' },
-    component: Upload
 }, {
     path: '/dashboard',
     name: 'dashboard',
