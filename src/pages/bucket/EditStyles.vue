@@ -256,7 +256,7 @@
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
                                     <div class="upload-box">
-                                        <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" :validationInfo="$t('STORAGE.WATER_PNG_VALID_INFO')" :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
+                                        <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" :checkFileType="true" :validateMessage="$t('STORAGE.WATER_PNG_VALID_INFO')" :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
                                     </div>
                                 </div><!--image-->
                             </div>
@@ -344,7 +344,7 @@
 <script>
 import { handler, config } from '@/service/Aws'
 import { prefix } from '@/service/bucketService'
-import upload from '@/components/bucket/upload'
+import upload from '@/components/upload/upload'
 import * as styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
 import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'

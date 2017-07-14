@@ -11,6 +11,7 @@
             <Col span="10">
                 <div>
                     <Button type="primary" v-show="canUpload" @click="upload">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
+                    <Button type="primary" v-show="canUpload" @click="openUploadModal">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
                     <Button type="primary" v-show="canUpload" @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
                     <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
                     <Button @click="batchDeleteFileConfirm" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
@@ -50,6 +51,10 @@
             </div>
             <div slot="footer"></div>
         </Modal>
+        <Modal v-model="uploadModal" :mask-closable="uploadModalMaskClosable" title='Upload file' @on-cancel="uploadModalClose"  width="700">
+             <upload ref="upload" :bucket="bucket" :prefix="prefix"></upload>
+             <div slot="footer"></div>
+        </Modal>
         <Modal v-model="showPermissonModal" :title='$t("STORAGE.FILE_PERMISSIONS")' width="700">
             <file-permission v-if="showPermissonModal" v-on:permissionSuccess="showPermissonModal = false" :bucket="bucket" :filePrefix="prefix" :itemKey="permissionKey" :show-modal="showPermissonModal"></file-permission>
             <div slot="footer" class="copy-modal-footer">
@@ -70,6 +75,7 @@
 import { getAWS, handler } from '@/service/Aws'
 import { bytes, keyFilter, convertPrefix2Router } from '@/service/bucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
+import upload from '@/components/upload/upload'
 import Clipboard from 'clipboard'
 import user from '@/store/modules/user'
 import moment from 'moment'
@@ -87,6 +93,8 @@ export default {
             createFolderModal: false,
             renameModal: false,
             searchMode: false,
+            uploadModal: false,
+            uploadModalMaskClosable: false,
             createFolderValue: '',
             selectedFileKey: '',
             renameKey: '',
@@ -319,7 +327,7 @@ export default {
         }
     },
     components: {
-        filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item
+        filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item, upload
     },
     computed: {
         bucket: function () {
@@ -414,6 +422,9 @@ export default {
             this.copyModal = true
             this.$Loading.finish()
         },
+        openUploadModal () {
+            this.uploadModal = true
+        },
         download (url) {
             document.querySelector('#element-download').href = url
             document.querySelector('#span-download').click()
@@ -497,6 +508,26 @@ export default {
         },
         async upload () {
             this.$router.push({ name: 'upload', params: { bucket: this.bucket, prefix: this.$route.params.prefix } })
+        },
+        async fileUpload (item) {
+            let file = item.file
+            let params = {
+                Bucket: this.bucket,
+                Key: this.prefix + item.name,
+                ContentType: file.type,
+                Body: file
+            }
+            let aws = await getAWS(3600000)
+            let request = aws.upload(params, { partSize: 10000 * 1024 * 1024 })
+            request.on('httpUploadProgress', function (evt) {
+                item.progress = parseInt((evt.loaded * 100) / evt.total)
+                item.request = request
+            })
+            return request.promise()
+        },
+        uploadModalClose () {
+            this.getData()
+            this.$refs.upload.clearFiles()
         },
         async checkCanUpload () {
             if (user.state.type === 'sub') {

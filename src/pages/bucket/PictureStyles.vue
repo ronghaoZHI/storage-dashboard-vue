@@ -17,8 +17,8 @@
             </div>
             <div slot="footer"></div>
         </Modal>
-        <Modal v-model="showUploadModal" :title='$t("STORAGE.FILE_PERMISSION")' width="700">
-            <upload accept="application/json" v-if="showUploadModal" v-on:uploadSuccess="uploadSuccess" :validationInfo='$t("STORAGE.PIC_UPLOAD_INFO")' :validation="uploadValidation" :bucket="bucket" :prefix="prefix"></upload>
+        <Modal v-model="showUploadModal" title='Upload settings files' width="700">
+            <upload accept="application/json" :prefix="prefix" :bucket="bucket" :checkFileType="true" :validateMessage='$t("STORAGE.PIC_UPLOAD_INFO")' :validation="uploadValidation" v-if="showUploadModal" v-on:uploadSuccess="uploadSuccess"></upload>
             <div slot="footer" class="copy-modal-footer">
                  <Button style="visibility:hidden" type="primary"></Button>
             </div>
@@ -31,7 +31,7 @@
 import { getAWS, handler, config } from '@/service/Aws'
 import { prefix, Utf8ArrayToStr } from '@/service/bucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
-import upload from '@/components/bucket/upload'
+import upload from '@/components/upload/upload'
 import iView from 'iview'
 export default {
     data () {
@@ -306,8 +306,10 @@ export default {
             this.showUploadModal = true
         },
         uploadSuccess (fileName) {
-            const file = {Key: prefix.rules + fileName}
-            this.getObject(file)
+            const file = {Key: this.prefix + fileName}
+            this.getObject(file).then(res => {
+                this.showUploadModal = false
+            })
         }
     },
     watch: {
