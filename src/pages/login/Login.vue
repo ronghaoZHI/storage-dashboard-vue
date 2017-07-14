@@ -447,7 +447,7 @@ export default {
 
             .wrap {
                 height: 460px;
-                overflow-y: scroll;
+                overflow-y: auto;
 
                 .body {
                     width: 100%;
