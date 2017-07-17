@@ -84,7 +84,7 @@
                     Body: file
                 }
                 let aws = await getAWS(3600000)
-                let request = aws.upload(params, { partSize: 10000 * 1024 * 1024 })
+                let request = aws.upload(params, { partSize: 1024 * 1024 * 10000 })
                 request.on('httpUploadProgress', function (evt) {
                     item.progress = parseInt((evt.loaded * 100) / evt.total)
                     item.request = request
@@ -172,7 +172,9 @@
                             if (!this.checkFileType || (this.checkFileType && this.validation.test(file.name))) {
                                 this.uploadFile(file).then(res => {
                                     this.$emit('uploadSuccess', file.name)
-                                }, () => this.$Message.error(this.$t('STORAGE.UPLOAD_FAILED', {fileName: file.name}), 5))
+                                }, e => {
+                                    this.$Message.error(`Upload ${file.name} fail`, 5)
+                                })
                             } else {
                                 this.fileList.splice(this.fileList.indexOf(file), 1)
                                 this.$Message.error(this.validateMessage)
