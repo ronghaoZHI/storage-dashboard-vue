@@ -2,8 +2,7 @@
     <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/video">视频处理</Breadcrumb-item>
-                <Breadcrumb-item href="/video">模版配置</Breadcrumb-item>
+                <Breadcrumb-item href="/video/template">模版配置</Breadcrumb-item>
                 <Breadcrumb-item>新建模版</Breadcrumb-item>
             </Breadcrumb>
         </div>
@@ -12,7 +11,7 @@
             <div class="form-item">
                 <span class="form-label">模版名称 : </span>
                 <Input v-model="template.Name" placeholder="模版名称" class="line-width"></Input>
-                <p class="style-name-info redFont" v-if="nameError" >不超过20个字符</p>
+                <p class="style-name-info redFont" v-if="nameError" >不少于1个字符，不超过20个字符</p>
             </div>
             <div class="form-item">
                 <span class="form-label">模版描述 : </span>
@@ -42,7 +41,7 @@
             <div class="form-item">
                 <span class="form-label">编码方式 : </span>
                 <Radio-group v-model="template.Video.Codec">
-                    <Radio v-for='codec in videoCodecList' :key="codec" :label='codec'>{{codec}}</Radio>
+                    <Radio v-for='codec in videoCodecList' :key="codec.value" :label='codec.value'>{{codec.name}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Video.Codec === 'H.264'">
@@ -63,22 +62,20 @@
                     <span slot="open">开</span>
                     <span slot="close">关</span>
                 </i-switch>
-                <Input v-model="template.Video.KeyframesMaxDist" style="width: 60px"></Input> S
-                <span :class="{'redFont':KeyframesError}">(1~100000)</span>
+                <Input-number :min='1' :max='100000' v-model="template.Video.KeyframesMaxDist" :disabled="!template.Video.FixedGOP"></Input-number> 秒 (1~100000)
             </div>
             <div class="form-item">
                 <span class="form-label">码率 : </span>
                 <Radio-group v-model="auxiliary.videoBitRate">
                     <Radio label="auto">自适应</Radio>
-                    <Radio label="value"></Radio>
+                    <Radio label="value">自定义</Radio>
                 </Radio-group>
-                <Input v-model="auxiliary.videoBitRateValue" :disabled="auxiliary.videoBitRate === 'auto'" style="width: 60px"></Input> Kbps
-                <span v-if="videoBitError" class="redFont">请输入正整数</span>
+                <Input-number :min='1' v-model="auxiliary.videoBitRateValue" :disabled="auxiliary.videoBitRate === 'auto'"></Input-number> Kbps
             </div>
             <div class="form-item">
                 <span class="form-label">帧率 : </span>
                 <Select v-model="template.Video.FrameRate" class="line-width">
-                    <Option v-for="fr in videoFrameRateList" :value="fr" :key="fr">{{fr}}</Option>
+                    <Option v-for="fr in videoFrameRateList" :value="fr.value" :key="fr.value">{{fr.name}}</Option>
                 </Select>
             </div>
             <div class="form-item" v-if="template.Video.Codec !== 'auto'">
@@ -87,14 +84,13 @@
                     <Radio label="auto">不变</Radio>
                     <Radio label="value"></Radio>
                 </Radio-group>
-                <Input v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto' "placeholder="宽度" style="width: 60px"></Input>
-                <Input v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto' "placeholder="高度"style="width: 60px"></Input>
-                <span v-if="videoResolutionError" class="redFont">请输入正整数</span>
+                <Input-number :min='1' v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto'" placeholder="宽度"></Input-number>
+                <Input-number :min='1' v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto'" placeholder="高度"></Input-number>
             </div>
             <div class="form-item" v-if="template.Video.Codec !== 'auto'">
                 <span class="form-label">宽高比 : </span>
                 <Radio-group v-model="template.Video.AspectRatio">
-                    <Radio v-for='asp in aspectRatioLkist' :key="asp" :label='asp'>{{asp}}</Radio>
+                    <Radio v-for='asp in aspectRatioList' :key="asp.value" :label='asp.value'>{{asp.name}}</Radio>
                 </Radio-group>
             </div>
         </div>
@@ -107,13 +103,13 @@
             <div class="form-item">
                 <span class="form-label">编码方式 : </span>
                 <Radio-group v-model="template.Audio.Codec">
-                    <Radio v-for='codec in audioCodecList' :key="codec" :label='codec'>{{codec}}</Radio>
+                    <Radio v-for='codec in audioCodecList' :key="codec.value" :label='codec.value'>{{codec.name}}</Radio>
                 </Radio-group>
             </div>
-            <div class="form-item" v-if="template.Audio.Codec !== 'AAC'">
+            <div class="form-item" v-if="template.Audio.Codec === 'AAC'">
                 <span class="form-label">编码质量 : </span>
                 <Radio-group v-model="template.Audio.CodecOptions.Profile">
-                    <Radio v-for='pro in audioProfileList' :key="pro" :label='pro'>{{pro}}</Radio>
+                    <Radio v-for='pro in audioProfileList' :key="pro.value" :label='pro.value'>{{pro.name}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
@@ -126,14 +122,15 @@
                 <span class="form-label">码率 : </span>
                 <Radio-group v-model="auxiliary.audioBitRate">
                     <Radio label="auto">自适应</Radio>
-                    <Radio label="value"></Radio>
+                    <Radio label="value">自定义</Radio>
                 </Radio-group>
-                <Slider v-model="auxiliary.audioBitRateValue" :min='64' :max='320' :disabled="auxiliary.audioBitRate === 'auto'" class="my-slider" show-input ></Slider>
+                <Slider v-model="auxiliary.audioBitRateValue" :min='64' :max='320' :disabled="auxiliary.audioBitRate === 'auto'" class="my-slider" ></Slider>
+                <Input-number :min='64' :max='320' v-model="auxiliary.audioBitRateValue" :disabled="auxiliary.audioBitRate === 'auto'"></Input-number>
             </div>
             <div class="form-item">
                 <span class="form-label">声道数 : </span>
                 <Select v-model="template.Audio.Channels" class="line-width">
-                    <Option v-for="ch in audioChannelsList" :value="ch" :key="ch">{{ch}}</Option>
+                    <Option v-for="ch in audioChannelsList" :value="ch.value" :key="ch.value">{{ch.name}}</Option>
                 </Select>
             </div>
         </div>
@@ -145,45 +142,37 @@
 </template>
 <script>
 import { transcoder } from '@/service/Aws'
+import InputNumber from '@/components/input-number/input-number.vue'
 export default {
     data () {
         return {
             template: _.cloneDeep(templateDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
             containerList: ['flac', 'flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts'],
-            videoCodecList: ['auto', 'gif', 'H.264', 'H.265', 'mpeg2'],
+            videoCodecList: [{name: '不变', value: 'auto'}, {name: 'gif', value: 'gif'}, {name: 'H.264', value: 'H.264'}, {name: 'H.265', value: 'H.265'}, {name: 'mpeg2', value: 'mpeg2'}],
             videoProfileList: ['baseline', 'main', 'high'],
-            videoLevelList: ['1', '1b', '1.1', '1.2', '1.3', '2', '2.1', '2.2', '2.3', '3', '3.1', '3.2', '4', '4.1'],
-            videoFrameRateList: ['auto', '10', '15', '23.97', '24', '25', '29.97', '30', '50', '60'],
-            aspectRatioLkist: ['auto', '1:1', '4:3', '3:2', '16:9'],
-            audioCodecList: ['auto', 'AAC', 'flac', 'mp2', 'mp3', 'vorbis', 'speex'],
-            audioProfileList: ['auto', 'AAC-LC', 'HE-AAC', 'HE-AACv2'],
+            videoLevelList: ['1', '1b', '1.1', '1.2', '1.3', '2', '2.1', '2.2', '3', '3.1', '3.2', '4', '4.1'],
+            videoFrameRateList: [{name: '不变', value: 'auto'}, {name: '10', value: '10'}, {name: '15', value: '15'}, {name: '23.97', value: '23.97'}, {name: '24', value: '24'}, {name: '25', value: '25'}, {name: '29.97', value: '29.97'}, {name: '30', value: '30'}, {name: '50', value: '50'}, {name: '60', value: '60'}],
+            aspectRatioList: [{name: '不变', value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
+            audioCodecList: [{name: '不变', value: 'auto'}, {name: 'AAC', value: 'AAC'}, {name: 'flac', value: 'flac'}, {name: 'mp3', value: 'mp3'}, {name: 'mp2', value: 'mp2'}],
+            audioProfileList: [{name: '自适应', value: 'auto'}, {name: 'AAC-LC', value: 'AAC-LC'}, {name: 'HE-AAC', value: 'HE-AAC'}, {name: 'HE-AACv2', value: 'HE-AACv2'}],
             audioSampleRateList: ['22050', '32000', '44100', '48000', '96000'],
-            audioChannelsList: ['auto', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+            audioChannelsList: [{name: '不变', value: 'auto'}, {name: '1', value: '1'}, {name: '2', value: '2'}, {name: '3', value: '3'}, {name: '4', value: '4'}, {name: '5', value: '5'}, {name: '6', value: '6'}, {name: '7', value: '7'}, {name: '8', value: '8'}, {name: '9', value: '9'}, {name: '10', value: '10'}, {name: '11', value: '11'}, {name: '12', value: '12'}, {name: '13', value: '13'}, {name: '14', value: '14'}, {name: '15', value: '15'}, {name: '16', value: '16'}]
         }
     },
+    components: { InputNumber },
     computed: {
         templateId () {
             return this.$route.params.id
         },
         nameError () {
-            return (new TextEncoder('utf-8').encode(this.template.Name)).length > 20
+            return this.template.Name.length === 0 || (new TextEncoder('utf-8').encode(this.template.Name)).length > 20
         },
         descriptionError () {
             return (new TextEncoder('utf-8').encode(this.template.Description)).length > 100
         },
-        KeyframesError () {
-            let frames = Number(this.template.Video.KeyframesMaxDist)
-            return this.template.Video.FixedGOP && (nonPositiveInt(frames) || frames > 100000)
-        },
-        videoBitError () {
-            return this.auxiliary.videoBitRate === 'value' && nonPositiveInt(this.auxiliary.videoBitRateValue)
-        },
-        videoResolutionError () {
-            return this.auxiliary.resolution === 'value' && (nonPositiveInt(this.auxiliary.width) || nonPositiveInt(this.auxiliary.height))
-        },
         submitDisabled () {
-            return this.nameError || this.descriptionError || this.KeyframesError || this.videoBitError || this.videoResolutionError
+            return this.nameError || this.descriptionError
         }
     },
     mounted () {
@@ -197,6 +186,7 @@ export default {
                 await transcoder('createPreset', template)
                 this.$Loading.finish()
                 this.$Message.success('创建成功')
+                this.$router.push({ name: 'template' })
             } catch (error) {
                 this.$Message.error(error)
                 this.$Loading.error()
@@ -240,17 +230,14 @@ const convert2Save = (template, auxiliary) => {
 
     saved.FastStart = template.FastStart.toString()
     saved.Video.FixedGOP = template.Video.FixedGOP.toString()
+    saved.Video.KeyframesMaxDist = template.Video.KeyframesMaxDist.toString()
 
     return saved
 }
 
-const nonPositiveInt = value => {
-    let num = Number(value)
-    return !num || num !== parseInt(num) || num < 1
-}
 const auxiliaryDefult = {
     videoBitRate: 'auto',
-    videoBitRateValue: '',
+    videoBitRateValue: 1,
     resolution: 'auto',
     width: '',
     height: '',
@@ -259,8 +246,8 @@ const auxiliaryDefult = {
 }
 
 const templateDefult = {
-    Name: '模板名称',
-    Description: '模板描述',
+    Name: '',
+    Description: '',
     FastStart: true,
     Container: 'mp4',
     Audio: {
@@ -318,8 +305,9 @@ const templateDefult = {
             .my-slider {
                 display: inline-block;
                 vertical-align: middle;
-                width: 400px;
+                width: 250px;
                 height: 32px;
+                margin-right:8px;
             }
 
             .input-box-label{

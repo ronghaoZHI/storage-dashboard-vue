@@ -6,6 +6,7 @@ import iconDashboard from '../../assets/icon-dashboard.png'
 import iconKey from '../../assets/icon-key.png'
 import iconMachine from '../../assets/icon-machine.png'
 import iconUser from '../../assets/icon-user.png'
+import iconVideo from '../../assets/icon-video.png'
 
 const bucket = {
     index: 1,
@@ -25,6 +26,21 @@ const keychain = {
     icon: iconKey
 }
 
+const videoChildren = [{
+    index: 1,
+    name: 'template'
+}, {
+    index: 2,
+    name: 'output'
+}]
+
+const video = {
+    index: 4,
+    name: 'video',
+    icon: iconVideo,
+    children: videoChildren
+}
+
 const machine = {
     index: 5,
     name: 'machine',
@@ -40,9 +56,9 @@ const userManage = {
 const ONLINE_ADMIN_NO_SUBSUER = [userManage]
 
 const ONLINE_SUB = [bucket, keychain]
-const ONLINE_NORMAL = [bucket, dashboard, keychain]
-const ONLINE_SUPRER = [bucket, dashboard, keychain, userManage]
-const ONLINE_ADMIN = [bucket, dashboard, keychain, machine, userManage]
+const ONLINE_NORMAL = [bucket, dashboard, keychain, video]
+const ONLINE_SUPRER = [bucket, dashboard, keychain, video, userManage]
+const ONLINE_ADMIN = [bucket, dashboard, keychain, video, machine, userManage]
 
 const state = {
     menuList: user.state.type === 'admin' ? (user.state.subUser ? ONLINE_ADMIN : ONLINE_ADMIN_NO_SUBSUER) : (user.state.type === 'super' ? ONLINE_SUPRER : (user.state.type === 'sub' ? ONLINE_SUB : ONLINE_NORMAL))

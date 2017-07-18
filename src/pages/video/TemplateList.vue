@@ -19,7 +19,7 @@ export default {
             listHeader: [{
                 title: 'ID',
                 key: 'id',
-                width: 100
+                width: 80
             }, {
                 title: 'Name',
                 width: 100,

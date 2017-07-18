@@ -1,6 +1,6 @@
 <template>
     <div class="layout-menu">
-        <Menu :active-name="activeName" theme="dark" width="auto" @on-select="goRouter">
+        <Menu :active-name="activeName" theme="dark" :open-names="[openName]" :accordion="false" width="auto" @on-select="goRouter">
             <div class="layout-logo-left">
                 <img class="logo-big" src="../../assets/logo.png" height="30px" />
             </div>
@@ -18,6 +18,7 @@ export default {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
+            openName: this.$route.meta.parent || '',
             menuList: menuState.state.menuList
         }
     },

@@ -11,7 +11,8 @@ export const messages = {
             RESET: 'Reset',
             COPY: 'Copy',
             LOADING: 'Loading...',
-            LINK_CONVERSION: 'Link conversion'
+            LINK_CONVERSION: 'Link conversion',
+            EDIT: 'Edit'
         },
         LOGIN: {
             TITLE: 'LOGIN',
@@ -443,7 +444,8 @@ export const messages = {
             RESET: '重置',
             COPY: '复制',
             LOADING: '加载中...',
-            LINK_CONVERSION: 'url转换'
+            LINK_CONVERSION: 'url转换',
+            EDIT: '编辑'
         },
         LOGIN: {
             TITLE: '登 录',
@@ -478,7 +480,7 @@ export const messages = {
             PARTITION: '磁盘分区',
             USER: '用户管理',
             TEMPLATE: '转码模版',
-            OUTPUT: '转码输出'
+            OUTPUT: '自动转码配置'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',

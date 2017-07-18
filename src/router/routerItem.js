@@ -13,6 +13,8 @@ import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
 import TemplateList from '@/pages/video/TemplateList'
 import TemplateEdit from '@/pages/video/TemplateEdit'
+import OutputList from '@/pages/video/OutputList'
+import OutputEdit from '@/pages/video/OutputEdit'
 import Notfound from '@/pages/404/404'
 
 const layoutChild = [{
@@ -60,19 +62,24 @@ const layoutChild = [{
     component: FilePermissions
 }, {
     path: '/video/template',
-    name: 'video',
-    meta: { title: 'Video', ali: 'video' },
-    component: TemplateList
-}, {
-    path: '/video/template',
     name: 'template',
-    meta: { title: 'Video', ali: 'video' },
+    meta: { title: 'Video', ali: 'template', parent: 'video' },
     component: TemplateList
 }, {
-    path: '/video/TemplateEdit/id/:id',
+    path: '/video/templateEdit/id/:id',
     name: 'TemplateEdit',
-    meta: { title: 'Video', ali: 'video' },
+    meta: { title: 'Video', ali: 'template', parent: 'video' },
     component: TemplateEdit
+}, {
+    path: '/video/output',
+    name: 'output',
+    meta: { title: 'Video', ali: 'output', parent: 'video' },
+    component: OutputList
+}, {
+    path: '/video/outputEdit/bucket/:bucket/id/:id',
+    name: 'outputEdit',
+    meta: { title: 'Video', ali: 'output', parent: 'video' },
+    component: OutputEdit
 }, {
     path: '/machine',
     name: 'machine',
