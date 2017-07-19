@@ -73,7 +73,7 @@ export default {
                 title: 'Outputs',
                 width: 170,
                 render: (h, params) => {
-                    if (params.row.outputs.length > 0) {
+                    if (params.row.outputs && params.row.outputs.length > 0) {
                         return params.row.outputs.map(item => {
                             const sd = item.segment_duration || '-'
                             return h('p', [`keySuffix:${item.key_suffix},`, h('br'), `视频转码模板ID:${item.preset_id},`, h('br'), `HLS切片时长:${sd},`, h('br')])

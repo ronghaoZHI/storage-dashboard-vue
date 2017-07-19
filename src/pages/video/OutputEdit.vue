@@ -53,7 +53,7 @@
             <div class="form-item">
                 <span class="form-label">输出规则 : </span>
                 <div class="table-box line-width">
-                    <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="transcode.outputs" no-data-text='输出规则少于一个将不能提交'></Table>
+                    <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="transcode.outputs" no-data-text='输出规则和视频截图规则至少存在一个'></Table>
                 </div>
                 <br>
                 <p class="style-name-info redFont button-add-item" v-if="HLSError">设置自动转码后，输出规则中至少有一项模版输出为TS，且所有HLS切片时长需保持一致，且不能为0</p>
@@ -62,9 +62,10 @@
             <div class="form-item">
                 <span class="form-label">视频截图规则 : </span>
                 <div class="table-box line-width">
-                    <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="transcode.snapshots" no-data-text='截图规则少于一个将不能提交'></Table>
+                    <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="transcode.snapshots" no-data-text='输出规则和视频截图规则至少存在一个'></Table>
                 </div>
                 <br>
+                <p class="style-name-info redFont button-add-item" v-if="osError">输出规则和视频截图规则至少存在一个</p>
                 <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">添加</Button>
             </div>
         </div>
@@ -555,14 +556,8 @@ export default {
         outputsDisabled () {
             return this.isTS(this.outputModal.preset_id) && this.outputModal.segment_duration === 0 && this.auxiliary.MP
         },
-        outputsError () {
-            return this.transcode.outputs.length === 0
-        },
-        snapshotsError () {
-            return this.transcode.snapshots.length === 0
-        },
         sbumitDisabled () {
-            return this.snapshotsError || this.regError || this.outputsError || this.MPNameError
+            return this.regError || this.MPNameError
         },
         regError () {
             try {
@@ -579,6 +574,9 @@ export default {
         },
         MPNameError () {
             return this.MPShow && this.auxiliary.MP && !this.transcode.master_playlist.name
+        },
+        osError () {
+            return this.transcode.snapshots.length === 0 && this.transcode.outputs.length === 0
         }
     },
     components: { InputNumber },
@@ -677,7 +675,6 @@ export default {
             } else {
                 this.transcode.snapshots.splice(this.shotIndex, 1, data)
             }
-            console.log('newnew', this.transcode.snapshots)
             this.showShotsModal = false
         },
         editShot (index) {
@@ -717,6 +714,12 @@ export default {
                     return
                 }
             }
+
+            if (this.osError) {
+                this.$Message.warning('输出规则和视频截图规则至少存在一个')
+                return
+            }
+
             this.addTranscode()
         },
         async addTranscode () {
@@ -791,25 +794,32 @@ export default {
             const auxiliary = _.clone(this.auxiliary)
             let saved = _.clone(data)
 
-            saved.outputs = front.outputs.map(item => {
-                let res = _.clone(item)
-                if (item.segment_duration && item.segment_duration !== 0) {
-                    res.segment_duration = item.segment_duration.toString()
-                } else {
-                    delete res.segment_duration
-                }
-                delete res.template
-                return res
-            })
+            if (data.outputs.length === 0) {
+                delete saved.outputs
+            } else {
+                saved.outputs = front.outputs.map(item => {
+                    let res = _.clone(item)
+                    if (item.segment_duration && item.segment_duration !== 0) {
+                        res.segment_duration = item.segment_duration.toString()
+                    } else {
+                        delete res.segment_duration
+                    }
+                    delete res.template
+                    return res
+                })
+            }
 
-            saved.snapshots = front.snapshots.map(item => {
-                let res = _.clone(item)
-                res.interval = item.interval.toString()
-                res.number = item.number.toString()
-                res.time = item.time.toString()
-
-                return res
-            })
+            if (data.snapshots.length === 0) {
+                delete saved.snapshots
+            } else {
+                saved.snapshots = front.snapshots.map(item => {
+                    let res = _.clone(item)
+                    res.interval = item.interval.toString()
+                    res.number = item.number.toString()
+                    res.time = item.time.toString()
+                    return res
+                })
+            }
 
             let groug = this.groupACLList
             let user = this.userACLList
@@ -861,12 +871,16 @@ export default {
             let front = _.cloneDeep(data)
             front.failure_callback_url = data.failure_callback_url.split('http://')[1] || ''
             front.success_callback_url = data.success_callback_url.split('http://')[1] || ''
-            if (front.outputs.length === 0) {
+            if (!data.outputs || isEmpty(data.outputs)) {
                 front.outputs = []
             } else {
                 front.outputs.forEach(item => {
                     item.template = `${item.preset_id}+${this.templateName[item.preset_id]}`
                 })
+            }
+
+            if (!data.snapshots || isEmpty(data.snapshots)) {
+                front.snapshots = []
             }
 
             if (!front.master_playlist) {
@@ -879,7 +893,11 @@ export default {
 
             this.auxiliary.regular = data.allowed_keys_regex[0]
 
-            this.MPShow = data.outputs.filter(output => this.isTS(output.preset_id)).length !== 0
+            if (isEmpty(data.outputs)) {
+                this.MPShow = false
+            } else {
+                this.MPShow = data.outputs.filter(output => this.isTS(output.preset_id)).length !== 0
+            }
 
             data.output_acls.forEach(item => {
                 let acc = {
@@ -1005,7 +1023,12 @@ const aclConvert2Save = data => {
     }
     return saved
 }
-
+const isEmpty = obj => {
+    for (var name in obj) {
+        return false
+    }
+    return true
+}
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
