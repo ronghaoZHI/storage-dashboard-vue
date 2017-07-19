@@ -590,14 +590,13 @@ const getURL = async (bucket, file, prefix) => {
 }
 
 </script>
+
 <style lang="less" scoped>
-.bsc-input {
-    height: 32px;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 400px;
+@import '../../styles/index.less';
+
+.@{css-prefix}input {
+    .wh(400px,32px);
+    .fb(flex-start,center);
     position: relative;
     vertical-align: middle;
     border: 1px solid #d7dde4;
@@ -606,11 +605,10 @@ const getURL = async (bucket, file, prefix) => {
     input {
         height: 22px;
         line-height: 1.5;
-        font-size: 12px;
+        .sc(12px,#657180);
         padding: 0 4px;
         flex: 1;
         border: 0;
-        color: #657180;
         background-image: none;
         position: relative;
         cursor: text;
@@ -625,7 +623,7 @@ const getURL = async (bucket, file, prefix) => {
         border-radius: 2px;
     }
 }
-.bsc-input-focus {
+.@{css-prefix}input-focus {
     outline: 0;
     box-shadow: 0 0 0 2px rgba(51,153,255,.2);
 }
@@ -640,10 +638,7 @@ const getURL = async (bucket, file, prefix) => {
 }
 
 .section-search {
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    .fb(space-between,center);
 }
 
 .link-folder {
@@ -667,12 +662,8 @@ const getURL = async (bucket, file, prefix) => {
 }
 
 .section-paging {
-    height: 40px;
-    width: 100%;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
+    .wh(100%,40px);
+    .fb(flex-end,center);
     button {
         width: 70px;
         margin-left: 6px;
@@ -683,4 +674,3 @@ const getURL = async (bucket, file, prefix) => {
     border-top: 0 !important;
 }
 </style>
-
