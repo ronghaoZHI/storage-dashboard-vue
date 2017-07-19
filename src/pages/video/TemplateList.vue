@@ -160,52 +160,54 @@ export default {
         },
         convert2Front (data) {
             let frontList = []
-            data.forEach(item => {
-                const video = item.Video
-                const audio = item.Audio
-                const frontItem = {
-                    id: item.Id,
-                    description: item.Description,
-                    name: item.Name,
-                    container: item.Container,
-                    video: [],
-                    audio: [],
-                    videoDetails: [],
-                    audioDetails: []
-                }
-                _.forEach(video, (value, key) => {
-                    if (key === 'FixedGOP') {
-                    } else if (key === 'CodecOptions') {
-                        _.forEach(value, (value, key) => {
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    const video = item.Video
+                    const audio = item.Audio
+                    const frontItem = {
+                        id: item.Id,
+                        description: item.Description,
+                        name: item.Name,
+                        container: item.Container,
+                        video: [],
+                        audio: [],
+                        videoDetails: [],
+                        audioDetails: []
+                    }
+                    _.forEach(video, (value, key) => {
+                        if (key === 'FixedGOP') {
+                        } else if (key === 'CodecOptions') {
+                            _.forEach(value, (value, key) => {
+                                frontItem.videoDetails.push({name: this.videoNames[key], value: value})
+                            })
+                        } else if (videoMust.includes(key)) {
+                            frontItem.video.push({name: this.videoNames[key], value: value})
                             frontItem.videoDetails.push({name: this.videoNames[key], value: value})
-                        })
-                    } else if (videoMust.includes(key)) {
-                        frontItem.video.push({name: this.videoNames[key], value: value})
-                        frontItem.videoDetails.push({name: this.videoNames[key], value: value})
-                    } else {
-                        frontItem.videoDetails.push({name: this.videoNames[key], value: value})
-                    }
-                })
-                _.forEach(audio, (value, key) => {
-                    if (key === 'CodecOptions') {
-                        _.forEach(value, (value, key) => {
+                        } else {
+                            frontItem.videoDetails.push({name: this.videoNames[key], value: value})
+                        }
+                    })
+                    _.forEach(audio, (value, key) => {
+                        if (key === 'CodecOptions') {
+                            _.forEach(value, (value, key) => {
+                                frontItem.audioDetails.push({name: this.audioNames[key], value: value})
+                            })
+                        } else if (audioMust.includes(key)) {
+                            frontItem.audio.push({name: this.audioNames[key], value: value})
                             frontItem.audioDetails.push({name: this.audioNames[key], value: value})
-                        })
-                    } else if (audioMust.includes(key)) {
-                        frontItem.audio.push({name: this.audioNames[key], value: value})
-                        frontItem.audioDetails.push({name: this.audioNames[key], value: value})
-                    } else {
-                        frontItem.audioDetails.push({name: this.audioNames[key], value: value})
+                        } else {
+                            frontItem.audioDetails.push({name: this.audioNames[key], value: value})
+                        }
+                    })
+                    if (audio.CodecOptions && audio.CodecOptions.Profile) {
+                        frontItem.audio.profile = {
+                            name: '编码质量',
+                            value: audio.CodecOptions.Profile
+                        }
                     }
+                    frontList.push(frontItem)
                 })
-                if (audio.CodecOptions && audio.CodecOptions.Profile) {
-                    frontItem.audio.profile = {
-                        name: '编码质量',
-                        value: audio.CodecOptions.Profile
-                    }
-                }
-                frontList.push(frontItem)
-            })
+            }
             return frontList
         },
         deletePresetConfirm (rule) {
