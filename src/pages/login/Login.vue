@@ -132,6 +132,7 @@ export default {
         async toIndex (data, router = '/') {
             await this.$store.dispatch('setUserInfo', data)
             await this.refreshMenu()
+
             let redirect = this.$route.query.redirect // get redirect path
             !!redirect ? this.$router.push(redirect) : this.$router.push(router)
             Vue.config.lang = this.lang

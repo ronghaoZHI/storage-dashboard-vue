@@ -361,10 +361,11 @@
     </div>
 </template>
 <script>
-import { transcoder, handler } from '@/service/Aws'
+import { transcoder } from '@/service/Aws'
 import InputNumber from '@/components/input-number/input-number.vue'
 import * as listPage from '@/pages/video/OutputList'
 import user from '@/store/modules/user'
+import { getBucketList } from '@/service/Data'
 export default {
     data () {
         return {
@@ -587,7 +588,7 @@ export default {
     },
     methods: {
         async getBucketNames () {
-            let res = await handler('listBuckets')
+            let res = await getBucketList()
             this.bucketList = _.map(res.Buckets, bucket => bucket.Name)
         },
         async getTemplateList () {

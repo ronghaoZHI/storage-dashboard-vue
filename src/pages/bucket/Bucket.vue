@@ -23,13 +23,14 @@
 <script>
 import { handler } from '@/service/Aws'
 import { removeItemFromArray } from '@/service/bucketService'
+import { getBucketList } from '@/service/Data'
 import moment from 'moment'
-import user from '@/store/modules/user'
+import userStore from '@/store/modules/user'
 export default {
     data () {
         return {
             adminMode: false,
-            isSubUser: user.state.type === 'sub',
+            isSubUser: userStore.state.type === 'sub',
             createBucketValue: '',
             createBucketModal: false,
             selectedBucket: {},
@@ -40,7 +41,7 @@ export default {
         }
     },
     mounted () {
-        this.getBucketList()
+        this.convertBucketList()
     },
     directives: {
         cbutton: {
@@ -55,10 +56,10 @@ export default {
         }
     },
     methods: {
-        async getBucketList () {
+        async convertBucketList () {
             try {
                 this.$Loading.start()
-                let res = await handler('listBuckets')
+                let res = await getBucketList()
                 this.bucketList = _.forEach(res.Buckets, (item) => {
                     item.selected = false
                     item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
@@ -112,15 +113,15 @@ export default {
         rowClick (item) {
             this.selectedBucket = this.selectedBucket === item ? {} : item
         },
-        addBucket () {
+        async addBucket () {
             // the 'this' in arrow function is not point to vue
             let self = this
             if (this.createBucketValue.length > 2) {
-                handler('createBucket', { Bucket: this.createBucketValue }).then(() => {
-                    self.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
-                    self.getBucketList()
-                    self.createBucketValue = ''
-                })
+                await handler('createBucket', { Bucket: this.createBucketValue })
+                self.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
+                await this.$store.dispatch('setBucketList', await handler('listBuckets'))
+                self.convertBucketList()
+                self.createBucketValue = ''
             } else {
                 this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
             }

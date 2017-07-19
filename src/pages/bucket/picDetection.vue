@@ -38,9 +38,8 @@
 </template>
 
 <script>
-    import {
-        handler
-    } from '@/service/Aws'
+    import { handler } from '@/service/Aws'
+    import { getBucketList } from '@/service/Data'
     export default {
         data () {
             return {
@@ -64,7 +63,7 @@
         methods: {
             async getBucketList () {
                 try {
-                    let res = await handler('listBuckets')
+                    let res = await getBucketList()
                     this.bucketList = [...res.Buckets]
                     _.remove(this.bucketList, n => n.Name === this.bucket)
                 } catch (error) {

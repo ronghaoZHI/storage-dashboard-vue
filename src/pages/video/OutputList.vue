@@ -9,6 +9,7 @@
 <script>
 import { getAWS, handler } from '@/service/Aws'
 import { HOST } from '@/service/HOST'
+import { getBucketList } from '@/service/Data'
 export default {
     data () {
         return {
@@ -164,7 +165,7 @@ export default {
             } catch (error) {}
         },
         async getBucketNames () {
-            let res = await handler('listBuckets')
+            let res = await getBucketList()
             return _.map(res.Buckets, bucket => bucket.Name)
         },
         async getBucketPolicy (bucket) {

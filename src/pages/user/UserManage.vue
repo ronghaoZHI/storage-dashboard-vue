@@ -78,7 +78,7 @@
 </template>
 <script>
 import user from '@/store/modules/user'
-import { handler } from '@/service/Aws'
+import { getBucketList } from '@/service/Data'
 import { BOUND_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, UNBIND_USER } from '@/service/API'
 export default {
     data () {
@@ -246,7 +246,7 @@ export default {
                         subUserList: this.userList
                     })
                 } else {
-                    let [res, users] = await Promise.all([handler('listBuckets'), this.$http.get(SUB_USER)])
+                    let [res, users] = await Promise.all([getBucketList(), this.$http.get(SUB_USER)])
                     let buckets = await Promise.all(Array.map(res.Buckets, (bucket) => {
                         this.bucketList = res.Buckets
                         return this.$http.get(SUB_USER_ACL, { params: { bucket: bucket.Name } }).then(acl => {

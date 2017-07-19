@@ -124,7 +124,7 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
-import { handler } from '@/service/Aws'
+import { getBucketList } from '@/service/Data'
 import { getAnalysisUrl } from '@/service/API'
 import user from '@/store/modules/user'
 import { bytes, times, timesK, date } from '@/service/bucketService'
@@ -171,13 +171,13 @@ export default {
     },
     mounted () {
         this.dateSelect = this.dateDefault.seven_days
-        this.getBucketList()
+        this.convertBucketList()
         this.getInitData()
     },
     methods: {
-        async getBucketList () {
+        async convertBucketList () {
             try {
-                let res = await handler('listBuckets')
+                let res = await getBucketList()
                 this.bucketList = [...res.Buckets, { Name: 'All Buckets' }]
             } catch (error) {
                 console.log(error)

@@ -1,1 +1,1 @@
-export const bucket = state => state.bucket.selectedBucket
+export const bucketList = state => state.bucket.bucketList
