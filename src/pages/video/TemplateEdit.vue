@@ -82,7 +82,7 @@
                 <span class="form-label">分辨率 : </span>
                 <Radio-group v-model="auxiliary.resolution">
                     <Radio label="auto">不变</Radio>
-                    <Radio label="value"></Radio>
+                    <Radio label="value">自定义</Radio>
                 </Radio-group>
                 <Input-number :min='1' v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto'" placeholder="宽度"></Input-number>
                 <Input-number :min='1' v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto'" placeholder="高度"></Input-number>
@@ -115,7 +115,7 @@
             <div class="form-item">
                 <span class="form-label">采样率(HZ) : </span>
                 <Radio-group v-model="template.Audio.SampleRate">
-                    <Radio v-for='sam in audioSampleRateList' :key="sam" :label='sam'>{{sam}}</Radio>
+                    <Radio v-for='sam in audioSampleRateList' :key="sam.value" :label='sam.value'>{{sam.name}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
@@ -156,7 +156,7 @@ export default {
             aspectRatioList: [{name: '不变', value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
             audioCodecList: [{name: '不变', value: 'auto'}, {name: 'AAC', value: 'AAC'}, {name: 'flac', value: 'flac'}, {name: 'mp3', value: 'mp3'}, {name: 'mp2', value: 'mp2'}],
             audioProfileList: [{name: '自适应', value: 'auto'}, {name: 'AAC-LC', value: 'AAC-LC'}, {name: 'HE-AAC', value: 'HE-AAC'}, {name: 'HE-AACv2', value: 'HE-AACv2'}],
-            audioSampleRateList: ['22050', '32000', '44100', '48000', '96000'],
+            audioSampleRateList: [{name: '不变', value: 'auto'}, {name: '22050', value: '22050'}, {name: '32000', value: '32000'}, {name: '44100', value: '44100'}, {name: '48000', value: '48000'}, {name: '96000', value: '96000'}],
             audioChannelsList: [{name: '不变', value: 'auto'}, {name: '1', value: '1'}, {name: '2', value: '2'}, {name: '3', value: '3'}, {name: '4', value: '4'}, {name: '5', value: '5'}, {name: '6', value: '6'}, {name: '7', value: '7'}, {name: '8', value: '8'}, {name: '9', value: '9'}, {name: '10', value: '10'}, {name: '11', value: '11'}, {name: '12', value: '12'}, {name: '13', value: '13'}, {name: '14', value: '14'}, {name: '15', value: '15'}, {name: '16', value: '16'}]
         }
     },
@@ -251,26 +251,26 @@ const templateDefult = {
     FastStart: true,
     Container: 'mp4',
     Audio: {
-        Codec: 'AAC',
+        Codec: 'auto',
         CodecOptions: {
             Profile: 'auto'
         },
-        SampleRate: '22050',
+        SampleRate: 'auto',
         BitRate: '64',
         Channels: 'auto'
     },
     Video: {
-        Codec: 'H.264',
+        Codec: 'auto',
         CodecOptions: {
             Profile: 'baseline',
             Level: '1'
         },
-        KeyframesMaxDist: '1',
-        FixedGOP: true,
+        KeyframesMaxDist: '',
+        FixedGOP: false,
         BitRate: '64',
-        FrameRate: '23.97',
+        FrameRate: 'auto',
         Resolution: 'auto',
-        AspectRatio: '1:1'
+        AspectRatio: 'auto'
     }
 }
 </script>
