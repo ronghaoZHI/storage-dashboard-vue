@@ -20,7 +20,7 @@
             </div>
             <div class="form-item">
                 <span class="form-label">输出封装格式 : </span>
-                <Radio-group v-model="template.Container">
+                <Radio-group v-model="template.Container" @on-change="containerChange">
                     <Radio v-for='con in containerList' :key="con" :label='con'>{{con}}</Radio>
                 </Radio-group>
             </div>
@@ -41,7 +41,7 @@
             <div class="form-item">
                 <span class="form-label">编码方式 : </span>
                 <Radio-group v-model="template.Video.Codec">
-                    <Radio v-for='codec in videoCodecList' v-if="codec.container.includes(template.Container)" :key="codec.value" :label='codec.value'>{{codec.name}}</Radio>
+                    <Radio :disabled="videoDisabled" v-for='codec in videoCodecList' v-if="codec.container.includes(template.Container)" :key="codec.value" :label='codec.value'>{{codec.name}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Video.Codec === 'H.264'">
@@ -67,14 +67,14 @@
             <div class="form-item">
                 <span class="form-label">码率 : </span>
                 <Radio-group v-model="auxiliary.videoBitRate">
-                    <Radio label="auto">自适应</Radio>
-                    <Radio label="value">自定义</Radio>
+                    <Radio label="auto" :disabled="videoDisabled">自适应</Radio>
+                    <Radio label="value" :disabled="videoDisabled">自定义</Radio>
                 </Radio-group>
                 <Input-number :min='1' v-model="auxiliary.videoBitRateValue" :disabled="auxiliary.videoBitRate === 'auto'"></Input-number> Kbps
             </div>
             <div class="form-item">
                 <span class="form-label">帧率 : </span>
-                <Select v-model="template.Video.FrameRate" class="line-width">
+                <Select v-model="template.Video.FrameRate" :disabled="videoDisabled" class="line-width">
                     <Option v-for="fr in videoFrameRateList" :value="fr.value" :key="fr.value">{{fr.name}}</Option>
                 </Select>
             </div>
@@ -146,6 +146,7 @@ import InputNumber from '@/components/input-number/input-number.vue'
 export default {
     data () {
         return {
+            videoDisabled: false,
             template: _.cloneDeep(templateDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
             containerList: ['flac', 'flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts'],
@@ -202,6 +203,16 @@ export default {
                     this.$Message.error(error)
                     this.$Loading.error()
                 }
+            }
+        },
+        containerChange (value) {
+            if (audioOnly.includes(value)) {
+                this.template.Video.Codec = 'auto'
+                this.auxiliary.videoBitRate = 'auto'
+                this.template.Video.FrameRate = 'auto'
+                this.videoDisabled = true
+            } else if (this.videoDisabled) {
+                this.videoDisabled = false
             }
         }
     }
@@ -265,7 +276,7 @@ const templateDefult = {
             Profile: 'baseline',
             Level: '1'
         },
-        KeyframesMaxDist: '',
+        KeyframesMaxDist: '1',
         FixedGOP: false,
         BitRate: '64',
         FrameRate: 'auto',
@@ -273,6 +284,8 @@ const templateDefult = {
         AspectRatio: 'auto'
     }
 }
+
+const audioOnly = ['flac', 'mp3']
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
