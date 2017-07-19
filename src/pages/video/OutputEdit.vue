@@ -351,7 +351,7 @@
             <div class="form-item">
                 <span class="form-label">宽高比 : </span>
                 <Radio-group v-model="shotModal.aspect_ratio">
-                    <Radio v-for='asp in aspectRatioList' :key="asp" :label='asp'>{{asp}}</Radio>
+                    <Radio v-for='asp in aspectRatioList' :key="asp.value" :label='asp.value'>{{asp.name}}</Radio>
                 </Radio-group>
             </div>
             <div slot="footer" class="copy-modal-footer">
@@ -376,7 +376,7 @@ export default {
             bucketList: this.bucketList,
             showOutputsModal: false,
             showShotsModal: false,
-            aspectRatioList: ['auto', '1:1', '4:3', '3:2', '16:9'],
+            aspectRatioList: [{name: '不变', value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
             formatList: ['png', 'jpg'],
             templateList: this.templateList,
             outputModal: _.clone(outputsDefult),
