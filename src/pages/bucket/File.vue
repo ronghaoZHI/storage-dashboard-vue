@@ -1,5 +1,5 @@
 <template>
-    <div @keyup.enter="searchValue !== '' && searchFile(searchValue)">
+    <div class="bsc-file" @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
             <bsc-breadcrumb>
                 <bsc-breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
@@ -594,83 +594,67 @@ const getURL = async (bucket, file, prefix) => {
 <style lang="less" scoped>
 @import '../../styles/index.less';
 
-.@{css-prefix}input {
-    .wh(400px,32px);
-    .fb(flex-start,center);
-    position: relative;
-    vertical-align: middle;
-    border: 1px solid #d7dde4;
-    padding: 5px 0 5px 7px;
-    border-radius: 4px;
-    input {
-        height: 22px;
-        line-height: 1.5;
-        .sc(12px,#657180);
-        padding: 0 4px;
-        flex: 1;
-        border: 0;
-        background-image: none;
-        position: relative;
-        cursor: text;
-        transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+.@{css-prefix}file{
+    .layout-bsc-toolbar {
+        padding-bottom: 8px;
+        border-bottom: 1px solid #f2f1f6;
+        button {
+            margin-right: 1px;
+        }
     }
-    input:focus {
-        outline: 0;
+
+    .section-search {
+        .fb(space-between,center);
+        .@{css-prefix}input {
+            .wh(400px,32px);
+            .fb(flex-start,center);
+            position: relative;
+            vertical-align: middle;
+            border: 1px solid #d7dde4;
+            padding: 5px 0 5px 7px;
+            border-radius: 4px;
+
+            .input-append-before {
+                flex: none;
+                background: #f5f7f9;
+                border-radius: 2px;
+            }
+
+            input {
+                height: 22px;
+                line-height: 1.5;
+                .sc(12px,#657180);
+                padding: 0 4px;
+                flex: 1;
+                border: 0;
+                background-image: none;
+                position: relative;
+                cursor: text;
+                transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+            
+                &:focus {
+                    outline: 0;
+                }
+            }
+        }
     }
-    .input-append-before {
-        flex: none;
-        background: #f5f7f9;
-        border-radius: 2px;
+    
+    .section-img {
+        width: 100%;
+        text-align: center;
+        img {
+            max-width: 844px;
+            max-height: 600px;
+        }
     }
-}
-.@{css-prefix}input-focus {
-    outline: 0;
-    box-shadow: 0 0 0 2px rgba(51,153,255,.2);
-}
 
-.section-img {
-    width: 100%;
-    text-align: center;
-    img {
-        max-width: 844px;
-        max-height: 600px;
+    .section-paging {
+        .wh(100%,40px);
+        .fb(flex-end,center);
+        button {
+            width: 70px;
+            margin-left: 6px;
+        }
     }
-}
-
-.section-search {
-    .fb(space-between,center);
-}
-
-.link-folder {
-    font-weight: bold;
-    color: #1088E9;
-    cursor: pointer;
-}
-
-.button-reset {
-    margin-top: 2px;
-    background-color: #eee !important;
-    border-radius: 0 !important;
-}
-
-.layout-bsc-toolbar {
-    padding-bottom: 8px;
-    border-bottom: 1px solid #f2f1f6;
-    button {
-        margin-right: 1px;
-    }
-}
-
-.section-paging {
-    .wh(100%,40px);
-    .fb(flex-end,center);
-    button {
-        width: 70px;
-        margin-left: 6px;
-    }
-}
-
-.ivu-modal-footer {
-    border-top: 0 !important;
 }
 </style>
