@@ -823,7 +823,7 @@ export default {
             if (!this.auxiliary.MP || !this.MPShow) {
                 delete saved.master_playlist
             }
-            saved.allowed_keys_regex = auxiliary.reg === 'extension' ? [`^${auxiliary.path}.*\.(${auxiliary.extension})$`] : [`${auxiliary.regular}`]
+            saved.allowed_keys_regex = auxiliary.reg === 'extension' ? [`^${auxiliary.path}.*\\.(${auxiliary.extension})$`] : [`${auxiliary.regular}`]
             return saved
         },
         isMPShow () {
