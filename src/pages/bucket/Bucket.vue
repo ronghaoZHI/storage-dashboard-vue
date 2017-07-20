@@ -164,6 +164,8 @@ const batchDeletion = (list, bucket) => {
 @bucket-hover-background-color: #f5f5f5;
 @bucket-selected-background-color: #f5f5f5;
 @bucket-span-filename-color: #657180;
+@bucket-card-width: 120px;
+@bucket-card-height: 120px;
 
 .@{css-prefix}bucket{
     .layout-bsc-toolbar {
@@ -176,14 +178,14 @@ const batchDeletion = (list, bucket) => {
         }
     }
 
-    .@{css-prefix}flex-section {
+    .bsc-flex-section {
         min-height: 100%;
         width: 100%;
         .fb(flex-start,flex-start);
         flex-wrap: wrap;
 
         .bucket {
-            .wh(120px,120px);
+            .wh(@bucket-card-width,@bucket-card-height);
             font-size: 14px;
             border-radius: 5px;
             margin: 4px;
@@ -205,14 +207,12 @@ const batchDeletion = (list, bucket) => {
                 top: 85px;
                 left: 0;
                 width: 110px;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
+                .overflow()
             }
         }
 
         .bucket-selected {
-            background-color: @bucket-selected-background-color ;
+            background-color: @bucket-selected-background-color;
         }
     }
 
