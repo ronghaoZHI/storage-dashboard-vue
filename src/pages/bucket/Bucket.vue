@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bsc-bucket">
         <div class="layout-bsc-toolbar" v-if="!isSubUser">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="createBucketModal = true">{{$t("STORAGE.ADD_BUCKET")}}</Button>
@@ -156,64 +156,71 @@ const batchDeletion = (list, bucket) => {
 }
 
 </script>
+
 <style lang="less" scoped>
-.bsc-flex-section {
-    min-height: 100%;
-    width: 100%;
-    display: inline-flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
+@import '../../styles/index.less';
 
-.bucket {
-    width: 120px;
-    height: 120px;
-    font-size: 14px;
-    border-radius: 5px;
-    margin: 4px;
-    padding: 5px;
-    background: url('../../assets/Bucket_folder.png') no-repeat center;
-    background-size: 66px 66px;
-    .span-filename {
-        display: inline-block;
-        position: relative;
-        text-align: center;
-        color: #657180;
-        font-style: normal;
-        font-weight: 400;
-        top: 85px;
-        left: 0;
-        width: 110px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis
+@layout-bsc-toolbar-border-bottom-color: #f2f1f6;
+@bucket-hover-background-color: #f5f5f5;
+@bucket-selected-background-color: #f5f5f5;
+@bucket-span-filename-color: #657180;
+
+.@{css-prefix}bucket{
+    .layout-bsc-toolbar {
+        padding-bottom: 20px;
+        border-bottom: 1px solid @layout-bsc-toolbar-border-bottom-color;
+        margin-bottom: 0;
+
+        button {
+            margin-right: 1px;
+        }
     }
-}
 
-.layout-bsc-toolbar {
-    padding-bottom: 20px;
-    border-bottom: 1px solid #f2f1f6;
-    margin-bottom: 0;
-    button {
-        margin-right: 1px;
+    .@{css-prefix}flex-section {
+        min-height: 100%;
+        width: 100%;
+        .fb(flex-start,flex-start);
+        flex-wrap: wrap;
+
+        .bucket {
+            .wh(120px,120px);
+            font-size: 14px;
+            border-radius: 5px;
+            margin: 4px;
+            padding: 5px;
+            background: url('../../assets/Bucket_folder.png') no-repeat center;
+            background-size: 66px 66px;
+
+            &:hover{
+                background-color: @bucket-hover-background-color;
+            }
+
+            .span-filename {
+                display: inline-block;
+                position: relative;
+                text-align: center;
+                color: @bucket-span-filename-color;
+                font-style: normal;
+                font-weight: 400;
+                top: 85px;
+                left: 0;
+                width: 110px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .bucket-selected {
+            background-color: @bucket-selected-background-color ;
+        }
     }
-}
 
-.bucket:hover,
-.bucket-selected {
-    background-color: #f5f5f5;
-}
-
-.info-input-error {
-    display: block;
-    margin-top: 6px;
-    color: red;
-}
-
-.ivu-table-row:hover {
-    cursor: pointer;
+    .info-input-error {
+        display: block;
+        margin-top: 6px;
+        color: red;
+    }
 }
 </style>
 
