@@ -7,9 +7,8 @@
     </div>
 </template>
 <script>
-import { getAWS, handler } from '@/service/Aws'
-import { HOST } from '@/service/HOST'
 import { getBucketList } from '@/service/Data'
+import { getBucketPolicy, putBucketPolicy, getTranscodes } from '@/pages/video/data'
 export default {
     data () {
         return {
@@ -159,7 +158,7 @@ export default {
             const bucketNames = await this.getBucketNames()
             try {
                 let polifyList = await Promise.all(bucketNames.map(bucket => {
-                    return this.getBucketPolicy(bucket)
+                    return getBucketPolicy(bucket)
                 }))
                 this.policyFront = this.convert2Front(polifyList)
             } catch (error) {}
@@ -167,12 +166,6 @@ export default {
         async getBucketNames () {
             let res = await getBucketList()
             return _.map(res.Buckets, bucket => bucket.Name)
-        },
-        async getBucketPolicy (bucket) {
-            let aws = await getAWS(10000, HOST.policyHOST)
-            return new Promise((resolve, reject) => aws.getBucketPolicy({Bucket: bucket}, (error, data) => {
-                return error && error.code !== 'PolicyNotFound' ? reject(error) : resolve({bucket, data: data})
-            }))
         },
         convert2Front (data) {
             let front = []
@@ -199,13 +192,13 @@ export default {
             })
         },
         async deletePolicy (bucket, id, index) {
-            let trans = await this.getTranscode(bucket)
+            let trans = await getTranscodes(bucket)
             try {
                 if (trans) {
                     let newData = trans.filter(item => {
                         return item.id !== id
                     })
-                    await this.putBucketPolicy(bucket, newData)
+                    await putBucketPolicy(bucket, newData)
                 }
                 this.policyFront.splice(index, 1)
                 this.$Message.success(this.$t('VIDEO.DELETED_SUCCESSFULLY'))
@@ -214,30 +207,10 @@ export default {
                 this.$Message.error(this.$t('VIDEO.FAILED_TO_DELETE'))
             }
         },
-        async getTranscode (bucket) {
-            let res = await this.getBucketPolicy(bucket)
-            const policy = res.data && res.data.Policy ? JSON.parse(res.data.Policy) : {}
-            let transcodes = []
-            if (policy && policy.post_upload_transcoding && policy.post_upload_transcoding.length > 0) {
-                transcodes = policy.post_upload_transcoding
-            }
-            return transcodes
-        },
-        async putBucketPolicy (bucket, data) {
-            const policy = {
-                name: 'post_upload_transcoding',
-                value: data
-            }
-            try {
-                return handler('putBucketPolicy', {Bucket: bucket, Policy: JSON.stringify(policy)}, HOST.policyHOST)
-            } catch (error) {
-                return Promise.reject(error)
-            }
-        },
         async changeStatus (data) {
             const bucket = data.input_bucket
             const id = data.id
-            let trans = await this.getTranscode(bucket)
+            let trans = await getTranscodes(bucket)
             try {
                 if (trans) {
                     trans.forEach(item => {
@@ -245,7 +218,7 @@ export default {
                             item.is_enabled = item.is_enabled === 'true' ? 'false' : 'true'
                         }
                     })
-                    await this.putBucketPolicy(bucket, trans)
+                    await putBucketPolicy(bucket, trans)
                     const enable = this.policyFront[data._index].is_enabled
                     this.policyFront[data._index].is_enabled = enable === 'true' ? 'false' : 'true'
                 }

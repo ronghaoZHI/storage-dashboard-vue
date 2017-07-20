@@ -374,7 +374,7 @@
 <script>
 import { transcoder } from '@/service/Aws'
 import InputNumber from '@/components/input-number/input-number.vue'
-import * as listPage from '@/pages/video/OutputList'
+import { putBucketPolicy, getTranscodes } from '@/pages/video/data'
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
 export default {
@@ -625,9 +625,8 @@ export default {
                 this.inputBucket = this.bucketList[0]
                 this.transcode.output_bucket = this.bucketList[0]
             } else {
-                let res = await listPage.methods.getBucketPolicy(this.bucket, this.id)
                 this.inputBucket = this.bucket
-                const transcods = JSON.parse(res.data.Policy).post_upload_transcoding
+                const transcods = await getTranscodes(this.bucket)
                 const transcod = transcods.filter(item => {
                     return item.id === this.id
                 })
@@ -744,12 +743,12 @@ export default {
             }
         },
         async newTranscode () {
-            let trans = await listPage.methods.getTranscode(this.inputBucket)
+            let trans = await getTranscodes(this.inputBucket)
             const newTrans = this.convert2Save(this.transcode)
             newTrans.id = Date.now() + Math.random().toString().slice(-6)
             trans.push(newTrans)
             try {
-                await listPage.methods.putBucketPolicy(this.inputBucket, trans)
+                await putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
@@ -758,7 +757,7 @@ export default {
             }
         },
         async alterTranscode () {
-            let trans = await listPage.methods.getTranscode(this.inputBucket)
+            let trans = await getTranscodes(this.inputBucket)
             const newTrans = this.convert2Save(this.transcode)
             let updateIndex
             trans.forEach((item, index) => {
@@ -768,7 +767,7 @@ export default {
             })
             trans.splice(updateIndex, 1, newTrans)
             try {
-                await listPage.methods.putBucketPolicy(this.inputBucket, trans)
+                await putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
@@ -777,8 +776,8 @@ export default {
             }
         },
         async ranscodeChangeBucket () {
-            let originalTrans = await listPage.methods.getTranscode(this.bucket)
-            let trans = await listPage.methods.getTranscode(this.inputBucket)
+            let originalTrans = await getTranscodes(this.bucket)
+            let trans = await getTranscodes(this.inputBucket)
             const newTrans = this.convert2Save(this.transcode)
             newTrans.id = Date.now() + Math.random().toString().slice(-6)
             let updateIndex
@@ -790,8 +789,8 @@ export default {
             originalTrans.splice(updateIndex, 1)
             trans.push(newTrans)
             try {
-                await listPage.methods.putBucketPolicy(this.bucket, originalTrans)
-                await listPage.methods.putBucketPolicy(this.inputBucket, trans)
+                await putBucketPolicy(this.bucket, originalTrans)
+                await putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
