@@ -1,5 +1,6 @@
 import { getAWS, handler } from '@/service/Aws'
 import { HOST } from '@/service/HOST'
+import iView from 'iview'
 
 const getBucketPolicy = async(bucket) => {
     let aws = await getAWS(10000, HOST.policyHOST)
@@ -22,14 +23,17 @@ const putBucketPolicy = async(bucket, data) => {
 }
 
 const getTranscodes = async(bucket) => {
-    let res = await getBucketPolicy(bucket)
-    console.log(res)
-    const policy = res.data && res.data.Policy ? JSON.parse(res.data.Policy) : {}
-    let transcodes = []
-    if (policy && policy.post_upload_transcoding && policy.post_upload_transcoding.length > 0) {
-        transcodes = policy.post_upload_transcoding
+    try {
+        let res = await getBucketPolicy(bucket)
+        const policy = res.data && res.data.Policy ? JSON.parse(res.data.Policy) : {}
+        let transcodes = []
+        if (policy && policy.post_upload_transcoding && policy.post_upload_transcoding.length > 0) {
+            transcodes = policy.post_upload_transcoding
+        }
+        return transcodes
+    } catch (error) {
+        iView.Message.error(error.message, 5)
     }
-    return transcodes
 }
 
 export { getBucketPolicy, putBucketPolicy, getTranscodes }

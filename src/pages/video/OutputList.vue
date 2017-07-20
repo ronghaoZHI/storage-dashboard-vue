@@ -157,11 +157,16 @@ export default {
         async listPolify () {
             const bucketNames = await this.getBucketNames()
             try {
+                this.$Loading.start()
                 let polifyList = await Promise.all(bucketNames.map(bucket => {
                     return getBucketPolicy(bucket)
                 }))
                 this.policyFront = this.convert2Front(polifyList)
-            } catch (error) {}
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+                this.$Message.error(error)
+            }
         },
         async getBucketNames () {
             let res = await getBucketList()
@@ -192,8 +197,9 @@ export default {
             })
         },
         async deletePolicy (bucket, id, index) {
-            let trans = await getTranscodes(bucket)
             try {
+                this.$Loading.start()
+                let trans = await getTranscodes(bucket)
                 if (trans) {
                     let newData = trans.filter(item => {
                         return item.id !== id
@@ -208,10 +214,11 @@ export default {
             }
         },
         async changeStatus (data) {
+            this.$Loading.start()
             const bucket = data.input_bucket
             const id = data.id
-            let trans = await getTranscodes(bucket)
             try {
+                let trans = await getTranscodes(bucket)
                 if (trans) {
                     trans.forEach(item => {
                         if (item.id === id) {

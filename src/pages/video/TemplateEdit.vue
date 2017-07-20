@@ -193,7 +193,6 @@ export default {
                 this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 this.$router.push({ name: 'template' })
             } catch (error) {
-                this.$Message.error(error)
                 this.$Loading.error()
             }
         },
@@ -204,7 +203,6 @@ export default {
                     await transcoder('readPreset', {Id: '153'})
                     this.$Loading.finish()
                 } catch (error) {
-                    this.$Message.error(error)
                     this.$Loading.error()
                 }
             }

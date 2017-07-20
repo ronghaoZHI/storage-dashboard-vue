@@ -613,8 +613,6 @@ export default {
                 })
                 this.$Loading.finish()
             } catch (error) {
-                console.log(error)
-                this.$Message.error(error)
                 this.$Loading.error()
             }
         },
@@ -743,11 +741,12 @@ export default {
             }
         },
         async newTranscode () {
-            let trans = await getTranscodes(this.inputBucket)
-            const newTrans = this.convert2Save(this.transcode)
-            newTrans.id = Date.now() + Math.random().toString().slice(-6)
-            trans.push(newTrans)
             try {
+                this.$Loading.start()
+                let trans = await getTranscodes(this.inputBucket)
+                const newTrans = this.convert2Save(this.transcode)
+                newTrans.id = Date.now() + Math.random().toString().slice(-6)
+                trans.push(newTrans)
                 await putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
@@ -757,16 +756,17 @@ export default {
             }
         },
         async alterTranscode () {
-            let trans = await getTranscodes(this.inputBucket)
-            const newTrans = this.convert2Save(this.transcode)
-            let updateIndex
-            trans.forEach((item, index) => {
-                if (item.id === this.id) {
-                    updateIndex = index
-                }
-            })
-            trans.splice(updateIndex, 1, newTrans)
             try {
+                this.$Loading.start()
+                let trans = await getTranscodes(this.inputBucket)
+                const newTrans = this.convert2Save(this.transcode)
+                let updateIndex
+                trans.forEach((item, index) => {
+                    if (item.id === this.id) {
+                        updateIndex = index
+                    }
+                })
+                trans.splice(updateIndex, 1, newTrans)
                 await putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
@@ -776,19 +776,20 @@ export default {
             }
         },
         async ranscodeChangeBucket () {
-            let originalTrans = await getTranscodes(this.bucket)
-            let trans = await getTranscodes(this.inputBucket)
-            const newTrans = this.convert2Save(this.transcode)
-            newTrans.id = Date.now() + Math.random().toString().slice(-6)
-            let updateIndex
-            originalTrans.forEach((item, index) => {
-                if (item.id === this.id) {
-                    updateIndex = index
-                }
-            })
-            originalTrans.splice(updateIndex, 1)
-            trans.push(newTrans)
             try {
+                this.$Loading.start()
+                let originalTrans = await getTranscodes(this.bucket)
+                let trans = await getTranscodes(this.inputBucket)
+                const newTrans = this.convert2Save(this.transcode)
+                newTrans.id = Date.now() + Math.random().toString().slice(-6)
+                let updateIndex
+                originalTrans.forEach((item, index) => {
+                    if (item.id === this.id) {
+                        updateIndex = index
+                    }
+                })
+                originalTrans.splice(updateIndex, 1)
+                trans.push(newTrans)
                 await putBucketPolicy(this.bucket, originalTrans)
                 await putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })

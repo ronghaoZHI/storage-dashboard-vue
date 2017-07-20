@@ -111,18 +111,6 @@ export default {
         this.listPresets()
     },
     methods: {
-        async createPreset () {
-            try {
-                this.$Loading.start()
-                let res = await transcoder('createPreset', transcoderData)
-                this.$Loading.finish()
-                console.log('res', res)
-            } catch (error) {
-                console.log(error)
-                this.$Message.error(error)
-                this.$Loading.error()
-            }
-        },
         async listPresets () {
             try {
                 this.$Loading.start()
@@ -130,23 +118,11 @@ export default {
                 this.templateList = await this.convert2Front(res.Presets)
                 this.$Loading.finish()
             } catch (error) {
-                console.log(error)
-                this.$Message.error(error)
                 this.$Loading.error()
             }
         },
         goTemplateEdit () {
             this.$router.push({ name: 'TemplateEdit', params: { id: 'none' } })
-        },
-        async readPreset () {
-            try {
-                this.$Loading.start()
-                await transcoder('readPreset', {Id: '153'})
-                this.$Loading.finish()
-            } catch (error) {
-                this.$Message.error(error)
-                this.$Loading.error()
-            }
         },
         async deletePreset (rule) {
             try {
@@ -224,34 +200,6 @@ export default {
 const videoMust = ['Codec', 'FrameRate', 'Resolution', 'BitRate', 'AspectRatio']
 const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
 
-const transcoderData = {
-    Name: '模板名称',
-    Description: '模板描述',
-    FastStart: 'true',
-    Container: 'mp4',
-    Audio: {
-        Codec: 'AAC',
-        CodecOptions: {
-            Profile: 'auto'
-        },
-        SampleRate: '22050',
-        BitRate: '64',
-        Channels: '0'
-    },
-    Video: {
-        Codec: 'H.264',
-        CodecOptions: {
-            Profile: 'baseline',
-            Level: '1'
-        },
-        KeyframesMaxDist: '1',
-        FixedGOP: 'true',
-        BitRate: '64',
-        FrameRate: '23.97',
-        Resolution: '1024x900',
-        AspectRatio: '1:1'
-    }
-}
 </script>
 <style lang="less" scoped>
 
