@@ -594,10 +594,15 @@ const getURL = async (bucket, file, prefix) => {
 <style lang="less" scoped>
 @import '../../styles/index.less';
 
+@layout-bsc-toolbar-border-bottom-color:#f2f1f6;
+@bsc-input-border-color:#d7dde4;
+@input-append-before-background-color:#f5f7f9;
+@input-color:#657180;
+
 .@{css-prefix}file{
     .layout-bsc-toolbar {
         padding-bottom: 8px;
-        border-bottom: 1px solid #f2f1f6;
+        border-bottom: 1px solid @layout-bsc-toolbar-border-bottom-color;
         button {
             margin-right: 1px;
         }
@@ -610,20 +615,20 @@ const getURL = async (bucket, file, prefix) => {
             .fb(flex-start,center);
             position: relative;
             vertical-align: middle;
-            border: 1px solid #d7dde4;
+            border: 1px solid @bsc-input-border-color;
             padding: 5px 0 5px 7px;
             border-radius: 4px;
 
             .input-append-before {
                 flex: none;
-                background: #f5f7f9;
+                background: @input-append-before-background-color;
                 border-radius: 2px;
             }
 
             input {
                 height: 22px;
                 line-height: 1.5;
-                .sc(12px,#657180);
+                .sc(12px,@input-color);
                 padding: 0 4px;
                 flex: 1;
                 border: 0;
