@@ -594,12 +594,12 @@ const getURL = async (bucket, file, prefix) => {
 <style lang="less" scoped>
 @import '../../styles/index.less';
 
-@layout-bsc-toolbar-border-bottom-color:#f2f1f6;
-@bsc-input-border-color:#d7dde4;
-@input-append-before-background-color:#f5f7f9;
-@input-color:#657180;
+@layout-bsc-toolbar-border-bottom-color: #f2f1f6;
+@bsc-input-border-color: #d7dde4;
+@input-append-before-background-color: #f5f7f9;
+@input-color: #657180;
 
-.@{css-prefix}file{
+.@{css-prefix}file {
     .layout-bsc-toolbar {
         padding-bottom: 8px;
         border-bottom: 1px solid @layout-bsc-toolbar-border-bottom-color;
