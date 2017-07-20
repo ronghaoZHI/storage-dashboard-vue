@@ -736,7 +736,7 @@ export default {
                 if (this.bucket === this.inputBucket) {
                     this.alterTranscode()
                 } else {
-                    this.ranscodeChangeBucket()
+                    this.transcodeChangeBucket()
                 }
             }
         },
@@ -775,11 +775,10 @@ export default {
                 this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         },
-        async ranscodeChangeBucket () {
+        async transcodeChangeBucket () {
             try {
                 this.$Loading.start()
-                let originalTrans = await getTranscodes(this.bucket)
-                let trans = await getTranscodes(this.inputBucket)
+                let [originalTrans, trans] = await Promise.all([getTranscodes(this.bucket), getTranscodes(this.inputBucket)])
                 const newTrans = this.convert2Save(this.transcode)
                 newTrans.id = Date.now() + Math.random().toString().slice(-6)
                 let updateIndex
@@ -790,8 +789,7 @@ export default {
                 })
                 originalTrans.splice(updateIndex, 1)
                 trans.push(newTrans)
-                await putBucketPolicy(this.bucket, originalTrans)
-                await putBucketPolicy(this.inputBucket, trans)
+                await Promise.all([putBucketPolicy(this.bucket, originalTrans), putBucketPolicy(this.inputBucket, trans)])
                 this.$router.push({ name: 'output' })
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {

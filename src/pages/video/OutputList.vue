@@ -165,12 +165,16 @@ export default {
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.error(error)
             }
         },
         async getBucketNames () {
-            let res = await getBucketList()
-            return _.map(res.Buckets, bucket => bucket.Name)
+            this.$Loading.start()
+            try {
+                let res = await getBucketList()
+                return _.map(res.Buckets, bucket => bucket.Name)
+            } catch (error) {
+                this.$Loading.error()
+            }
         },
         convert2Front (data) {
             let front = []
