@@ -779,16 +779,16 @@ export default {
             try {
                 this.$Loading.start()
                 let [originalTrans, trans] = await Promise.all([getTranscodes(this.bucket), getTranscodes(this.inputBucket)])
-                const newTrans = this.convert2Save(this.transcode)
+
+                let newTrans = this.convert2Save(this.transcode)
                 newTrans.id = Date.now() + Math.random().toString().slice(-6)
-                let updateIndex
                 originalTrans.forEach((item, index) => {
                     if (item.id === this.id) {
-                        updateIndex = index
+                        originalTrans.splice(index, 1)
                     }
                 })
-                originalTrans.splice(updateIndex, 1)
                 trans.push(newTrans)
+
                 await Promise.all([putBucketPolicy(this.bucket, originalTrans), putBucketPolicy(this.inputBucket, trans)])
                 this.$router.push({ name: 'output' })
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))

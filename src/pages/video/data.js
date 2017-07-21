@@ -4,7 +4,6 @@ import iView from 'iview'
 
 const getBucketPolicy = async(bucket) => {
     let aws = await getAWS(10000, HOST.policyHOST)
-    console.log(aws)
     return new Promise((resolve, reject) => aws.getBucketPolicy({Bucket: bucket}, (error, data) => {
         return error && error.code !== 'PolicyNotFound' ? reject(error) : resolve({bucket, data: data})
     }))
