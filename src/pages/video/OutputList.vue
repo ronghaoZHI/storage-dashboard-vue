@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket" type="primary" @click="goOutputEdit('none', 'none')">新建配置</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="goOutputEdit('none', 'none')">{{$t('VIDEO.NEW_CONFIGURATION')}}</Button>
         </div>
         <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="policyFront" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
     </div>
@@ -76,7 +76,7 @@ export default {
                     if (params.row.outputs && params.row.outputs.length > 0) {
                         return params.row.outputs.map(item => {
                             const sd = item.segment_duration || '-'
-                            return h('p', [`keySuffix:${item.key_suffix},`, h('br'), `视频转码模板ID:${item.preset_id},`, h('br'), `HLS切片时长:${sd},`, h('br')])
+                            return h('p', [`keySuffix:${item.key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${item.preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${sd},`, h('br')])
                         })
                     }
                 }
@@ -88,7 +88,7 @@ export default {
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
-                            content: params.row.is_enabled === 'true' ? '关闭' : '开启',
+                            content: params.row.is_enabled === 'true' ? this.$t('VIDEO.CLOSE') : this.$t('VIDEO.OPEN'),
                             delay: 1000,
                             placement: 'top'
                         }
@@ -208,10 +208,10 @@ export default {
                     await this.putBucketPolicy(bucket, newData)
                 }
                 this.policyFront.splice(index, 1)
-                this.$Message.success('删除成功!')
+                this.$Message.success(this.$t('VIDEO.DELETED_SUCCESSFULLY'))
             } catch (error) {
                 console.log(error)
-                this.$Message.error('删除失败!')
+                this.$Message.error(this.$t('VIDEO.FAILED_TO_DELETE'))
             }
         },
         async getTranscode (bucket) {
@@ -249,9 +249,9 @@ export default {
                     const enable = this.policyFront[data._index].is_enabled
                     this.policyFront[data._index].is_enabled = enable === 'true' ? 'false' : 'true'
                 }
-                this.$Message.success('设置成功!')
+                this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
-                this.$Message.error('设置失败!')
+                this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         },
         goOutputEdit (bucket, id) {

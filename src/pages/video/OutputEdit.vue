@@ -2,33 +2,33 @@
     <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/video/Output">自动转码配置</Breadcrumb-item>
-                <Breadcrumb-item>新建模版</Breadcrumb-item>
+                <Breadcrumb-item href="/video/Output">{{$t('VIDEO.AUTOMATIC_TRANSCODING_CONFIGURATION')}}</Breadcrumb-item>
+                <Breadcrumb-item>{{$t('VIDEO.NEW_TEMPLATE')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
                 <span class="separator-icon"></span>
-                <span class="separator-info">输入配置</span>
+                <span class="separator-info">{{$t('VIDEO.INPUT_CONFIGURATION')}}</span>
             </div>
             <div class="form-item">
-                <span class="form-label">允许转码的路径规则 : </span>
+                <span class="form-label">{{$t('VIDEO.TRANSCODING_PATH_RULES')}} : </span>
                 <Radio-group v-model="auxiliary.reg">
-                    <Radio key="extension" label='extension'>按文件扩展名配置</Radio>
-                    <Radio key="regular" label='regular'>正则表达式配置</Radio>
+                    <Radio key="extension" label='extension'>{{$t('VIDEO.BY_FILE_EXTENSION_CONFIGURATION')}}</Radio>
+                    <Radio key="regular" label='regular'>{{$t('VIDEO.REGULAR_EXPRESSION_CONFIGURATION')}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
                 <span class="form-label"></span>
-                <Input v-if="auxiliary.reg === 'extension'" v-model="auxiliary.path" placeholder="路径" class="sub-setting-input"></Input>
-                <Input v-if="auxiliary.reg === 'extension'" v-model="auxiliary.extension" placeholder="扩展名" class="sub-setting-input"></Input>
-                <span v-if="auxiliary.reg === 'extension'">(多个扩展名使用“|”分割)</span>
-                <Input v-if="auxiliary.reg === 'regular'" v-model="auxiliary.regular" placeholder="正则表达式" class="sub-setting-input"></Input>
-                <span class="style-name-info redFont" v-if="regError">表达式错误</span>
+                <Input v-if="auxiliary.reg === 'extension'" v-model="auxiliary.path" :placeholder='$t("VIDEO.PATH")' class="sub-setting-input"></Input>
+                <Input v-if="auxiliary.reg === 'extension'" v-model="auxiliary.extension" :placeholder='$t("VIDEO.EXTENSION_NAME")' class="sub-setting-input"></Input>
+                <span v-if="auxiliary.reg === 'extension'">{{$t('VIDEO.SEPARATE_EXTENSION_NAMES')}}</span>
+                <Input v-if="auxiliary.reg === 'regular'" v-model="auxiliary.regular" :placeholder='$t("VIDEO.REGULAR_EXPRESSION")' class="sub-setting-input"></Input>
+                <span class="style-name-info redFont" v-if="regError">{{$t('VIDEO.EXPRESSION_INCORRECT')}}</span>
             </div>
             <div class="form-item">
-                <span class="form-label">输入Bucket : </span>
+                <span class="form-label">{{$t('VIDEO.INPUT_BUCKET')}} : </span>
                 <Select v-model="inputBucket" class="line-width">
                     <Option v-for="bucket in bucketList" :value="bucket" :key="bucket">{{bucket}}</Option>
                 </Select>
@@ -38,66 +38,66 @@
         <div class="editBlock">
             <div class="section-separator">
                 <span class="separator-icon"></span>
-                <span class="separator-info">输出配置</span>
+                <span class="separator-info">{{$t('VIDEO.OUTPUT_CONFIGURATION')}}</span>
             </div>
             <div class="form-item">
-                <span class="form-label">输出文件key前缀 : </span>
-                <Input v-model="transcode.output_key_prefix" placeholder="输出文件key前缀" class="line-width"></Input>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_KEY_PREFIX')}} : </span>
+                <Input v-model="transcode.output_key_prefix" :placeholder='$t("VIDEO.OUTPUT_FILE_KEY_PREFIX")' class="line-width"></Input>
             </div>
             <div class="form-item">
-                <span class="form-label">输出Bucket : </span>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_BUCKET')}} : </span>
                 <Select v-model="transcode.output_bucket" class="line-width">
                     <Option v-for="bucket in bucketList" :value="bucket" :key="bucket">{{bucket}}</Option>
                 </Select>
             </div>
             <div class="form-item">
-                <span class="form-label">输出规则 : </span>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_RULES')}} : </span>
                 <div class="table-box line-width">
-                    <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="transcode.outputs" no-data-text='输出规则和视频截图规则至少存在一个'></Table>
+                    <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="transcode.outputs" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
                 </div>
                 <br>
-                <p class="style-name-info redFont button-add-item" v-if="HLSError">设置自动转码后，输出规则中至少有一项模版输出为TS，且所有HLS切片时长需保持一致，且不能为0</p>
-                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">添加</Button>
+                <p class="style-name-info redFont button-add-item" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
+                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
             </div>
             <div class="form-item">
-                <span class="form-label">视频截图规则 : </span>
+                <span class="form-label">{{$t('VIDEO.VIDEO_SCREENSHOTS_RULES')}} : </span>
                 <div class="table-box line-width">
-                    <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="transcode.snapshots" no-data-text='输出规则和视频截图规则至少存在一个'></Table>
+                    <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="transcode.snapshots" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
                 </div>
                 <br>
-                <p class="style-name-info redFont button-add-item" v-if="osError">输出规则和视频截图规则至少存在一个</p>
-                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">添加</Button>
+                <p class="style-name-info redFont button-add-item" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
+                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
             </div>
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
                 <span class="separator-icon"></span>
-                <span class="separator-info">更多配置</span>
+                <span class="separator-info">{{$t('VIDEO.MORE_CONFIGURATION')}}</span>
             </div>
             <div class="form-item">
-                <span class="form-label">转码后是否删除原始文件 : </span>
+                <span class="form-label">{{$t('VIDEO.WHETHER_DELETE_ORIGINAL_FILE_AFTER_TRANSCODING')}} : </span>
                 <Radio-group v-model="transcode.delete_origin">
-                    <Radio key="true" label='true'>是</Radio>
-                    <Radio key="false" label='false'>否</Radio>
+                    <Radio key="true" label='true'>{{$t('VIDEO.YES')}}</Radio>
+                    <Radio key="false" label='false'>{{$t('VIDEO.NO')}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
-                <span class="form-label">转码后是否保留原始路径 : </span>
+                <span class="form-label">{{$t('VIDEO.WHETHER_RETAIN_ORIGINAL_PATH_AFTER_TRANSCODING')}} : </span>
                 <Radio-group v-model="transcode.keep_input_path">
-                    <Radio key="true" label='true'>是</Radio>
-                    <Radio key="false" label='false'>否</Radio>
+                    <Radio key="true" label='true'>{{$t('VIDEO.YES')}}</Radio>
+                    <Radio key="false" label='false'>{{$t('VIDEO.NO')}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
-                <span class="form-label">转码成功回调Url : </span>
-                <Input v-model="transcode.success_callback_url" placeholder="转码成功回调Url" class="line-width" style="display:inline-table;">
+                <span class="form-label">{{$t('VIDEO.TRANSCODING_SUCCESSFUL_CALLBACK_URL')}} : </span>
+                <Input v-model="transcode.success_callback_url" :placeholder='$t("VIDEO.TRANSCODING_SUCCESSFUL_CALLBACK_URL")' class="line-width" style="display:inline-table;">
                     <span slot="prepend">http://</span>
                 </Input>
             </div>
             <div class="form-item">
-                <span class="form-label">转码失败回调Url : </span>
-                <Input v-model="transcode.failure_callback_url" placeholder="转码失败回调Url" class="line-width" style="display:inline-table;">
+                <span class="form-label">{{$t('VIDEO.TRANSCODING_FAILED_CALLBACK_URL')}} : </span>
+                <Input v-model="transcode.failure_callback_url" :placeholder='$t("VIDEO.TRANSCODING_FAILED_CALLBACK_URL")' class="line-width" style="display:inline-table;">
                     <span slot="prepend">http://</span>
                 </Input>
             </div>
@@ -106,35 +106,35 @@
         <div class="editBlock" v-if="MPShow">
             <div class="section-separator">
                 <span class="separator-icon"></span>
-                <span class="separator-info">MasterPlaylist配置</span>
+                <span class="separator-info">{{$t('VIDEO.MASTER_PLAYLIST_CONFIGURATION')}}</span>
             </div>
             <div class="form-item">
-                <span class="form-label">是否开启 : </span>
+                <span class="form-label">{{$t('VIDEO.WHETHER_TO_OPEN')}} : </span>
                 <i-switch v-model="auxiliary.MP">
-                    <span slot="open">开</span>
-                    <span slot="close">关</span>
+                    <span slot="open">{{$t('VIDEO.ON')}}</span>
+                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
                 </i-switch>
             </div>
             <div class="form-item" v-if="auxiliary.MP">
-                <span class="form-label">切片格式 : </span>
+                <span class="form-label">{{$t('VIDEO.SLICE_FORMAT')}} : </span>
                 <Radio-group v-model="transcode.master_playlist.format">
                     <Radio key="HLSv3" label='HLSv3'>HLSv3</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="auxiliary.MP">
-                <span class="form-label">MasterPlaylist文件名后缀 : </span>
+                <span class="form-label">{{$t('VIDEO.MASTER_PLAYLIST_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="transcode.master_playlist.name" placeholder="MasterPlaylist" class="line-width"></Input>
-                <p class="style-name-info redFont button-add-item" v-if="MPNameError">文件名后缀不能为空</p>
+                <p class="style-name-info redFont button-add-item" v-if="MPNameError">{{$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')}}</p>
             </div>
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
                 <span class="separator-icon"></span>
-                <span class="separator-info">权限设置</span>
+                <span class="separator-info">{{$t('VIDEO.PERMISSION_SETTINGS')}}</span>
             </div>
             <div class="form-item">
-                <span class="form-label">用户组权限 : </span>
+                <span class="form-label">{{$t('VIDEO.USER_GROUP_PERMISSIONS')}} : </span>
                 <table class="table-permission" style="display:inline-block;width:475px">
                     <thead>
                         <tr>
@@ -181,7 +181,7 @@
                 </table>
             </div>
             <div class="form-item">
-                <span class="form-label">用户权限 : </span>
+                <span class="form-label">{{$t('VIDEO.USER_PERMISSIONS')}} : </span>
                 <table class="table-permission" style="display:inline-block;width:475px">
                     <thead>
                         <tr>
@@ -230,7 +230,7 @@
                                         <Icon type="ios-checkmark" :size="iconSize"></Icon>
                                     </Button>
                                     <div slot="content">
-                                        <p>添加</p>
+                                        <p>{{$t('VIDEO.ADD')}}</p>
                                     </div>
                                 </Tooltip>
                                 <Tooltip placement="bottom" :delay="1000">
@@ -238,7 +238,7 @@
                                         <Icon type="ios-close" :size="iconSize"></Icon>
                                     </Button>
                                     <div slot="content">
-                                        <p>取消</p>
+                                        <p>{{$t('VIDEO.CANCEL')}}</p>
                                     </div>
                                 </Tooltip>
                             </td>
@@ -296,67 +296,67 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" :disabled="sbumitDisabled">保存</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" :disabled="sbumitDisabled">{{$t('VIDEO.SAVE')}}</Button>
         </div>
-        <Modal v-model="showOutputsModal" title='输出规则' width="700" class="my-modal">
+        <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
             <div class="form-item">
-                <span class="form-label">转码模板 : </span>
+                <span class="form-label">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
                 <Select v-model="outputModal.preset_id" class="line-width" @on-change="templateChange">
                     <Option v-for="template in templateList" :value="template.Id" :key="template.Id">{{template.Name}}</Option>
                 </Select>
             </div>
             <div class="form-item">
-                <span class="form-label">输出文件名后缀 : </span>
-                <Input v-model="outputModal.key_suffix" placeholder="输出文件名后缀" class="line-width"></Input>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
+                <Input v-model="outputModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' class="line-width"></Input>
             </div>
             <div class="form-item" v-if="HLSShow" >
-                <span class="form-label">HLS切片时长 : </span>
+                <span class="form-label">{{$t('VIDEO.HLS_SLICE_LENGTH')}} : </span>
                 <Slider v-model="outputModal.segment_duration" :min='0' :max='50' class="my-slider"></Slider>
                 <Input-number :min='0' :max='50' v-model="outputModal.segment_duration"></Input-number>
-                <p class="style-name-info redFont" v-if="outputsDisabled">HLS切片时长不能为0</p>
+                <p class="style-name-info redFont" v-if="outputsDisabled">{{$t('VIDEO.HLS_SLICE_LENGTH_CANNOT_BE_0')}}</p>
             </div>
             <div style="height:90px;"></div>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">确定</Button>
+                <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
-        <Modal v-model="showShotsModal" title='输出规则' width="700" class="my-modal">
+        <Modal v-model="showShotsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
             <div class="form-item">
-                <span class="form-label">输出文件名后缀 : </span>
-                <Input v-model="shotModal.key_suffix" placeholder="输出文件名后缀" style="width:160px;"></Input>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
+                <Input v-model="shotModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
                 <Select v-model="shotModal.format" style="width:100px;display:inline-block">
                     <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
                 </Select>
             </div>
             <div class="form-item">
-                <span class="form-label">截图起始时间点 : </span>
+                <span class="form-label">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
                 <Input-number :min='1' v-model="shotModal.time"></Input-number> S
             </div>
            <div class="form-item">
-                <span class="form-label">截图间隔时间 : </span>
+                <span class="form-label">{{$t('VIDEO.SCREENSHOT_INTERVAL')}} : </span>
                 <Input-number :min='1' v-model="shotModal.interval"></Input-number> S
             </div>
             <div class="form-item">
-                <span class="form-label">截图最大数量 : </span>
+                <span class="form-label">{{$t('VIDEO.SCREENSHOT_MAX_NUMBER')}} : </span>
                 <Input-number :min='1' v-model="shotModal.number"></Input-number>
             </div>
             <div class="form-item">
-                <span class="form-label">分辨率 : </span>
+                <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
                 <Radio-group v-model="shotModal.resolution">
-                    <Radio label="auto">不变</Radio>
+                    <Radio label="auto">{{$t('VIDEO.CONSTANT')}}</Radio>
                     <Radio label="value"></Radio>
                 </Radio-group>
-                <Input-number :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" placeholder="宽度"></Input-number>
-                <Input-number :min='1' v-model="shotModal.height" :disabled="shotModal.resolution === 'auto'" placeholder="高度"></Input-number>
+                <Input-number :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></Input-number>
+                <Input-number :min='1' v-model="shotModal.height" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></Input-number>
             </div>
             <div class="form-item">
-                <span class="form-label">宽高比 : </span>
+                <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
                 <Radio-group v-model="shotModal.aspect_ratio">
                     <Radio v-for='asp in aspectRatioList' :key="asp.value" :label='asp.value'>{{asp.name}}</Radio>
                 </Radio-group>
             </div>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="updateShots">确定</Button>
+                <Button type="primary" @click="updateShots">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
     </div>
@@ -377,7 +377,7 @@ export default {
             bucketList: this.bucketList,
             showOutputsModal: false,
             showShotsModal: false,
-            aspectRatioList: [{name: '不变', value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
+            aspectRatioList: [{name: this.$t('VIDEO.CONSTANT'), value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
             formatList: ['png', 'jpg'],
             templateList: this.templateList,
             outputModal: _.clone(outputsDefult),
@@ -393,15 +393,15 @@ export default {
             templateName: {},
             HLSError: false,
             outputsHeader: [{
-                title: '输出文件名后缀',
+                title: this.$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX'),
                 key: 'key_suffix',
                 width: 120
             }, {
-                title: '转码模板',
+                title: this.$t('VIDEO.TRANSCODING_TEMPLATE'),
                 key: 'template',
                 width: 100
             }, {
-                title: 'HLS切片时长',
+                title: this.$t('VIDEO.HLS_SLICE_LENGTH'),
                 width: 100,
                 key: 'segment_duration'
             }, {
@@ -454,31 +454,31 @@ export default {
                 }
             }],
             shotsHeader: [{
-                title: '输出文件名后缀',
+                title: this.$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX'),
                 key: 'key_suffix',
                 width: 140
             }, {
-                title: '格式',
+                title: this.$t('VIDEO.FORMAT'),
                 key: 'format',
                 width: 70
             }, {
-                title: '截图起始时间点(秒)',
+                title: this.$t('VIDEO.SCREENSHOT_START_TIME_SECOND'),
                 width: 160,
                 key: 'time'
             }, {
-                title: '截图间隔时间(秒)',
+                title: this.$t('VIDEO.SCREENSHOT_INTERVAL_SECOND'),
                 width: 140,
                 key: 'interval'
             }, {
-                title: '截图最大数量',
+                title: this.$t('VIDEO.SCREENSHOT_MAX_NUMBER'),
                 width: 120,
                 key: 'number'
             }, {
-                title: '截图分辨率',
+                title: this.$t('VIDEO.SCREENSHOT_RESOLUTION'),
                 width: 100,
                 key: 'resolution'
             }, {
-                title: '宽高比',
+                title: this.$t('VIDEO.ASPECT_RATIO'),
                 width: 80,
                 key: 'aspect_ratio'
             }, {
@@ -699,24 +699,24 @@ export default {
                     }
                 })
                 if (segments.length === 0) {
-                    this.$Message.warning('设置自适应转码，输出规则中需存在转码模版输出为TS格式的项')
+                    this.$Message.warning(this.$t('VIDEO.ADAPTIVE_EXIST_TS_FORMAT'))
                     this.HLSError = true
                     return
                 }
                 const unified = segments.filter(seg => parseInt(seg) === parseInt(segments[0]))
                 if (unified.length !== segments.length) {
-                    this.$Message.warning('设置自适应转码，输出规则中HLS切片时长需保持一致')
+                    this.$Message.warning(this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT'))
                     this.HLSError = true
                     return
                 } else if (segments[0] === 0) {
-                    this.$Message.warning('设置自适应转码，输出规则中HLS切片时长不能为0')
+                    this.$Message.warning(this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0'))
                     this.HLSError = true
                     return
                 }
             }
 
             if (this.osError) {
-                this.$Message.warning('输出规则和视频截图规则至少存在一个')
+                this.$Message.warning(this.$t('VIDEO.AT_LEAST_ONE_RULE'))
                 return
             }
 
@@ -741,10 +741,10 @@ export default {
             try {
                 await listPage.methods.putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
-                this.$Message.success('设置成功!')
+                this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
                 console.log(error)
-                this.$Message.error('设置失败!')
+                this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         },
         async alterTranscode () {
@@ -760,10 +760,10 @@ export default {
             try {
                 await listPage.methods.putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
-                this.$Message.success('设置成功!')
+                this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
                 console.log(error)
-                this.$Message.error('设置失败!')
+                this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         },
         async ranscodeChangeBucket () {
@@ -783,10 +783,10 @@ export default {
                 await listPage.methods.putBucketPolicy(this.bucket, originalTrans)
                 await listPage.methods.putBucketPolicy(this.inputBucket, trans)
                 this.$router.push({ name: 'output' })
-                this.$Message.success('设置成功!')
+                this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
                 console.log(error)
-                this.$Message.error('设置失败!')
+                this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         },
         convert2Save (data) {
