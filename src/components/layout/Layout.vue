@@ -39,7 +39,6 @@ export default {
 
 .layout-row {
     min-height: 100%;
-    .ff();
     .layout-container {
         flex: 1;
         margin-left: @layout-margin-left;
