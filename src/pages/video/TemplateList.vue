@@ -133,7 +133,6 @@ export default {
                 this.$Message.success(this.$t('VIDEO.DELETED_SUCCESSFULLY'))
             } catch (error) {
                 this.$Message.error(this.$t('VIDEO.FAILED_TO_DELETE'))
-                this.$Message.error(error)
                 this.$Loading.error()
             }
         },

@@ -218,6 +218,26 @@ export default {
                 this.$Message.error(this.$t('VIDEO.FAILED_TO_DELETE'))
             }
         },
+        async getTranscode (bucket) {
+            let res = await this.getBucketPolicy(bucket)
+            const policy = res.data && res.data.Policy ? JSON.parse(res.data.Policy) : {}
+            let transcodes = []
+            if (policy && policy.post_upload_transcoding && policy.post_upload_transcoding.length > 0) {
+                transcodes = policy.post_upload_transcoding
+            }
+            return transcodes
+        },
+        async putBucketPolicy (bucket, data) {
+            const policy = {
+                name: 'post_upload_transcoding',
+                value: data
+            }
+            try {
+                return handler('putBucketPolicy', {Bucket: bucket, Policy: JSON.stringify(policy)}, HOST.policyHOST)
+            } catch (error) {
+                return Promise.reject(error)
+            }
+        },
         async changeStatus (data) {
             this.$Loading.start()
             const bucket = data.input_bucket
