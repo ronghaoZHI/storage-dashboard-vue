@@ -380,7 +380,7 @@ export default {
             if (this.renameKey.length > 0) {
                 try {
                     this.$Loading.start()
-                    await handler('copyObject', { Bucket: this.bucket, CopySource: this.bucket + '/' + this.prefix + this.selectedFileKey, Key: this.prefix + this.renameKey })
+                    await handler('copyObject', { Bucket: this.bucket, CopySource: encodeURIComponent(this.bucket + '/' + this.prefix + this.selectedFileKey), Key: this.prefix + this.renameKey })
                     await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + this.selectedFileKey })
                     this.renameKey = ''
                     this.getData()
