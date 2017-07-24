@@ -505,22 +505,6 @@ export default {
         getUrl (prefix) {
             return '/bucket/' + this.bucket + '/prefix/' + repliceAllString(prefix, '/', '%2F')
         },
-        async fileUpload (item) {
-            let file = item.file
-            let params = {
-                Bucket: this.bucket,
-                Key: this.prefix + item.name,
-                ContentType: file.type,
-                Body: file
-            }
-            let aws = await getAWS(3600000)
-            let request = aws.upload(params, { partSize: 10000 * 1024 * 1024 })
-            request.on('httpUploadProgress', function (evt) {
-                item.progress = parseInt((evt.loaded * 100) / evt.total)
-                item.request = request
-            })
-            return request.promise()
-        },
         uploadModalClose () {
             this.getData()
             this.$refs.upload.clearFiles()
