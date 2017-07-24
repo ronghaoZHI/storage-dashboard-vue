@@ -233,6 +233,7 @@
             align-items: center;
 
             .upload-span-name {
+                .overflow();
                 flex: 5;
             }
 
