@@ -26,10 +26,11 @@ export default {
                             trigger: 'hover'
                         }
                     }, [h('div', [params.row.name, h('Icon', {
-                        type: 'ios-information-outline',
-                        size: '14'
+                        props: {
+                            type: 'ios-information-outline',
+                            size: '14'
+                        }
                     })]), h('div', {
-                        class: 'api',
                         slot: 'content'
                     }, params.row.description)])
                 }
@@ -52,7 +53,6 @@ export default {
                         }
                     }, `${item.name}:${item.value}`))),
                         h('div', {
-                            class: 'api',
                             slot: 'content'
                         }, params.row.videoDetails.map(item => h('p', `${item.name}:${item.value}`)))]
                     )
@@ -72,7 +72,6 @@ export default {
                         }
                     }, `${item.name}:${item.value}`))),
                         h('div', {
-                            class: 'api',
                             slot: 'content'
                         }, params.row.audioDetails.map(item => h('p', `${item.name}:${item.value}`)))]
                     )
