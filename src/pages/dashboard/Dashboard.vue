@@ -17,8 +17,10 @@
             </div>
         </div>
         <div class="section-separator visible-dashboard-separator">
-            <span class="separator-icon"></span>
-            <span class="separator-info">Overview</span>
+            <div class="separator-body">
+                <span class="separator-icon"></span>
+                <span class="separator-info">Overview</span>
+            </div>
         </div>
         <div class="section-overview">
             <div>
@@ -87,9 +89,12 @@
                 </p>
             </div>
         </div>
-        <div class="section-separator visible-dashboard-separator">
-            <span class="separator-icon"></span>
-            <span class="separator-info">Data charts</span>
+        <div class="section-separator">
+            <div class="separator-body">
+                <span class="separator-icon"></span>
+                <span class="separator-info">Data charts</span>
+            </div>
+            <Button @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">{{ $t("DASHBOARD.CAPACITY")}}</button>
@@ -128,6 +133,8 @@ import { getBucketList } from '@/service/Data'
 import { getAnalysisUrl } from '@/service/API'
 import user from '@/store/modules/user'
 import { bytes, times, timesK, date } from '@/service/bucketService'
+import Csv from './csv'
+import ExportCsv from './export-csv'
 export default {
     data () {
         return {
@@ -146,6 +153,7 @@ export default {
                     return date && date.valueOf() > Date.now() - 86400000
                 }
             },
+            data: [],
             capacityData: this.capacityData,
             uploadSpaceData: this.uploadSpaceData,
             downloadSpaceData: this.downloadSpaceData,
@@ -186,30 +194,41 @@ export default {
         },
         async getInitData () {
             if (!this.dateSelect) return
-            let self = this
-            self.showChart = 0
+            this.showChart = 0
 
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
-                    self.originOverview = res.data.data
+                    this.originOverview = res.data.data
                 }), this.$http.get((this.getApiURL('capacity'))).then(res => {
-                    self.capacityData = res.data
-                    self.capacityOptions = InitOptions(self.capacityData)
+                    this.capacityData = res.data
+                    this.capacityOptions = InitOptions(this.capacityData)
                 }), this.$http.get((this.getApiURL('upload_space'))).then(res => {
-                    self.uploadSpaceData = res.data
-                    self.uploadTrafficOptions = InitOptions(self.uploadSpaceData)
+                    this.uploadSpaceData = res.data
+                    this.uploadTrafficOptions = InitOptions(this.uploadSpaceData)
                 }), this.$http.get((this.getApiURL('download_space'))).then(res => {
-                    self.downloadSpaceData = res.data
-                    self.downloadTrafficOptions = InitOptions(self.downloadSpaceData)
+                    this.downloadSpaceData = res.data
+                    this.downloadTrafficOptions = InitOptions(this.downloadSpaceData)
                 }), this.$http.get((this.getApiURL('download_count'))).then(res => {
-                    self.downloadCountData = res.data
-                    self.downloadsOptions = InitOptions(self.downloadCountData)
+                    this.downloadCountData = res.data
+                    this.downloadsOptions = InitOptions(this.downloadCountData)
                 }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
-                    self.uploadCountData = res.data
-                    self.uploadsOptions = InitOptions(self.uploadCountData)
-                })])
+                    this.uploadCountData = res.data
+                    this.uploadsOptions = InitOptions(this.uploadCountData)
+                })]).then(res => {
+                    this.data = []
+                    _.each(this.capacityData.data.map(data => data[0]), (time, index) => {
+                        this.data.push({
+                            time: date(time),
+                            capacity: this.capacityData.data[index][1],
+                            uploadSpace: this.uploadSpaceData.data[index][1],
+                            downloadSpace: this.downloadSpaceData.data[index][1],
+                            downloadCount: this.downloadCountData.data[index][1],
+                            uploadCount: this.uploadCountData.data[index][1]
+                        })
+                    })
+                })
             } catch (error) {
-                self.$Message.warning('Get data error')
+                this.$Message.warning('Get data error')
             }
         },
         convertData (item) {
@@ -233,6 +252,9 @@ export default {
             let vm = this
             vm.showChart = index
             setTimeout(() => { vm.$refs[ref].resize() }, 100)
+        },
+        exportCsv () {
+            ExportCsv.download(this.dateRange + '.csv', Csv(_.keys(this.data[0]), this.data, ','))
         }
     },
     watch: {

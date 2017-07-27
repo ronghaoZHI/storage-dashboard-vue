@@ -35,8 +35,10 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t('VIDEO.VIDEO_PARAMETER_CONFIGURATION')}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.VIDEO_PARAMETER_CONFIGURATION')}}</span>
+                </div>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.ENCODING')}} : </span>
@@ -97,8 +99,10 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t('VIDEO.AUDIO_PARAMETER_CONFIGURATION')}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.AUDIO_PARAMETER_CONFIGURATION')}}</span>
+                </div>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.ENCODING')}} : </span>

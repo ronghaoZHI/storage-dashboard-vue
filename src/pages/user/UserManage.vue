@@ -36,8 +36,10 @@
         </Modal>
         <Modal v-model="createSubUserModal" :title='$t("USER.CREATE_SUB_USER")' width="600" @on-ok="createSubUser">
             <div class="section-separator" v-show="!isEditSubUser">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
+                </div>
             </div>
             <Form ref="createSubUserForm" :model="createSubUserForm" :rules="subUserRuleValidate" :label-width="85" v-show="!isEditSubUser">
                 <Form-item :label='$t("USER.USER_NAME")' prop="username">
@@ -54,8 +56,10 @@
                 </Form-item>
             </Form>
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
+                </div>
             </div>
             <table class="table-bucket-acl">
                 <thead>

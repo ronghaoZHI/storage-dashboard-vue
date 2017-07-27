@@ -1,8 +1,10 @@
 <template >
     <div>
         <div class="section-separator">
-            <span class="separator-icon"></span>
-            <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
+            <div class="separator-body">
+                <span class="separator-icon"></span>
+                <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
+            </div>
         </div>
         <table class="table-permission">
             <thead>
@@ -58,8 +60,10 @@
             </tbody>
         </table>
         <div class="section-separator">
-            <span class="separator-icon"></span>
-            <span class="separator-info">User</span>
+            <div class="separator-body">
+                <span class="separator-icon"></span>
+                <span class="separator-info">User</span>
+            </div>
         </div>
         <table class="table-permission">
             <thead>

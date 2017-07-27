@@ -312,7 +312,8 @@ export const messages = {
             DOWNLOAD_COUNT_INFO: 'The number of download requests within a day',
             UPLOAD_COUNT_INFO: 'The number of upload and delete requests within a day',
             UNIT: 'unit',
-            GET_BUCKET_FAILED: 'Get bucket list fail'
+            GET_BUCKET_FAILED: 'Get bucket list fail',
+            EXPORT_DATA: 'Export data'
         },
         USER: {
             CREATE_SUB_USER: 'Create user',
@@ -834,7 +835,8 @@ export const messages = {
             DOWNLOAD_SPACE_INFO: '某天的下载流量',
             DOWNLOAD_COUNT_INFO: '某天的读请求数',
             UPLOAD_COUNT_INFO: '某天的写请求数',
-            GET_BUCKET_FAILED: '获取Bucket列表失败'
+            GET_BUCKET_FAILED: '获取Bucket列表失败',
+            EXPORT_DATA: '导出数据'
         },
         USER: {
             CREATE_SUB_USER: '新建账号',

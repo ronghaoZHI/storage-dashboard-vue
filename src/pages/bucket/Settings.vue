@@ -11,8 +11,10 @@
         <Tabs size="small" v-model="tabName">
             <Tab-pane :label='$t("PUBLIC.ACL")' name="permission">
                 <div class="section-separator">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
+                    <div class="separator-body">
+                        <span class="separator-icon"></span>
+                        <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
+                    </div>
                 </div>
                 <table class="table-permission">
                     <thead>
@@ -69,8 +71,10 @@
                     </tbody>
                 </table>
                 <div class="section-separator">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info">{{$t("STORAGE.ACL_USER")}}</span>
+                    <div class="separator-body">
+                        <span class="separator-icon"></span>
+                        <span class="separator-info">{{$t("STORAGE.ACL_USER")}}</span>
+                    </div>
                 </div>
                 <table class="table-permission">
                     <thead>

@@ -83,18 +83,30 @@ export default {
 }
 
 .section-separator {
+    width: 100%;
     height: 16px;
-    .fb(center,center,inline-flex);
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
-    .separator-icon {
-        display: inline-block;
-        .wh(3px,100%);
-        background: #20a0ff;
-        margin-right: 8px;
+    .separator-body {
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        .separator-icon {
+            display: inline-block;
+            .wh(3px,16px);
+            background: #20a0ff;
+            margin-top: 3px;
+            margin-right: 8px;
+        }
+        .separator-info {
+            .sc(16px,#657180);
+        }
     }
-    .separator-info {
-        .sc(16px,#657180);
-    }
+    
 }
 
 .info-input-error {

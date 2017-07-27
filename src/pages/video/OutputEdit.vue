@@ -9,8 +9,10 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t('VIDEO.INPUT_CONFIGURATION')}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.INPUT_CONFIGURATION')}}</span>
+                </div>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.TRANSCODING_PATH_RULES')}} : </span>
@@ -37,8 +39,10 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t('VIDEO.OUTPUT_CONFIGURATION')}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.OUTPUT_CONFIGURATION')}}</span>
+                </div>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_KEY_PREFIX')}} : </span>
@@ -72,8 +76,10 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t('VIDEO.MORE_CONFIGURATION')}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.MORE_CONFIGURATION')}}</span>
+                </div>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.WHETHER_DELETE_ORIGINAL_FILE_AFTER_TRANSCODING')}} : </span>
@@ -105,8 +111,10 @@
         <div class="separator-line" v-if="MPShow"></div>
         <div class="editBlock" v-if="MPShow">
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t('VIDEO.MASTER_PLAYLIST_CONFIGURATION')}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.MASTER_PLAYLIST_CONFIGURATION')}}</span>
+                </div>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.WHETHER_TO_OPEN')}} : </span>
@@ -130,8 +138,10 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t('VIDEO.PERMISSION_SETTINGS')}}</span>
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.PERMISSION_SETTINGS')}}</span>
+                </div>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.USER_GROUP_PERMISSIONS')}} : </span>
