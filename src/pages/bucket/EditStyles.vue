@@ -348,6 +348,7 @@ import upload from '@/components/upload/upload'
 import * as styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
 import encoding from 'text-encoding'
+import { HOST } from '@/service/HOST'
 import colorPicker from '@/components/vueColorPicker/vueColorPicker'
 import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
@@ -629,7 +630,7 @@ export default {
 }
 const putOverlayFile = (name, body) => {
     const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
-    const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
+    const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey }, 10000, HOST.awsHost)
     return new Promise((resolve, reject) => s3.putObject({
         Bucket: 'image-example',
         Key: prefix.overlay + name,

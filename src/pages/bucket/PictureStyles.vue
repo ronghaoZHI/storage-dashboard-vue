@@ -33,6 +33,7 @@ import { prefix, Utf8ArrayToStr } from '@/service/bucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
 import iView from 'iview'
+import { HOST } from '@/service/HOST'
 export default {
     data () {
         return {
@@ -291,7 +292,7 @@ export default {
                 Bucket: this.bucket,
                 Key: prefix.overlay + fileName
             })
-            const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
+            const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey }, 10000, HOST.awsHost)
             return await new Promise((resolve, reject) => s3.putObject({
                 Bucket: 'image-example',
                 Key: prefix.overlay + fileName,
