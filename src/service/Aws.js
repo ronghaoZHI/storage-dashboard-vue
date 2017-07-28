@@ -24,7 +24,7 @@ export const getKey = () => {
     })
 }
 
-export const config = ({ accesskey, secretkey }, timeout = 10000, host, s3ForcePathStyle, region = 'us-west-1') => {
+export const config = ({ accesskey, secretkey }, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1') => {
     AWS.config.update({ accessKeyId: accesskey, secretAccessKey: secretkey })
     AWS.config.region = region
     AWS.config.httpOptions = { timeout: timeout }
