@@ -347,6 +347,7 @@ import { prefix } from '@/service/bucketService'
 import upload from '@/components/upload/upload'
 import * as styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
+import encoding from 'text-encoding'
 import colorPicker from '@/components/vueColorPicker/vueColorPicker'
 import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
@@ -428,7 +429,7 @@ export default {
                     Bucket: this.bucket,
                     Key: this.key
                 })
-                let styles = JSON.parse(new TextDecoder('utf-8').decode(res.Body))
+                let styles = JSON.parse(new encoding.TextDecoder('utf-8').decode(res.Body))
                 if (isPrimary(styles)) {
                     let front = styles2Front(styles)
                     this.general = front.ganeral
@@ -438,7 +439,7 @@ export default {
                     if (!!overlay) {
                         let file = await this.readOverlayFile(overlay)
                         if (/.+\.json$/.test(overlay)) {
-                            let fontStyle = JSON.parse(new TextDecoder('utf-8').decode(file))
+                            let fontStyle = JSON.parse(new encoding.TextDecoder('utf-8').decode(file))
                             this.fontStyle = fontStyle
                             this.fontStyle.font_color = '#' + fontStyle.font_color
                             this.fontStyle.background = '#' + fontStyle.background
