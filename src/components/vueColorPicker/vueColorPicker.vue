@@ -47,47 +47,45 @@ export default {
             return `hsl(${this.color.h}, ${this.color.s}%, ${this.color.l}%)`
         },
         gradientH () {
-            var stops = []
-            for (var i = 0; i < 7; i++) {
-                var h = i * 60
-                var hsl = hsb2hsl(parseFloat(h / 360), parseFloat(this.s) / 100, parseFloat(this.b / 100))
-                var c = hsl.h + ', ' + hsl.s + '%, ' + hsl.l + '%'
-                stops.push('hsl(' + c + ')')
+            let stops = []
+            for (let i = 0; i < 7; i++) {
+                let h = i * 60
+                let hsl = hsb2hsl(parseFloat(h / 360), parseFloat(this.s) / 100, parseFloat(this.b / 100))
+                let c = `${hsl.h}, ${hsl.s}%, ${hsl.l}%`
+                stops.push(`hsl(${c})`)
             }
             return {
-                backgroundImage: 'linear-gradient(to right, ' + stops.join(', ') + ')'
+                backgroundImage: `linear-gradient(to right, ${stops.join(', ')})`
             }
         },
         gradientS () {
-            var stops = []
-            var c
-            var hsl1 = hsb2hsl(parseFloat(this.h / 360), 0, parseFloat(this.b / 100))
-            c = hsl1.h + ', ' + hsl1.s + '%, ' + hsl1.l + '%'
-            stops.push('hsl(' + c + ')')
+            let stops = []
+            let c
+            let hsl1 = hsb2hsl(parseFloat(this.h / 360), 0, parseFloat(this.b / 100))
+            c = `${hsl1.h}, ${hsl1.s}%, ${hsl1.l}%`
+            stops.push(`hsl(${c})`)
 
-            var hsl2 = hsb2hsl(parseFloat(this.h / 360), 1, parseFloat(this.b / 100))
-            c = hsl2.h + ', ' + hsl2.s + '%, ' + hsl2.l + '%'
-            stops.push('hsl(' + c + ')')
+            let hsl2 = hsb2hsl(parseFloat(this.h / 360), 1, parseFloat(this.b / 100))
+            c = `${hsl2.h}, ${hsl2.s}%, ${hsl2.l}%`
+            stops.push(`hsl(${c})`)
 
             return {
-                backgroundImage: 'linear-gradient(to right, ' + stops.join(', ') + ')'
+                backgroundImage: `linear-gradient(to right, ${stops.join(', ')})`
             }
         },
         gradientL () {
-            var stops = []
-            var c
+            let stops = []
+            let c
+            let hsl1 = hsb2hsl(parseFloat(this.h / 360), 0, 0)
+            c = `${hsl1.h}, ${hsl1.s}%, ${hsl1.l}%`
+            stops.push(`hsl(${c})`)
 
-            var hsl1 = hsb2hsl(parseFloat(this.h / 360), 0, 0)
-            c = hsl1.h + ', ' + hsl1.s + '%, ' + hsl1.l + '%'
-            stops.push('hsl(' + c + ')')
-
-            var hsl2 = hsb2hsl(parseFloat(this.h / 360), parseFloat(this.s / 100), 1)
-
-            c = hsl2.h + ', ' + hsl2.s + '%, ' + hsl2.l + '%'
-            stops.push('hsl(' + c + ')')
+            let hsl2 = hsb2hsl(parseFloat(this.h / 360), parseFloat(this.s / 100), 1)
+            c = `${hsl2.h}, ${hsl2.s}%, ${hsl2.l}%`
+            stops.push(`hsl(${c})`)
 
             return {
-                backgroundImage: 'linear-gradient(to right, ' + stops.join(', ') + ')'
+                backgroundImage: `linear-gradient(to right, ${stops.join(', ')})`
             }
         }
     },
@@ -121,7 +119,6 @@ export default {
     },
     watch: {
         'parentColor' (to, from) {
-            console.log('parentchange====', to, 'from', from)
             const rgb = hex2rgb(to)
             if (rgb !== null) {
                 const hsl = rgb2hsl(rgb.r, rgb.g, rgb.b)
@@ -138,7 +135,7 @@ export default {
     }
 }
 const hsb2hsl = (h, s, b) => {
-    var hsl = {
+    let hsl = {
         h: h
     }
     hsl.l = (2 - s) * b
@@ -177,7 +174,7 @@ const hsl2hsb = (h, s, l) => {
 }
 
 const hsl2rgb = (h, s, l) => {
-    var r, g, b, m, c, x
+    let r, g, b, m, c, x
 
     if (!isFinite(h)) h = 0
     if (!isFinite(s)) s = 0
@@ -227,7 +224,7 @@ const hsl2rgb = (h, s, l) => {
     return { r: r, g: g, b: b }
 }
 const rgb2hsl = (r, g, b) => {
-    var max, min, h, s, l, d
+    let max, min, h, s, l, d
     r /= 255
     g /= 255
     b /= 255
@@ -260,12 +257,12 @@ const rgb2hsl = (r, g, b) => {
 
 const hex2rgb = (hex) => {
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+    let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
     hex = hex.replace(shorthandRegex, (m, r, g, b) => {
         return r + r + g + g + b + b
     })
 
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
     return result ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
@@ -274,12 +271,12 @@ const hex2rgb = (hex) => {
 }
 
 const component2hex = (c) => {
-    var hex = c.toString(16)
+    let hex = c.toString(16)
     return hex.length === 1 ? '0' + hex : hex
 }
 
 function rgb2hex (r, g, b) {
-    return '#' + component2hex(r) + component2hex(g) + component2hex(b)
+    return `#${component2hex(r)}${component2hex(g)}${component2hex(b)}`
 }
 </script>
 <style lang="less" scoped>
