@@ -48,7 +48,7 @@
                                 <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
                             <div class="color-box">
-                                <input type="color" v-model="general.padColor" class="color-trigger">
+                                <color-picker class="color-trigger" :parentColor="general.padColor" v-on:onChange="padColorChange"></color-picker>
                                 <input type='text' v-model="general.padColor" class="color-input">
                             </div><!--padColor-->
                         </div>
@@ -193,7 +193,7 @@
                                     <span>px</span>
                                 </div><!--borderSize-->
                                 <div class="color-box" v-if="general.border">
-                                    <input type="color" v-model="general.borderColor" class="color-trigger">
+                                    <color-picker class="color-trigger" :parentColor="general.borderColor" v-on:onChange="borderColorChange"></color-picker>
                                     <input type='text' v-model="general.borderColor" class="color-input">
                                 </div><!--borderColor-->
                             </div><!--border-->
@@ -224,7 +224,7 @@
                                     <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
                                 </Radio-group>
                             </div><!--watermarkerType-->
-                            <div v-if="mark.type == 'text'" class="clearfix">
+                            <div v-if="mark.type == 'text'">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
                                     <Input v-model="mark.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
@@ -240,14 +240,14 @@
                                         <span>px</span>
                                     </div><!--font_size-->
                                     <div class="color-box">
-                                        <input type="color" v-model="fontStyle.font_color" class="color-trigger">
+                                        <color-picker class="color-trigger" :parentColor="fontStyle.font_color" v-on:onChange="fontColorChange"></color-picker>
                                         <input type='text' v-model="fontStyle.font_color" class="color-input">
                                     </div><!--fontColor-->
                                 </div>
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.BACKGROUBD")}} : </span>
                                     <div class="color-box">
-                                        <input type="color" v-model="fontStyle.background" class="color-trigger">
+                                        <color-picker class="color-trigger" :parentColor="fontStyle.background" v-on:onChange="fontbackColorChange"></color-picker>
                                         <input type='text' v-model="fontStyle.background" class="color-input">
                                     </div><!--fontColor-->
                                 </div><!--fontBack-->
@@ -347,6 +347,7 @@ import { prefix } from '@/service/bucketService'
 import upload from '@/components/upload/upload'
 import * as styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
+import colorPicker from '@/components/vueColorPicker/vueColorPicker'
 import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
     data () {
@@ -376,7 +377,7 @@ export default {
             colorList: [{name: this.$t('STORAGE.SEPIA'), value: 'sepia'}, {name: this.$t('STORAGE.RED'), value: 'red'}, {name: this.$t('STORAGE.GREEN'), value: 'green'}, {name: this.$t('STORAGE.BLUE'), value: 'blue'}, {name: this.$t('STORAGE.YELLOW'), value: 'yellow'}, {name: this.$t('STORAGE.CYAN'), value: 'cyan'}, {name: this.$t('STORAGE.MAGENTA'), value: 'magenta'}]
         }
     },
-    components: { upload },
+    components: {upload, colorPicker},
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -605,6 +606,18 @@ export default {
                 }
             })
             return ruleList
+        },
+        padColorChange (color) {
+            this.general.padColor = color
+        },
+        fontbackColorChange (color) {
+            this.fontStyle.background = color
+        },
+        fontColorChange (color) {
+            this.fontStyle.font_color = color
+        },
+        borderColorChange (color) {
+            this.general.borderColor = color
         }
     },
     watch: {
@@ -616,7 +629,6 @@ export default {
 const putOverlayFile = (name, body) => {
     const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
     const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
-    console.log(s3)
     return new Promise((resolve, reject) => s3.putObject({
         Bucket: 'image-example',
         Key: prefix.overlay + name,
@@ -1052,17 +1064,11 @@ const mark2Front = data => {
                 position: relative;
                 display: inline-block;
                 vertical-align: middle;
-                input.color-trigger {
-                    -webkit-appearance: none;
-                    width: 30px;
-                    height: 30px;
+                .color-trigger {
                     float: left;
-                    border: none;
-                    border-top-left-radius: 4px;
-                    border-bottom-left-radius: 4px;
-                    border-right: 1px solid @edit-styles-border-color;
-                    background-color: #fff;
                     outline: none;
+                    left: 3px;
+                    top: 4px;
                 }
                 input.color-input {
                     border: none;
