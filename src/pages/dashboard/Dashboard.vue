@@ -134,7 +134,7 @@ import { getAnalysisUrl } from '@/service/API'
 import user from '@/store/modules/user'
 import { bytes, times, timesK, date } from '@/service/bucketService'
 import Csv from './csv'
-import ExportCsv from './export-csv'
+import fileSaver from 'file-saver'
 export default {
     data () {
         return {
@@ -254,7 +254,9 @@ export default {
             setTimeout(() => { vm.$refs[ref].resize() }, 100)
         },
         exportCsv () {
-            ExportCsv.download(this.dateRange + '.csv', Csv(_.keys(this.data[0]), this.data, ','))
+            let content = Csv(_.keys(this.data[0]), this.data, ',')
+            let file = new File(Array.from(content), this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
+            fileSaver.saveAs(file)
         }
     },
     watch: {
