@@ -43,6 +43,7 @@ export default {
 @import '../../styles/index.less';
 
 .layout-menu {
+    z-index: 100;
     .wh(200px, 100%);
     background: @menu-background;
     position: fixed;
