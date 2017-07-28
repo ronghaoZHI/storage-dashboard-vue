@@ -269,6 +269,7 @@ export const messages = {
             CYAN: 'cyan',
             MAGENTA: 'magenta',
             NO_LIST: 'No data',
+            COLOR_ERROR: 'Invalid color value',
 
             TITLE: 'My Storage',
             FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
@@ -793,6 +794,7 @@ export const messages = {
             CYAN: '青色',
             MAGENTA: '粉色',
             NO_LIST: '列表为空',
+            COLOR_ERROR: '颜色值不合法',
 
             TITLE: '我的存储',
             FILE_UPLOAD_LIM: '点击或拖拽上传',

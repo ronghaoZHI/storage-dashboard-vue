@@ -47,7 +47,7 @@
                             <Select v-model="general.padType" class="sub-select" style="margin-right:8px">
                                 <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
                             </Select>
-                            <div class="color-box">
+                            <div class="color-box" :class="{'color-error': padColorError}">
                                 <color-picker class="color-trigger" :parentColor="general.padColor" v-on:onChange="padColorChange"></color-picker>
                                 <input type='text' v-model="general.padColor" class="color-input">
                             </div><!--padColor-->
@@ -192,7 +192,7 @@
                                     <input type='number' v-model="general.borderSize">
                                     <span>px</span>
                                 </div><!--borderSize-->
-                                <div class="color-box" v-if="general.border">
+                                <div class="color-box" :class="{'color-error': borderColorError}" v-if="general.border">
                                     <color-picker class="color-trigger" :parentColor="general.borderColor" v-on:onChange="borderColorChange"></color-picker>
                                     <input type='text' v-model="general.borderColor" class="color-input">
                                 </div><!--borderColor-->
@@ -239,14 +239,14 @@
                                         <input type='number' v-model="fontStyle.font_size">
                                         <span>px</span>
                                     </div><!--font_size-->
-                                    <div class="color-box">
+                                    <div class="color-box" :class="{'color-error': fontColorError}">
                                         <color-picker class="color-trigger" :parentColor="fontStyle.font_color" v-on:onChange="fontColorChange"></color-picker>
                                         <input type='text' v-model="fontStyle.font_color" class="color-input">
                                     </div><!--fontColor-->
                                 </div>
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.BACKGROUBD")}} : </span>
-                                    <div class="color-box">
+                                    <div class="color-box" :class="{'color-error': fontbackColorError}">
                                         <color-picker class="color-trigger" :parentColor="fontStyle.background" v-on:onChange="fontbackColorChange"></color-picker>
                                         <input type='text' v-model="fontStyle.background" class="color-input">
                                     </div><!--fontColor-->
@@ -299,7 +299,7 @@
                         <div class="separator-line"></div>
                         <div class="form-item clearfix line-button">
                             <div class="img-button">
-                                <Button type="primary" @click="submitStyles" :disabled="transformationError || textError || imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                <Button type="primary" @click="beforeSubmit" :disabled="transformationError || textError || imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
                             </div>
                         </div>
                     </Col>
@@ -415,6 +415,18 @@ export default {
         },
         gravityImg () {
             return this.general.gravity.split(':')[0]
+        },
+        padColorError () {
+            return !colorTest(this.general.padColor)
+        },
+        borderColorError () {
+            return !colorTest(this.general.borderColor)
+        },
+        fontColorError () {
+            return !colorTest(this.fontStyle.font_color)
+        },
+        fontbackColorError () {
+            return !colorTest(this.fontStyle.background)
         }
     },
     mounted () {
@@ -474,6 +486,13 @@ export default {
                 } catch (error) {
                     this.$Message.success($t('STERAGE.SAVE_FAILED'))
                 }
+            }
+        },
+        beforeSubmit () {
+            if (this.padColorError || this.borderColorError || this.borderColorError || this.fontColorError || this.fontbackColorError) {
+                this.$Message.warning(this.$t('STORAGE.COLOR_ERROR'))
+            } else {
+                this.submitStyles()
             }
         },
         async primaryPreview () {
@@ -572,9 +591,9 @@ export default {
             return {
                 font_family: data.font_family,
                 font_size: parseInt(data.font_size),
-                font_color: data.font_color.substr(1).toLowerCase(),
+                font_color: color2Save(data.font_color),
                 text: this.mark.text,
-                background: data.background.substr(1).toLowerCase()
+                background: color2Save(data.background)
             }
         },
         uploadSuccess (fileName) {
@@ -627,6 +646,21 @@ export default {
         }
     }
 }
+const color2Save = (hex) => {
+    const regHex3 = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+    if (regHex3.test(hex)) {
+        hex = hex.replace(regHex3, (m, r, g, b) => {
+            return r + r + g + g + b + b
+        })
+    }
+    return hex.substr(1).toLowerCase()
+}
+const colorTest = (hex) => {
+    const regHex6 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
+    const regHex3 = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+    console.log(hex, regHex6.test(hex) || regHex3.test(hex))
+    return regHex6.test(hex) || regHex3.test(hex)
+}
 const putOverlayFile = (name, body) => {
     const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
     const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
@@ -647,7 +681,7 @@ const general2Save = data => {
     let saved = {}
     if (data.crop === 'pad') {
         saved.crop = data.padType
-        saved.background = data.padColor.substr(1).toLowerCase()
+        saved.background = color2Save(data.padColor)
     } else if (data.crop === 'fill') {
         saved.crop = data.fillType
     } else if (data.crop === 'fit') {
@@ -706,7 +740,7 @@ const general2Save = data => {
     } else {}
 
     if (data.border) {
-        saved.border = data.borderSize + '_' + data.borderColor.substr(1).toLowerCase()
+        saved.border = data.borderSize + '_' + color2Save(data.borderColor)
     }
     if (data.opacity !== 100) {
         saved.opacity = data.opacity
@@ -1320,6 +1354,11 @@ const mark2Front = data => {
         .img-button {
             margin-left: 250px;
         }
+    }
+
+    .color-error {
+        border:1px solid red !important;
+        box-shadow: 0 0 5px red;
     }
 }
 </style>
