@@ -1,14 +1,14 @@
 <template id="color-picker-template">
     <div class="color-picker">
-        <div class="color-picker__overlay" v-if="isVisible" v-on:click="hide"></div>
+        <div class="color-picker-overlay" v-if="isVisible" v-on:click="hide"></div>
         <transition name="pop">
-            <div class="color-picker__flyout" v-if="isVisible">
+            <div class="color-picker-flyout" v-if="isVisible">
                 <div class="color-chip" v-bind:style="{'background': colorHex}">
-                    <div class="color-chip__inner">
-                        <h1 class="color-chip__title">imgx</h1>
+                    <div class="color-chip-inner">
+                        <h1 class="color-chip-title">imgx</h1>
                     </div>
                 </div>
-                <div class="color-picker__inner">
+                <div class="color-picker-inner">
                     <div class="control" v-bind:style="gradientH">
                         <input type="range" min="0" max="360" v-model="h" @input="input"/>
                     </div>
@@ -19,7 +19,7 @@
                         <input type="range" min="0" max="100" v-model="b" @input="input"/>
                     </div>
                 </div>
-            </div><!--color-picker__flyout-->
+            </div><!--color-picker-flyout-->
         </transition>
         <div class="swatch" v-bind:style="{'background': colorHex}" v-on:click="toggle"></div>
     </div><!--color-picker-->
@@ -299,7 +299,7 @@ body {
   display: inline-block;
 }
 
-.color-picker__overlay {
+.color-picker-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -310,7 +310,7 @@ body {
   opacity: 0;
 }
 
-.color-picker__flyout {
+.color-picker-flyout {
   width: 240px;
   border: 1px solid #eee;
   border-radius: 4px;
@@ -323,7 +323,7 @@ body {
   z-index: 2;
 }
 
-.color-picker__inner {
+.color-picker-inner {
   padding: 1.5rem 1rem;
 }
 
@@ -336,11 +336,11 @@ body {
   border-radius: 4px 4px 0 0;
 }
 
-.color-chip__inner {
+.color-chip-inner {
   text-align: center;
 }
 
-.color-chip__subtitle {
+.color-chip-subtitle {
   margin-top: 0.5rem;
   opacity: 0.7;
   font-weight: normal;
@@ -348,7 +348,7 @@ body {
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.color-chip__title {
+.color-chip-title {
   color: rgba(255,255,255,0.9);
   margin: 0;
   font-size: 50px;
