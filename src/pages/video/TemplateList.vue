@@ -17,10 +17,6 @@ export default {
             videoNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_PROFILE'), Level: this.$t('VIDEO.CODING_LEVEL'), KeyframesMaxDist: this.$t('VIDEO.FIXED_KEY_FRAME_SPACING'), BitRate: this.$t('VIDEO.BIT_RATE'), FrameRate: this.$t('VIDEO.FRAME_RATE'), Resolution: this.$t('VIDEO.RESOLUTION'), AspectRatio: this.$t('VIDEO.ASPECT_RATIO')},
             audioNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_QUALITY'), SampleRate: this.$t('VIDEO.SAMPLE_RATE'), BitRate: this.$t('VIDEO.BIT_RATE'), Channels: this.$t('VIDEO.CHANNELS')},
             listHeader: [{
-                title: 'ID',
-                key: 'id',
-                width: 80
-            }, {
                 title: 'Name',
                 width: 100,
                 render: (h, params) => {
@@ -39,18 +35,22 @@ export default {
                 }
             }, {
                 title: 'Container',
-                width: 90,
+                width: 100,
                 key: 'container'
             }, {
                 title: 'Video',
-                width: 140,
+                width: 400,
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
                             placement: 'right',
                             trigger: 'hover'
                         }
-                    }, [h('div', params.row.video.map(item => h('p', `${item.name}:${item.value}`))),
+                    }, [h('div', params.row.video.map(item => h('Tag', {
+                        props: {
+                            type: 'border'
+                        }
+                    }, `${item.name}:${item.value}`))),
                         h('div', {
                             class: 'api',
                             slot: 'content'
@@ -59,14 +59,18 @@ export default {
                 }
             }, {
                 title: 'Audio',
-                width: 140,
+                width: 380,
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
                             placement: 'right',
                             trigger: 'hover'
                         }
-                    }, [h('div', params.row.audio.map(item => h('p', `${item.name}:${item.value}`))),
+                    }, [h('div', params.row.audio.map(item => h('Tag', {
+                        props: {
+                            type: 'border'
+                        }
+                    }, `${item.name}:${item.value}`))),
                         h('div', {
                             class: 'api',
                             slot: 'content'
@@ -76,7 +80,7 @@ export default {
             }, {
                 title: 'Actions',
                 key: 'actions',
-                width: 60,
+                width: 80,
                 align: 'right',
                 render: (h, params) => {
                     return h('Tooltip', {

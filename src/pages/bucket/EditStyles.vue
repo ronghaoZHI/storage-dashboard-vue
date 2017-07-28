@@ -658,7 +658,6 @@ const color2Save = (hex) => {
 const colorTest = (hex) => {
     const regHex6 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
     const regHex3 = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
-    console.log(hex, regHex6.test(hex) || regHex3.test(hex))
     return regHex6.test(hex) || regHex3.test(hex)
 }
 const putOverlayFile = (name, body) => {
