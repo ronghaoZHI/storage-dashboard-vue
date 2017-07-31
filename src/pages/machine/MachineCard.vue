@@ -1,26 +1,29 @@
 <template>
     <div class="bsc-machine-card">
-        <div class="card-title">
-            <span><Icon :class="{ alive: data.status === 'alive', down: data.status !== 'alive' }" type="heart"></Icon> {{data.hostname.slice(data.hostname.indexOf('-',14) + 1)}}</span>
+        <div class="card-title" :class="{ alive: data.status === 'alive', down: data.status !== 'alive' }">
+            <span><Icon type="android-star" v-show="data.status === 'alive'" size="16"></Icon> {{data.hostname.slice(data.hostname.indexOf('-',14) + 1)}}</span>
         </div>
-        <div class="card-chart">
-            <chart :options="memOptions" auto-resize></chart>
-            <div class="data-scale">
-                <span>{{data.mem.percent}}%</span>
-                <span>已用内存</span>
+        <div class="card-mem">
+            <span>内存使用：{{bytes(data.mem.total - data.mem.available)}} (已用)／{{bytes(data.mem.total)}} (总计)</span>
+            <div class="mem-show" v-percentPointer="[{percent: data.mem.percent, width: data.mem.percent, bc: true}, {percent: 100 - data.mem.percent, width: 100 - data.mem.percent - 2, bc: false}]">
+                <span v-if="data.mem.percent > 12" class="mem-used">{{data.mem.percent}}%</span>
+                <span v-else class="mem-used">&nbsp;</span>
+                <span class="mem-unused">{{Math.floor(100 - data.mem.percent)}}%</span>
             </div>
         </div>
-        <div class="card-tooltip">
-            <span>
-                <i class="tooltip-color"></i>
-                已用:{{bytes(data.mem.total - data.mem.available)}}</span>
-            <span>总内存:{{bytes(data.mem.total)}}</span>
+        <div class="card-mem">
+            <span>swap：{{bytes(data.swap.total - data.swap.free)}} (已用)／{{bytes(data.swap.total)}} (总计)</span>
+            <div class="mem-show" v-percentPointer="[{percent: data.swap.percent, width: data.swap.percent, bc: true}, {percent: 100 - data.swap.percent, width: 100 - data.swap.percent - 2, bc: false}]">
+                <span v-if="data.swap.percent > 12" class="mem-used">{{data.swap.percent}}%</span>
+                <span v-else class="mem-used">&nbsp;</span>
+                <span class="mem-unused">{{100 - data.swap.percent}}%</span>
+            </div>
         </div>
         <div class="card-cpu">
             <span>CPU load: {{data.cpu.load}}</span>
         </div>
         <div class="card-partition" v-if="partitionList.length > 0">
-            <span>磁盘信息</span><span class="ps">Space - IO 单位:%</span>
+            <span>磁盘信息</span><span class="ps">Space - IO (单位:%)</span>
             <partition-node v-for="node in partitionList" :data="node" :key="node.ts"></partition-node>
         </div>
         <div class="card-ip">
@@ -30,6 +33,9 @@
         <div class="card-footer">
             <div v-openBtn class="button-open">
                 <Icon type="chevron-down"></Icon>
+            </div>
+            <div v-cloBtn class="button-close dn">
+                <Icon type="chevron-up"></Icon>
             </div>
             <div class="card-network dn">
                 <div class="row-network">
@@ -42,78 +48,52 @@
                     <span>{{bytes(value.bytes_sent)}}</span>
                     <span>{{bytes(value.bytes_recv)}}</span>
                 </div>
-                <div v-cloBtn class="button-close">
-                    <Icon type="chevron-up"></Icon>
-                </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import ECharts from 'vue-echarts/components/ECharts'
-import 'echarts/lib/chart/pie'
-import 'echarts/lib/component/tooltip'
 import { bytes } from '@/service/bucketService'
 import partitionNode from './PartitionNode'
 export default {
     data () {
-        return {}
+        return {
+            memPointData: []
+        }
     },
     props: ['data'],
     computed: {
         partitionList: function () {
             return this.data.partitions.ok.concat(this.data.partitions.bad).slice(0, 50)
-        },
-        memOptions: function () {
-            return {
-                tooltip: {
-                    show: false
-                },
-                series: [
-                    {
-                        type: 'pie',
-                        radius: ['70%', '80%'],
-                        avoidLabelOverlap: false,
-                        label: {
-                            normal: {
-                                show: false,
-                                position: 'center'
-                            }
-                        },
-                        labelLine: {
-                            normal: {
-                                show: false
-                            }
-                        },
-                        color: ['#20a0ff', '#ffde2a'],
-                        data: [
-                            { value: this.data.mem.total - this.data.mem.available, name: 'used' },
-                            { value: this.data.mem.available, name: 'unused' }
-                        ]
-                    }
-                ]
-            }
         }
     },
     components: {
-        chart: ECharts,
         partitionNode
     },
     directives: {
         cloBtn: {
             bind: function (el) {
-                el.onclick = (e) => {
-                    el.parentNode.classList.toggle('dn')
-                    el.parentNode.parentNode.childNodes[0].classList.toggle('dn')
-                }
+                $(el).click(e => {
+                    $(el).toggleClass('dn').siblings('.card-network').toggleClass('dn').siblings('.button-open').toggleClass('dn')
+                })
             }
         },
         openBtn: {
             bind: function (el) {
-                el.onclick = (e) => {
-                    el.classList.toggle('dn')
-                    el.parentNode.childNodes[2].classList.toggle('dn')
-                }
+                $(el).click(e => {
+                    $(el).toggleClass('dn').siblings('.card-network').toggleClass('dn').siblings('.button-close').toggleClass('dn')
+                })
+            }
+        },
+        percentPointer: {
+            inserted: function (el, binding) {
+                let data = binding.value
+                const colorList = ['#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#76d0a3', '#F1A4A4']
+                data.forEach((item, index) => {
+                    let val = `span:nth-child(${index + 1})`
+                    $(el).children(val).css('width', Math.floor(item.width) + '%')
+                    item.bc && $(el).children(val).css('background-color', colorList[Math.floor(item.percent / 10)])
+                })
             }
         }
     },
@@ -127,67 +107,50 @@ export default {
 @import '../../styles/index.less';
 
 .@{css-prefix}machine-card {
-
+    .wh(300px, 100%);
+    margin: 0 15px 15px 0;
+    border: 1px solid #d8dbdb;
+    
 
     .card-title {
-        padding: 16px 16px 0 16px;
-        .sc(14px, #475669);
+        padding: 10px 16px 10px 16px;
 
-        .alive {
+        i {
             color: #00924c;
         }
-
-        .down {
-            color: #b93600;
-        }
     }
 
-    .card-chart {
-        .wh(100%, 165px);
-
-        .data-scale {
-            position: relative;
-            top: -105px;
-
-            & > span {
-                display: block;
-                text-align: center;
-            }
-            
-            & > span:first-child {
-                font-size: 20px;
-                font-weight: 500;
-            }
-
-            & > span:last-child {
-                .sc(12px,#a2a8bb);
-                font-weight: normal;
-            }
-        }
+    .alive {
+        background-color: #fafafb;
+        .sc(14px, #475669);
     }
 
-    .card-tooltip {
-        padding: 0 30px;
-        margin-bottom: 15px;
-        .sc(12px, #a2a8bb);
+    .down {
+        background-color: #f65c59;
+        .sc(14px, #fff);
+    }
 
-        & > span:last-child {
-            float: right;
-        }
+    .card-mem {
+        width: 100%;
+        padding: 8px 10px;
+        border-top: @common-border;
 
-        .tooltip-color {
-            display: inline-block;
-            position: relative;
-            top: 2px;
-            .wh(12px,12px);
-            border-radius: 2px;
-            background-color: @primary-color;
+        .mem-show {
+            .wh(100%,20px);
+            background: #eff3f7;
+
+            span {
+                height: 100%;
+                .fb(center, center);
+            }
         }
     }
 
     .card-cpu {
+        border-top: @common-border;
         text-align: center;
-        margin-bottom: 10px;
+        height: 34px;
+        line-height: 34px;
         span {
             .sc(14px,#475669)
         }

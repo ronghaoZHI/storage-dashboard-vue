@@ -42,11 +42,5 @@ export default {
     width: 100%;
     .fb(flex-start, flex-start);
     flex-wrap: wrap;
-
-    & > div {
-        .wh(300px, 100%);
-        margin: 0 15px 15px 0;
-        border: 1px solid #eee;
-    }
 }
 </style>
