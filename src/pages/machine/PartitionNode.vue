@@ -40,7 +40,7 @@ export default {
 @import '../../styles/index.less';
 
 .@{css-prefix}partition-node {
-    .wh(40px,20px);
+    .wh(42px,20px);
     border: @common-border;
     margin: 2px;
 
@@ -59,7 +59,7 @@ export default {
         font-size: 12px;
         top: -16px;
         left: 4px;
-        width: 30px;
+        width: 32px;
         height: 16px;
     }
 }

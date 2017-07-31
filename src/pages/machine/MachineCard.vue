@@ -4,7 +4,7 @@
             <span><Icon type="android-star" v-show="data.status === 'alive'" size="16"></Icon> {{data.hostname.slice(data.hostname.indexOf('-',14) + 1)}}</span>
         </div>
         <div class="card-mem">
-            <span>内存使用：{{bytes(data.mem.total - data.mem.available)}} (已用)／{{bytes(data.mem.total)}} (总计)</span>
+            <span>内存使用：{{bytes(data.mem.total - data.mem.available)}}／{{bytes(data.mem.total)}} (已用/总计)</span>
             <div class="mem-show" v-percentPointer="[{percent: data.mem.percent, width: data.mem.percent, bc: true}, {percent: 100 - data.mem.percent, width: 100 - data.mem.percent - 2, bc: false}]">
                 <span v-if="data.mem.percent > 12" class="mem-used">{{data.mem.percent}}%</span>
                 <span v-else class="mem-used">&nbsp;</span>
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="card-mem">
-            <span>swap：{{bytes(data.swap.total - data.swap.free)}} (已用)／{{bytes(data.swap.total)}} (总计)</span>
+            <span>swap：{{bytes(data.swap.total - data.swap.free)}}／{{bytes(data.swap.total)}} (已用/总计)</span>
             <div class="mem-show" v-percentPointer="[{percent: data.swap.percent, width: data.swap.percent, bc: true}, {percent: 100 - data.swap.percent, width: 100 - data.swap.percent - 2, bc: false}]">
                 <span v-if="data.swap.percent > 12" class="mem-used">{{data.swap.percent}}%</span>
                 <span v-else class="mem-used">&nbsp;</span>
@@ -45,8 +45,8 @@
                 </div>
                 <div class="row-network" v-for="(value, key) in data.net.io">
                     <span>{{key}}</span>
-                    <span>{{bytes(value.bytes_sent)}}</span>
-                    <span>{{bytes(value.bytes_recv)}}</span>
+                    <span>{{Math.floor(value.bytes_sent / 8 / 1024)}} Kb/s</span>
+                    <span>{{Math.floor(value.bytes_recv / 8 / 1024)}} Kb/s</span>
                 </div>
             </div>
         </div>
@@ -163,7 +163,7 @@ export default {
         width: 100%;
         .fb(flex-start, flex-start);
         flex-wrap: wrap;
-        padding: 30px 16px 16px 16px;
+        padding: 30px 10px 16px 10px;
 
         & > span {
             position: absolute;
@@ -226,10 +226,12 @@ export default {
                     flex: 1;
                     padding: 0 16px;
                     border-top: @common-border;
+                    text-align: right;
                 }
 
                 & > span:first-child {
                     flex: 1;
+                    text-align: left;
                 }
 
                 & > span:not(:last-child) {
