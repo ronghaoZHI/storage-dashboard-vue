@@ -7,6 +7,7 @@
     </div>
 </template>
 <script>
+import { handler } from '@/service/Aws'
 import { getBucketList } from '@/service/Data'
 import { getBucketPolicy, putBucketPolicy, getTranscodes } from '@/pages/video/data'
 export default {
@@ -233,7 +234,7 @@ export default {
                 value: data
             }
             try {
-                return handler('putBucketPolicy', {Bucket: bucket, Policy: JSON.stringify(policy)}, HOST.policyHOST)
+                return handler('putBucketPolicy', {Bucket: bucket, Policy: JSON.stringify(policy)})
             } catch (error) {
                 return Promise.reject(error)
             }
