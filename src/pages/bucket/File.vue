@@ -161,6 +161,9 @@ export default {
                             content: this.$t('STORAGE.DELETE_FOLDER'),
                             delay: 1000,
                             placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
                         }
                     }, [h('i-button', {
                         props: {
@@ -184,6 +187,9 @@ export default {
                                 content: this.$t('STORAGE.RENAME'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {
@@ -208,6 +214,9 @@ export default {
                                 content: this.$t('STORAGE.FILE_PERMISSIONS'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {
@@ -231,6 +240,9 @@ export default {
                                 content: this.$t('STORAGE.DOWNLOAD_FILE'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {
@@ -253,6 +265,9 @@ export default {
                                 content: this.$t('STORAGE.IMG_PREVIEW'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {
@@ -276,6 +291,9 @@ export default {
                                 content: this.$t('STORAGE.COPY_FILE_LINK'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {

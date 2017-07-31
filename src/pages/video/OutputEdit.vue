@@ -425,6 +425,9 @@ export default {
                             content: this.$t('PUBLIC.EDIT'),
                             delay: 1000,
                             placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
                         }
                     }, [h('i-button', {
                         props: {
@@ -445,6 +448,9 @@ export default {
                             content: this.$t('PUBLIC.DELETE'),
                             delay: 1000,
                             placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
                         }
                     }, [h('i-button', {
                         props: {
@@ -502,6 +508,9 @@ export default {
                             content: this.$t('PUBLIC.EDIT'),
                             delay: 1000,
                             placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
                         }
                     }, [h('i-button', {
                         props: {

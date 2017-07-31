@@ -90,6 +90,9 @@ export default {
                             content: params.row.is_enabled === 'true' ? this.$t('VIDEO.CLOSE') : this.$t('VIDEO.OPEN'),
                             delay: 1000,
                             placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
                         }
                     }, [h('i-switch', {
                         props: {
@@ -105,6 +108,9 @@ export default {
                             content: this.$t('PUBLIC.EDIT'),
                             delay: 1000,
                             placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
                         }
                     }, [h('i-button', {
                         props: {
@@ -240,7 +246,7 @@ export default {
 }
 
 </script>
-<style lang="less" scoped>
+<style lang="less" scope>
 @import '../../styles/index.less';
 
 </style>

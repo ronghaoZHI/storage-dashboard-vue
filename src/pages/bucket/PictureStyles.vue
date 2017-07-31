@@ -76,6 +76,9 @@ export default {
                                 content: this.$t('STORAGE.IMG_PREVIEW'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {
@@ -99,6 +102,9 @@ export default {
                                 content: this.$t('STORAGE.EXPORT_STYLE'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {
@@ -121,6 +127,9 @@ export default {
                                 content: this.$t('STORAGE.EDIT'),
                                 delay: 1000,
                                 placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
                             }
                         }, [h('i-button', {
                             props: {
