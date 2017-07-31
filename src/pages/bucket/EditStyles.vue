@@ -470,7 +470,7 @@ export default {
         async submitStyles () {
             let ruleList = await this.getRuleList()
             if (ruleList.includes(this.transformation)) {
-                this.$Message.warning($t('STERAGE.RULE_NAME_EXISTS'))
+                this.$Message.warning(this.$t('STORAGE.RULE_NAME_EXISTS'))
                 return
             }
             if (!this.transformationError && !this.textError && this.styles2Save()) {
@@ -484,7 +484,7 @@ export default {
                     })
                     this.$router.push({ name: 'pictureStyles', params: { bucket: this.bucket } })
                 } catch (error) {
-                    this.$Message.success($t('STERAGE.SAVE_FAILED'))
+                    this.$Message.success(this.$t('STERAGE.SAVE_FAILED'))
                 }
             }
         },
@@ -550,7 +550,7 @@ export default {
             } else {
                 const insArray = this.instructions.split('--')
                 if (insArray.length > 4) {
-                    this.$Message.error($t('STORAGE.NO_MORE_4'))
+                    this.$Message.error(this.$t('STORAGE.NO_MORE_4'))
                     return false
                 }
                 insArray.forEach(instruction => {
@@ -584,7 +584,7 @@ export default {
                     Body: file
                 })
             } catch (error) {
-                this.$Message.error($t('STERAGE.SAVE_FAILED'))
+                this.$Message.error(this.$t('STERAGE.SAVE_FAILED'))
             }
         },
         font2Save (data) {

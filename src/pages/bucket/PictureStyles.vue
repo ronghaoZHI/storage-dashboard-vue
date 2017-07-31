@@ -202,7 +202,7 @@ export default {
                 })
                 this.$Loading.finish()
             } catch (error) {
-                this.$Message.error($t('STORAGE.GET_RULES_FAILED'))
+                this.$Message.error(this.$t('STORAGE.GET_RULES_FAILED'))
             }
         },
         async getObject (file) {

@@ -257,6 +257,7 @@ export default {
                 }
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
+                this.policyFront[data._index].is_enabled = enable
                 this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         },
