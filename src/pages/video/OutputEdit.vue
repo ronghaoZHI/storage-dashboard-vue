@@ -761,7 +761,6 @@ export default {
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
                 console.log(error)
-                this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         },
         async alterTranscode () {
