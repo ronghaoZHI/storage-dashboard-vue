@@ -353,7 +353,7 @@
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
                 <Radio-group v-model="shotModal.resolution">
-                    <Radio label="auto">{{$t('VIDEO.CONSTANT')}}</Radio>
+                    <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>
                     <Radio label="value"></Radio>
                 </Radio-group>
                 <Input-number :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></Input-number>
@@ -387,7 +387,7 @@ export default {
             bucketList: this.bucketList,
             showOutputsModal: false,
             showShotsModal: false,
-            aspectRatioList: [{name: this.$t('VIDEO.CONSTANT'), value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
+            aspectRatioList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
             formatList: ['png', 'jpg'],
             templateList: this.templateList,
             outputModal: _.clone(outputsDefult),
