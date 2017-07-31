@@ -4,6 +4,11 @@
             <Button class="button-bsc-add-bucket" type="primary" @click="goTemplateEdit">{{$t('VIDEO.NEW_TEMPLATE')}}</Button>
         </div>
         <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+        <div class="section-paging">
+            <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="listPresets();pageToken.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="nextPageToken" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+        </div>
     </div>
 </template>
 <script>
@@ -14,6 +19,9 @@ export default {
             iconSize: 18,
             self: this,
             templateList: this.templateList,
+            nextPageShow: false,
+            pageToken: [],
+            nextPageToken: '',
             videoNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_PROFILE'), Level: this.$t('VIDEO.CODING_LEVEL'), KeyframesMaxDist: this.$t('VIDEO.FIXED_KEY_FRAME_SPACING'), BitRate: this.$t('VIDEO.BIT_RATE'), FrameRate: this.$t('VIDEO.FRAME_RATE'), Resolution: this.$t('VIDEO.RESOLUTION'), AspectRatio: this.$t('VIDEO.ASPECT_RATIO')},
             audioNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_QUALITY'), SampleRate: this.$t('VIDEO.SAMPLE_RATE'), BitRate: this.$t('VIDEO.BIT_RATE'), Channels: this.$t('VIDEO.CHANNELS')},
             listHeader: [{
@@ -111,15 +119,30 @@ export default {
         this.listPresets()
     },
     methods: {
-        async listPresets () {
+        async listPresets (pageToken) {
             try {
                 this.$Loading.start()
-                let res = await transcoder('listPresets')
+                let res
+                if (!pageToken) {
+                    res = await transcoder('listPresets')
+                } else {
+                    res = await transcoder('listPresets', {PageToken: pageToken})
+                }
                 this.templateList = await this.convert2Front(res.Presets)
+                this.nextPageToken = res.NextPageToken
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
             }
+        },
+        previousPage () {
+            let page = this.pageToken[this.pageToken.length - 2]
+            this.pageToken.pop()
+            this.listPresets(page)
+        },
+        nextPage () {
+            this.nextPageToken && this.pageToken.push(this.nextPageToken)
+            this.listPresets(this.nextPageToken)
         },
         goTemplateEdit () {
             this.$router.push({ name: 'TemplateEdit', params: { id: 'none' } })

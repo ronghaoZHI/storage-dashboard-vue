@@ -655,13 +655,18 @@ const getURL = async (bucket, file, prefix) => {
         }
     }
 
-    .section-paging {
-        .wh(100%,40px);
-        .fb(flex-end,center);
-        button {
-            width: 70px;
-            margin-left: 6px;
-        }
+}
+</style>
+
+<style lang="less">
+@import '../../styles/index.less';
+
+.section-paging {
+    .wh(100%,40px);
+    .fb(flex-end,center);
+    button {
+        width: 70px;
+        margin-left: 6px;
     }
 }
 </style>
