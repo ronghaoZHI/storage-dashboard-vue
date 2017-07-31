@@ -61,10 +61,10 @@
             <div class="form-item" v-if="template.Video.Codec === 'H.264' || template.Video.Codec === 'H.265'">
                 <span class="form-label">{{$t('VIDEO.FIXED_KEY_FRAME_SPACING')}} : </span>
                 <i-switch v-model="template.Video.FixedGOP">
-                    <span slot="open">{{$t('VIDEO.OPEN')}}</span>
-                    <span slot="close">{{$t('VIDEO.CLOSE')}}</span>
+                    <span slot="open">{{$t('VIDEO.ON')}}</span>
+                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
                 </i-switch>
-                <Input-number :min='1' :max='100000' v-model="template.Video.KeyframesMaxDist" :disabled="!template.Video.FixedGOP"></Input-number> 秒 (1~100000)
+                <Input-number :min='1' :max='100000' v-model="template.Video.KeyframesMaxDist" :disabled="!template.Video.FixedGOP"></Input-number> {{$t('VIDEO.SECOND')}} (1~100000)
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.BIT_RATE')}} : </span>
@@ -86,8 +86,8 @@
                     <Radio label="auto">{{$t('VIDEO.CONSTANT')}}</Radio>
                     <Radio label="value">{{$t('VIDEO.USER_DEFINED')}}</Radio>
                 </Radio-group>
-                <Input-number :min='1' v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto'" placeholder="宽度"></Input-number>
-                <Input-number :min='1' v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto'" placeholder="高度"></Input-number>
+                <Input-number :min='1' v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></Input-number>
+                <Input-number :min='1' v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></Input-number>
             </div>
             <div class="form-item" v-if="template.Video.Codec !== 'auto'">
                 <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>

@@ -428,7 +428,8 @@ export const messages = {
             AUTO_OUTPUT_RULES_DESCRIPTION: 'After setting the auto transcoding, at least one of the template output is TS in the output rules, and all the HLS slice length need to be consistent and can not be 0',
             ADAPTIVE_EXIST_TS_FORMAT: 'When setting the adaptive transcoding, the TS format item of the transcoding template needs to exist in the output rules',
             ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT: 'When setting the adaptive transcoding, the HLS slice length needs to be consistent in the output rules',
-            ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: 'When setting the adaptive transcoding, the HLS slice length can not be 0 in the output rules'
+            ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: 'When setting the adaptive transcoding, the HLS slice length can not be 0 in the output rules',
+            SECOND: 'second'
         },
         i: {
             select: {
@@ -952,7 +953,8 @@ export const messages = {
             AUTO_OUTPUT_RULES_DESCRIPTION: '设置自动转码后，输出规则中至少有一项模版输出为TS，且所有HLS切片时长需保持一致，且不能为0',
             ADAPTIVE_EXIST_TS_FORMAT: '设置自适应转码，输出规则中需存在转码模版输出为TS格式的项',
             ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT: '设置自适应转码，输出规则中HLS切片时长需保持一致',
-            ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: '设置自适应转码，输出规则中HLS切片时长不能为0'
+            ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: '设置自适应转码，输出规则中HLS切片时长不能为0',
+            SECOND: '秒'
         },
         i: {
             select: {
