@@ -91,21 +91,16 @@ export default {
                             delay: 1000,
                             placement: 'top'
                         }
-                    }, [h('i-button', {
+                    }, [h('i-switch', {
                         props: {
-                            size: 'small'
+                            value: params.row.is_enabled === 'true'
                         },
                         on: {
-                            click: () => {
+                            input: () => {
                                 this.changeStatus(params.row)
                             }
                         }
-                    }, [h('Icon', {
-                        props: {
-                            type: params.row.is_enabled === 'true' ? 'ios-locked' : 'ios-unlocked',
-                            size: this.iconSize
-                        }
-                    })])]), h('Tooltip', {
+                    })]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.EDIT'),
                             delay: 1000,
@@ -221,6 +216,8 @@ export default {
             this.$Loading.start()
             const bucket = data.input_bucket
             const id = data.id
+            const enable = this.policyFront[data._index].is_enabled
+            this.policyFront[data._index].is_enabled = enable === 'true' ? 'false' : 'true'
             try {
                 let trans = await getTranscodes(bucket)
                 if (trans) {
@@ -230,8 +227,6 @@ export default {
                         }
                     })
                     await putBucketPolicy(bucket, trans)
-                    const enable = this.policyFront[data._index].is_enabled
-                    this.policyFront[data._index].is_enabled = enable === 'true' ? 'false' : 'true'
                 }
                 this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
