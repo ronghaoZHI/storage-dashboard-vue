@@ -48,8 +48,8 @@ export const messages = {
             USER: 'User Management',
             TEMPLATE: 'Template',
             OUTPUT: 'Output',
-            PIPELINE: 'Pipeline',
-            JOB: 'Job'
+            JOB: 'Job',
+            PIPELINE: 'Pipeline'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
@@ -588,8 +588,8 @@ export const messages = {
             USER: '用户管理',
             TEMPLATE: '转码模版',
             OUTPUT: '自动转码配置',
-            PIPELINE: '管道管理',
-            JOB: '任务管理'
+            JOB: '任务管理',
+            PIPELINE: '管道管理'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',
