@@ -11,7 +11,7 @@
             <div class="button-daterange">
                 <Button-group>
                     <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">{{ $t("DASHBOARD.SEVEN_DAYS")}}</Button>
-                    <Button :disabled="isFristDay" v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month" >{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
+                    <Button v-show="!isFristDay" v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month" >{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
                     <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.thirty_days}" @click="dateSelect = dateDefault.thirty_days">{{ $t("DASHBOARD.THIRTY_DAYS")}}</Button>
                 </Button-group>
             </div>
@@ -174,7 +174,7 @@ export default {
             return formatDate(this.dateSelect[0]) + '-' + formatDate(this.dateSelect[1])
         },
         isFristDay () {
-            return new Date().getDate === 1
+            return new Date().getDate() === 1
         }
     },
     mounted () {
