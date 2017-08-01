@@ -945,7 +945,7 @@ export const messages = {
             CANCEL: '取消',
             FORMAT: '格式',
             SLICE_FORMAT: '切片格式',
-            TRANSCODING_SUCCESSFUL_CALLBACK_URL: '转码失败回调Url',
+            TRANSCODING_SUCCESSFUL_CALLBACK_URL: '转码成功回调Url',
             TRANSCODING_FAILED_CALLBACK_URL: '转码失败回调Url',
             FILE_NAME_SUFFIX_CANNOT_EMPTY: '文件名后缀不能为空',
             MASTER_PLAYLIST_CONFIGURATION: 'MasterPlaylist配置',
