@@ -46,12 +46,12 @@ export default {
     directives: {
         cbutton: {
             bind: function (el, binding) {
-                el.onclick = (e) => {
-                    el.classList.toggle('bucket-selected')
-                    _.each(el.parentNode.childNodes, (node) => {
-                        node !== el && node.classList.remove('bucket-selected')
+                $(el).click((e) => {
+                    $(el).toggleClass('bucket-selected')
+                    Array.from($(el).siblings()).forEach((node) => {
+                        node !== el && $(node).removeClass('bucket-selected')
                     })
-                }
+                })
             }
         }
     },
