@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket" type="primary" @click="goJobEdit">{{$t('VIDEO.CREATE_JOB')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="goJobEdit">创建任务</Button>
             <div>
-                <span class="quary-name">{{$t('VIDEO.PIPE')}} : </span>
+                <span class="quary-name">管道 : </span>
                 <Select v-model="pipeId" style="width:200px" @on-change="listJobsByPipeline">
                     <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
                 </Select>
@@ -20,7 +20,6 @@
 <script>
 import { transcoder } from '@/service/Aws'
 import { listPipelines, getTemplateInfo } from '@/pages/video/data'
-
 export default {
     data () {
         return {
@@ -33,56 +32,50 @@ export default {
             pageToken: [],
             nextPageToken: '',
             listHeader: [{
-                title: this.$t('VIDEO.JOB_ID'),
+                title: '转码ID',
                 width: 100,
                 key: 'Id'
             }, {
-                title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
+                title: '输出文件名',
                 width: 300,
                 render: (h, params) => {
-                    let names = params.row.outputNames
-                    if (names && names.length > 0) {
-                        return h('div', names.map(item => h('Tag', {
-                            props: {
-                                type: 'border'
-                            }
-                        }, item)))
-                    }
+                    return h('div', params.row.outputNames.map(item => h('Tag', {
+                        props: {
+                            type: 'border'
+                        }
+                    }, item)))
                 }
             }, {
-                title: this.$t('VIDEO.PIPE_ID'),
+                title: '管道ID',
                 width: 100,
                 key: 'PipelineId'
             }, {
-                title: this.$t('VIDEO.JOB_TEMPLATE'),
+                title: '转码模版',
                 width: 300,
                 render: (h, params) => {
-                    let templates = params.row.templates
-                    if (templates && templates.length > 0) {
-                        return h('div', templates.map(item => h('Tag', {
-                            props: {
-                                type: 'border'
-                            }
-                        }, item)))
-                    }
+                    return h('div', params.row.templates.map(item => h('Tag', {
+                        props: {
+                            type: 'border'
+                        }
+                    }, item)))
                 }
             }, {
-                title: this.$t('VIDEO.STATUS'),
+                title: '状态',
                 width: 100,
                 key: 'Status'
             }, {
-                title: this.$t('VIDEO.CREATE_TIME'),
+                title: '创建时间',
                 width: 100,
                 key: 'cTime'
             }, {
-                title: this.$t('VIDEO.OPERATION'),
+                title: '操作',
                 key: 'actions',
                 width: 80,
                 align: 'right',
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {
-                            content: this.$t('VIDEO.CANCEL'),
+                            content: '取消',
                             delay: 1000,
                             placement: 'top'
                         }
@@ -105,12 +98,12 @@ export default {
             }]
         }
     },
-    created () {
+    async mounted () {
+        this.pipes = await listPipelines()
         this.listJobs()
     },
     methods: {
         async listJobs () {
-            this.pipes = await listPipelines()
             if (this.pipes.length > 0) {
                 this.pipeId = this.pipes[0].Id
                 await this.listJobsByPipeline(this.pipeId)
@@ -143,7 +136,7 @@ export default {
             this.listJobsByPipeline(this.pipeId, this.nextPageToken)
         },
         goJobEdit () {
-            this.$router.push({name: 'jobEdit'})
+            this.$router.push({ name: 'jobEdit', params: { id: 'none' } })
         },
         async deletePreset (rule) {
             try {
@@ -156,13 +149,33 @@ export default {
                 this.$Loading.error()
             }
         },
+        async createPipe () {
+            try {
+                this.$Loading.start()
+                await transcoder('createPipeline', pipelinesData)
+                this.$Loading.finish()
+                this.$Message.success('创建成功')
+            } catch (error) {
+                this.$Loading.error()
+            }
+        },
+        async createJob (job) {
+            try {
+                this.$Loading.start()
+                await transcoder('createJob', createData)
+                this.$Loading.finish()
+                this.$Message.success('操作成功')
+            } catch (error) {
+                this.$Loading.error()
+            }
+        },
         async cancelJob (job) {
             try {
                 this.$Loading.start()
                 await transcoder('cancelJob', {Id: job.Id})
                 this.jobList.splice(job._index, 1)
                 this.$Loading.finish()
-                this.$Message.success($t('VIDEO.DELETED'))
+                this.$Message.success('操作成功')
             } catch (error) {
                 this.$Loading.error()
             }
@@ -193,21 +206,54 @@ const convert2Front = async (data) => {
             const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
             front.cTime = `${date.getFullYear()}-${month}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 
-            if (item.Outputs && item.Outputs.length > 0) {
-                front.outputNames = item.Outputs.map(item => {
-                    return item.Key
-                })
-                front.templates = item.Outputs.map(item => {
-                    return `${item.PresetId}:${templateInfo.templateName[item.PresetId]}`
-                })
-            }
+            front.outputNames = item.Outputs.map(item => {
+                return item.Key
+            })
+            front.templates = item.Outputs.map(item => {
+                return `${item.PresetId}:${templateInfo.templateName[item.PresetId]}`
+            })
+
             frontList.push(front)
         })
     }
 
     return frontList
 }
-
+const createData = {
+    Inputs: [{
+        Key: 'path/source'
+    }],
+    OutputKeyPrefix: 'path/output',
+    Outputs: [{
+        Key: 'outputName',
+        PresetId: '623',
+        SegmentDuration: '20'
+    }],
+    Snapshots: [{
+        Key: 'SnapshotsName',
+        Format: 'jpg',
+        Time: '1233',
+        Interval: '12',
+        Number: '1000'
+    }],
+    PipelineId: '1164000000039767922'
+}
+const pipelinesData = {
+    Name: ' forJob',
+    InputBucket: 'policytest',
+    OutputBucket: 'policytest',
+    ContentConfig: {
+        Permissions: [
+            {
+                GranteeType: 'Group',
+                Grantee: 'AllUsers',
+                Access: ['FullControl']
+            }
+        ]
+    },
+    SuccessCallbackUrl: '',
+    FailureCallbackUrl: ''
+}
 </script>
 <style lang="less" scoped>
 
