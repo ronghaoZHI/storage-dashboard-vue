@@ -98,12 +98,12 @@ export default {
             }]
         }
     },
-    created () {
+    async mounted () {
+        this.pipes = await listPipelines()
         this.listJobs()
     },
     methods: {
         async listJobs () {
-            this.pipes = await listPipelines()
             if (this.pipes.length > 0) {
                 this.pipeId = this.pipes[0].Id
                 await this.listJobsByPipeline(this.pipeId)

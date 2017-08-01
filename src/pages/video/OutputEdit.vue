@@ -1,9 +1,9 @@
 <template>
-    <div class="bsc-output-edit bsc-edit">
+    <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/Output">{{$t('VIDEO.AUTOMATIC_TRANSCODING_CONFIGURATION')}}</Breadcrumb-item>
-                <Breadcrumb-item>{{$t('VIDEO.CONF')}}</Breadcrumb-item>
+                <Breadcrumb-item>{{$t('VIDEO.NEW_CONFIGURATION')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <div class="separator-line"></div>
@@ -45,8 +45,8 @@
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_KEY_PREFIX')}} : </span>
-                <Input v-model="transcode.output_key_prefix" :placeholder='$t("VIDEO.OUTPUT_KEY_PREFIX")' class="line-width"></Input>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_KEY_PREFIX')}} : </span>
+                <Input v-model="transcode.output_key_prefix" :placeholder='$t("VIDEO.OUTPUT_FILE_KEY_PREFIX")' class="line-width"></Input>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.OUTPUT_BUCKET')}} : </span>
@@ -108,8 +108,8 @@
                 </Input>
             </div>
         </div>
-        <div class="separator-line"></div>
-        <div class="editBlock">
+        <div class="separator-line" v-if="MPShow"></div>
+        <div class="editBlock" v-if="MPShow">
             <div class="section-separator">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
@@ -330,7 +330,7 @@
                 <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
-        <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="my-modal">
+        <Modal v-model="showShotsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="shotModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
@@ -353,7 +353,7 @@
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
                 <Radio-group v-model="shotModal.resolution">
-                    <Radio label="auto">{{$t('VIDEO.WH_UNALTERED')}}</Radio>
+                    <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>
                     <Radio label="value"></Radio>
                 </Radio-group>
                 <Input-number :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></Input-number>
@@ -392,6 +392,7 @@ export default {
             outputModal: _.clone(outputsDefult),
             shotModal: _.clone(shotDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
+            MPShow: false,
             HLSShow: false,
             groupACLList: _.cloneDeep(groupACLListDefult),
             isAddUser: false,
@@ -590,14 +591,14 @@ export default {
             return name === '' || !(Read || ReadAcp || WriteAcp)
         },
         MPNameError () {
-            return this.auxiliary.MP && !this.transcode.master_playlist.name
+            return this.MPShow && this.auxiliary.MP && !this.transcode.master_playlist.name
         },
         osError () {
             return this.transcode.snapshots.length === 0 && this.transcode.outputs.length === 0
         }
     },
     components: { InputNumber },
-    created () {
+    mounted () {
         this.getTranscode()
     },
     methods: {
@@ -652,6 +653,7 @@ export default {
             } else {
                 this.transcode.outputs.splice(this.outputIndex, 1, this.outputModal)
             }
+            this.MPShow = this.isMPShow()
             this.showOutputsModal = false
         },
         deleteOutput (index) {
@@ -692,7 +694,7 @@ export default {
         },
         beforeSubmit () {
             let segments = []
-            if (this.auxiliary.MP) {
+            if (this.MPShow && this.auxiliary.MP) {
                 this.transcode.outputs.forEach(item => {
                     if (this.isTS(item.preset_id)) {
                         segments.push(item.segment_duration || 0)
@@ -830,11 +832,22 @@ export default {
                 }
             }), null, undefined)
 
-            if (!this.auxiliary.MP) {
+            if (!this.auxiliary.MP || !this.MPShow) {
                 delete saved.master_playlist
             }
             saved.allowed_keys_regex = auxiliary.reg === 'extension' ? [`^${auxiliary.path}.*\\.(${auxiliary.extension})$`] : [`${auxiliary.regular}`]
             return saved
+        },
+        isMPShow () {
+            const out = this.transcode.outputs
+            const temp = this.templateList
+            const ids = out.map(op => {
+                return op.preset_id
+            })
+            const TSItems = temp.filter(item => {
+                return ids.includes(item.Id) && item.Container === 'ts'
+            })
+            return TSItems.length > 0
         },
         templateChange (id) {
             this.HLSShow = this.isTS(id)
@@ -881,6 +894,12 @@ export default {
             this.transcode = front
 
             this.auxiliary.regular = data.allowed_keys_regex[0]
+
+            if (isEmpty(data.outputs)) {
+                this.MPShow = false
+            } else {
+                this.MPShow = data.outputs.filter(output => this.isTS(output.preset_id)).length !== 0
+            }
 
             data.output_acls.forEach(item => {
                 let acc = {
@@ -1013,108 +1032,7 @@ const isEmpty = obj => {
     return true
 }
 </script>
-<style lang="less">
-@import '../../styles/index.less';
-
-@edit-styles-border-color: #d7dde4;
-@edit-output-item-span: 175px;
-@edit-modal-item-span: 120px;
-@edit-output-line-width: 475px;
-
-.@{css-prefix}edit{
-    .editBlock {
-        margin: 20px 0 10px;
-        .form-item {
-                margin-bottom: 20px;
-
-                .form-label {
-                    display: inline-block;
-                    width: @edit-output-item-span;
-                    font-size: 14px;
-                    padding-right: 5px;
-                    line-height: 30px;
-                    text-align: right;
-                }
-
-                .table-box {
-                    display: inline-flex;
-                }
-
-                .button-add-item {
-                    margin: 10px 0 0 @edit-output-item-span;
-                }
-
-                .line-width {
-                    width: @edit-output-line-width;
-                }
-
-                .my-slider {
-                    display: inline-block;
-                    vertical-align: middle;
-                    width: 260px;
-                    height: 32px;
-                    margin-right:8px;
-                }
-
-                .input-box-label{
-                    padding: 0 5px;
-                    .sc(14px,#8492a6);
-                    line-height: 30px;
-                }
-
-                .dis-inline {
-                    display: inline
-                }
-
-                .pullRight{
-                    float: right;
-                }
-            }
-        
-    }
-
-    .redFont {
-        color: red !important;
-    }
-
-    .separator-line {
-        border-bottom: 1px solid @edit-styles-border-color;
-    }
-}
-.my-modal {
-    .form-item {
-        margin-bottom: 20px;
-        // text-align: center;
-
-        .form-label {
-            display: inline-block;
-            width: @edit-modal-item-span;
-            font-size: 14px;
-            padding-right: 5px;
-            line-height: 30px;
-            text-align: right;
-        }
-
-        .line-width {
-            width: 500px;
-        }
-
-        .my-slider {
-            display: inline-block;
-            vertical-align: middle;
-            width: 405px;
-            height: 32px;
-            margin-right:8px;
-        }
-
-        .style-name-info {
-            padding: 5px 0 0 @edit-modal-item-span;
-            .sc(12px,#8492a6);
-        }
-    }
-}
-</style>
-<style lang="less">
+<style lang="less" scoped>
 @import '../../styles/index.less';
 
 @edit-styles-border-color: #d7dde4;
@@ -1122,21 +1040,113 @@ const isEmpty = obj => {
 @edit-modal-item-span: 115px;
 @edit-output-line-width: 475px;
 
-.@{css-prefix}output-edit{
-    .editBlock {
-        .form-item {
+.editBlock {
+    margin: 20px 0 10px;
+    .form-item {
+            margin-bottom: 20px;
+
             .form-label {
+                display: inline-block;
+                width: @edit-output-item-span;
+                font-size: 14px;
+                padding-right: 5px;
+                line-height: 30px;
+                text-align: right;
                 vertical-align: top;
+            }
+
+            .line-width {
+                width: @edit-output-line-width;
+            }
+
+            .table-box {
+                display: inline-flex;
+            }
+
+            .button-add-item {
+                margin: 10px 0 0 @edit-output-item-span;
             }
 
             .sub-setting-input {
                 width: 200px;
             }
-        }
-    }
 
-    .new-user-input {
-        width: 85%;
-    }
+            .my-slider {
+                display: inline-block;
+                vertical-align: middle;
+                width: 260px;
+                height: 32px;
+                margin-right:8px;
+            }
+
+            .input-box-label{
+                padding: 0 5px;
+                .sc(14px,#8492a6);
+                line-height: 30px;
+            }
+
+            .dis-inline {
+                display: inline
+            }
+
+            .pullRight{
+                float: right;
+            }
+        }
+    
+}
+
+.my-modal {
+    .form-item {
+            margin-bottom: 20px;
+            // text-align: center;
+
+            .form-label {
+                display: inline-block;
+                width: @edit-modal-item-span;
+                font-size: 14px;
+                padding-right: 5px;
+                line-height: 30px;
+                text-align: right;
+            }
+
+            .line-width {
+                width: 500px;
+            }
+
+            .my-slider {
+                display: inline-block;
+                vertical-align: middle;
+                width: 405px;
+                height: 32px;
+                margin-right:8px;
+            }
+
+            .style-name-info {
+                padding: 5px 0 0 @edit-modal-item-span;
+                .sc(12px,#8492a6);
+            }
+        }
+}
+
+
+
+.redFont {
+    color: red !important;
+}
+
+.separator-line {
+    border-bottom: 1px solid @edit-styles-border-color;
+}
+
+.new-user-input {
+    width: 85%;
+}
+
+
+.ivu-select .ivu-select-dropdown {
+    max-height: 130px !important;
+    overflow: auto;
 }
 </style>
+

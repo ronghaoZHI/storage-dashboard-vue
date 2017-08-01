@@ -1,6 +1,6 @@
 
 <template>
-    <div class="bsc-job-edit bsc-edit">
+    <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/JobList">主动转码配置</Breadcrumb-item>
