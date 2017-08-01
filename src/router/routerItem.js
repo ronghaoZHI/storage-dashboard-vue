@@ -13,6 +13,8 @@ import FilePermissions from '@/pages/bucket/FilePermissions'
 import user from '@/store/modules/user'
 import TemplateList from '@/pages/video/TemplateList'
 import TemplateEdit from '@/pages/video/TemplateEdit'
+import PipelineList from '@/pages/video/PipelineList'
+import PipelineEdit from '@/pages/video/PipelineEdit'
 import OutputList from '@/pages/video/OutputList'
 import OutputEdit from '@/pages/video/OutputEdit'
 import JobList from '@/pages/video/JobList'
@@ -74,6 +76,16 @@ const layoutChild = [{
     name: 'TemplateEdit',
     meta: { title: 'Video', ali: 'template', parent: 'video' },
     component: TemplateEdit
+}, {
+    path: '/video/pipeline',
+    name: 'pipeline',
+    meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
+    component: PipelineList
+}, {
+    path: '/video/pipelineEdit/bucket/:bucket/id/:id',
+    name: 'pipelineEdit',
+    meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
+    component: PipelineEdit
 }, {
     path: '/video/output',
     name: 'output',
