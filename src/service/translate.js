@@ -47,7 +47,8 @@ export const messages = {
             PARTITION: 'Partition',
             USER: 'User Management',
             TEMPLATE: 'Template',
-            OUTPUT: 'Output'
+            OUTPUT: 'Output',
+            JOB: 'Job'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
@@ -574,7 +575,8 @@ export const messages = {
             PARTITION: '磁盘分区',
             USER: '用户管理',
             TEMPLATE: '转码模版',
-            OUTPUT: '自动转码配置'
+            OUTPUT: '自动转码配置',
+            JOB: '任务管理'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',

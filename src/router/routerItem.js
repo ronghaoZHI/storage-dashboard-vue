@@ -15,6 +15,8 @@ import TemplateList from '@/pages/video/TemplateList'
 import TemplateEdit from '@/pages/video/TemplateEdit'
 import OutputList from '@/pages/video/OutputList'
 import OutputEdit from '@/pages/video/OutputEdit'
+import JobList from '@/pages/video/JobList'
+import JobEdit from '@/pages/video/JobEdit'
 import Notfound from '@/pages/404/404'
 
 const layoutChild = [{
@@ -80,6 +82,16 @@ const layoutChild = [{
     name: 'outputEdit',
     meta: { title: 'Video', ali: 'output', parent: 'video' },
     component: OutputEdit
+}, {
+    path: '/video/JobList',
+    name: 'job',
+    meta: { title: 'Video', ali: 'job', parent: 'video' },
+    component: JobList
+}, {
+    path: '/video/JobEdit/id/:id',
+    name: 'jobEdit',
+    meta: { title: 'Video', ali: 'job', parent: 'video' },
+    component: JobEdit
 }, {
     path: '/machine',
     name: 'machine',

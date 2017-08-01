@@ -372,9 +372,8 @@
     </div>
 </template>
 <script>
-import { transcoder } from '@/service/Aws'
 import InputNumber from '@/components/input-number/input-number.vue'
-import { putBucketPolicy, getTranscodes } from '@/pages/video/data'
+import { putBucketPolicy, getTranscodes, getTemplateInfo } from '@/pages/video/data'
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
 export default {
@@ -599,33 +598,20 @@ export default {
         }
     },
     components: { InputNumber },
-    async mounted () {
-        await this.getTemplateList()
-        await this.getTranscode()
+    mounted () {
+        this.getTranscode()
     },
     methods: {
         async getBucketNames () {
             let res = await getBucketList()
             this.bucketList = _.map(res.Buckets, bucket => bucket.Name)
         },
-        async getTemplateList () {
-            try {
-                this.$Loading.start()
-                let res = await transcoder('listPresets')
-                this.templateList = res.Presets
-
-                this.templateList.forEach(item => {
-                    this.templateContainer[item.Id] = item.Container
-                })
-                this.templateList.forEach(item => {
-                    this.templateName[item.Id] = item.Name
-                })
-                this.$Loading.finish()
-            } catch (error) {
-                this.$Loading.error()
-            }
-        },
         async getTranscode () {
+            const templateInfor = await getTemplateInfo()
+            this.templateList = templateInfor.templateList
+            this.templateContainer = templateInfor.templateContainer
+            this.templateName = templateInfor.templateName
+
             if (this.id === 'none') {
                 this.userACLList = [this.owerACL]
                 await this.getBucketNames()

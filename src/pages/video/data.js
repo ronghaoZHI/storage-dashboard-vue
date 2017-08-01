@@ -1,4 +1,4 @@
-import { getAWS, handler } from '@/service/Aws'
+import { getAWS, handler, transcoder } from '@/service/Aws'
 import { HOST } from '@/service/HOST'
 import iView from 'iview'
 
@@ -35,4 +35,34 @@ const getTranscodes = async(bucket) => {
     }
 }
 
-export { getBucketPolicy, putBucketPolicy, getTranscodes }
+const listPipelines = async(pageToken) => {
+    try {
+        let res
+        if (pageToken) {
+            res = await transcoder('listPipelines', {pageToken: pageToken})
+        } else {
+            res = await transcoder('listPipelines')
+        }
+        const pipelines = res.Pipelines
+        // console.log('pipelines', pipelines)
+        return pipelines
+    } catch (error) {
+        iView.Message.error(error.message, 5)
+    }
+}
+
+const getTemplateInfo = async() => {
+    let [templateList, templateContainer, templateName] = [[], [], []]
+    let res = await transcoder('listPresets')
+    templateList = res.Presets
+
+    templateList.forEach(item => {
+        templateContainer[item.Id] = item.Container
+    })
+    templateList.forEach(item => {
+        templateName[item.Id] = item.Name
+    })
+    return {templateList, templateContainer, templateName}
+}
+
+export { getBucketPolicy, putBucketPolicy, getTranscodes, listPipelines, getTemplateInfo }
