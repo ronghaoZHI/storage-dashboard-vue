@@ -122,12 +122,7 @@ export default {
         async listPresets (pageToken) {
             try {
                 this.$Loading.start()
-                let res
-                if (!pageToken) {
-                    res = await transcoder('listPresets')
-                } else {
-                    res = await transcoder('listPresets', {PageToken: pageToken})
-                }
+                let res = !pageToken ? await transcoder('listPresets') : await transcoder('listPresets', {PageToken: pageToken})
                 this.templateList = await this.convert2Front(res.Presets)
                 this.nextPageToken = res.NextPageToken
                 this.$Loading.finish()
