@@ -56,7 +56,7 @@
                 return _.findKey(this.bucketList, ['Name', this.adultPolify.isolate_bucket]) === undefined
             }
         },
-        mounted () {
+        created () {
             this.getBucketList()
             this.getBucketPolicy()
         },

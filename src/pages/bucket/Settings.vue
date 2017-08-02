@@ -204,7 +204,7 @@ export default {
             return name && (READ || WRITE || READ_ACP || WRITE_ACP)
         }
     },
-    mounted () {
+    created () {
         this.getACLList()
     },
     methods: {

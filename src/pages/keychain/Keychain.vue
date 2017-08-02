@@ -14,7 +14,7 @@ export default {
             data: []
         }
     },
-    mounted () {
+    created () {
         this.getKeychainList()
     },
     components: {
@@ -24,12 +24,7 @@ export default {
         async getKeychainList () {
             this.$Loading.start()
             try {
-                let keys = []
-                if (user.state.type === 'admin') {
-                    keys = user.state.subUser.keys
-                } else {
-                    keys = await this.$http.get(ACCESSKEY)
-                }
+                let keys = user.state.type === 'admin' ? user.state.subUser.keys : await this.$http.get(ACCESSKEY)
                 this.data = await _.forEach(keys, (item) => {
                     item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
                 })

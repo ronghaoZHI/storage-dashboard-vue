@@ -205,7 +205,7 @@ export default {
             return convertPrefix2Router(this.prefix)
         }
     },
-    mounted () {
+    created () {
         this.getACLList()
     },
     methods: {

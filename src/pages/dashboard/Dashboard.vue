@@ -177,7 +177,7 @@ export default {
             return new Date().getDate() === 1
         }
     },
-    mounted () {
+    created () {
         this.dateSelect = this.dateDefault.seven_days
         this.convertBucketList()
         this.getInitData()

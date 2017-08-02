@@ -40,13 +40,13 @@ export default {
             bucketList: this.bucketList
         }
     },
-    mounted () {
+    created () {
         this.convertBucketList()
     },
     directives: {
         cbutton: {
-            bind: function (el, binding) {
-                $(el).click((e) => {
+            bind: function (el) {
+                $(el).click(() => {
                     $(el).toggleClass('bucket-selected')
                     Array.from($(el).siblings()).forEach((node) => {
                         node !== el && $(node).removeClass('bucket-selected')

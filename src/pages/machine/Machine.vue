@@ -14,7 +14,7 @@ export default {
             machineList: []
         }
     },
-    mounted () {
+    created () {
         this.getMachineList()
     },
     components: {

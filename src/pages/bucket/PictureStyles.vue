@@ -181,7 +181,7 @@ export default {
         }
     },
     components: { upload },
-    mounted () {
+    created () {
         this.getList()
     },
     methods: {
