@@ -472,7 +472,8 @@ export const messages = {
             WH_UNALTERED: 'Calculate by resolution',
             OUTPUTKEY_REQUIRED: 'Output file name is required',
             SHOTKEY_REQUIRED: 'File name suffix is required',
-            HLS_REQUIRED: 'HLS file name is required'
+            HLS_REQUIRED: 'HLS file name is required',
+            NEW_PIPELINE: 'New pipeline'
         },
         i: {
             select: {
@@ -1041,7 +1042,8 @@ export const messages = {
             WH_UNALTERED: '根据分辨率计算',
             OUTPUTKEY_REQUIRED: '请填写输出文件名',
             SHOTKEY_REQUIRED: '请填写输出文件名后缀',
-            HLS_REQUIRED: '请填写自适应HLS文件名'
+            HLS_REQUIRED: '请填写自适应HLS文件名',
+            NEW_PIPELINE: '新建管道'
         },
         i: {
             select: {
