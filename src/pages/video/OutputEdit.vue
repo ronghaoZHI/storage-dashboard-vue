@@ -3,7 +3,7 @@
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/Output">{{$t('VIDEO.AUTOMATIC_TRANSCODING_CONFIGURATION')}}</Breadcrumb-item>
-                <Breadcrumb-item>{{$t('VIDEO.NEW_TEMPLATE')}}</Breadcrumb-item>
+                <Breadcrumb-item>{{$t('VIDEO.NEW_CONFIGURATION')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <div class="separator-line"></div>
