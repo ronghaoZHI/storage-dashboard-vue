@@ -136,7 +136,7 @@ export default {
             this.listJobsByPipeline(this.pipeId, this.nextPageToken)
         },
         goJobEdit () {
-            this.$router.push({ name: 'jobEdit', params: { id: 'none' } })
+            this.$router.push({name: 'jobEdit'})
         },
         async deletePreset (rule) {
             try {
@@ -155,16 +155,6 @@ export default {
                 await transcoder('createPipeline', pipelinesData)
                 this.$Loading.finish()
                 this.$Message.success('创建成功')
-            } catch (error) {
-                this.$Loading.error()
-            }
-        },
-        async createJob (job) {
-            try {
-                this.$Loading.start()
-                await transcoder('createJob', createData)
-                this.$Loading.finish()
-                this.$Message.success('操作成功')
             } catch (error) {
                 this.$Loading.error()
             }
@@ -219,28 +209,9 @@ const convert2Front = async (data) => {
 
     return frontList
 }
-const createData = {
-    Inputs: [{
-        Key: 'path/source'
-    }],
-    OutputKeyPrefix: 'path/output',
-    Outputs: [{
-        Key: 'outputName',
-        PresetId: '623',
-        SegmentDuration: '20'
-    }],
-    Snapshots: [{
-        Key: 'SnapshotsName',
-        Format: 'jpg',
-        Time: '1233',
-        Interval: '12',
-        Number: '1000'
-    }],
-    PipelineId: '1164000000039767922'
-}
 const pipelinesData = {
-    Name: ' forJob',
-    InputBucket: 'policytest',
+    Name: 'forJob',
+    InputBucket: 'cdnlog',
     OutputBucket: 'policytest',
     ContentConfig: {
         Permissions: [

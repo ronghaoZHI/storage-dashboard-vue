@@ -52,10 +52,9 @@ const listPipelines = async(pageToken) => {
 }
 
 const getTemplateInfo = async() => {
-    let [templateList, templateContainer, templateName] = [[], [], []]
-    let res = await transcoder('listPresets')
-    templateList = res.Presets
-
+    templateList = []
+    await getTemplatePage()
+    let [templateContainer, templateName] = [[], []]
     templateList.forEach(item => {
         templateContainer[item.Id] = item.Container
     })
@@ -65,4 +64,12 @@ const getTemplateInfo = async() => {
     return {templateList, templateContainer, templateName}
 }
 
+let templateList = []
+const getTemplatePage = async(pageToken) => {
+    let res = !pageToken ? await transcoder('listPresets') : await transcoder('listPresets', {PageToken: pageToken})
+    templateList.push(...res.Presets)
+    if (!!res.NextPageToken) {
+        await getTemplatePage(res.NextPageToken)
+    }
+}
 export { getBucketPolicy, putBucketPolicy, getTranscodes, listPipelines, getTemplateInfo }

@@ -610,42 +610,6 @@ const getURL = async (bucket, file, prefix) => {
         }
     }
 
-    .section-search {
-        .fb(space-between,center);
-        .@{css-prefix}input {
-            .wh(400px,32px);
-            .fb(flex-start,center);
-            position: relative;
-            vertical-align: middle;
-            border: 1px solid @bsc-input-border-color;
-            padding: 5px 0 5px 7px;
-            border-radius: 4px;
-
-            .input-append-before {
-                flex: none;
-                background: @input-append-before-background-color;
-                border-radius: 2px;
-            }
-
-            input {
-                height: 22px;
-                line-height: 1.5;
-                .sc(12px,@input-color);
-                padding: 0 4px;
-                flex: 1;
-                border: 0;
-                background-image: none;
-                position: relative;
-                cursor: text;
-                transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
-            
-                &:focus {
-                    outline: 0;
-                }
-            }
-        }
-    }
-    
     .section-img {
         width: 100%;
         text-align: center;
@@ -667,6 +631,49 @@ const getURL = async (bucket, file, prefix) => {
     button {
         width: 70px;
         margin-left: 6px;
+    }
+}
+</style>
+<style lang="less">
+@import '../../styles/index.less';
+
+@bsc-input-border-color: #d7dde4;
+@input-append-before-background-color: #f5f7f9;
+@input-color: #657180;
+
+.section-search {
+    .fb(space-between,center);
+    .@{css-prefix}input {
+        .wh(400px,32px);
+        .fb(flex-start,center);
+        position: relative;
+        vertical-align: middle;
+        border: 1px solid @bsc-input-border-color;
+        padding: 5px 0 5px 7px;
+        border-radius: 4px;
+
+        .input-append-before {
+            flex: none;
+            background: @input-append-before-background-color;
+            border-radius: 2px;
+        }
+
+        input {
+            height: 22px;
+            line-height: 1.5;
+            .sc(12px,@input-color);
+            padding: 0 4px;
+            flex: 1;
+            border: 0;
+            background-image: none;
+            position: relative;
+            cursor: text;
+            transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+        
+            &:focus {
+                outline: 0;
+            }
+        }
     }
 }
 </style>

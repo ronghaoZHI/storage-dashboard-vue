@@ -88,7 +88,7 @@ const layoutChild = [{
     meta: { title: 'Video', ali: 'job', parent: 'video' },
     component: JobList
 }, {
-    path: '/video/JobEdit/id/:id',
+    path: '/video/JobEdit',
     name: 'jobEdit',
     meta: { title: 'Video', ali: 'job', parent: 'video' },
     component: JobEdit
