@@ -18,6 +18,7 @@ import OutputEdit from '@/pages/video/OutputEdit'
 import JobList from '@/pages/video/JobList'
 import JobEdit from '@/pages/video/JobEdit'
 import Notfound from '@/pages/404/404'
+import Bridge from '@/pages/bridge/bridge'
 
 const layoutChild = [{
     path: '',
@@ -112,6 +113,9 @@ const routes = [{
 }, {
     path: '/login',
     component: Login
+}, {
+    path: '/bridge',
+    component: Bridge
 }, {
     path: '*',
     component: Notfound

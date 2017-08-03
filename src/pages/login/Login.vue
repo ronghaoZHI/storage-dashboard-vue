@@ -60,7 +60,7 @@
     </div>
 </template>
 <script>
-import { LOGIN, BOUND_USER } from '@/service/API'
+import { USERINFO, BOUND_USER } from '@/service/API'
 import user from '@/store/modules/user'
 import Vue from 'vue'
 export default {
@@ -97,7 +97,7 @@ export default {
                 this.$Loading.start()
                 // save user email
                 this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
-                this.$http.post(LOGIN, { ...this.loginForm }).then(res => {
+                this.$http.get(USERINFO).then(res => {
                     res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
                     this.$Loading.finish()
                 }, error => {

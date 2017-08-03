@@ -1,5 +1,6 @@
 export const SELECTED_BUCKET = 'SELECTED_BUCKET'
 export const BUCKET_LIST = 'BUCKET_LIST'
 export const REFRESH_MENU = 'REFRESH_MENU'
-export const LOGIN = 'LOGIN'
+export const SET_USER_INFO = 'SET_USER_INFO'
+export const SET_TOKEN = 'SET_TOKEN'
 export const LOGOUT = 'LOGOUT'

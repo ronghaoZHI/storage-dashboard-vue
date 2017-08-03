@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import * as types from '../mutation-types'
 
 const state = {
@@ -6,13 +5,9 @@ const state = {
 }
 
 const mutations = {
-    [types.LOGIN] (state, info) {
+    [types.SET_USER_INFO] (state, info) {
         sessionStorage.setItem('user', JSON.stringify(info))
         Object.assign(state, info)
-    },
-    [types.LOGOUT] (state) {
-        sessionStorage.removeItem('user')
-        Object.keys(state).forEach(k => Vue.delete(state, k))
     }
 }
 

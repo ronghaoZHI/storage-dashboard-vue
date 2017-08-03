@@ -1,6 +1,6 @@
 // shit
 window.domain = 'bscstorage.com'
 window.dashboard_conf = {
-    apiHost: 'frontendapi-stats.bscstorage.com:9090',
-    awsHost: 's2.i.qingcdn.com'
+    apiHost: 'api.bscstorage.com:9090',
+    awsHost: '123.56.219.150'
 }

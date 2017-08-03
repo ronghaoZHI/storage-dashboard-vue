@@ -6,8 +6,8 @@ import {aws4} from '@/service/aws4/aws4'
 import { getKey } from '@/service/Aws'
 // for cros cookie
 axios.defaults.withCredentials = true
-axios.interceptors.request.use(async(config) => {
-    return /transcoder-ss.bscstorage.com/.test(config.url) ? await getConfig(config) : config
+axios.interceptors.request.use(async (config) => {
+    return /transcoder-ss.bscstorage.com/.test(config.url) ? getConfig(config) : config
 }, error => Promise.reject(error))
 axios.interceptors.response.use(response => response.data, error => {
     if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
@@ -25,7 +25,7 @@ axios.interceptors.response.use(response => response.data, error => {
     }
     return Promise.reject(error.response.data.error)
 })
-const getHeaders = async(config) => {
+const getHeaders = async (config) => {
     let key = await getKey()
     console.log('config', config)
     let myMethod = config.method.toUpperCase()
@@ -49,7 +49,7 @@ const getHeaders = async(config) => {
     return signed.headers
 }
 
-const getConfig = async(config) => {
+const getConfig = async (config) => {
     let headers = await getHeaders(config)
     config.headers.Authorization = headers.Authorization
     config.headers['Content-Type'] = headers['Content-Type']
@@ -57,4 +57,7 @@ const getConfig = async(config) => {
     config.withCredentials = false
     return config
 }
+let _token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJuYW1lIjoic3NvX3Rlc3QiLCJ0b2tlbiI6IjU5ODJlOTM0ZTdlODYiLCJleHAiOjE1MDE3NTg4MDR9.qOLU41ExJdZWU5WVnbnN4N-ZYqx-CdAF8RvS18HFaXeAtrWKc9MIe-97RJPoDOP8lUBO4DJuRUf9UR5VtCEA7Q'
+axios.defaults.headers.common['Authorization'] = _token
+
 export default axios
