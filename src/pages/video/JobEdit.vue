@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+    <div class="bsc-job-edit bsc-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/JobList">主动转码配置</Breadcrumb-item>
@@ -585,7 +585,6 @@ const outputsDefult = {
     PresetId: '',
     SegmentDuration: 0
 }
-
 const shotDefult = {
     Key: '',
     Format: 'jpg',
@@ -597,7 +596,6 @@ const shotDefult = {
     width: '',
     height: ''
 }
-
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
