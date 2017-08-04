@@ -3,25 +3,14 @@ import { HOST } from './HOST'
 import AWS from 'aws-sdk'
 import { ACCESSKEY } from './API'
 import axios from './axios-bsc'
-import store from '@/store'
 import user from '@/store/modules/user'
-import router from '@/router'
 
 let key = {}
 
 export const clear = () => key = {}
 
 export const getKey = () => {
-    return axios.get(ACCESSKEY).then(res => key = res[0], error => {
-        iView.Message.warning(error.message)
-        store.dispatch('logout').then(res => {
-            router.push({
-                path: '/login',
-                query: { redirect: router.fullPath }
-            })
-        })
-        return error
-    })
+    return axios.get(ACCESSKEY).then(res => key = res[0], error => error)
 }
 
 export const config = ({ accesskey, secretkey }, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1') => {

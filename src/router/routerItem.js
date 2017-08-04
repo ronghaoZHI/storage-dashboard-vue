@@ -114,6 +114,9 @@ const routes = [{
     path: '/login',
     component: Login
 }, {
+    path: '',
+    component: Bridge
+}, {
     path: '/bridge',
     component: Bridge
 }, {

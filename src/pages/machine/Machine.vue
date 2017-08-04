@@ -1,8 +1,6 @@
 <template>
-    <div>
-        <div class="bsc-flex-section">
-            <machine-card v-for="item in machineList" :key="item.hostname" :data="item"></machine-card>
-        </div>
+    <div class="bsc-flex-section">
+        <machine-card v-for="item in machineList" :key="item.hostname" :data="item"></machine-card>
     </div>
 </template>
 <script>

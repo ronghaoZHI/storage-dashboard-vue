@@ -1,7 +1,6 @@
 import axios from 'axios'
 import iView from 'iview'
 import store from '@/store'
-import router from '@/router'
 import {aws4} from '@/service/aws4/aws4'
 import { getKey } from '@/service/Aws'
 // for cros cookie
@@ -11,13 +10,7 @@ axios.interceptors.request.use(async (config) => {
 }, error => Promise.reject(error))
 axios.interceptors.response.use(response => response.data, error => {
     if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
-        iView.Message.warning('Need login again')
-        store.dispatch('logout').then(res => {
-            router.push({
-                path: '/login',
-                query: { redirect: router.fullPath }
-            })
-        })
+        console.log('axios -- response', error.response.status, error.message)
     } else if (error.request) {
         iView.Message.warning('The network may be broken, please try again')
     } else {
@@ -57,7 +50,7 @@ const getConfig = async (config) => {
     config.withCredentials = false
     return config
 }
-let _token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJuYW1lIjoic3NvX3Rlc3QiLCJ0b2tlbiI6IjU5ODJlOTM0ZTdlODYiLCJleHAiOjE1MDE3NTg4MDR9.qOLU41ExJdZWU5WVnbnN4N-ZYqx-CdAF8RvS18HFaXeAtrWKc9MIe-97RJPoDOP8lUBO4DJuRUf9UR5VtCEA7Q'
-axios.defaults.headers.common['Authorization'] = _token
+
+axios.defaults.headers.common['Authorization'] = store.state.token
 
 export default axios

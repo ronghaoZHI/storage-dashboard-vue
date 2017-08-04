@@ -19,6 +19,7 @@ const store = new Vuex.Store({
     mutations: {
         [types.SET_TOKEN] (state, token) {
             sessionStorage.setItem('token', token)
+            state.token = token
         },
         [types.LOGOUT] (state) {
             sessionStorage.removeItem('user')
