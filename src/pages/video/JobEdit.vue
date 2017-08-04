@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bsc-job-edit bsc-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/Output">主动转码配置</Breadcrumb-item>
@@ -37,7 +37,7 @@
                         <Button type="text" size="small" @click="getFiles(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
                     </span>
                 </div>
-                <p class="style-name-info button-add-item" v-if="fileInfo">文件数大于50请使用搜索(前缀匹配)</p>
+                <p class="style-name-info" v-if="fileInfo">文件数大于50请使用搜索(前缀匹配)</p>
             </div>
             <div class="form-item">
                 <span class="form-label"></span>
@@ -136,7 +136,7 @@
                 <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
-        <Modal v-model="showShotsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
+        <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="my-modal">
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="shotModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
@@ -609,119 +609,22 @@ const shotDefult = {
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
+@edit-output-item-span: 160px;
 
-@edit-styles-border-color: #d7dde4;
-@edit-output-item-span: 175px;
-@edit-modal-item-span: 115px;
-@edit-output-line-width: 475px;
-
-.editBlock {
-    margin: 20px 0 10px;
-    .form-item {
-            margin-bottom: 20px;
-
-            .form-label {
-                display: inline-block;
-                width: @edit-output-item-span;
-                font-size: 14px;
-                padding-right: 5px;
-                line-height: 30px;
-                text-align: right;
-                vertical-align: top;
-            }
-
-            .line-width {
-                width: @edit-output-line-width;
-            }
-
-            .table-box {
-                display: inline-flex;
-            }
-
-            .button-add-item {
-                margin: 10px 0 0 @edit-output-item-span;
-            }
-
-            .sub-setting-input {
-                width: 200px;
-            }
-
-            .my-slider {
-                display: inline-block;
-                vertical-align: middle;
-                width: 260px;
-                height: 32px;
-                margin-right:8px;
-            }
-
-            .input-box-label{
-                padding: 0 5px;
-                .sc(14px,#8492a6);
-                line-height: 30px;
-            }
-
-            .dis-inline {
-                display: inline
-            }
-
-            .pullRight{
-                float: right;
-            }
-        }
-    
-}
-
-.my-modal {
-    .form-item {
-            margin-bottom: 20px;
-            // text-align: center;
-
-            .form-label {
-                display: inline-block;
-                width: @edit-modal-item-span;
-                font-size: 14px;
-                padding-right: 5px;
-                line-height: 30px;
-                text-align: right;
-            }
-
-            .line-width {
-                width: 500px;
-            }
-
-            .my-slider {
-                display: inline-block;
-                vertical-align: middle;
-                width: 405px;
-                height: 32px;
-                margin-right:8px;
-            }
-
+.@{css-prefix}job-edit {
+    .section-search .bsc-input {
+        width: 475px;
+    }
+    .editBlock {
+        .form-item {
             .style-name-info {
-                padding: 5px 0 0 @edit-modal-item-span;
-                .sc(12px,#8492a6);
+                padding: 5px 0 0 @edit-output-item-span;
             }
         }
-}
-
-.redFont {
-    color: red !important;
-}
-
-.separator-line {
-    border-bottom: 1px solid @edit-styles-border-color;
-}
-
-.new-user-input {
-    width: 85%;
-}
-
-.ivu-select .ivu-select-dropdown {
-    max-height: 130px !important;
-    overflow: auto;
-}
-.section-search .bsc-input {
-    width: 475px;
+        .form-label {
+            width: @edit-output-item-span !important;
+        }
+    }
 }
 </style>
 

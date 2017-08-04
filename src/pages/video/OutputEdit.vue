@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bsc-output-edit bsc-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/Output">{{$t('VIDEO.AUTOMATIC_TRANSCODING_CONFIGURATION')}}</Breadcrumb-item>
@@ -330,7 +330,7 @@
                 <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
-        <Modal v-model="showShotsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
+        <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="my-modal">
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="shotModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
@@ -1032,7 +1032,7 @@ const isEmpty = obj => {
     return true
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 @import '../../styles/index.less';
 
 @edit-styles-border-color: #d7dde4;
@@ -1040,113 +1040,122 @@ const isEmpty = obj => {
 @edit-modal-item-span: 115px;
 @edit-output-line-width: 475px;
 
-.editBlock {
-    margin: 20px 0 10px;
+.@{css-prefix}edit{
+    .editBlock {
+        margin: 20px 0 10px;
+        .form-item {
+                margin-bottom: 20px;
+
+                .form-label {
+                    display: inline-block;
+                    width: @edit-output-item-span;
+                    font-size: 14px;
+                    padding-right: 5px;
+                    line-height: 30px;
+                    text-align: right;
+                }
+
+                .table-box {
+                    display: inline-flex;
+                }
+
+                .button-add-item {
+                    margin: 10px 0 0 @edit-output-item-span;
+                }
+
+                .line-width {
+                    width: @edit-output-line-width;
+                }
+
+                .my-slider {
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 260px;
+                    height: 32px;
+                    margin-right:8px;
+                }
+
+                .input-box-label{
+                    padding: 0 5px;
+                    .sc(14px,#8492a6);
+                    line-height: 30px;
+                }
+
+                .dis-inline {
+                    display: inline
+                }
+
+                .pullRight{
+                    float: right;
+                }
+            }
+        
+    }
+
+    .redFont {
+        color: red !important;
+    }
+
+    .separator-line {
+        border-bottom: 1px solid @edit-styles-border-color;
+    }
+}
+.my-modal {
     .form-item {
-            margin-bottom: 20px;
+        margin-bottom: 20px;
+        // text-align: center;
 
+        .form-label {
+            display: inline-block;
+            width: @edit-modal-item-span;
+            font-size: 14px;
+            padding-right: 5px;
+            line-height: 30px;
+            text-align: right;
+        }
+
+        .line-width {
+            width: 500px;
+        }
+
+        .my-slider {
+            display: inline-block;
+            vertical-align: middle;
+            width: 405px;
+            height: 32px;
+            margin-right:8px;
+        }
+
+        .style-name-info {
+            padding: 5px 0 0 @edit-modal-item-span;
+            .sc(12px,#8492a6);
+        }
+    }
+}
+</style>
+<style lang="less">
+@import '../../styles/index.less';
+
+@edit-styles-border-color: #d7dde4;
+@edit-output-item-span: 175px;
+@edit-modal-item-span: 115px;
+@edit-output-line-width: 475px;
+
+.@{css-prefix}output-edit{
+    .editBlock {
+        .form-item {
             .form-label {
-                display: inline-block;
-                width: @edit-output-item-span;
-                font-size: 14px;
-                padding-right: 5px;
-                line-height: 30px;
-                text-align: right;
                 vertical-align: top;
-            }
-
-            .line-width {
-                width: @edit-output-line-width;
-            }
-
-            .table-box {
-                display: inline-flex;
-            }
-
-            .button-add-item {
-                margin: 10px 0 0 @edit-output-item-span;
             }
 
             .sub-setting-input {
                 width: 200px;
             }
-
-            .my-slider {
-                display: inline-block;
-                vertical-align: middle;
-                width: 260px;
-                height: 32px;
-                margin-right:8px;
-            }
-
-            .input-box-label{
-                padding: 0 5px;
-                .sc(14px,#8492a6);
-                line-height: 30px;
-            }
-
-            .dis-inline {
-                display: inline
-            }
-
-            .pullRight{
-                float: right;
-            }
         }
-    
-}
+    }
 
-.my-modal {
-    .form-item {
-            margin-bottom: 20px;
-            // text-align: center;
-
-            .form-label {
-                display: inline-block;
-                width: @edit-modal-item-span;
-                font-size: 14px;
-                padding-right: 5px;
-                line-height: 30px;
-                text-align: right;
-            }
-
-            .line-width {
-                width: 500px;
-            }
-
-            .my-slider {
-                display: inline-block;
-                vertical-align: middle;
-                width: 405px;
-                height: 32px;
-                margin-right:8px;
-            }
-
-            .style-name-info {
-                padding: 5px 0 0 @edit-modal-item-span;
-                .sc(12px,#8492a6);
-            }
-        }
-}
-
-
-
-.redFont {
-    color: red !important;
-}
-
-.separator-line {
-    border-bottom: 1px solid @edit-styles-border-color;
-}
-
-.new-user-input {
-    width: 85%;
-}
-
-
-.ivu-select .ivu-select-dropdown {
-    max-height: 130px !important;
-    overflow: auto;
+    .new-user-input {
+        width: 85%;
+    }
 }
 </style>
-

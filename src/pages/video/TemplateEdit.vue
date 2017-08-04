@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bsc-template-edit bsc-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/template">{{$t('VIDEO.TEMPLATE_CONFIGURATION')}}</Breadcrumb-item>
@@ -289,65 +289,25 @@ const templateDefult = {
 
 const audioOnly = ['flac', 'mp3']
 </script>
+
 <style lang="less" scoped>
 @import '../../styles/index.less';
 
 @edit-styles-border-color: #d7dde4;
+@edit-output-item-span: 115px;
 
-.editBlock {
-    margin: 20px 0 10px;
-    .form-item {
-            margin-bottom: 20px;
-
-            .form-label {
-                display: inline-block;
-                width: 115px;
-                font-size: 14px;
-                padding-right: 5px;
-                line-height: 30px;
-                text-align: right;
-            }
-
-            .line-width {
-                width: 475px;
-            }
-
+.@{css-prefix}template-edit {
+    .editBlock {
+        .form-item {
             .style-name-info {
-                padding: 5px 0 0 120px;
+                padding: 5px 0 0 @edit-output-item-span;
                 .sc(12px,#8492a6);
             }
-
-            .my-slider {
-                display: inline-block;
-                vertical-align: middle;
-                width: 250px;
-                height: 32px;
-                margin-right:8px;
-            }
-
-            .input-box-label{
-                padding: 0 5px;
-                .sc(14px,#8492a6);
-                line-height: 30px;
-            }
-
-            .redFont {
-                color: red !important;
-            }
-
-            .dis-inline {
-                display: inline
-            }
-
-            .pullRight{
-                float: right;
-            }
         }
-    
-}
-
-.separator-line {
-    border-bottom: 1px solid @edit-styles-border-color;
+        .form-label {
+            width: @edit-output-item-span !important;
+        }
+    }
 }
 </style>
 

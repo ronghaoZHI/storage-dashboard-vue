@@ -431,7 +431,8 @@ export const messages = {
             ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT: 'When setting the adaptive transcoding, the HLS slice length needs to be consistent in the output rules',
             ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: 'When setting the adaptive transcoding, the HLS slice length can not be 0 in the output rules',
             SECOND: 'second',
-            NO_DATA: 'No data'
+            NO_DATA: 'No data',
+            SNAPSHOTS_RULES: 'Snapshots Rules'
         },
         i: {
             select: {
@@ -958,7 +959,8 @@ export const messages = {
             ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT: '设置自适应转码，输出规则中HLS切片时长需保持一致',
             ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: '设置自适应转码，输出规则中HLS切片时长不能为0',
             SECOND: '秒',
-            NO_DATA: '没有数据'
+            NO_DATA: '没有数据',
+            SNAPSHOTS_RULES: '视频截图规则'
         },
         i: {
             select: {
