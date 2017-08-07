@@ -108,8 +108,8 @@
                 </Input>
             </div>
         </div>
-        <div class="separator-line" v-if="MPShow"></div>
-        <div class="editBlock" v-if="MPShow">
+        <div class="separator-line"></div>
+        <div class="editBlock">
             <div class="section-separator">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
@@ -392,7 +392,6 @@ export default {
             outputModal: _.clone(outputsDefult),
             shotModal: _.clone(shotDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
-            MPShow: false,
             HLSShow: false,
             groupACLList: _.cloneDeep(groupACLListDefult),
             isAddUser: false,
@@ -591,7 +590,7 @@ export default {
             return name === '' || !(Read || ReadAcp || WriteAcp)
         },
         MPNameError () {
-            return this.MPShow && this.auxiliary.MP && !this.transcode.master_playlist.name
+            return this.auxiliary.MP && !this.transcode.master_playlist.name
         },
         osError () {
             return this.transcode.snapshots.length === 0 && this.transcode.outputs.length === 0
@@ -653,7 +652,6 @@ export default {
             } else {
                 this.transcode.outputs.splice(this.outputIndex, 1, this.outputModal)
             }
-            this.MPShow = this.isMPShow()
             this.showOutputsModal = false
         },
         deleteOutput (index) {
@@ -694,7 +692,7 @@ export default {
         },
         beforeSubmit () {
             let segments = []
-            if (this.MPShow && this.auxiliary.MP) {
+            if (this.auxiliary.MP) {
                 this.transcode.outputs.forEach(item => {
                     if (this.isTS(item.preset_id)) {
                         segments.push(item.segment_duration || 0)
@@ -832,22 +830,11 @@ export default {
                 }
             }), null, undefined)
 
-            if (!this.auxiliary.MP || !this.MPShow) {
+            if (!this.auxiliary.MP) {
                 delete saved.master_playlist
             }
             saved.allowed_keys_regex = auxiliary.reg === 'extension' ? [`^${auxiliary.path}.*\\.(${auxiliary.extension})$`] : [`${auxiliary.regular}`]
             return saved
-        },
-        isMPShow () {
-            const out = this.transcode.outputs
-            const temp = this.templateList
-            const ids = out.map(op => {
-                return op.preset_id
-            })
-            const TSItems = temp.filter(item => {
-                return ids.includes(item.Id) && item.Container === 'ts'
-            })
-            return TSItems.length > 0
         },
         templateChange (id) {
             this.HLSShow = this.isTS(id)
@@ -894,12 +881,6 @@ export default {
             this.transcode = front
 
             this.auxiliary.regular = data.allowed_keys_regex[0]
-
-            if (isEmpty(data.outputs)) {
-                this.MPShow = false
-            } else {
-                this.MPShow = data.outputs.filter(output => this.isTS(output.preset_id)).length !== 0
-            }
 
             data.output_acls.forEach(item => {
                 let acc = {

@@ -424,7 +424,7 @@ export const messages = {
             TRANSCODING_SUCCESSFUL_CALLBACK_URL: 'Successful, callback url',
             TRANSCODING_FAILED_CALLBACK_URL: 'Failed, callback url',
             FILE_NAME_SUFFIX_CANNOT_EMPTY: 'The file name suffix can not be empty',
-            MASTER_PLAYLIST_CONFIGURATION: 'MasterPlaylist configuration',
+            MASTER_PLAYLIST_CONFIGURATION: 'Adaptive HLS configuration',
             MASTER_PLAYLIST_FILE_NAME_SUFFIX: 'MasterPlaylist file name suffix',
             AUTO_OUTPUT_RULES_DESCRIPTION: 'After setting the auto transcoding, at least one of the template output is TS in the output rules, and all the HLS slice length need to be consistent and can not be 0',
             ADAPTIVE_EXIST_TS_FORMAT: 'When setting the adaptive transcoding, the TS format item of the transcoding template needs to exist in the output rules',
@@ -432,7 +432,8 @@ export const messages = {
             ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: 'When setting the adaptive transcoding, the HLS slice length can not be 0 in the output rules',
             SECOND: 'second',
             NO_DATA: 'No data',
-            SNAPSHOTS_RULES: 'Snapshots Rules'
+            SNAPSHOTS_RULES: 'Snapshots Rules',
+            OUTPUT_FILE_NAME: 'Output file name'
         },
         i: {
             select: {
@@ -952,7 +953,7 @@ export const messages = {
             TRANSCODING_SUCCESSFUL_CALLBACK_URL: '转码成功回调Url',
             TRANSCODING_FAILED_CALLBACK_URL: '转码失败回调Url',
             FILE_NAME_SUFFIX_CANNOT_EMPTY: '文件名后缀不能为空',
-            MASTER_PLAYLIST_CONFIGURATION: 'MasterPlaylist配置',
+            MASTER_PLAYLIST_CONFIGURATION: '自适应HLS配置',
             MASTER_PLAYLIST_FILE_NAME_SUFFIX: 'MasterPlaylist文件名后缀',
             AUTO_OUTPUT_RULES_DESCRIPTION: '设置自动转码后，输出规则中至少有一项模版输出为TS，且所有HLS切片时长需保持一致，且不能为0',
             ADAPTIVE_EXIST_TS_FORMAT: '设置自适应转码，输出规则中需存在转码模版输出为TS格式的项',
@@ -960,7 +961,8 @@ export const messages = {
             ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0: '设置自适应转码，输出规则中HLS切片时长不能为0',
             SECOND: '秒',
             NO_DATA: '没有数据',
-            SNAPSHOTS_RULES: '视频截图规则'
+            SNAPSHOTS_RULES: '视频截图规则',
+            OUTPUT_FILE_NAME: '输出文件名'
         },
         i: {
             select: {
