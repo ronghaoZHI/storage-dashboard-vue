@@ -1,6 +1,11 @@
 <template>
     <div class="bsc-keychain">
-        <keychain-card v-for="key in data" :keychain="key" :key="key.ts"></keychain-card>
+        <div class="section-add-card" v-show="!isAdmin">
+            <Button type="primary" @click="addKeychain">{{$t("KEYCHAIN.ADD_KEY")}}</Button>
+        </div>
+        <div class="section-card-list">
+            <keychain-card v-for="(key, index) in data" :keychain="key" :work="index === 0" v-on:deleteKey="deleteKeychain" :key="key.ts"></keychain-card>
+        </div>
     </div>
 </template>
 <script>
@@ -11,7 +16,8 @@ import moment from 'moment'
 export default {
     data () {
         return {
-            data: []
+            data: [],
+            isAdmin: user.state.type === 'admin'
         }
     },
     created () {
@@ -31,11 +37,30 @@ export default {
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.warning(this.$t('LOGIN.LOGIN_AGAIN'))
-                this.$router.push({
-                    path: '/login',
-                    query: { redirect: '/keychain' }
-                })
+                this.$Message.warning(error)
+            }
+        },
+        async addKeychain () {
+            this.$Loading.start()
+            try {
+                await this.$http.post(ACCESSKEY)
+                this.getKeychainList()
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+                console.log(error)
+            }
+        },
+        async deleteKeychain (accesskey) {
+            this.$Loading.start()
+            try {
+                console.log(accesskey)
+                await this.$http.delete(ACCESSKEY, {params: {accesskey: accesskey}})
+                this.getKeychainList()
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+                console.log(error)
             }
         }
     }
@@ -48,7 +73,14 @@ export default {
 .@{css-prefix}keychain {
     min-height: 100%;
     width: 100%;
-    .fb(flex-start, flex-start);
-    flex-wrap: wrap;
+
+    .section-add-card {
+        height: 40px;
+    }
+    
+    .section-card-list {
+        .fb(flex-start, flex-start);
+        flex-wrap: wrap;
+    }
 }
 </style>

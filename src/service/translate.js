@@ -317,6 +317,13 @@ export const messages = {
             GET_BUCKET_FAILED: 'Get bucket list fail',
             EXPORT_DATA: 'Export data'
         },
+        KEYCHAIN: {
+            ADD_KEY: 'Add accesskey',
+            COPY_ACCESSKEY: 'Click to copy accesskey',
+            COPY_SECRETKEY: 'Click to copy secretkey',
+            DELETE_KEY: 'Delete keychain',
+            DELETE_KEY_COM: 'Are you sure you want to delete [{accesskey}] ？'
+        },
         USER: {
             CREATE_SUB_USER: 'Create user',
             CREATE_USER: 'Create user',
@@ -877,6 +884,13 @@ export const messages = {
             UPLOAD_COUNT_INFO: '某天的写请求数',
             GET_BUCKET_FAILED: '获取Bucket列表失败',
             EXPORT_DATA: '导出数据'
+        },
+        KEYCHAIN: {
+            ADD_KEY: '新增密钥',
+            COPY_ACCESSKEY: '点击复制 accesskey',
+            COPY_SECRETKEY: '点击复制 secretkey',
+            DELETE_KEY: '删除密钥',
+            DELETE_KEY_COM: '确定删除 [{accesskey}] ？'
         },
         USER: {
             CREATE_SUB_USER: '新建账号',
