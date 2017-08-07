@@ -53,6 +53,7 @@ const userManage = {
     icon: iconUser
 }
 
+const ONLINE_SUB = [bucket, keychain]
 const ONLINE_ADMIN_NO_SUBSUER = [userManage]
 
 const ONLINE_NORMAL = [bucket, dashboard, keychain, video]
