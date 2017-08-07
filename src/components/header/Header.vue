@@ -42,7 +42,7 @@
     </div>
 </template>
 <script>
-import { LOGOUT, REPASSWORD } from '@/service/API'
+import { LOGOUT, REPASSWORD, sso } from '@/service/API'
 import { clear } from '@/service/Aws'
 import user from '@/store/modules/user'
 export default {
@@ -72,9 +72,10 @@ export default {
                 try {
                     await this.$http.post(LOGOUT)
                     await this.$store.dispatch('logout')
-                    clear() && this.$router.push('/login')
+                    await clear()
+                    window.location = sso()
                 } catch (error) {
-                    this.$router.push('/login')
+                    window.location = sso()
                     this.$Message.error(error)
                 }
             } else if (name === 'rePasssword') {
@@ -92,7 +93,7 @@ export default {
                 await this.$http.post(REPASSWORD, {email: user.state.email, password: this.rePasswordForm.password})
                 await this.$http.post(LOGOUT)
                 await this.$store.dispatch('logout')
-                this.$router.push('/login')
+                window.location = sso()
             } catch (error) {
                 console.log(error)
                 this.$Message.error(this.$t('NAV.CHANGE_PASSWORD_FAILED'))

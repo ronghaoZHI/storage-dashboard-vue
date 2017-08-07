@@ -1,8 +1,27 @@
 <template>
-  
+    <div class="bsc-login" @keyup.enter="loginSubmit('loginForm')">
+        <div class="card-login">
+            <div class="tab-register" v-if="!isLogin">
+                <div class="header">
+                    <img src="../../assets/logo.png" alt="logo" />
+                    <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
+                </div>
+                <div class="wrap">
+                    <div class="body">
+                        <div v-if="subUserList.length > 0" class="card-user" v-for="user in subUserList" :key="user.ts" @click="selectSubUser(user)">
+                            <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
+                            <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
+                            <span class="icon" v-show="user.info.type === 'super'"><Icon type="star"></Icon></span>
+                        </div>
+                        <div v-if="subUserList.length <= 0" class="warning" @click="toUserMange()">暂无绑定用户,<span>点击绑定或新增用户</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
-import { USERINFO, BOUND_USER } from '@/service/API'
+import { USERINFO, BOUND_USER, sso } from '@/service/API'
 import user from '@/store/modules/user'
 import Vue from 'vue'
 export default {
@@ -16,24 +35,25 @@ export default {
         }
     },
     created () {
-        console.log(this.$route.query)
-        let _token = this.$route.query.ticket || 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjU5N2FlZmRkODYzM2YiLCJuYW1lIjoidXNlcl9teXkiLCJleHAiOjE1MDE5NDE2MDB9.XReR-642zoO1VaW2Iq-a77oI65XVGdimTzWisG-I2PNq_WjjXZKaOKhEisNas-NuHNO7CHO3kxiXT0Ya5IhsjA'
-        let _router = this.$route.query.callback || '/bucket'
-        console.log(_token)
-
-        if (_token) {
-            try {
-                this.$http.defaults.headers.common['Authorization'] = _token
-                this.$store.dispatch('setToken', _token)
-            } catch (error) {
-                console.log(error)
-            }
-        } else {
-            window.location = `http://sso.qingcdn.com/web/user/checkLogin?appId=2&callback=${_router}`
-        }
+        this.saveToken()
     },
     methods: {
-        async getUserInfo (name) {
+        async saveToken () {
+            let _token = this.$route.query.ticket || this.$store.token
+            let _router = this.$route.query.callback || '/bucket'
+
+            if (_token) {
+                try {
+                    this.$store.dispatch('setToken', _token)
+                    await this.getUserInfo()
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                window.location = sso(_router)
+            }
+        },
+        async getUserInfo () {
             this.$http.get(USERINFO).then(res => {
                 res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
                 this.$Loading.finish()
@@ -98,3 +118,127 @@ export default {
     }
 }
 </script>
+<style lang="less" scoped>
+@import '../../styles/index.less';
+
+@login-card-height: 600px;
+@login-card-width: 900px;
+@login-card-padding: 48px;
+@login-card-bg: #2e373e;
+@login-card-login-text-color: #8492a6;
+@login-card-register-item-width: 180px;
+@login-card-register-item-height: 80px;
+@login-card-register-text-color: #c0ccda;
+@login-card-register-input-backgrand: #414d56;
+@login-card-register-input-backgrand-hover: #52626d;
+
+.@{css-prefix}login {
+    .wh(100%,100%);
+    .fb(center,center);
+    background: url('../../assets/login-bg.png') no-repeat;
+    background-size: cover;
+
+    .card-login {
+        position: relative;
+        .wh(@login-card-width,@login-card-height);
+        background-color: @login-card-bg;
+        padding: 40px @login-card-padding;
+
+        .tab-register {
+            .header {
+                height: 60px;
+                border-bottom: 1px solid #52626d;
+
+                & > img {
+                    position: absolute; 
+                    left: @login-card-padding;
+                }
+
+                & > a {
+                    .sc(18px,@primary-color);
+                    position: absolute; 
+                    top: @login-card-padding + 3px;
+                    right: @login-card-padding;
+                    cursor: pointer;
+                }
+            }
+
+            .wrap {
+                height: 460px;
+                overflow-y: auto;
+
+                .body {
+                    width: 100%;
+                    display: inline-flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    padding: 10px 0 0 12px;
+
+                    & > .card-user {
+                        position: relative;
+                        .wh(@login-card-register-item-width,@login-card-register-item-height);
+                        background-color: @login-card-register-input-backgrand;
+                        border-radius: @common-radius;
+                        .sc(16px,#fff);
+                        margin: 8px 8px;
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: @login-card-register-input-backgrand-hover;
+                        }
+
+                        & > span:first-child {
+                            margin-top: 12px;
+                        }
+                        & > span:nth-child(2) {
+                            margin-top: 8px;
+                        }
+
+                        .info {
+                            display: inline-block;
+                            .wh(98%,@login-card-register-item-height / 2 - 15);
+                            line-height: @login-card-register-item-height / 2 - 15;
+                            vertical-align: bottom;
+                            padding: 0 16px;
+                            text-align: left;
+                            text-overflow: ellipsis;
+                            overflow:hidden;
+                            white-space:nowrap;
+
+                            i {
+                                position: relative;
+                                top: 1px;
+                                padding-right: 4px;
+                            }
+                        }
+                        
+                        .icon {
+                            position: absolute;
+                            color: #fff;
+                            top: 6px;
+                            right: 12px;
+                        }
+                    }
+
+                    .warning {
+                        .sc(16px, #fff);
+
+                        span {
+                            color: @primary-color;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+input:-webkit-autofill {
+    box-shadow: 0 0 0 1000px @login-card-bg inset !important;
+    -webkit-text-fill-color: @login-card-login-text-color !important;
+}
+</style>

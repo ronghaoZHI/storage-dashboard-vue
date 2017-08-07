@@ -10,7 +10,10 @@ let key = {}
 export const clear = () => key = {}
 
 export const getKey = () => {
-    return axios.get(ACCESSKEY).then(res => key = res[0], error => error)
+    return axios.get(ACCESSKEY).then(res => key = res[0], error => {
+        console.log(error)
+        return error
+    })
 }
 
 export const config = ({ accesskey, secretkey }, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1') => {
