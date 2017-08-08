@@ -435,7 +435,25 @@ export const messages = {
             SNAPSHOTS_RULES: 'Snapshots Rules',
             OUTPUT_FILE_NAME: 'Output file name',
             MP_NAME_INFO: 'File name can not be empty',
-            OUTPUT_TABLE_INFO: 'At last one poutput rule'
+            OUTPUT_TABLE_INFO: 'At last one poutput rule',
+            CREATED: 'Created',
+            DELETED: 'Delete successfully',
+            PIPE: 'Pipeline',
+            CREATE_JOB: 'Create',
+            JOB_ID: 'ID',
+            PIPE_ID: 'Pipeline ID',
+            JOB_TEMPLATE: 'Template ID',
+            STATUS: 'Status',
+            CREATE_TIME: ' Create time',
+            OPERATION: 'Actions',
+            JOB_CONF: 'Job configuration',
+            JOB_CREATE: 'Create',
+            BASIC_SET: 'Basic',
+            JOB_PIPE: 'Pipeline',
+            SRC_FILE: 'Source file',
+            SEARCH_INFO: 'Please use search when file number is greater than 50 (prefix match)',
+            HLS_FILE_NAME: 'HLS file name',
+            SRC_FILE_INFO: 'Please select the input source file'
         },
         i: {
             select: {
@@ -966,7 +984,25 @@ export const messages = {
             SNAPSHOTS_RULES: '视频截图规则',
             OUTPUT_FILE_NAME: '输出文件名',
             MP_NAME_INFO: '文件名不能为空',
-            OUTPUT_TABLE_INFO: '输出规则至少存在一个'
+            OUTPUT_TABLE_INFO: '输出规则至少存在一个',
+            CREATED: '创建成功',
+            DELETED: '操作成功',
+            PIPE: '管道',
+            CREATE_JOB: '创建任务',
+            JOB_ID: '转码ID',
+            PIPE_ID: '管道ID',
+            JOB_TEMPLATE: '转码模版',
+            STATUS: '状态',
+            CREATE_TIME: '创建时间',
+            OPERATION: '操作',
+            JOB_CONF: '主动转码配置',
+            JOB_CREATE: '新建转码',
+            BASIC_SET: '基础配置',
+            JOB_PIPE: '转码管道',
+            SRC_FILE: '源文件名',
+            SEARCH_INFO: '文件数大于50请使用搜索(前缀匹配)',
+            HLS_FILE_NAME: '自适应HLS文件名',
+            SRC_FILE_INFO: '请选择输入源文件'
         },
         i: {
             select: {
