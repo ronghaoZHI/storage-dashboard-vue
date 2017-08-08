@@ -24,13 +24,13 @@
                     <Radio v-for='con in containerList' :key="con" :label='con'>{{con}}</Radio>
                 </Radio-group>
             </div>
-            <div class="form-item" v-if="template.Container === 'mp4'" >
+            <!-- <div class="form-item" v-if="template.Container === 'mp4'" >
                 <span class="form-label">FastStart : </span>
                 <i-switch v-model="template.FastStart">
                     <span slot="open">{{$t('VIDEO.ON')}}</span>
                     <span slot="close">{{$t('VIDEO.OFF')}}</span>
                 </i-switch>
-            </div>
+            </div> -->
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
@@ -241,7 +241,7 @@ const convert2Save = (template, auxiliary) => {
         saved.Audio.BitRate = auxiliary.audioBitRate
     }
 
-    saved.FastStart = template.FastStart.toString()
+    // saved.FastStart = template.FastStart.toString()
     saved.Video.FixedGOP = template.Video.FixedGOP.toString()
     saved.Video.KeyframesMaxDist = template.Video.KeyframesMaxDist.toString()
 
@@ -261,7 +261,7 @@ const auxiliaryDefult = {
 const templateDefult = {
     Name: '',
     Description: '',
-    FastStart: true,
+    // FastStart: true,
     Container: 'mp4',
     Audio: {
         Codec: 'auto',

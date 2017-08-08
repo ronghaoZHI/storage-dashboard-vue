@@ -434,7 +434,8 @@ export const messages = {
             NO_DATA: 'No data',
             SNAPSHOTS_RULES: 'Snapshots Rules',
             OUTPUT_FILE_NAME: 'Output file name',
-            MP_NAME_INFO: 'File name can not be empty'
+            MP_NAME_INFO: 'File name can not be empty',
+            OUTPUT_TABLE_INFO: 'At last one poutput rule'
         },
         i: {
             select: {
@@ -964,7 +965,8 @@ export const messages = {
             NO_DATA: '没有数据',
             SNAPSHOTS_RULES: '视频截图规则',
             OUTPUT_FILE_NAME: '输出文件名',
-            MP_NAME_INFO: '文件名不能为空'
+            MP_NAME_INFO: '文件名不能为空',
+            OUTPUT_TABLE_INFO: '输出规则至少存在一个'
         },
         i: {
             select: {
