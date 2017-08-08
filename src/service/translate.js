@@ -397,7 +397,7 @@ export const messages = {
             EXPRESSION_INCORRECT: 'The expression is incorrect',
             INPUT_BUCKET: 'Input bucket',
             OUTPUT_BUCKET: 'Output bucket',
-            OUTPUT_FILE_KEY_PREFIX: 'Output file key prefix',
+            OUTPUT_KEY_PREFIX: 'Output key prefix',
             OUTPUT_RULES: 'Output rules',
             VIDEO_SCREENSHOTS_RULES: 'Video screenshots rules',
             AT_LEAST_ONE_RULE: 'There is at least one between the output rule and the video screenshots rule',
@@ -453,7 +453,13 @@ export const messages = {
             SRC_FILE: 'Source file',
             SEARCH_INFO: 'Please use search when file number is greater than 50 (prefix match)',
             HLS_FILE_NAME: 'HLS file name',
-            SRC_FILE_INFO: 'Please select the input source file'
+            SRC_FILE_INFO: 'Please select the input source file',
+            KEYS_REG: 'Keys Regex',
+            OUTPUTS: 'Outputs',
+            CONTAINER: 'Container',
+            VIDEO: 'Video',
+            AUDIO: 'Audio',
+            TEMPLATE_NAME_TABLE: 'Name'
         },
         i: {
             select: {
@@ -947,7 +953,7 @@ export const messages = {
             EXPRESSION_INCORRECT: '表达式错误',
             INPUT_BUCKET: '输入Bucket',
             OUTPUT_BUCKET: '输出Bucket',
-            OUTPUT_FILE_KEY_PREFIX: '输出文件key前缀',
+            OUTPUT_KEY_PREFIX: '输出文件key前缀',
             OUTPUT_RULES: '输出规则',
             VIDEO_SCREENSHOTS_RULES: '视频截图规则',
             AT_LEAST_ONE_RULE: '输出规则和视频截图规则至少存在一个',
@@ -1003,7 +1009,13 @@ export const messages = {
             SRC_FILE: '源文件名',
             SEARCH_INFO: '文件数大于50请使用搜索(前缀匹配)',
             HLS_FILE_NAME: '自适应HLS文件名',
-            SRC_FILE_INFO: '请选择输入源文件'
+            SRC_FILE_INFO: '请选择输入源文件',
+            KEYS_REG: '允许转码的路径规则',
+            OUTPUTS: '输出',
+            CONTAINER: '输出格式',
+            VIDEO: '视频',
+            AUDIO: '音频',
+            TEMPLATE_NAME_TABLE: '模版名称'
         },
         i: {
             select: {

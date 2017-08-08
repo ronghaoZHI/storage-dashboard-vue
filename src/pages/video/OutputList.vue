@@ -21,7 +21,7 @@ export default {
                 key: 'id',
                 width: 165
             }, {
-                title: 'Status',
+                title: this.$t('VIDEO.STATUS'),
                 width: 75,
                 render: (h, params) => {
                     if (params.row.is_enabled === 'true') {
@@ -47,15 +47,15 @@ export default {
                     }
                 }
             }, {
-                title: 'Input Bucket',
+                title: this.$t('VIDEO.INPUT_BUCKET'),
                 width: 150,
                 key: 'input_bucket'
             }, {
-                title: 'Output Bucket',
+                title: this.$t('VIDEO.OUTPUT_BUCKET'),
                 width: 150,
                 key: 'output_bucket'
             }, {
-                title: 'Keys Regex',
+                title: this.$t('VIDEO.KEYS_REG'),
                 width: 200,
                 render: (h, params) => {
                     if (params.row.allowed_keys_regex.length > 0) {
@@ -63,14 +63,14 @@ export default {
                     }
                 }
             }, {
-                title: 'Output key prefix',
+                title: this.$t('VIDEO.OUTPUT_KEY_PREFIX'),
                 key: 'actions',
                 width: 150,
                 render: (h, params) => {
                     return h('p', [params.row.output_key_prefix])
                 }
             }, {
-                title: 'Outputs',
+                title: this.$t('VIDEO.OUTPUTS'),
                 width: 170,
                 render: (h, params) => {
                     if (params.row.outputs && params.row.outputs.length > 0) {
@@ -81,9 +81,9 @@ export default {
                     }
                 }
             }, {
-                title: 'Actions',
+                title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
-                width: 120,
+                width: 160,
                 align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {

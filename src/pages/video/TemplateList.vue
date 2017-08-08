@@ -24,7 +24,7 @@ export default {
             videoNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_PROFILE'), Level: this.$t('VIDEO.CODING_LEVEL'), KeyframesMaxDist: this.$t('VIDEO.FIXED_KEY_FRAME_SPACING'), BitRate: this.$t('VIDEO.BIT_RATE'), FrameRate: this.$t('VIDEO.FRAME_RATE'), Resolution: this.$t('VIDEO.RESOLUTION'), AspectRatio: this.$t('VIDEO.ASPECT_RATIO')},
             audioNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_QUALITY'), SampleRate: this.$t('VIDEO.SAMPLE_RATE'), BitRate: this.$t('VIDEO.BIT_RATE'), Channels: this.$t('VIDEO.CHANNELS')},
             listHeader: [{
-                title: 'Name',
+                title: this.$t('VIDEO.TEMPLATE_NAME_TABLE'),
                 width: 100,
                 render: (h, params) => {
                     return h('Poptip', {
@@ -42,11 +42,11 @@ export default {
                     }, params.row.description)])
                 }
             }, {
-                title: 'Container',
+                title: this.$t('VIDEO.CONTAINER'),
                 width: 100,
                 key: 'container'
             }, {
-                title: 'Video',
+                title: this.$t('VIDEO.VIDEO'),
                 width: 400,
                 render: (h, params) => {
                     return h('Poptip', {
@@ -65,7 +65,7 @@ export default {
                     )
                 }
             }, {
-                title: 'Audio',
+                title: this.$t('VIDEO.AUDIO'),
                 width: 380,
                 render: (h, params) => {
                     return h('Poptip', {
@@ -84,7 +84,7 @@ export default {
                     )
                 }
             }, {
-                title: 'Actions',
+                title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
                 width: 80,
                 align: 'right',
