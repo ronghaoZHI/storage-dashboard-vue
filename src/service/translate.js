@@ -458,7 +458,8 @@ export const messages = {
         i: {
             select: {
                 placeholder: 'Select',
-                noMatch: 'No matching data'
+                noMatch: 'No matching data',
+                loading: 'Loading'
             },
             table: {
                 noDataText: 'No Data',
@@ -1007,7 +1008,8 @@ export const messages = {
         i: {
             select: {
                 placeholder: '请选择',
-                noMatch: '无匹配数据'
+                noMatch: '无匹配数据',
+                loading: '加载中'
             },
             table: {
                 noDataText: '暂无数据',
