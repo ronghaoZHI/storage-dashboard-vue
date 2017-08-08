@@ -3,7 +3,7 @@
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/Output">{{$t('VIDEO.AUTOMATIC_TRANSCODING_CONFIGURATION')}}</Breadcrumb-item>
-                <Breadcrumb-item>{{$t('VIDEO.NEW_CONFIGURATION')}}</Breadcrumb-item>
+                <Breadcrumb-item>{{$t('VIDEO.CONF')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <div class="separator-line"></div>
@@ -353,7 +353,7 @@
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
                 <Radio-group v-model="shotModal.resolution">
-                    <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>
+                    <Radio label="auto">{{$t('VIDEO.WH_UNALTERED')}}</Radio>
                     <Radio label="value"></Radio>
                 </Radio-group>
                 <Input-number :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></Input-number>

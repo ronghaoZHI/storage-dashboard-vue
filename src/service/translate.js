@@ -397,7 +397,7 @@ export const messages = {
             EXPRESSION_INCORRECT: 'The expression is incorrect',
             INPUT_BUCKET: 'Input bucket',
             OUTPUT_BUCKET: 'Output bucket',
-            OUTPUT_KEY_PREFIX: 'Output key prefix',
+            OUTPUT_KEY_PREFIX: 'Output file prefix',
             OUTPUT_RULES: 'Output rules',
             VIDEO_SCREENSHOTS_RULES: 'Video screenshots rules',
             AT_LEAST_ONE_RULE: 'There is at least one between the output rule and the video screenshots rule',
@@ -459,7 +459,9 @@ export const messages = {
             CONTAINER: 'Container',
             VIDEO: 'Video',
             AUDIO: 'Audio',
-            TEMPLATE_NAME_TABLE: 'Name'
+            TEMPLATE_NAME_TABLE: 'Name',
+            CONF: 'Configuration',
+            WH_UNALTERED: 'Calculate by resolution'
         },
         i: {
             select: {
@@ -953,7 +955,7 @@ export const messages = {
             EXPRESSION_INCORRECT: '表达式错误',
             INPUT_BUCKET: '输入Bucket',
             OUTPUT_BUCKET: '输出Bucket',
-            OUTPUT_KEY_PREFIX: '输出文件key前缀',
+            OUTPUT_KEY_PREFIX: '输出文件前缀',
             OUTPUT_RULES: '输出规则',
             VIDEO_SCREENSHOTS_RULES: '视频截图规则',
             AT_LEAST_ONE_RULE: '输出规则和视频截图规则至少存在一个',
@@ -1015,7 +1017,9 @@ export const messages = {
             CONTAINER: '输出格式',
             VIDEO: '视频',
             AUDIO: '音频',
-            TEMPLATE_NAME_TABLE: '模版名称'
+            TEMPLATE_NAME_TABLE: '模版名称',
+            CONF: '配置',
+            WH_UNALTERED: '根据分辨率计算'
         },
         i: {
             select: {
