@@ -39,7 +39,6 @@ const listPipelines = async (pageToken) => {
     try {
         let res = pageToken ? await transcoder('listPipelines', {pageToken: pageToken}) : await transcoder('listPipelines')
         const pipelines = res.Pipelines
-        // console.log('pipelines', pipelines)
         return pipelines
     } catch (error) {
         iView.Message.error(error.message, 5)

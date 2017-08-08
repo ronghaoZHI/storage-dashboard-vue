@@ -585,6 +585,7 @@ const outputsDefult = {
     PresetId: '',
     SegmentDuration: 0
 }
+
 const shotDefult = {
     Key: '',
     Format: 'jpg',
