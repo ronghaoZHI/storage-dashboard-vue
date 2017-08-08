@@ -3,7 +3,7 @@
     <div class="bsc-job-edit bsc-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/video/Output">主动转码配置</Breadcrumb-item>
+                <Breadcrumb-item href="/video/JobList">主动转码配置</Breadcrumb-item>
                 <Breadcrumb-item>新建转码</Breadcrumb-item>
             </Breadcrumb>
         </div>
@@ -65,7 +65,7 @@
                     <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="job.Outputs" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
                 </div>
                 <br>
-                <p class="style-name-info redFont button-add-item" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
+·                <p class="style-name-info redFont" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
                 <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
             </div>
             <div class="form-item">
@@ -74,12 +74,12 @@
                     <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="job.Snapshots" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
                 </div>
                 <br>
-                <p class="style-name-info redFont button-add-item" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
+                <p class="style-name-info redFont" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
                 <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
             </div>
         </div>
-        <div class="separator-line" v-if="MPShow"></div>
-        <div class="editBlock" v-if="MPShow">
+        <div class="separator-line"></div>
+        <div class="editBlock">
             <div class="section-separator">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
@@ -102,7 +102,7 @@
             <div class="form-item" v-if="MPOpen">
                 <span class="form-label">MasterPlaylist文件名 : </span>
                 <Input v-model="job.Playlists.Name" placeholder="MasterPlaylist" class="line-width"></Input>
-                <p class="style-name-info redFont button-add-item" v-if="MPNameError">{{$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')}}</p>
+                <p class="style-name-info redFont" v-if="MPNameError">{{$t('VIDEO.MP_NAME_INFO')}}</p>
             </div>
             <div class="form-item" v-if="MPOpen">
                 <span class="form-label">输出文件名 : </span>
@@ -123,8 +123,8 @@
                 </Select>
             </div>
             <div class="form-item">
-                <span class="form-label">输出文件名 : </span>
-                <Input v-model="outputModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' class="line-width"></Input>
+                <span class="form-label">{{$t("VIDEO.OUTPUT_FILE_NAME")}} : </span>
+                <Input v-model="outputModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME")' class="line-width"></Input>
             </div>
             <div class="form-item" v-if="HLSShow" >
                 <span class="form-label">{{$t('VIDEO.HLS_SLICE_LENGTH')}} : </span>
@@ -195,7 +195,6 @@ export default {
             fileModelShow: false,
             outputModal: _.clone(outputsDefult),
             shotModal: _.clone(shotDefult),
-            MPShow: false,
             HLSShow: false,
             HLSError: false,
             pipeInputBucket: '',
@@ -364,21 +363,24 @@ export default {
             return this.regError || this.MPNameError
         },
         MPNameError () {
-            return this.MPShow && this.MPOpen && !this.job.Playlists.Name
+            return this.MPOpen && !this.job.Playlists.Name
         },
         osError () {
             return this.job.Snapshots.length === 0 && this.job.Outputs.length === 0
         }
     },
     components: { InputNumber },
-    async created () {
-        this.pipes = await listPipelines()
-        this.job.PipelineId = this.pipes[0].Id
-        this.pipeInputBucket = this.pipes[0].InputBucket
-        this.templateInfo = await getTemplateInfo()
-        this.getFiles()
+    created () {
+        this.createdMethods()
     },
     methods: {
+        async createdMethods () {
+            this.pipes = await listPipelines()
+            this.job.PipelineId = this.pipes[0].Id
+            this.pipeInputBucket = this.pipes[0].InputBucket
+            this.templateInfo = await getTemplateInfo()
+            this.getFiles()
+        },
         async beforeSubmit () {
             let segments = []
             let segmentsSet = new Set()
@@ -387,7 +389,7 @@ export default {
                 this.$Message.warning('请选择输入源文件')
                 return
             }
-            if (this.MPShow && this.MPOpen) {
+            if (this.MPOpen) {
                 this.job.Outputs.forEach(item => {
                     if (this.isTS(item.PresetId)) {
                         segments.push(item.SegmentDuration || 0)
@@ -457,7 +459,7 @@ export default {
                 })
             }
 
-            if (!this.MPOpen || !this.MPShow) {
+            if (!this.MPOpen) {
                 delete saved.Playlists
             } else {
                 saved.Playlists = [{...front.Playlists}]
@@ -490,7 +492,6 @@ export default {
             } else {
                 this.job.Outputs.splice(this.outputIndex, 1, this.outputModal)
             }
-            this.MPShow = this.isMPShow()
             this.showOutputsModal = false
             this.updateMPNames(this.job.Outputs)
         },
@@ -531,17 +532,6 @@ export default {
         deleteShot (index) {
             this.job.Snapshots.splice(index, 1)
         },
-        isMPShow () {
-            const out = this.job.Outputs
-            const temp = this.templateInfo.templateList
-            const ids = out.map(op => {
-                return op.PresetId
-            })
-            const TSItems = temp.filter(item => {
-                return ids.includes(item.Id) && item.Container === 'ts'
-            })
-            return TSItems.length > 0
-        },
         templateChange (id) {
             this.HLSShow = this.isTS(id)
             if (!this.HLSShow) {
@@ -557,7 +547,7 @@ export default {
                     this.pipeInputBucket = pipe.InputBucket
                 }
             })
-            await this.getFiles()
+            this.getFiles()
         },
         updateMPNames () {
             const tc = this.templateInfo.templateContainer
@@ -595,6 +585,7 @@ const outputsDefult = {
     PresetId: '',
     SegmentDuration: 0
 }
+
 const shotDefult = {
     Key: '',
     Format: 'jpg',
