@@ -19,7 +19,6 @@ export default {
             iconSize: 18,
             self: this,
             templateList: this.templateList,
-            nextPageShow: false,
             pageToken: [],
             nextPageToken: '',
             videoNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_PROFILE'), Level: this.$t('VIDEO.CODING_LEVEL'), KeyframesMaxDist: this.$t('VIDEO.FIXED_KEY_FRAME_SPACING'), BitRate: this.$t('VIDEO.BIT_RATE'), FrameRate: this.$t('VIDEO.FRAME_RATE'), Resolution: this.$t('VIDEO.RESOLUTION'), AspectRatio: this.$t('VIDEO.ASPECT_RATIO')},
@@ -123,6 +122,9 @@ export default {
             try {
                 this.$Loading.start()
                 let res = !pageToken ? await transcoder('listPresets') : await transcoder('listPresets', {PageToken: pageToken})
+                if (!res.Presets.length) {
+                    this.$Message.warning(this.$t('VIDEO.NO_DATA'))
+                }
                 this.templateList = await this.convert2Front(res.Presets)
                 this.nextPageToken = res.NextPageToken
                 this.$Loading.finish()
