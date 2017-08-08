@@ -149,14 +149,11 @@
                                 {{item.Grantee}}
                             </td>
                             <td>
-                                <Checkbox :disabled="username == item.Grantee"
-                                        v-model="item.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox :disabled="username == item.Grantee" v-model="item.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
                             </td>
                             <td>
-                                <Checkbox :disabled="username == item.Grantee"
-                                        v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox :disabled="username == item.Grantee"
-                                        v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
+                                <Checkbox :disabled="username == item.Grantee" v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox :disabled="username == item.Grantee" v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
                                 <Tooltip placement="bottom" :delay="1000">
@@ -235,7 +232,7 @@ export default {
             pipeline: _.cloneDeep(pipelineDefult),
             groupACLList: _.cloneDeep(groupACLListDefult),
             newUserItem: _.cloneDeep(newUserItemDefult),
-            bucketList: this.bucketList,
+            bucketList: [],
             isAddUser: false,
             userACLList: []
         }
@@ -267,32 +264,63 @@ export default {
             }
         }
     },
-    mounted () {
-        this.getBucketNames()
+    created () {
         this.readPipeline()
     },
     methods: {
-        async getBucketNames () {
+        async readPipeline () {
             let res = await getBucketList()
             this.bucketList = _.map(res.Buckets, bucket => bucket.Name)
-            this.pipeline.InputBucket = this.bucketList[0]
-            this.pipeline.OutputBucket = this.bucketList[0]
-        },
-        async readPipeline () {
             if (this.pipelineId !== 'none') {
                 try {
                     this.$Loading.start()
                     let res = await transcoder('readPipeline', {Id: this.pipelineId})
-                    this.pipeline.Name = res.Pipeline.Name
-                    this.pipeline.InputBucket = res.Pipeline.InputBucket
-                    this.pipeline.OutputBucket = res.Pipeline.OutputBucket
+                    await this.convert2Front(res.Pipeline)
                     this.$Loading.finish()
                 } catch (error) {
                     this.$Loading.error()
                 }
             } else {
+                this.pipeline.InputBucket = this.bucketList[0]
+                this.pipeline.OutputBucket = this.bucketList[0]
                 this.userACLList = [this.owerACL]
             }
+        },
+        convert2Front (data) {
+            this.pipeline.Name = data.Name
+            this.pipeline.InputBucket = data.InputBucket
+            this.pipeline.OutputBucket = data.OutputBucket
+            this.pipeline.SuccessCallbackUrl = data.SuccessCallbackUrl.split('http://')[1] || ''
+            this.pipeline.FailureCallbackUrl = data.FailureCallbackUrl.split('http://')[1] || ''
+            const permissions = data.ContentConfig.Permissions
+            _.forEach(permissions, item => {
+                let acc = {
+                    Read: false,
+                    ReadAcp: false,
+                    WriteAcp: false
+                }
+                _.forEach(item.Access, item => {
+                    if (item === 'FullControl') {
+                        acc = {
+                            Read: true,
+                            ReadAcp: true,
+                            WriteAcp: true
+                        }
+                    } else {
+                        acc[item] = true
+                    }
+                })
+                item.Access = acc
+                if (item.GranteeType === 'Group') {
+                    if (item.Grantee === 'AllUsers') {
+                        this.groupACLList[0] = item
+                    } else {
+                        this.groupACLList[1] = item
+                    }
+                } else {
+                    this.userACLList.push(item)
+                }
+            })
         },
         addUser () {
             this.isAddUser = true
@@ -306,14 +334,14 @@ export default {
             this.userACLList.splice(index, 1)
         },
         async addPipeline () {
-            let pipeline = _.cloneDeep(this.pipeline)
-            pipeline.Permission = _.cloneDeep(this.groupACLList)
+            let params = this.convert2Save()
             try {
                 this.$Loading.start()
                 if (this.pipelineId === 'none') {
-                    await transcoder('createPipeline', pipeline)
+                    await transcoder('createPipeline', params)
                 } else {
-                    await transcoder('updatePipeline', pipeline)
+                    params.Id = this.pipelineId
+                    await transcoder('updatePipeline', params)
                 }
                 this.$Loading.finish()
                 this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
@@ -321,6 +349,23 @@ export default {
             } catch (error) {
                 this.$Loading.error()
             }
+        },
+        convert2Save () {
+            let saved = _.cloneDeep(this.pipeline)
+            saved.Name = this.pipeline.Name
+            saved.InputBucket = this.pipeline.InputBucket
+            saved.OutputBucket = this.pipeline.OutputBucket
+            saved.SuccessCallbackUrl = this.pipeline.SuccessCallbackUrl
+            saved.FailureCallbackUrl = this.pipeline.FailureCallbackUrl
+            let group = _.cloneDeep(this.groupACLList)
+            let user = _.cloneDeep(this.userACLList)
+            saved.ContentConfig.Permissions = _.without([...group, ...user].map(item => {
+                const { Read, ReadAcp, WriteAcp } = item.Access
+                if (Read || ReadAcp || WriteAcp) {
+                    return aclConvert2Save(item)
+                }
+            }), null, undefined)
+            return saved
         },
         goPipelineList () {
             this.$router.push({ name: 'pipeline' })
@@ -334,9 +379,11 @@ const pipelineDefult = {
     SuccessCallbackUrl: '',
     FailureCallbackUrl: '',
     ContentConfig: {
-        Permission: []
+        Permissions: []
     }
 }
+
+const groupGrantee = ['AllUsers', 'AuthenticatedUsers']
 
 const groupACLListDefult = [{
     GranteeType: 'Group',
@@ -354,14 +401,6 @@ const groupACLListDefult = [{
         ReadAcp: false,
         WriteAcp: false
     }
-}, {
-    GranteeType: 'Group',
-    Grantee: 'LogDelivery',
-    Access: {
-        Read: false,
-        ReadAcp: false,
-        WriteAcp: false
-    }
 }]
 
 const newUserItemDefult = {
@@ -371,6 +410,26 @@ const newUserItemDefult = {
         ReadAcp: false,
         WriteAcp: false
     }
+}
+
+const aclConvert2Save = data => {
+    const saved = {
+        Grantee: data.Grantee
+    }
+    if (!groupGrantee.includes(data.Grantee)) {
+        saved.GranteeType = data.Grantee.split('@')[1] ? 'Email' : 'Canonical'
+    } else {
+        saved.GranteeType = data.GranteeType
+    }
+    if (Object.values(data.Access).includes(false)) {
+        saved.Access = []
+        _.forEach(data.Access, (value, key) => {
+            if (value) { saved.Access.push(key) }
+        })
+    } else {
+        saved.Access = ['FullControl']
+    }
+    return saved
 }
 </script>
 

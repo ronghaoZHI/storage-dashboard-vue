@@ -8,33 +8,50 @@
 </template>
 
 <script>
+import user from '@/store/modules/user'
 import { transcoder } from '@/service/Aws'
 export default {
     data () {
         return {
             iconSize: 18,
             self: this,
-            pipelineList: this.pipelineList,
+            pipelineList: [],
+            pageToken: '',
             listHeader: [{
                 title: '管道ID',
                 key: 'id',
-                width: 165
+                width: 160
             }, {
                 title: '管道名称',
                 key: 'name',
-                width: 100
+                width: 120
             }, {
                 title: '输入Bucket',
                 key: 'input_bucket',
-                width: 150
+                width: 120
             }, {
                 title: '输出Bucket',
                 key: 'output_bucket',
-                width: 150
+                width: 120
             }, {
                 title: '权限设置',
-                key: 'permission',
-                width: 200
+                width: 250,
+                render: (h, params) => {
+                    return h('Poptip', {
+                        props: {
+                            placement: 'right',
+                            trigger: 'hover'
+                        }
+                    }, [h('div', params.row.permission.map(item => h('Tag', {
+                        props: {
+                            type: 'border'
+                        }
+                    }, `${item.name}:${item.value}`))),
+                        h('div', {
+                            slot: 'content'
+                        }, params.row.permissionDetails.map(item => h('p', `${item.name}:${item.value}`)))]
+                    )
+                }
             }, {
                 title: '状态',
                 width: 50,
@@ -133,19 +150,19 @@ export default {
             }]
         }
     },
-    mounted () {
-        this.listPipelines()
+    computed: {
+        username () {
+            return user.state.username
+        }
+    },
+    created () {
+        this.listPipelines(this.pageToken)
     },
     methods: {
         async listPipelines (pageToken) {
             try {
                 this.$Loading.start()
-                let res
-                if (pageToken) {
-                    res = await transcoder('listPipelines', { PageToken: pageToken })
-                } else {
-                    res = await transcoder('listPipelines')
-                }
+                let res = pageToken ? await transcoder('listPipelines', { PageToken: pageToken }) : await transcoder('listPipelines')
                 this.pipelineList = await this.convert2Front(res.Pipelines)
                 this.$Loading.finish()
             } catch (error) {
@@ -155,9 +172,27 @@ export default {
         convert2Front (data) {
             let frontList = []
             data.forEach(item => {
+                const permissions = item.ContentConfig.Permissions
                 const frontItem = {
-
+                    id: item.Id,
+                    name: item.Name,
+                    input_bucket: item.InputBucket,
+                    output_bucket: item.OutputBucket,
+                    is_enabled: item.Status === 'Active' ? 'true' : 'false',
+                    permission: [],
+                    permissionDetails: []
                 }
+                _.forEach(permissions, value => {
+                    if (permissionMust.includes(value.Grantee)) {
+                        frontItem.permission.push({name: value.Grantee, value: value.Access.join()})
+                        frontItem.permissionDetails.push({name: value.Grantee, value: value.Access.join()})
+                    } else if (value.Grantee === this.username) {
+                        frontItem.permission.push({name: value.Grantee, value: value.Access.join()})
+                        frontItem.permissionDetails.push({name: value.Grantee, value: value.Access.join()})
+                    } else {
+                        frontItem.permissionDetails.push({name: value.Grantee, value: value.Access.join()})
+                    }
+                })
                 frontList.push(frontItem)
             })
             return frontList
@@ -186,9 +221,22 @@ export default {
             }
         },
         async changeStatus (data) {
+            try {
+                this.$Loading.start()
+                await transcoder('updatePipelineStatus', { Id: data.id, Status: data.is_enabled === 'true' ? 'Active' : 'Paused' })
+                const enable = this.pipelineList[data._index].is_enabled
+                this.pipelineList[data._index].is_enabled = enable === 'true' ? 'false' : 'true'
+                this.$Loading.finish()
+                this.$Message.success('设置成功')
+            } catch (error) {
+                this.$Loading.error()
+                this.$Message.error('设置失败')
+            }
         }
     }
 }
+
+const permissionMust = ['AllUsers', 'AuthenticatedUsers']
 </script>
 
 <style lang="less" scope>
