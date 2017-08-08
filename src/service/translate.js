@@ -1054,7 +1054,8 @@ export const messages = {
             PIPELINE_NAME: '管道名称',
             PIPELINE_NAME_CHAR_NUMBER: '不少于1个字符，不超过40个字符',
             UPDATED_SUCCESSFULLY: '更新成功',
-            PIPELINE_ID: '管道ID'
+            PIPELINE_ID: '管道ID',
+            ACTIONS: '操作'
         },
         i: {
             select: {
