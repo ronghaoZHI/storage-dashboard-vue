@@ -37,14 +37,8 @@ const getTranscodes = async(bucket) => {
 
 const listPipelines = async(pageToken) => {
     try {
-        let res
-        if (pageToken) {
-            res = await transcoder('listPipelines', {pageToken: pageToken})
-        } else {
-            res = await transcoder('listPipelines')
-        }
+        let res = !pageToken ? res = await transcoder('listPipelines') : await transcoder('listPipelines', {pageToken: pageToken})
         const pipelines = res.Pipelines
-        // console.log('pipelines', pipelines)
         return pipelines
     } catch (error) {
         iView.Message.error(error.message, 5)

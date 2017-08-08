@@ -152,7 +152,7 @@ export default {
             }]
         }
     },
-    mounted () {
+    created () {
         this.listPolify()
     },
     methods: {

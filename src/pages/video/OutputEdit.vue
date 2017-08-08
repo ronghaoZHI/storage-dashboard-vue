@@ -597,7 +597,7 @@ export default {
         }
     },
     components: { InputNumber },
-    mounted () {
+    created () {
         this.getTranscode()
     },
     methods: {

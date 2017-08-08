@@ -180,7 +180,7 @@ export default {
             return this.nameError || this.descriptionError
         }
     },
-    mounted () {
+    created () {
         this.readPreset()
     },
     methods: {

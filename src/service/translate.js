@@ -433,7 +433,8 @@ export const messages = {
             SECOND: 'second',
             NO_DATA: 'No data',
             SNAPSHOTS_RULES: 'Snapshots Rules',
-            OUTPUT_FILE_NAME: 'Output file name'
+            OUTPUT_FILE_NAME: 'Output file name',
+            MP_NAME_INFO: 'File name can not be empty'
         },
         i: {
             select: {
@@ -962,7 +963,8 @@ export const messages = {
             SECOND: '秒',
             NO_DATA: '没有数据',
             SNAPSHOTS_RULES: '视频截图规则',
-            OUTPUT_FILE_NAME: '输出文件名'
+            OUTPUT_FILE_NAME: '输出文件名',
+            MP_NAME_INFO: '文件名不能为空'
         },
         i: {
             select: {

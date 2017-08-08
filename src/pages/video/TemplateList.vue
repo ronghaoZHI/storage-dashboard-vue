@@ -114,7 +114,7 @@ export default {
             }]
         }
     },
-    mounted () {
+    created () {
         this.listPresets()
     },
     methods: {
