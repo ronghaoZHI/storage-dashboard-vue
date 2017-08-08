@@ -11,7 +11,7 @@
             <div class="form-item">
                 <span class="form-label"><span class="redFont">*</span>管道名称 : </span>
                 <Input v-model="pipeline.Name" placeholder="管道名称" class="line-width"></Input>
-                <p class="style-name-info redFont" v-if="nameError" >名称使用数字、字母、小数点，且不超过40个字符</p>
+                <p class="style-name-info redFont" v-if="nameError" >管道名称不少于1个字符，不超过40个字符</p>
             </div>
             <div class="form-item">
                 <span class="form-label"><span class="redFont">*</span>{{$t('VIDEO.INPUT_BUCKET')}} : </span>
@@ -149,15 +149,15 @@
                                 {{item.Grantee}}
                             </td>
                             <td>
-                                <Checkbox :disabled="username == item.Grantee" v-model="item.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox :disabled="username === item.Grantee" v-model="item.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
                             </td>
                             <td>
-                                <Checkbox :disabled="username == item.Grantee" v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox :disabled="username == item.Grantee" v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
+                                <Checkbox :disabled="username === item.Grantee" v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
+                                <Checkbox :disabled="username === item.Grantee" v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
                             </td>
                             <td>
                                 <Tooltip placement="bottom" :delay="1000">
-                                    <Button v-if="index == 0"
+                                    <Button v-if="index === 0"
                                         style="margin: 0 2px;"
                                         size="small"
                                         @click="addUser">
@@ -175,7 +175,7 @@
                                     </div>
                                 </Tooltip>
                                 <Tooltip placement="bottom" :delay="1000">
-                                    <Button :disabled="username == item.Grantee"
+                                    <Button :disabled="username === item.Grantee"
                                         style="margin: 0 2px;"
                                         size="small"
                                         @click="deleteUser(index)">

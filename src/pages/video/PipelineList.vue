@@ -4,6 +4,11 @@
             <Button class="button-bsc-add-bucket" type="primary" @click="goPipelineEdit('none', 'none')">{{$t('VIDEO.NEW_PIPELINE')}}</Button>
         </div>
         <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="pipelineList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+        <div class="section-paging">
+            <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="pageTokenArray.length > 0" @click="listPipelines('');pageTokenArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="pageTokenArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="pageToken" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+        </div>
     </div>
 </template>
 
@@ -17,6 +22,7 @@ export default {
             self: this,
             pipelineList: [],
             pageToken: '',
+            pageTokenArray: [],
             listHeader: [{
                 title: '管道ID',
                 key: 'id',
@@ -87,7 +93,6 @@ export default {
                     return h('div', [h('Tooltip', {
                         props: {
                             content: params.row.is_enabled === 'true' ? this.$t('VIDEO.CLOSE') : this.$t('VIDEO.OPEN'),
-                            delay: 1000,
                             placement: 'top'
                         },
                         'class': {
@@ -105,7 +110,6 @@ export default {
                     })]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.EDIT'),
-                            delay: 1000,
                             placement: 'top'
                         },
                         'class': {
@@ -128,7 +132,6 @@ export default {
                     })])]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.DELETE'),
-                            delay: 1000,
                             placement: 'top'
                         }
                     }, [h('i-button', {
@@ -156,7 +159,7 @@ export default {
         }
     },
     created () {
-        this.listPipelines(this.pageToken)
+        this.listPipelines()
     },
     methods: {
         async listPipelines (pageToken) {
@@ -164,6 +167,7 @@ export default {
                 this.$Loading.start()
                 let res = pageToken ? await transcoder('listPipelines', { PageToken: pageToken }) : await transcoder('listPipelines')
                 this.pipelineList = await this.convert2Front(res.Pipelines)
+                this.pageToken = res.NextPageToken
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
@@ -197,6 +201,15 @@ export default {
             })
             return frontList
         },
+        previousPage () {
+            let pageToken = this.pageTokenArray[this.pageTokenArray.length - 2]
+            this.pageTokenArray.pop()
+            this.listPipelines(pageToken)
+        },
+        nextPage () {
+            this.pageToken && this.pageTokenArray.push(this.pageToken)
+            this.listPipelines(this.pageToken)
+        },
         goPipelineEdit (bucket, id) {
             this.$router.push({ name: 'pipelineEdit', params: { bucket: bucket, id: id } })
         },
@@ -223,7 +236,7 @@ export default {
         async changeStatus (data) {
             try {
                 this.$Loading.start()
-                await transcoder('updatePipelineStatus', { Id: data.id, Status: data.is_enabled === 'true' ? 'Active' : 'Paused' })
+                await transcoder('updatePipelineStatus', { Id: data.id, Status: data.is_enabled === 'true' ? 'Paused' : 'Active' })
                 const enable = this.pipelineList[data._index].is_enabled
                 this.pipelineList[data._index].is_enabled = enable === 'true' ? 'false' : 'true'
                 this.$Loading.finish()
@@ -241,4 +254,12 @@ const permissionMust = ['AllUsers', 'AuthenticatedUsers']
 
 <style lang="less" scope>
 @import '../../styles/index.less';
+.section-paging {
+    .wh(100%,40px);
+    .fb(flex-end,center);
+    button {
+        width: 70px;
+        margin-left: 6px;
+    }
+}
 </style>
