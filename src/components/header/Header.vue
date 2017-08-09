@@ -42,8 +42,8 @@
     </div>
 </template>
 <script>
-import { LOGOUT, REPASSWORD, sso } from '@/service/API'
-import { clear } from '@/service/Aws'
+import { REPASSWORD } from '@/service/API'
+import { logout } from '@/service/Helper'
 import user from '@/store/modules/user'
 export default {
     data () {
@@ -69,15 +69,7 @@ export default {
     methods: {
         async menuClick (name) {
             if (name === 'logout') {
-                try {
-                    await this.$http.post(LOGOUT)
-                    await this.$store.dispatch('logout')
-                    await clear()
-                    window.location = sso()
-                } catch (error) {
-                    window.location = sso()
-                    this.$Message.error(error)
-                }
+                logout()
             } else if (name === 'rePasssword') {
                 this.rePasswordModal = true
             } else if (name === 'selectSubUser') {
@@ -91,9 +83,7 @@ export default {
             }
             try {
                 await this.$http.post(REPASSWORD, {email: user.state.email, password: this.rePasswordForm.password})
-                await this.$http.post(LOGOUT)
-                await this.$store.dispatch('logout')
-                window.location = sso()
+                logout()
             } catch (error) {
                 console.log(error)
                 this.$Message.error(this.$t('NAV.CHANGE_PASSWORD_FAILED'))

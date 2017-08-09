@@ -21,7 +21,7 @@
     </div>
 </template>
 <script>
-import { USERINFO, BOUND_USER, sso } from '@/service/API'
+import { USERINFO, BOUND_USER, SSO_CHECK_LOGIN } from '@/service/API'
 import user from '@/store/modules/user'
 import Vue from 'vue'
 export default {
@@ -45,12 +45,13 @@ export default {
             if (_token) {
                 try {
                     this.$store.dispatch('setToken', _token)
+                    this.$http.defaults.headers.common['Authorization'] = _token
                     await this.getUserInfo()
                 } catch (error) {
                     console.log(error)
                 }
             } else {
-                window.location = sso(_router)
+                window.location = SSO_CHECK_LOGIN(_router)
             }
         },
         async getUserInfo () {

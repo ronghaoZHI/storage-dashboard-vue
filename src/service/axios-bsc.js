@@ -3,12 +3,15 @@ import iView from 'iview'
 import store from '@/store'
 import {aws4} from '@/service/aws4/aws4'
 import { getKey } from '@/service/Aws'
+import { logout } from '@/service/Helper'
 // for cros cookie
 axios.defaults.withCredentials = true
 axios.interceptors.request.use(async (config) => {
     return /transcoder-ss.bscstorage.com/.test(config.url) ? getConfig(config) : config
 }, error => Promise.reject(error))
-axios.interceptors.response.use(response => response.data, error => {
+
+axios.interceptors.request.use(config => config, error => Promise.reject(error))
+axios.interceptors.response.use(response => errorHandle(response.data), error => {
     if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
         console.log('axios -- response', error.response.status, error.message)
     } else if (error.request) {
@@ -52,5 +55,14 @@ const getConfig = async (config) => {
 }
 
 axios.defaults.headers.common['Authorization'] = store.state.token
+
+const errorHandle = (data) => {
+    if (data.error && data.code) {
+        data.code === 400 ? logout(data.error) : iView.Message.error(data.error)
+        return Promise.reject('Signature verification failed')
+    } else {
+        return data
+    }
+}
 
 export default axios
