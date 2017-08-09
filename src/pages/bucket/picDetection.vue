@@ -140,7 +140,7 @@
             //  arrow function can not be used in watcher
             'adultPolify': {
                 handler: function (to, from) {
-                    from.enabled === undefined ? '' : this.putBucketPolicy()
+                    from.enabled !== undefined && this.putBucketPolicy()
                 },
                 deep: true
             },

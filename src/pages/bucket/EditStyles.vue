@@ -345,7 +345,7 @@
 import { handler, config } from '@/service/Aws'
 import { prefix } from '@/service/bucketService'
 import upload from '@/components/upload/upload'
-import * as styleList from '@/pages/bucket/PictureStyles'
+import styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview'
 import encoding from 'text-encoding'
 import colorPicker from '@/components/vueColorPicker/vueColorPicker'

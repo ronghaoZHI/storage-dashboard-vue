@@ -59,9 +59,9 @@ export default {
                             type: 'border'
                         }
                     }, `${item.name}:${item.value}`))),
-                        h('div', {
-                            slot: 'content'
-                        }, params.row.videoDetails.map(item => h('p', `${item.name}:${item.value}`)))]
+                    h('div', {
+                        slot: 'content'
+                    }, params.row.videoDetails.map(item => h('p', `${item.name}:${item.value}`)))]
                     )
                 }
             }, {
@@ -78,9 +78,9 @@ export default {
                             type: 'border'
                         }
                     }, `${item.name}:${item.value}`))),
-                        h('div', {
-                            slot: 'content'
-                        }, params.row.audioDetails.map(item => h('p', `${item.name}:${item.value}`)))]
+                    h('div', {
+                        slot: 'content'
+                    }, params.row.audioDetails.map(item => h('p', `${item.name}:${item.value}`)))]
                     )
                 }
             }, {

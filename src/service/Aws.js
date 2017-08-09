@@ -10,10 +10,7 @@ let key = {}
 export const clear = () => key = {}
 
 export const getKey = () => {
-    return axios.get(ACCESSKEY).then(res => key = res[0], error => {
-        console.log(error)
-        return error
-    })
+    return axios.get(ACCESSKEY).then(res => key = res[0])
 }
 
 export const config = ({ accesskey, secretkey }, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1') => {
@@ -25,7 +22,7 @@ export const config = ({ accesskey, secretkey }, timeout = 10000, host = HOST.aw
     return new AWS.S3()
 }
 
-export const getAWS = async(timeout = 10000, host = HOST.awsHost, s3ForcePathStyle = true) => {
+export const getAWS = async (timeout = 10000, host = HOST.awsHost, s3ForcePathStyle = true) => {
     if (user.state.type === 'admin') {
         key = user.state.subUser.keys[0]
     } else if (!key.accesskey) {
@@ -34,7 +31,7 @@ export const getAWS = async(timeout = 10000, host = HOST.awsHost, s3ForcePathSty
     return config(key, timeout, host, s3ForcePathStyle)
 }
 
-export const handler = async(method, params = '', host = HOST.awsHost, s3ForcePathStyle = true, timeout = 10000) => {
+export const handler = async (method, params = '', host = HOST.awsHost, s3ForcePathStyle = true, timeout = 10000) => {
     try {
         const s3 = await getAWS(timeout, host, s3ForcePathStyle)
         return new Promise((resolve, reject) => s3[method](params, (error, data) => {
@@ -47,7 +44,7 @@ export const handler = async(method, params = '', host = HOST.awsHost, s3ForcePa
     }
 }
 
-export const transcoder = async(method, params = '') => {
+export const transcoder = async (method, params = '') => {
     await getAWS(1000, HOST.transcoderHOST, false)
     try {
         let elastictranscoder = new AWS.ElasticTranscoder({paramValidation: false, convertResponseTypes: false})

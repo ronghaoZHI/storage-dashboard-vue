@@ -223,4 +223,3 @@ const batchDeletion = (list, bucket) => {
     }
 }
 </style>
-

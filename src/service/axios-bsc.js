@@ -13,7 +13,7 @@ axios.interceptors.request.use(async (config) => {
 axios.interceptors.request.use(config => config, error => Promise.reject(error))
 axios.interceptors.response.use(response => errorHandle(response.data), error => {
     if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
-        console.log('axios -- response', error.response.status, error.message)
+        logout('The network may be broken')
     } else if (error.request) {
         iView.Message.warning('The network may be broken, please try again')
     } else {
@@ -58,8 +58,8 @@ axios.defaults.headers.common['Authorization'] = store.state.token
 
 const errorHandle = (data) => {
     if (data.error && data.code) {
-        data.code === 400 ? logout(data.error) : iView.Message.error(data.error)
-        return Promise.reject('Signature verification failed')
+        data.code === 400 || data.code === 401 || data.code === 403 ? logout(data.error) : iView.Message.error(data.error)
+        return Promise.reject(data.error)
     } else {
         return data
     }

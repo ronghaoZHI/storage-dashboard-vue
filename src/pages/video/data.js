@@ -2,14 +2,14 @@ import { getAWS, handler, transcoder } from '@/service/Aws'
 import { HOST } from '@/service/HOST'
 import iView from 'iview'
 
-const getBucketPolicy = async(bucket) => {
+const getBucketPolicy = async (bucket) => {
     let aws = await getAWS(10000, HOST.policyHOST)
     return new Promise((resolve, reject) => aws.getBucketPolicy({Bucket: bucket}, (error, data) => {
         return error && error.code !== 'PolicyNotFound' ? reject(error) : resolve({bucket, data: data})
     }))
 }
 
-const putBucketPolicy = async(bucket, data) => {
+const putBucketPolicy = async (bucket, data) => {
     const policy = {
         name: 'post_upload_transcoding',
         value: data
@@ -21,7 +21,7 @@ const putBucketPolicy = async(bucket, data) => {
     }
 }
 
-const getTranscodes = async(bucket) => {
+const getTranscodes = async (bucket) => {
     try {
         let res = await getBucketPolicy(bucket)
         const policy = res.data && res.data.Policy ? JSON.parse(res.data.Policy) : {}
@@ -35,9 +35,9 @@ const getTranscodes = async(bucket) => {
     }
 }
 
-const listPipelines = async(pageToken) => {
+const listPipelines = async (pageToken) => {
     try {
-        let res = !pageToken ? res = await transcoder('listPipelines') : await transcoder('listPipelines', {pageToken: pageToken})
+        let res = pageToken ? await transcoder('listPipelines', {pageToken: pageToken}) : await transcoder('listPipelines')
         const pipelines = res.Pipelines
         return pipelines
     } catch (error) {
@@ -45,7 +45,7 @@ const listPipelines = async(pageToken) => {
     }
 }
 
-const getTemplateInfo = async() => {
+const getTemplateInfo = async () => {
     templateList = []
     await getTemplatePage()
     let [templateContainer, templateName] = [[], []]
@@ -59,7 +59,7 @@ const getTemplateInfo = async() => {
 }
 
 let templateList = []
-const getTemplatePage = async(pageToken) => {
+const getTemplatePage = async (pageToken) => {
     let res = !pageToken ? await transcoder('listPresets') : await transcoder('listPresets', {PageToken: pageToken})
     templateList.push(...res.Presets)
     if (!!res.NextPageToken) {

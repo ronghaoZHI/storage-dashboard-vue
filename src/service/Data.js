@@ -1,7 +1,7 @@
 import { handler } from '@/service/Aws'
 import bucket from '@/store/modules/bucket'
 
-const getBucketList = async() => {
+const getBucketList = async () => {
     let bucketListStore = bucket.state.bucketList
     if (bucketListStore > 0) {
         return bucketListStore
