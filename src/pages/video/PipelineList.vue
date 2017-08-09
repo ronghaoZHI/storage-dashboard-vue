@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bsc-pipeline-list">
         <div class="layout-bsc-toolbar">
             <Button class="button-bsc-add-bucket" type="primary" @click="goPipelineEdit('none', 'none')">{{$t('VIDEO.NEW_PIPELINE')}}</Button>
         </div>
@@ -24,23 +24,23 @@ export default {
             pageToken: '',
             pageTokenArray: [],
             listHeader: [{
-                title: '管道ID',
+                title: this.$t('VIDEO.PIPELINE_ID'),
                 key: 'id',
                 width: 160
             }, {
-                title: '管道名称',
+                title: this.$t('VIDEO.PIPELINE_NAME'),
                 key: 'name',
                 width: 120
             }, {
-                title: '输入Bucket',
+                title: this.$t('VIDEO.INPUT_BUCKET'),
                 key: 'input_bucket',
                 width: 120
             }, {
-                title: '输出Bucket',
+                title: this.$t('VIDEO.OUTPUT_BUCKET'),
                 key: 'output_bucket',
                 width: 120
             }, {
-                title: '权限设置',
+                title: this.$t('VIDEO.PERMISSION_SETTINGS'),
                 width: 250,
                 render: (h, params) => {
                     return h('Poptip', {
@@ -59,7 +59,7 @@ export default {
                     )
                 }
             }, {
-                title: '状态',
+                title: this.$t('VIDEO.STATUS'),
                 width: 50,
                 render: (h, params) => {
                     if (params.row.is_enabled === 'true') {
@@ -85,7 +85,7 @@ export default {
                     }
                 }
             }, {
-                title: '操作',
+                title: this.$t('VIDEO.ACTIONS'),
                 key: 'actions',
                 width: 150,
                 align: 'right',
@@ -93,6 +93,7 @@ export default {
                     return h('div', [h('Tooltip', {
                         props: {
                             content: params.row.is_enabled === 'true' ? this.$t('VIDEO.CLOSE') : this.$t('VIDEO.OPEN'),
+                            delay: 500,
                             placement: 'top'
                         },
                         'class': {
@@ -110,6 +111,7 @@ export default {
                     })]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.EDIT'),
+                            delay: 500,
                             placement: 'top'
                         },
                         'class': {
@@ -132,6 +134,7 @@ export default {
                     })])]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.DELETE'),
+                            delay: 500,
                             placement: 'top'
                         }
                     }, [h('i-button', {
@@ -167,7 +170,12 @@ export default {
                 this.$Loading.start()
                 let res = pageToken ? await transcoder('listPipelines', { PageToken: pageToken }) : await transcoder('listPipelines')
                 this.pipelineList = await this.convert2Front(res.Pipelines)
-                this.pageToken = res.NextPageToken
+                if (res.NextPageToken) {
+                    let nextRes = await transcoder('listPipelines', { PageToken: res.NextPageToken })
+                    this.pageToken = !nextRes.Pipelines.length ? null : res.NextPageToken
+                } else {
+                    this.pageToken = null
+                }
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
@@ -240,10 +248,10 @@ export default {
                 const enable = this.pipelineList[data._index].is_enabled
                 this.pipelineList[data._index].is_enabled = enable === 'true' ? 'false' : 'true'
                 this.$Loading.finish()
-                this.$Message.success('设置成功')
+                this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.error('设置失败')
+                this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
             }
         }
     }
@@ -254,12 +262,27 @@ const permissionMust = ['AllUsers', 'AuthenticatedUsers']
 
 <style lang="less" scope>
 @import '../../styles/index.less';
-.section-paging {
-    .wh(100%,40px);
-    .fb(flex-end,center);
-    button {
-        width: 70px;
-        margin-left: 6px;
+
+@switch-off-color: #aca9a9;
+
+.@{css-prefix}pipeline-list {
+    .section-paging {
+        .wh(100%,40px);
+        .fb(flex-end,center);
+        button {
+            width: 70px;
+            margin-left: 6px;
+        }
+    }
+
+    .ivu-switch {
+        border: 1px solid @switch-off-color;
+        background-color: @switch-off-color;
+    }
+
+    .ivu-switch-checked {
+        border-color: @primary-color;
+        background-color: @primary-color;
     }
 }
 </style>

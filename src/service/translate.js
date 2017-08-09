@@ -473,7 +473,13 @@ export const messages = {
             OUTPUTKEY_REQUIRED: 'Output file name is required',
             SHOTKEY_REQUIRED: 'File name suffix is required',
             HLS_REQUIRED: 'HLS file name is required',
-            NEW_PIPELINE: 'New pipeline'
+            NEW_PIPELINE: 'New pipeline',
+            PIPELINE_MANAGEMENT: 'Pipeline management',
+            PIPELINE_NAME: 'Pipeline name',
+            PIPELINE_NAME_CHAR_NUMBER: 'Not less than 1 character, and not more than 40 characters',
+            UPDATED_SUCCESSFULLY: 'Updated successfully',
+            PIPELINE_ID: 'Pileline ID',
+            ACTIONS: 'Actions'
         },
         i: {
             select: {
@@ -1043,7 +1049,12 @@ export const messages = {
             OUTPUTKEY_REQUIRED: '请填写输出文件名',
             SHOTKEY_REQUIRED: '请填写输出文件名后缀',
             HLS_REQUIRED: '请填写自适应HLS文件名',
-            NEW_PIPELINE: '新建管道'
+            NEW_PIPELINE: '新建管道',
+            PIPELINE_MANAGEMENT: '管道管理',
+            PIPELINE_NAME: '管道名称',
+            PIPELINE_NAME_CHAR_NUMBER: '不少于1个字符，不超过40个字符',
+            UPDATED_SUCCESSFULLY: '更新成功',
+            PIPELINE_ID: '管道ID'
         },
         i: {
             select: {

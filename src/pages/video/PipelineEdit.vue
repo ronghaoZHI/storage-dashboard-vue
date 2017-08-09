@@ -1,17 +1,17 @@
 <template>
-    <div>
+    <div class="bsc-pipeline-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/video/pipeline">管道管理</Breadcrumb-item>
-                <Breadcrumb-item>新建管道</Breadcrumb-item>
+                <Breadcrumb-item href="/video/pipeline">{{$t('VIDEO.PIPELINE_MANAGEMENT')}}</Breadcrumb-item>
+                <Breadcrumb-item>{{$t('VIDEO.NEW_PIPELINE')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="form-item">
-                <span class="form-label"><span class="redFont">*</span>管道名称 : </span>
-                <Input v-model="pipeline.Name" placeholder="管道名称" class="line-width"></Input>
-                <p class="style-name-info redFont" v-if="nameError" >管道名称不少于1个字符，不超过40个字符</p>
+                <span class="form-label"><span class="redFont">*</span>{{$t('VIDEO.PIPELINE_NAME')}} : </span>
+                <Input v-model="pipeline.Name" :placeholder='this.$t("VIDEO.PIPELINE_NAME")' class="line-width"></Input>
+                <p class="style-name-info redFont" v-if="nameError" >{{$t('VIDEO.PIPELINE_NAME_CHAR_NUMBER')}}</p>
             </div>
             <div class="form-item">
                 <span class="form-label"><span class="redFont">*</span>{{$t('VIDEO.INPUT_BUCKET')}} : </span>
@@ -216,7 +216,7 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <Button class="button-bsc-add-bucket save-button" type="primary" @click="addPipeline">{{$t('VIDEO.SAVE')}}</Button>
-            <Button class="button-bsc-add-bucket cancel-button" type="primary" @click="goPipelineList">取消</Button>
+            <Button class="button-bsc-add-bucket cancel-button" type="primary" @click="goPipelineList">{{$t('VIDEO.CANCEL')}}</Button>
         </div>
     </div>
 </template>
@@ -290,16 +290,13 @@ export default {
             this.pipeline.Name = data.Name
             this.pipeline.InputBucket = data.InputBucket
             this.pipeline.OutputBucket = data.OutputBucket
-            this.pipeline.SuccessCallbackUrl = data.SuccessCallbackUrl.split('http://')[1] || ''
-            this.pipeline.FailureCallbackUrl = data.FailureCallbackUrl.split('http://')[1] || ''
-            const permissions = data.ContentConfig.Permissions
-            _.forEach(permissions, item => {
+            data.ContentConfig.Permissions.forEach(item => {
                 let acc = {
                     Read: false,
                     ReadAcp: false,
                     WriteAcp: false
                 }
-                _.forEach(item.Access, item => {
+                item.Access.forEach(item => {
                     if (item === 'FullControl') {
                         acc = {
                             Read: true,
@@ -339,12 +336,14 @@ export default {
                 this.$Loading.start()
                 if (this.pipelineId === 'none') {
                     await transcoder('createPipeline', params)
+                    this.$Loading.finish()
+                    this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 } else {
                     params.Id = this.pipelineId
                     await transcoder('updatePipeline', params)
+                    this.$Loading.finish()
+                    this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
                 }
-                this.$Loading.finish()
-                this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 this.$router.push({ name: 'pipeline' })
             } catch (error) {
                 this.$Loading.error()
@@ -440,9 +439,14 @@ const aclConvert2Save = data => {
 @edit-output-item-span: 175px;
 @edit-output-line-width: 500px;
 
-.editBlock {
-    margin: 20px 0 10px;
-    .form-item {
+.@{css-prefix}pipeline-edit {
+    .separator-line {
+        border-bottom: 1px solid @edit-styles-border-color;
+    }
+
+    .editBlock {
+        margin: 20px 0 10px;
+        .form-item {
             margin-bottom: 20px;
 
             .form-label {
@@ -462,31 +466,28 @@ const aclConvert2Save = data => {
             .style-name-info {
                 padding: 5px 0 0 @edit-output-item-span;
             }
-    }
 
-    .save-button {
-        margin: 0 0 0 250px;
-    }
+            .redFont {
+                color: red !important;
+            }
+
+            .ivu-select .ivu-select-dropdown {
+                max-height: 130px !important;
+                overflow: auto;
+            }
+
+            .new-user-input {
+                width: 85%;
+            }
+        }
+
+        .save-button {
+            margin: 0 0 0 250px;
+        }
     
-    .cancel-button {
-        margin: 0 0 0 80px;
+        .cancel-button {
+            margin: 0 0 0 80px;
+        }
     }
-}
-
-.redFont {
-    color: red !important;
-}
-
-.separator-line {
-    border-bottom: 1px solid @edit-styles-border-color;
-}
-
-.new-user-input {
-    width: 85%;
-}
-
-.ivu-select .ivu-select-dropdown {
-    max-height: 130px !important;
-    overflow: auto;
 }
 </style>
