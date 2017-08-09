@@ -10,7 +10,9 @@ axios.interceptors.request.use(config => {
     return /transcoder-ss.bscstorage.com/.test(config.url) ? getConfig(config) : isSSOLogin ? config : logout('Login status is invalid')
 }, error => Promise.reject(error))
 axios.interceptors.response.use(response => errorHandle(response.data), error => {
-    if (error.request) {
+    if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
+        logout('The network may be broken')
+    } else if (error.request) {
         iView.Message.warning('The network may be broken, please try again')
     } else {
         iView.Message.error(error.response.data.error)
