@@ -154,7 +154,6 @@ const batchDeletion = (list, bucket) => {
         })
     }))
 }
-
 </script>
 
 <style lang="less" scoped>

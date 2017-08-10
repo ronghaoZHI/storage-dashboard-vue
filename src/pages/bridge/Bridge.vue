@@ -55,6 +55,7 @@ export default {
             }
         },
         async getUserInfo () {
+            this.$Loading.start()
             this.$http.get(USERINFO).then(res => {
                 res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
                 this.$Loading.finish()

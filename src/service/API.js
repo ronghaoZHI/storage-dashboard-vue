@@ -9,8 +9,8 @@ export const LOGOUT = group('auth/logout')
 export const REPASSWORD = group('user/update/password')
 export const USERINFO = group('profile')
 export const ACCESSKEY = group('accesskey')
-export const SSO_CHECK_LOGIN = (callback = '') => `https://sso.qingcdn.com/web/user/checkLogin?appId=2&callback=${callback}`
-export const SSO_LOGOUT = `https://sso.qingcdn.com/web/user/logout?appId=2`
+export const SSO_CHECK_LOGIN = (callback = '') => `http://uc.baishancloud.com/web/user/checkLogin?appId=2&callback=${callback}`
+export const SSO_LOGOUT = `http://uc.baishancloud.com/web/user/logout?appId=2`
 
 export const CREATE_USER = group('administrator/create/user')
 export const REDIRECT_BUCKET = group('superuser/redirect/bucket')
