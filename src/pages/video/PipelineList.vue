@@ -170,6 +170,7 @@ export default {
                 this.$Loading.start()
                 let res = pageToken ? await transcoder('listPipelines', { PageToken: pageToken }) : await transcoder('listPipelines')
                 this.pipelineList = await this.convert2Front(res.Pipelines)
+                pageToken && !this.pageTokenArray.includes(pageToken) && this.pageTokenArray.push(pageToken)
                 if (res.NextPageToken) {
                     let nextRes = await transcoder('listPipelines', { PageToken: res.NextPageToken })
                     this.pageToken = !nextRes.Pipelines.length ? null : res.NextPageToken
@@ -215,7 +216,6 @@ export default {
             this.listPipelines(pageToken)
         },
         nextPage () {
-            this.pageToken && this.pageTokenArray.push(this.pageToken)
             this.listPipelines(this.pageToken)
         },
         goPipelineEdit (bucket, id) {
