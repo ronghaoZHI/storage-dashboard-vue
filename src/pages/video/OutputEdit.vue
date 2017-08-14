@@ -306,7 +306,7 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" :disabled="sbumitDisabled">{{$t('VIDEO.SAVE')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
         </div>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
             <div class="form-item">
@@ -574,9 +574,6 @@ export default {
         outputsDisabled () {
             return this.isTS(this.outputModal.preset_id) && this.outputModal.segment_duration === 0 && this.auxiliary.MP
         },
-        sbumitDisabled () {
-            return this.regError || this.MPNameError
-        },
         regError () {
             try {
                 new RegExp(this.auxiliary.regular)
@@ -706,7 +703,15 @@ export default {
         },
         beforeSubmit () {
             let segments = []
-            if (this.MPShow && this.auxiliary.MP) {
+            if (this.regError) {
+                this.$Message.warning(this.$t('VIDEO.REG_ERROR'))
+                return
+            }
+            if (this.regError) {
+                this.$Message.warning(this.$t('VIDEO.ADAPTIVE_EXIST_TS_FORMAT'))
+                return
+            }
+            if (this.auxiliary.MP) {
                 this.transcode.outputs.forEach(item => {
                     if (this.isTS(item.preset_id)) {
                         segments.push(item.segment_duration || 0)
@@ -725,6 +730,11 @@ export default {
                 } else if (segments[0] === 0) {
                     this.$Message.warning(this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0'))
                     this.HLSError = true
+                    return
+                }
+
+                if (this.MPNameError) {
+                    this.$Message.warning(this.$t('VIDEO.MP_NAME_ERROR'))
                     return
                 }
             }

@@ -468,6 +468,8 @@ export const messages = {
             SHOTKEY_REQUIRED: 'File name suffix is required',
             OUTPUTEMPLATE_REQUIRED: 'Transcoding template is required',
             OUTPUTKEY_SUFFIX_REQUIRED: 'File name suffixis required',
+            REG_ERROR: 'Invalid regular expression',
+            MP_NAME_ERROR: 'Invalid MasterPlaylist file name suffix',
             HLS_REQUIRED: 'HLS file name is required'
         },
         i: {
@@ -1032,6 +1034,8 @@ export const messages = {
             SHOTKEY_REQUIRED: '请填写输出文件名后缀',
             OUTPUTEMPLATE_REQUIRED: '请选择转码模版',
             OUTPUTKEY_SUFFIX_REQUIRED: '请输入输出文件名后缀',
+            REG_ERROR: '正则表达式错误',
+            MP_NAME_ERROR: 'MasterPlaylist文件名后缀无效',
             HLS_REQUIRED: '请填写自适应HLS文件名'
         },
         i: {
