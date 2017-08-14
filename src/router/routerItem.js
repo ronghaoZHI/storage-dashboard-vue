@@ -18,7 +18,8 @@ import OutputEdit from '@/pages/video/OutputEdit'
 import JobList from '@/pages/video/JobList'
 import JobEdit from '@/pages/video/JobEdit'
 import Notfound from '@/pages/404/404'
-import Bridge from '@/pages/bridge/bridge'
+import Bridge from '@/pages/bridge/Bridge'
+import Upgrade from '@/pages/upgrade/Upgrade'
 
 const layoutChild = [{
     path: '',
@@ -105,7 +106,14 @@ const layoutChild = [{
     component: UserManage
 }]
 
-const routes = [{
+let upgradeMode = {
+    path: '*',
+    component: Upgrade
+}
+
+console.log(window.dashboard_conf.upgradeMode)
+
+const routes = window.dashboard_conf.upgradeMode ? [upgradeMode] : [{
     path: '/',
     component: Layout,
     meta: { requiresAuth: true },
