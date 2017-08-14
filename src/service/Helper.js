@@ -7,7 +7,8 @@ export const logout = async (message) => {
     message ? iView.Modal.error({
         title: 'Need login',
         content: `${message},need to login again`,
-        onOk: () => dataClearAndLocation()
+        onOk: () => dataClearAndLocation(),
+        okText: 'OK'
     }) : dataClearAndLocation()
 }
 

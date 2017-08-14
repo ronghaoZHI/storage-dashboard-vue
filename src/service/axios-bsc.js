@@ -57,11 +57,13 @@ const getConfig = async (config) => {
 axios.defaults.headers.common['Authorization'] = store.state.token
 
 const errorHandle = (data) => {
-    if (data.error && data.code) {
-        data.code === 400 || data.code === 401 || data.code === 403 ? logout(data.error) : iView.Message.error(data.error)
+    console.log(data)
+    if (data.error) {
+        let code = data.error.status_code
+        code === 400 || code === 401 || code === 403 ? logout(data.error.show_msg) : iView.Message.error(data.error.show_msg)
         return Promise.reject(data.error)
     } else {
-        return data
+        return data.data
     }
 }
 

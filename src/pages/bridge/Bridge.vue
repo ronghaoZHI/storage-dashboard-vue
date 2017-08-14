@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-login" @keyup.enter="loginSubmit('loginForm')">
-        <div class="card-login">
-            <div class="tab-register" v-if="!isLogin">
+        <div class="card-login" v-if="showUserSelect">
+            <div class="tab-register">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
                     <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
@@ -11,7 +11,7 @@
                         <div v-if="subUserList.length > 0" class="card-user" v-for="user in subUserList" :key="user.ts" @click="selectSubUser(user)">
                             <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
                             <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
-                            <span class="icon" v-show="user.info.type === 'super'"><Icon type="star"></Icon></span>
+                            <span class="icon" v-show="user.info && user.info.type === 'super'"><Icon type="star"></Icon></span>
                         </div>
                         <div v-if="subUserList.length <= 0" class="warning" @click="toUserMange()">暂无绑定用户,<span>点击绑定或新增用户</span></div>
                     </div>
@@ -29,7 +29,7 @@ export default {
         return {
             lang: localStorage.getItem('lang') || 'cn',
             selectedCustomer: '',
-            isLogin: !(!!user.state && user.state.type === 'admin'),
+            showUserSelect: false,
             userInfo: user.state || {},
             subUserList: user.state.subUserList || []
         }
@@ -44,9 +44,9 @@ export default {
 
             if (_token) {
                 try {
-                    this.$store.dispatch('setToken', _token)
+                    await this.$store.dispatch('setToken', _token)
                     this.$http.defaults.headers.common['Authorization'] = _token
-                    await this.getUserInfo()
+                    this.getUserInfo()
                 } catch (error) {
                     console.log(error)
                 }
@@ -69,7 +69,7 @@ export default {
             this.userInfo = data
             if (res.length > 0) {
                 this.subUserList = res
-                this.isLogin = false
+                this.showUserSelect = true
                 await this.$store.dispatch('setUserInfo', {
                     ...data,
                     subUserList: this.subUserList
