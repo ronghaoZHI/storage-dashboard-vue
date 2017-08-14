@@ -9,7 +9,7 @@
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.TEMPLATE_NAME')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.TEMPLATE_NAME')}} : </span>
                 <Input v-model="template.Name" :placeholder='$t("VIDEO.TEMPLATE_NAME")' class="line-width"></Input>
                 <p class="style-name-info redFont" v-if="nameError" >{{$t('VIDEO.TEMPLATE_NAME_CHAR_NUMBER')}}</p>
             </div>
@@ -140,7 +140,7 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="createPreset" :disabled="submitDisabled">{{$t('VIDEO.SAVE')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="createPreset">{{$t('VIDEO.SAVE')}}</Button>
         </div>
     </div>
 </template>
@@ -175,9 +175,6 @@ export default {
         },
         descriptionError () {
             return (new TextEncoder('utf-8').encode(this.template.Description)).length > 100
-        },
-        submitDisabled () {
-            return this.nameError || this.descriptionError
         }
     },
     created () {
@@ -185,6 +182,13 @@ export default {
     },
     methods: {
         async createPreset () {
+            if (this.nameError) {
+                this.$Message.warning(this.$t('VIDEO.TEMPLATE_NAME_WARING'))
+                return
+            } else if (this.descriptionError) {
+                this.$Message.warning(this.$t('VIDEO.TEMPLATE_DESCRIPTION_WARING'))
+                return
+            }
             let template = convert2Save(this.template, this.auxiliary)
             try {
                 this.$Loading.start()
