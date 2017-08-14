@@ -4,6 +4,7 @@ import AWS from 'aws-sdk'
 import { ACCESSKEY } from './API'
 import axios from './axios-bsc'
 import user from '@/store/modules/user'
+import { logout, isSSOLogin } from '@/service/Helper'
 
 let key = {}
 
@@ -23,6 +24,7 @@ export const config = ({ accesskey, secretkey }, timeout = 10000, host = HOST.aw
 }
 
 export const getAWS = async (timeout = 10000, host = HOST.awsHost, s3ForcePathStyle = true) => {
+    if (!isSSOLogin) logout('Login status is invalid')
     if (user.state.type === 'admin') {
         key = user.state.subUser.keys[0]
     } else if (!key.accesskey) {
