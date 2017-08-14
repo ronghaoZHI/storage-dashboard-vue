@@ -20,29 +20,6 @@ axios.interceptors.response.use(response => errorHandle(response.data), error =>
     }
     return Promise.reject(error.response.data.error)
 })
-const getHeaders = async (config) => {
-    let key = await getKey()
-    console.log('config', config)
-    let myMethod = config.method.toUpperCase()
-    console.log('myMethod', myMethod)
-    let myPath = config.url.split('.com')[1]
-    console.log('myPath', myPath)
-    let myHost = config.url.split('http://')[1].split('/')[0]
-    console.log('myHost', myHost)
-    const data = config.data
-    console.log('data', data)
-    let signed = aws4.sign({
-        host: myHost,
-        method: myMethod,
-        path: myPath,
-        body: JSON.stringify(data)
-    }, {
-        secretAccessKey: key.secretkey,
-        accessKeyId: key.accesskey
-    })
-    console.log(signed.headers)
-    return signed.headers
-}
 
 const getConfig = async (config) => {
     let headers = await getHeaders(config)
@@ -64,6 +41,24 @@ const errorHandle = (data) => {
     } else {
         return data.data
     }
+}
+
+const getHeaders = async (config) => {
+    let key = await getKey()
+    let myMethod = config.method.toUpperCase()
+    let myPath = config.url.split('.com')[1]
+    let myHost = config.url.split('http://')[1].split('/')[0]
+    const data = config.data
+    let signed = aws4.sign({
+        host: myHost,
+        method: myMethod,
+        path: myPath,
+        body: JSON.stringify(data)
+    }, {
+        secretAccessKey: key.secretkey,
+        accessKeyId: key.accesskey
+    })
+    return signed.headers
 }
 
 export default axios
