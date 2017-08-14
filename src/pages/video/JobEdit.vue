@@ -61,13 +61,13 @@
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.OUTPUT_RULES')}} : </span>
                 <div class="table-box line-width">
-                    <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="job.Outputs" :no-data-text='$t("VIDEO.OUTPUT_TABLE_INFO")'></Table>
+                    <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="job.Outputs" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
                 </div>
                 <br>
 ·                <p class="style-name-info redFont" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
                 <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
             </div>
-            <!-- <div class="form-item">
+             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.VIDEO_SCREENSHOTS_RULES')}} : </span>
                 <div class="table-box line-width">
                     <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="job.Snapshots" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
@@ -75,7 +75,7 @@
                 <br>
                 <p class="style-name-info redFont" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
                 <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
-            </div> -->
+            </div> 
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
@@ -180,7 +180,7 @@
 <script>
 import InputNumber from '@/components/input-number/input-number.vue'
 import { listPipelines, getTemplateInfo } from '@/pages/video/data'
-import { transcoder, handler } from '@/service/Aws'
+import { handler } from '@/service/Aws'
 
 export default {
     data () {
@@ -412,7 +412,7 @@ export default {
             }
 
             if (this.osError) {
-                this.$Message.warning(this.$t('VIDEO.OUTPUT_TABLE_INFO'))
+                this.$Message.warning(this.$t('VIDEO.AT_LEAST_ONE_RULE'))
                 return
             }
             let saved = await this.convert2Save(this.job)
@@ -421,7 +421,7 @@ export default {
         async createJob (job) {
             try {
                 this.$Loading.start()
-                await transcoder('createJob', job)
+                await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/jobs', job).then(res => { console.log(res) })
                 this.$Loading.finish()
                 this.$Message.success($t('VIDEO.CREATED'))
             } catch (error) {

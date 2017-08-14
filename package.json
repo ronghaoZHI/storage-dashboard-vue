@@ -21,6 +21,7 @@
     "less-loader": "^4.0.5",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "querystring-browser": "^1.0.4",
     "text-encoding": "^0.6.4",
     "vue": "^2.3.0",
     "vue-color": "^2.0.9",

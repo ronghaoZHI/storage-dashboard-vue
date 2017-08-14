@@ -20,6 +20,7 @@
 <script>
 import { transcoder } from '@/service/Aws'
 import { listPipelines, getTemplateInfo } from '@/pages/video/data'
+
 export default {
     data () {
         return {
@@ -149,16 +150,6 @@ export default {
                 this.$Loading.error()
             }
         },
-        async createPipe () {
-            try {
-                this.$Loading.start()
-                await transcoder('createPipeline', pipelinesData)
-                this.$Loading.finish()
-                this.$Message.success($t('VIDEO.CREATED'))
-            } catch (error) {
-                this.$Loading.error()
-            }
-        },
         async cancelJob (job) {
             try {
                 this.$Loading.start()
@@ -196,35 +187,21 @@ const convert2Front = async (data) => {
             const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
             front.cTime = `${date.getFullYear()}-${month}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 
-            front.outputNames = item.Outputs.map(item => {
-                return item.Key
-            })
-            front.templates = item.Outputs.map(item => {
-                return `${item.PresetId}:${templateInfo.templateName[item.PresetId]}`
-            })
-
+            if (item.Outputs && item.Outputs.length > 0) {
+                front.outputNames = item.Outputs.map(item => {
+                    return item.Key
+                })
+                front.templates = item.Outputs.map(item => {
+                    return `${item.PresetId}:${templateInfo.templateName[item.PresetId]}`
+                })
+            }
             frontList.push(front)
         })
     }
 
     return frontList
 }
-const pipelinesData = {
-    Name: 'forJob',
-    InputBucket: 'cdnlog',
-    OutputBucket: 'policytest',
-    ContentConfig: {
-        Permissions: [
-            {
-                GranteeType: 'Group',
-                Grantee: 'AllUsers',
-                Access: ['FullControl']
-            }
-        ]
-    },
-    SuccessCallbackUrl: '',
-    FailureCallbackUrl: ''
-}
+
 </script>
 <style lang="less" scoped>
 
