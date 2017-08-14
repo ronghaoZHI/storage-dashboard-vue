@@ -461,7 +461,10 @@ export const messages = {
             AUDIO: 'Audio',
             TEMPLATE_NAME_TABLE: 'Name',
             CONF: 'Configuration',
-            WH_UNALTERED: 'Calculate by resolution'
+            WH_UNALTERED: 'Calculate by resolution',
+            OUTPUTKEY_REQUIRED: 'Output file name is required',
+            SHOTKEY_REQUIRED: 'File name suffix is required',
+            HLS_REQUIRED: 'HLS file name is required'
         },
         i: {
             select: {
@@ -1019,7 +1022,10 @@ export const messages = {
             AUDIO: '音频',
             TEMPLATE_NAME_TABLE: '模版名称',
             CONF: '配置',
-            WH_UNALTERED: '根据分辨率计算'
+            WH_UNALTERED: '根据分辨率计算',
+            OUTPUTKEY_REQUIRED: '请填写输出文件名',
+            SHOTKEY_REQUIRED: '请填写输出文件名后缀',
+            HLS_REQUIRED: '请填写自适应HLS文件名'
         },
         i: {
             select: {

@@ -7,11 +7,7 @@ import { getKey } from '@/service/Aws'
 // for cros cookie
 axios.defaults.withCredentials = true
 axios.interceptors.request.use(async(config) => {
-    if (/transcoder-ss\.bscstorage\.com/.test(config.url)) {
-        config.headers = await getHeaders(config)
-        config.withCredentials = false
-    }
-    return config
+    return /transcoder-ss.bscstorage.com/.test(config.url) ? await getConfig(config) : config
 }, error => Promise.reject(error))
 axios.interceptors.response.use(response => response.data, error => {
     if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
@@ -31,10 +27,15 @@ axios.interceptors.response.use(response => response.data, error => {
 })
 const getHeaders = async(config) => {
     let key = await getKey()
+    console.log('config', config)
     let myMethod = config.method.toUpperCase()
+    console.log('myMethod', myMethod)
     let myPath = config.url.split('.com')[1]
+    console.log('myPath', myPath)
     let myHost = config.url.split('http://')[1].split('/')[0]
+    console.log('myHost', myHost)
     const data = config.data
+    console.log('data', data)
     let signed = aws4.sign({
         host: myHost,
         method: myMethod,
@@ -44,6 +45,16 @@ const getHeaders = async(config) => {
         secretAccessKey: key.secretkey,
         accessKeyId: key.accesskey
     })
+    console.log(signed.headers)
     return signed.headers
+}
+
+const getConfig = async(config) => {
+    let headers = await getHeaders(config)
+    config.headers.Authorization = headers.Authorization
+    config.headers['Content-Type'] = headers['Content-Type']
+    config.headers['X-Amz-Date'] = headers['X-Amz-Date']
+    config.withCredentials = false
+    return config
 }
 export default axios

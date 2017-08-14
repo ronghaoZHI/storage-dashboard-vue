@@ -40,11 +40,14 @@ export default {
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
                 width: 300,
                 render: (h, params) => {
-                    return h('div', params.row.outputNames.map(item => h('Tag', {
-                        props: {
-                            type: 'border'
-                        }
-                    }, item)))
+                    let names = params.row.outputNames
+                    if (names && names.length > 0) {
+                        return h('div', names.map(item => h('Tag', {
+                            props: {
+                                type: 'border'
+                            }
+                        }, item)))
+                    }
                 }
             }, {
                 title: this.$t('VIDEO.PIPE_ID'),
@@ -54,11 +57,14 @@ export default {
                 title: this.$t('VIDEO.JOB_TEMPLATE'),
                 width: 300,
                 render: (h, params) => {
-                    return h('div', params.row.templates.map(item => h('Tag', {
-                        props: {
-                            type: 'border'
-                        }
-                    }, item)))
+                    let templates = params.row.templates
+                    if (templates && templates.length > 0) {
+                        return h('div', templates.map(item => h('Tag', {
+                            props: {
+                                type: 'border'
+                            }
+                        }, item)))
+                    }
                 }
             }, {
                 title: this.$t('VIDEO.STATUS'),

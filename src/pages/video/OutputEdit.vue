@@ -1018,7 +1018,7 @@ const isEmpty = obj => {
 
 @edit-styles-border-color: #d7dde4;
 @edit-output-item-span: 175px;
-@edit-modal-item-span: 115px;
+@edit-modal-item-span: 120px;
 @edit-output-line-width: 475px;
 
 .@{css-prefix}edit{
