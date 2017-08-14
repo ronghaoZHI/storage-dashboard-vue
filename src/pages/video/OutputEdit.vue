@@ -130,7 +130,7 @@
                 </Radio-group>
             </div>
             <div class="form-item" v-if="auxiliary.MP">
-                <span class="form-label">{{$t('VIDEO.MASTER_PLAYLIST_FILE_NAME_SUFFIX')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.MASTER_PLAYLIST_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="transcode.master_playlist.name" placeholder="MasterPlaylist" class="line-width"></Input>
                 <p class="style-name-info redFont button-add-item" v-if="MPNameError">{{$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')}}</p>
             </div>
@@ -310,13 +310,13 @@
         </div>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
                 <Select v-model="outputModal.preset_id" class="line-width" @on-change="templateChange">
                     <Option v-for="template in templateList" :value="template.Id" :key="template.Id">{{template.Name}}</Option>
                 </Select>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="outputModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' class="line-width"></Input>
             </div>
             <div class="form-item" v-if="HLSShow" >
@@ -332,14 +332,14 @@
         </Modal>
         <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="my-modal">
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="shotModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
                 <Select v-model="shotModal.format" style="width:100px;display:inline-block">
                     <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
                 </Select>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
                 <Input-number :min='1' v-model="shotModal.time"></Input-number> S
             </div>
            <div class="form-item">
@@ -646,6 +646,13 @@ export default {
             this.HLSError = false
         },
         updateOutputs () {
+            if (!this.outputModal.preset_id) {
+                this.$Message.warning(this.$t('VIDEO.OUTPUTEMPLATE_REQUIRED'))
+                return
+            } else if (this.outputModal.key_suffix.length < 1) {
+                this.$Message.warning(this.$t('VIDEO.OUTPUTKEY_SUFFIX_REQUIRED'))
+                return
+            }
             const ln = this.transcode.outputs.length
             this.outputModal.template = `${this.outputModal.preset_id}+${this.templateName[this.outputModal.preset_id]}`
             if (this.outputIndex === ln) {
@@ -665,6 +672,11 @@ export default {
             this.showShotsModal = true
         },
         updateShots () {
+            if (this.shotModal.key_suffix.length < 1) {
+                this.$Message.warning(this.$t('VIDEO.OUTPUTKEY_SUFFIX_REQUIRED'))
+                return
+            }
+
             const ln = this.transcode.snapshots.length
             let data = _.clone(this.shotModal)
             if (data.resolution !== 'auto') {
@@ -1036,8 +1048,8 @@ const isEmpty = obj => {
 @import '../../styles/index.less';
 
 @edit-styles-border-color: #d7dde4;
-@edit-output-item-span: 175px;
-@edit-modal-item-span: 115px;
+@edit-output-item-span: 180px;
+@edit-modal-item-span: 120px;
 @edit-output-line-width: 475px;
 
 .@{css-prefix}edit{

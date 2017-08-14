@@ -117,7 +117,7 @@
         </div>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
                 <Select v-model="outputModal.PresetId" class="line-width" @on-change="templateChange" filterable>
                     <Option v-for="template in templateInfo.templateList" :value="template.Id" :key="template.Id">{{template.Name}}</Option>
                 </Select>
@@ -485,6 +485,13 @@ export default {
             this.HLSError = false
         },
         updateOutputs () {
+            if (!this.outputModal.PresetId) {
+                this.$Message.warning(this.$t('VIDEO.OUTPUTEMPLATE_REQUIRED'))
+                return
+            } else if (this.outputModal.Key.length < 1) {
+                this.$Message.warning(this.$t('VIDEO.OUTPUTKEY_REQUIRED'))
+                return
+            }
             const ln = this.job.Outputs.length
             this.outputModal.template = `${this.outputModal.PresetId}+${this.templateInfo.templateName[this.outputModal.PresetId]}`
             if (this.outputIndex === ln) {
