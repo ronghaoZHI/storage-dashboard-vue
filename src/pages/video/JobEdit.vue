@@ -422,7 +422,7 @@ export default {
         async createJob (job) {
             try {
                 this.$Loading.start()
-                await transcoder('createJob', job)
+                await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/jobs', job)
                 this.$Loading.finish()
                 this.$Message.success('操作成功')
             } catch (error) {

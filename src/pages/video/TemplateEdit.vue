@@ -24,13 +24,13 @@
                     <Radio v-for='con in containerList' :key="con" :label='con'>{{con}}</Radio>
                 </Radio-group>
             </div>
-            <!-- <div class="form-item" v-if="template.Container === 'mp4'" >
+             <div class="form-item" v-if="template.Container === 'mp4'" >
                 <span class="form-label">FastStart : </span>
                 <i-switch v-model="template.FastStart">
                     <span slot="open">{{$t('VIDEO.ON')}}</span>
                     <span slot="close">{{$t('VIDEO.OFF')}}</span>
                 </i-switch>
-            </div> -->
+            </div> 
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
@@ -192,7 +192,7 @@ export default {
             let template = convert2Save(this.template, this.auxiliary)
             try {
                 this.$Loading.start()
-                await transcoder('createPreset', template)
+                await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/presets', template)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 this.$router.push({ name: 'template' })
@@ -245,7 +245,7 @@ const convert2Save = (template, auxiliary) => {
         saved.Audio.BitRate = auxiliary.audioBitRate
     }
 
-    // saved.FastStart = template.FastStart.toString()
+    saved.FastStart = template.FastStart.toString()
     saved.Video.FixedGOP = template.Video.FixedGOP.toString()
     saved.Video.KeyframesMaxDist = template.Video.KeyframesMaxDist.toString()
 

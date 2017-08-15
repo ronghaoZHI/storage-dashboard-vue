@@ -201,12 +201,6 @@ RequestSigner.prototype.signature = function () {
 }
 
 RequestSigner.prototype.stringToSign = function () {
-    console.log('stringToSign******', [
-        'AWS4-HMAC-SHA256',
-        this.getDateTime(),
-        this.credentialString(),
-        hash(this.canonicalString(), 'hex')
-    ].join('\n'))
     return [
         'AWS4-HMAC-SHA256',
         this.getDateTime(),
@@ -248,14 +242,6 @@ RequestSigner.prototype.canonicalString = function () {
         if (pathStr[0] !== '/') pathStr = '/' + pathStr
         if (decodeSlashesInPath) pathStr = pathStr.replace(/%2F/g, '/')
     }
-    console.log('canonicalString===', [
-        this.request.method || 'GET',
-        pathStr,
-        queryStr,
-        this.canonicalHeaders() + '\n',
-        this.signedHeaders(),
-        bodyHash
-    ].join('\n'))
     return [
         this.request.method || 'GET',
         pathStr,
