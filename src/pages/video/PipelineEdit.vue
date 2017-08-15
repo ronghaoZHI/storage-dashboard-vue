@@ -10,7 +10,7 @@
         <div class="editBlock">
             <div class="form-item">
                 <span class="form-label"><span class="redFont">*</span>{{$t('VIDEO.PIPELINE_NAME')}} : </span>
-                <Input v-model="pipeline.Name" :placeholder='this.$t("VIDEO.PIPELINE_NAME")' class="line-width"></Input>
+                <Input v-model="pipeline.Name" :placeholder='this.$t("VIDEO.PIPELINE_NAME_INFO")' class="line-width"></Input>
                 <p class="style-name-info redFont" v-if="nameError" >{{$t('VIDEO.PIPELINE_NAME_CHAR_NUMBER')}}</p>
             </div>
             <div class="form-item">
@@ -36,10 +36,10 @@
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.USER_GROUP_PERMISSIONS')}} : </span>
-                <table class="table-permission" style="display:inline-block;width:500px">
+                <table class="table-permission" style="display:inline-block;width:530px">
                     <thead>
                         <tr>
-                            <th style="width:180px;"> {{$t("STORAGE.ACL_GROUP")}}
+                            <th style="width:150px;"> {{$t("STORAGE.ACL_GROUP")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -47,7 +47,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th style="width:160px;">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                            <th style="width:150px;">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -55,7 +55,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th style="width:160px;">{{$t("STORAGE.ACL_PERMISSIONS")}}
+                            <th style="width:230px;">{{$t("STORAGE.ACL_PERMISSIONS")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -83,10 +83,10 @@
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.USER_PERMISSIONS')}} : </span>
-                <table class="table-permission" style="display:inline-block;width:500px">
+                <table class="table-permission" style="display:inline-block;width:530px">
                     <thead>
                         <tr>
-                            <th style="width:120px;"> {{$t("STORAGE.USER")}}
+                            <th style="width:150px;"> {{$t("STORAGE.USER")}}
                                 <Tooltip placement="right">
                                     <span><Icon type="ios-help"></Icon></span>
                                     <div slot="content">
@@ -201,22 +201,21 @@
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.TRANSCODING_SUCCESSFUL_CALLBACK_URL')}} : </span>
-                <Input v-model="pipeline.SuccessCallbackUrl" :placeholder='$t("VIDEO.TRANSCODING_SUCCESSFUL_CALLBACK_URL")' class="line-width" style="display:inline-table;">
+                <span class="form-label">{{$t('VIDEO.ACCEPT_JOB_SUCCESS_CALLBACK_URL')}} : </span>
+                <Input v-model="pipeline.SuccessCallbackUrl" :placeholder='$t("VIDEO.ACCEPT_JOB_SUCCESS_CALLBACK_URL_INFO")' class="line-width" style="display:inline-table;">
                     <span slot="prepend">http://</span>
                 </Input>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.TRANSCODING_FAILED_CALLBACK_URL')}} : </span>
-                <Input v-model="pipeline.FailureCallbackUrl" :placeholder='$t("VIDEO.TRANSCODING_FAILED_CALLBACK_URL")' class="line-width" style="display:inline-table;">
+                <span class="form-label">{{$t('VIDEO.ACCEPT_JOB_FAILURE_CALLBACK_URL')}} : </span>
+                <Input v-model="pipeline.FailureCallbackUrl" :placeholder='$t("VIDEO.ACCEPT_JOB_FAILURE_CALLBACK_URL_INFO")' class="line-width" style="display:inline-table;">
                     <span slot="prepend">http://</span>
                 </Input>
             </div>
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket save-button" type="primary" @click="addPipeline">{{$t('VIDEO.SAVE')}}</Button>
-            <Button class="button-bsc-add-bucket cancel-button" type="primary" @click="goPipelineList">{{$t('VIDEO.CANCEL')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="addPipeline">{{$t('VIDEO.SAVE')}}</Button>
         </div>
     </div>
 </template>
@@ -224,7 +223,6 @@
 <script>
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
-import { transcoder } from '@/service/Aws'
 export default {
     data () {
         return {
@@ -274,7 +272,7 @@ export default {
             if (this.pipelineId !== 'none') {
                 try {
                     this.$Loading.start()
-                    let res = await transcoder('readPipeline', {Id: this.pipelineId})
+                    let res = await this.$http.get('http://transcoder-ss.bscstorage.com/2012-09-25/pipelines/' + this.pipelineId)
                     await this.convert2Front(res.Pipeline)
                     this.$Loading.finish()
                 } catch (error) {
@@ -290,6 +288,8 @@ export default {
             this.pipeline.Name = data.Name
             this.pipeline.InputBucket = data.InputBucket
             this.pipeline.OutputBucket = data.OutputBucket
+            this.pipeline.SuccessCallbackUrl = data.SuccessCallbackUrl.split('http://')[1] || ''
+            this.pipeline.FailureCallbackUrl = data.FailureCallbackUrl.split('http://')[1] || ''
             data.ContentConfig.Permissions.forEach(item => {
                 let acc = {
                     Read: false,
@@ -335,12 +335,11 @@ export default {
             try {
                 this.$Loading.start()
                 if (this.pipelineId === 'none') {
-                    await transcoder('createPipeline', params)
+                    await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/pipelines', params)
                     this.$Loading.finish()
                     this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 } else {
-                    params.Id = this.pipelineId
-                    await transcoder('updatePipeline', params)
+                    await this.$http.put('http://transcoder-ss.bscstorage.com/2012-09-25/pipelines/' + this.pipelineId, params)
                     this.$Loading.finish()
                     this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
                 }
@@ -354,8 +353,8 @@ export default {
             saved.Name = this.pipeline.Name
             saved.InputBucket = this.pipeline.InputBucket
             saved.OutputBucket = this.pipeline.OutputBucket
-            saved.SuccessCallbackUrl = this.pipeline.SuccessCallbackUrl
-            saved.FailureCallbackUrl = this.pipeline.FailureCallbackUrl
+            saved.SuccessCallbackUrl = 'http://' + this.pipeline.SuccessCallbackUrl
+            saved.FailureCallbackUrl = 'http://' + this.pipeline.FailureCallbackUrl
             let group = _.cloneDeep(this.groupACLList)
             let user = _.cloneDeep(this.userACLList)
             saved.ContentConfig.Permissions = _.without([...group, ...user].map(item => {
@@ -437,7 +436,7 @@ const aclConvert2Save = data => {
 
 @edit-styles-border-color: #d7dde4;
 @edit-output-item-span: 175px;
-@edit-output-line-width: 500px;
+@edit-output-line-width: 530px;
 
 .@{css-prefix}pipeline-edit {
     .separator-line {
@@ -479,14 +478,6 @@ const aclConvert2Save = data => {
             .new-user-input {
                 width: 85%;
             }
-        }
-
-        .save-button {
-            margin: 0 0 0 250px;
-        }
-    
-        .cancel-button {
-            margin: 0 0 0 80px;
         }
     }
 }

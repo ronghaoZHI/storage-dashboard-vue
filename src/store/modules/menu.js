@@ -32,27 +32,6 @@ const machine = {
     icon: iconMachine
 }
 
-const videoChildren = [{
-    index: 1,
-    name: 'template'
-}, {
-    index: 2,
-    name: 'pipeline'
-}, {
-    index: 3,
-    name: 'output'
-}, {
-    index: 3,
-    name: 'job'
-}]
-
-const video = {
-    index: 4,
-    name: 'video',
-    icon: iconVideo,
-    children: videoChildren
-}
-
 const userManage = {
     index: 6,
     name: 'user',

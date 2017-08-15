@@ -26,7 +26,7 @@ export default {
             listHeader: [{
                 title: this.$t('VIDEO.PIPELINE_ID'),
                 key: 'id',
-                width: 160
+                width: 170
             }, {
                 title: this.$t('VIDEO.PIPELINE_NAME'),
                 key: 'name',
@@ -41,18 +41,18 @@ export default {
                 width: 120
             }, {
                 title: this.$t('VIDEO.PERMISSION_SETTINGS'),
-                width: 250,
+                width: 280,
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
                             placement: 'right',
                             trigger: 'hover'
                         }
-                    }, [h('div', params.row.permission.map(item => h('Tag', {
+                    }, [h('div', params.row.permission.map(item => h('div', [h('Tag', {
                         props: {
                             type: 'border'
                         }
-                    }, `${item.name}:${item.value}`))),
+                    }, `${item.name}:${item.value}`)]))),
                         h('div', {
                             slot: 'content'
                         }, params.row.permissionDetails.map(item => h('p', `${item.name}:${item.value}`)))]
@@ -60,7 +60,7 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.STATUS'),
-                width: 50,
+                width: 80,
                 render: (h, params) => {
                     if (params.row.is_enabled === 'true') {
                         return h('Icon', {
@@ -87,7 +87,7 @@ export default {
             }, {
                 title: this.$t('VIDEO.ACTIONS'),
                 key: 'actions',
-                width: 150,
+                width: 160,
                 align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
@@ -195,13 +195,17 @@ export default {
                     permission: [],
                     permissionDetails: []
                 }
+                frontItem.permission[0] = {name: 'AllUsers', value: '--'}
+                frontItem.permission[1] = {name: 'AuthenticatedUsers', value: '--'}
+                frontItem.permissionDetails[0] = {name: 'AllUsers', value: '--'}
+                frontItem.permissionDetails[1] = {name: 'AuthenticatedUsers', value: '--'}
                 _.forEach(permissions, value => {
-                    if (permissionMust.includes(value.Grantee)) {
-                        frontItem.permission.push({name: value.Grantee, value: value.Access.join()})
-                        frontItem.permissionDetails.push({name: value.Grantee, value: value.Access.join()})
-                    } else if (value.Grantee === this.username) {
-                        frontItem.permission.push({name: value.Grantee, value: value.Access.join()})
-                        frontItem.permissionDetails.push({name: value.Grantee, value: value.Access.join()})
+                    if (value.Grantee === 'AllUsers') {
+                        frontItem.permission[0] = {name: value.Grantee, value: value.Access.join()}
+                        frontItem.permissionDetails[0] = {name: value.Grantee, value: value.Access.join()}
+                    } else if (value.Grantee === 'AuthenticatedUsers') {
+                        frontItem.permission[1] = {name: value.Grantee, value: value.Access.join()}
+                        frontItem.permissionDetails[1] = {name: value.Grantee, value: value.Access.join()}
                     } else {
                         frontItem.permissionDetails.push({name: value.Grantee, value: value.Access.join()})
                     }
@@ -257,7 +261,6 @@ export default {
     }
 }
 
-const permissionMust = ['AllUsers', 'AuthenticatedUsers']
 </script>
 
 <style lang="less" scope>
