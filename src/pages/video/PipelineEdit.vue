@@ -223,6 +223,7 @@
 <script>
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
+import { AWS_HTTP_PIPELINES } from '@/service/API'
 export default {
     data () {
         return {
@@ -272,7 +273,7 @@ export default {
             if (this.pipelineId !== 'none') {
                 try {
                     this.$Loading.start()
-                    let res = await this.$http.get('http://transcoder-ss.bscstorage.com/2012-09-25/pipelines/' + this.pipelineId)
+                    let res = await this.$http.get(AWS_HTTP_PIPELINES + '/' + this.pipelineId)
                     await this.convert2Front(res.Pipeline)
                     this.$Loading.finish()
                 } catch (error) {
@@ -335,11 +336,11 @@ export default {
             try {
                 this.$Loading.start()
                 if (this.pipelineId === 'none') {
-                    await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/pipelines', params)
+                    await this.$http.post(AWS_HTTP_PIPELINES, params)
                     this.$Loading.finish()
                     this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 } else {
-                    await this.$http.put('http://transcoder-ss.bscstorage.com/2012-09-25/pipelines/' + this.pipelineId, params)
+                    await this.$http.put(AWS_HTTP_PIPELINES + '/' + this.pipelineId, params)
                     this.$Loading.finish()
                     this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
                 }

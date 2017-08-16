@@ -1,8 +1,10 @@
 import { HOST } from './HOST'
 
 const VERSION = '/v1/'
+const VERSION_TRANSCODER = '/2012-09-25/'
 
 const group = (url) => 'http://' + HOST.apiHost + VERSION + url
+const groupTranscoder = (url) => 'http://' + HOST.transcoderHOST + VERSION_TRANSCODER + url
 
 export const LOGIN = group('auth/login')
 export const LOGOUT = group('auth/logout')
@@ -24,5 +26,7 @@ export const UPDATE_SUB_USER_ACL = group('superuser/update/sub_user_acl')
 export const ALL_USER = group('administrator/list/user')
 export const BIND_USER = group('administrator/bind/user')
 export const UNBIND_USER = group('administrator/unbind/user')
+
+export const AWS_HTTP_PIPELINES = groupTranscoder('pipelines')
 
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
