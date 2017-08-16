@@ -34,12 +34,15 @@ const getTranscodes = async (bucket) => {
         iView.Message.error(error.message, 5)
     }
 }
-
-const listPipelines = async (pageToken) => {
+let pipeList = []
+const listPipelines = async(pageToken) => {
     try {
-        let res = pageToken ? await transcoder('listPipelines', {pageToken: pageToken}) : await transcoder('listPipelines')
-        const pipelines = res.Pipelines
-        return pipelines
+        let res = !pageToken ? await transcoder('listPipelines') : await transcoder('listPipelines', {PageToken: pageToken})
+        pipeList.push(...res.Pipelines)
+        if (!!res.NextPageToken) {
+            await listPipelines(res.NextPageToken)
+        }
+        return pipeList
     } catch (error) {
         iView.Message.error(error.message, 5)
     }
