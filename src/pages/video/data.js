@@ -35,7 +35,7 @@ const getTranscodes = async (bucket) => {
     }
 }
 let pipeList = []
-const listPipelines = async(pageToken) => {
+const listPipelines = async (pageToken) => {
     try {
         let res = !pageToken ? await transcoder('listPipelines') : await transcoder('listPipelines', {PageToken: pageToken})
         pipeList.push(...res.Pipelines)

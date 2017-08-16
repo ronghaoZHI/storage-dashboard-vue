@@ -181,7 +181,7 @@
 <script>
 import InputNumber from '@/components/input-number/input-number.vue'
 import { listPipelines, getTemplateInfo } from '@/pages/video/data'
-import { transcoder, handler } from '@/service/Aws'
+import { handler } from '@/service/Aws'
 
 export default {
     data () {
