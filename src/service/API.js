@@ -11,8 +11,8 @@ export const LOGOUT = group('auth/logout')
 export const REPASSWORD = group('user/update/password')
 export const USERINFO = group('profile')
 export const ACCESSKEY = group('accesskey')
-export const SSO_CHECK_LOGIN = (callback = '') => `http://uc.baishancloud.com/web/user/checkLogin?language=1`
-export const SSO_LOGOUT = `http://uc.baishancloud.com/web/user/logout?language=1`
+export const SSO_CHECK_LOGIN = (callback = '') => `http://uc.baishancloud.com/web/user/checkLogin?language=1&appId=${window.dashboard_conf.appID}`
+export const SSO_LOGOUT = `http://uc.baishancloud.com/web/user/logout?language=1&appId=${window.dashboard_conf.appID}`
 
 export const CREATE_USER = group('administrator/create/user')
 export const REDIRECT_BUCKET = group('superuser/redirect/bucket')
