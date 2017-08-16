@@ -154,11 +154,6 @@ export default {
                 }
             },
             data: [],
-            capacityData: this.capacityData,
-            uploadSpaceData: this.uploadSpaceData,
-            downloadSpaceData: this.downloadSpaceData,
-            downloadCountData: this.downloadCountData,
-            uploadCountData: this.uploadCountData,
             capacityOptions: lineOptions,
             uploadTrafficOptions: lineOptions,
             downloadTrafficOptions: lineOptions,
@@ -198,21 +193,21 @@ export default {
 
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
-                    this.originOverview = res.data.data
+                    this.originOverview = res.data
                 }), this.$http.get((this.getApiURL('capacity'))).then(res => {
-                    this.capacityData = res.data
+                    this.capacityData = res
                     this.capacityOptions = InitOptions(this.capacityData)
                 }), this.$http.get((this.getApiURL('upload_space'))).then(res => {
-                    this.uploadSpaceData = res.data
+                    this.uploadSpaceData = res
                     this.uploadTrafficOptions = InitOptions(this.uploadSpaceData)
                 }), this.$http.get((this.getApiURL('download_space'))).then(res => {
-                    this.downloadSpaceData = res.data
+                    this.downloadSpaceData = res
                     this.downloadTrafficOptions = InitOptions(this.downloadSpaceData)
                 }), this.$http.get((this.getApiURL('download_count'))).then(res => {
-                    this.downloadCountData = res.data
+                    this.downloadCountData = res
                     this.downloadsOptions = InitOptions(this.downloadCountData)
                 }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
-                    this.uploadCountData = res.data
+                    this.uploadCountData = res
                     this.uploadsOptions = InitOptions(this.uploadCountData)
                 })]).then(res => {
                     this.data = []
@@ -228,6 +223,7 @@ export default {
                     })
                 })
             } catch (error) {
+                console.log(error)
                 this.$Message.warning('Get data error')
             }
         },

@@ -111,8 +111,6 @@ let upgradeMode = {
     component: Upgrade
 }
 
-console.log(window.dashboard_conf.upgradeMode)
-
 const routes = window.dashboard_conf.upgradeMode ? [upgradeMode] : [{
     path: '/',
     component: Layout,

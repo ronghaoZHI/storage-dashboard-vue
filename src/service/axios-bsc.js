@@ -6,7 +6,6 @@ import { getKey } from '@/service/Aws'
 import { logout, isSSOLogin } from '@/service/Helper'
 
 // for cros cookie
-axios.defaults.withCredentials = true
 axios.interceptors.request.use(config => {
     return /transcoder-ss.bscstorage.com/.test(config.url) ? getConfig(config) : isSSOLogin ? config : logout('Login status is invalid')
 }, error => Promise.reject(error))
