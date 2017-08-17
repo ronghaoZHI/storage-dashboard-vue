@@ -181,7 +181,7 @@ export default {
                 await transcoder('cancelJob', {Id: job.Id})
                 this.jobList.splice(job._index, 1)
                 this.$Loading.finish()
-                this.$Message.success('操作成功')
+                this.$Message.success($t('VIDEO.DELETED'))
             } catch (error) {
                 this.$Loading.error()
             }
