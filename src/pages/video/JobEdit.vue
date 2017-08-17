@@ -371,6 +371,7 @@ export default {
     },
     components: { InputNumber },
     created () {
+        console.log('fghjkyyuihgkjhj======')
         this.createdMethods()
     },
     methods: {
