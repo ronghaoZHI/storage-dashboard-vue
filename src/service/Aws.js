@@ -30,6 +30,7 @@ export const getAWS = async (timeout = 10000, host = HOST.awsHost, s3ForcePathSt
     } else if (!key.accesskey) {
         key = await getKey()
     }
+    console.log('key======', key)
     return config(key, timeout, host, s3ForcePathStyle)
 }
 

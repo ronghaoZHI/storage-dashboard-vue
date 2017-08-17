@@ -115,6 +115,7 @@ export default {
         }
     },
     created () {
+        console.log('qwqwertyuioasdfghjklzxcvbnm,')
         this.listPresets()
     },
     methods: {

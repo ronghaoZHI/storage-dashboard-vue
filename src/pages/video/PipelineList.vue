@@ -53,9 +53,9 @@ export default {
                             type: 'border'
                         }
                     }, `${item.name}:${item.value}`)]))),
-                        h('div', {
-                            slot: 'content'
-                        }, params.row.permissionDetails.map(item => h('p', `${item.name}:${item.value}`)))]
+                    h('div', {
+                        slot: 'content'
+                    }, params.row.permissionDetails.map(item => h('p', `${item.name}:${item.value}`)))]
                     )
                 }
             }, {

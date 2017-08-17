@@ -20,6 +20,8 @@ import JobEdit from '@/pages/video/JobEdit'
 import Notfound from '@/pages/404/404'
 import Bridge from '@/pages/bridge/Bridge'
 import Upgrade from '@/pages/upgrade/Upgrade'
+import PipelineList from '@/pages/video/PipelineList'
+import PipelineEdit from '@/pages/video/PipelineEdit'
 
 const layoutChild = [{
     path: '',
@@ -74,6 +76,16 @@ const layoutChild = [{
     name: 'TemplateEdit',
     meta: { title: 'Video', ali: 'template', parent: 'video' },
     component: TemplateEdit
+}, {
+    path: '/video/pipeline',
+    name: 'pipeline',
+    meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
+    component: PipelineList
+}, {
+    path: '/video/pipelineEdit/bucket/:bucket/id/:id',
+    name: 'pipelineEdit',
+    meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
+    component: PipelineEdit
 }, {
     path: '/video/output',
     name: 'output',
