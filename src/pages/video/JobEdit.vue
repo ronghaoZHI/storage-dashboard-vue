@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label">转码管道 : </span>
+                <span class="form-label required-item">转码管道 : </span>
                 <Select v-model="job.PipelineId" class="line-width" @on-change="pipeChange">
                     <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
                 </Select>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label">源文件名 : </span>
+                <span class="form-label required-item">源文件名 : </span>
                 <div class="section-search">
                     <span class="bsc-input">
                         <input type="text" v-model="searchValue" />
@@ -100,7 +100,7 @@
                 </Radio-group>
             </div>
             <div class="form-item" v-if="MPOpen">
-                <span class="form-label">MasterPlaylist文件名 : </span>
+                <span class="form-label required-item">MasterPlaylist文件名 : </span>
                 <Input v-model="job.Playlists.Name" placeholder="MasterPlaylist" class="line-width"></Input>
                 <p class="style-name-info redFont" v-if="MPNameError">{{$t('VIDEO.MP_NAME_INFO')}}</p>
             </div>
@@ -113,7 +113,7 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" :disabled="sbumitDisabled">{{$t('VIDEO.SAVE')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" >{{$t('VIDEO.SAVE')}}</Button>
         </div>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
             <div class="form-item">
@@ -123,7 +123,7 @@
                 </Select>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t("VIDEO.OUTPUT_FILE_NAME")}} : </span>
+                <span class="form-label required-item">{{$t("VIDEO.OUTPUT_FILE_NAME")}} : </span>
                 <Input v-model="outputModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME")' class="line-width"></Input>
             </div>
             <div class="form-item" v-if="HLSShow" >
@@ -139,7 +139,7 @@
         </Modal>
         <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="my-modal">
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
+                <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="shotModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
                 <Select v-model="shotModal.Format" style="width:100px;display:inline-block">
                     <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
@@ -359,9 +359,6 @@ export default {
         outputsDisabled () {
             return this.isTS(this.outputModal.PresetId) && this.outputModal.SegmentDuration === 0 && this.MPOpen
         },
-        sbumitDisabled () {
-            return this.regError || this.MPNameError
-        },
         MPNameError () {
             return this.MPOpen && !this.job.Playlists.Name
         },
@@ -371,7 +368,6 @@ export default {
     },
     components: { InputNumber },
     created () {
-        console.log('fghjkyyuihgkjhj======')
         this.createdMethods()
     },
     methods: {
@@ -417,6 +413,11 @@ export default {
                 this.$Message.warning(this.$t('VIDEO.AT_LEAST_ONE_RULE'))
                 return
             }
+
+            if (this.MPNameError) {
+                this.$Message.warning(this.$t('VIDEO.HLS_REQUIRED'))
+                return
+            }
             let saved = await this.convert2Save(this.job)
             this.createJob(saved)
         },
@@ -426,6 +427,7 @@ export default {
                 await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/jobs', job)
                 this.$Loading.finish()
                 this.$Message.success('操作成功')
+                this.$router.push({ name: 'job' })
             } catch (error) {
                 this.$Loading.error()
             }
@@ -513,6 +515,11 @@ export default {
             this.showShotsModal = true
         },
         updateShots () {
+            if (this.shotModal.Key.length < 1) {
+                this.$Message.warning(this.$t('VIDEO.SHOTKEY_REQUIRED'))
+                return
+            }
+
             const ln = this.job.Snapshots.length
             let data = _.clone(this.shotModal)
             if (data.Resolution !== 'auto') {
