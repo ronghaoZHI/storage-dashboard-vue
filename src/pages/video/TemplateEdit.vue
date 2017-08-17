@@ -265,7 +265,7 @@ const auxiliaryDefult = {
 const templateDefult = {
     Name: '',
     Description: '',
-    // FastStart: true,
+    FastStart: false,
     Container: 'mp4',
     Audio: {
         Codec: 'auto',
