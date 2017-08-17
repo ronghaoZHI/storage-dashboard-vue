@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket" type="primary" @click="goJobEdit">创建任务</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="goJobEdit">{{$t('VIDEO.CREATE_JOB')}}</Button>
             <div>
-                <span class="quary-name">管道 : </span>
+                <span class="quary-name">{{$t('VIDEO.PIPE')}} : </span>
                 <Select v-model="pipeId" style="width:200px" @on-change="listJobsByPipeline">
                     <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
                 </Select>
@@ -32,11 +32,11 @@ export default {
             pageToken: [],
             nextPageToken: '',
             listHeader: [{
-                title: '转码ID',
+                title: this.$t('VIDEO.JOB_ID'),
                 width: 100,
                 key: 'Id'
             }, {
-                title: '输出文件名',
+                title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
                 width: 300,
                 render: (h, params) => {
                     let names = params.row.outputNames
@@ -49,11 +49,11 @@ export default {
                     }
                 }
             }, {
-                title: '管道ID',
+                title: this.$t('VIDEO.PIPE_ID'),
                 width: 100,
                 key: 'PipelineId'
             }, {
-                title: '转码模版',
+                title: this.$t('VIDEO.JOB_TEMPLATE'),
                 width: 300,
                 render: (h, params) => {
                     let templates = params.row.templates
@@ -66,22 +66,22 @@ export default {
                     }
                 }
             }, {
-                title: '状态',
+                title: this.$t('VIDEO.STATUS'),
                 width: 100,
                 key: 'Status'
             }, {
-                title: '创建时间',
+                title: this.$t('VIDEO.CREATE_TIME'),
                 width: 100,
                 key: 'cTime'
             }, {
-                title: '操作',
+                title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
                 width: 80,
                 align: 'right',
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {
-                            content: '取消',
+                            content: this.$t('VIDEO.CANCEL'),
                             delay: 1000,
                             placement: 'top'
                         }
@@ -160,7 +160,7 @@ export default {
                 this.$Loading.start()
                 await transcoder('createPipeline', pipelinesData)
                 this.$Loading.finish()
-                this.$Message.success('创建成功')
+                this.$Message.success(this.$t('VIDEO.CREATED'))
             } catch (error) {
                 this.$Loading.error()
             }
@@ -170,7 +170,7 @@ export default {
                 this.$Loading.start()
                 await transcoder('createJob', createData)
                 this.$Loading.finish()
-                this.$Message.success('操作成功')
+                this.$Message.success(this.$t('VIDEO.DELETED'))
             } catch (error) {
                 this.$Loading.error()
             }

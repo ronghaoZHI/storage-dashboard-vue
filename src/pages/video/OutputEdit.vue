@@ -45,8 +45,8 @@
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_KEY_PREFIX')}} : </span>
-                <Input v-model="transcode.output_key_prefix" :placeholder='$t("VIDEO.OUTPUT_FILE_KEY_PREFIX")' class="line-width"></Input>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_KEY_PREFIX')}} : </span>
+                <Input v-model="transcode.output_key_prefix" :placeholder='$t("VIDEO.OUTPUT_KEY_PREFIX")' class="line-width"></Input>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.OUTPUT_BUCKET')}} : </span>
