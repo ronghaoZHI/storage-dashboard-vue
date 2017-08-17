@@ -123,7 +123,7 @@ let upgradeMode = {
     component: Upgrade
 }
 
-const routes = window.dashboard_conf.upgradeMode ? [upgradeMode] : [{
+const routes = window.dashboard_conf.upgradeMode === 'True' ? [upgradeMode] : [{
     path: '/',
     component: Layout,
     meta: { requiresAuth: true },
