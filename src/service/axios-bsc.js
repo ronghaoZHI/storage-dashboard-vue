@@ -37,7 +37,7 @@ const errorHandle = (data) => {
         code === 400 || code === 401 || code === 403 ? logout(data.error.show_msg) : iView.Message.error(data.error.show_msg)
         return Promise.reject(data.error)
     } else {
-        return data.data
+        return data.data || data
     }
 }
 
