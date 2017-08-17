@@ -332,6 +332,10 @@ export default {
             this.userACLList.splice(index, 1)
         },
         async addPipeline () {
+            if (this.nameError === true) {
+                this.$Message.error(this.$t('VIDEO.ENTER_CORRECT_PIPELINE_NAME'))
+                return
+            }
             let params = this.convert2Save()
             try {
                 this.$Loading.start()
