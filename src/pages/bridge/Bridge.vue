@@ -22,12 +22,13 @@
 </template>
 <script>
 import { USERINFO, BOUND_USER, SSO_CHECK_LOGIN } from '@/service/API'
+import { getCookie } from '@/service/Helper'
 import user from '@/store/modules/user'
 import Vue from 'vue'
 export default {
     data () {
         return {
-            lang: localStorage.getItem('lang') || 'cn',
+            lang: getCookie('uc_lang') || 'cn',
             selectedCustomer: '',
             showUserSelect: false,
             userInfo: user.state || {},

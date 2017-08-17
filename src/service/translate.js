@@ -50,6 +50,13 @@ export const messages = {
             OUTPUT: 'Output',
             JOB: 'Job'
         },
+        KEYCHAIN: {
+            ADD_KEY: 'Add accesskey',
+            COPY_ACCESSKEY: 'Click to copy accesskey',
+            COPY_SECRETKEY: 'Click to copy secretkey',
+            DELETE_KEY: 'Delete keychain',
+            DELETE_KEY_COM: 'Are you sure you want to delete [{accesskey}] ？'
+        },
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
             TABLE_KEY: 'Key',
@@ -604,6 +611,13 @@ export const messages = {
             NEW_PASSWORD: '新密码',
             CHANGE_PASSWORD_FAILED: '修改密码失败',
             PASSWORD_CHECK: '密码不能少于6个字符'
+        },
+        KEYCHAIN: {
+            ADD_KEY: '新增密钥',
+            COPY_ACCESSKEY: '点击复制 accesskey',
+            COPY_SECRETKEY: '点击复制 secretkey',
+            DELETE_KEY: '删除密钥',
+            DELETE_KEY_COM: '确定删除 [{accesskey}] ？'
         },
         SIDEBAR: {
             BUCKET: '我的存储',

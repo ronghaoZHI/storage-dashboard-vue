@@ -20,7 +20,7 @@ function dataClearAndLocation () {
     store.dispatch('logout').then(() => clear()).then(() => window.location = SSO_LOGOUT)
 }
 
-function getCookie (name) {
+export function getCookie (name) {
     if (document.cookie.length > 0) {
         let start = document.cookie.indexOf(name + '=')
         if (start !== -1) {

@@ -1,9 +1,9 @@
 // shit
-window.domain = 'bscstorage.com'
+window.domain = 'baishancloud.com'
 window.dashboard_conf = {
     apiHost: 'api.bscstorage.com:9090',
-    awsHost: '123.56.219.150',
+    awsHost: 's2.i.qingcdn.com',
     onlineMode: true,
     upgradeMode: false,
-    appID: 9
+    appID: 6
 }
