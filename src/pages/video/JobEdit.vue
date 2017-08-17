@@ -3,8 +3,8 @@
     <div class="bsc-job-edit bsc-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/video/JobList">主动转码配置</Breadcrumb-item>
-                <Breadcrumb-item>新建转码</Breadcrumb-item>
+                <Breadcrumb-item href="/video/JobList">{{$t('VIDEO.JOB_CONF')}}</Breadcrumb-item>
+                <Breadcrumb-item>{{$t('VIDEO.JOB_CREATE')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
         <div class="separator-line"></div>
@@ -12,11 +12,11 @@
             <div class="section-separator">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
-                    <span class="separator-info">基础配置</span>
+                    <span class="separator-info">{{$t('VIDEO.BASIC_SET')}}</span>
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label required-item">转码管道 : </span>
+                <span class="form-label required-item">{{$t('VIDEO.JOB_PIPE')}} : </span>
                 <Select v-model="job.PipelineId" class="line-width" @on-change="pipeChange">
                     <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
                 </Select>
@@ -31,14 +31,14 @@
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label required-item">源文件名 : </span>
+                <span class="form-label required-item">{{$t('VIDEO.SRC_FILE')}} : </span>
                 <div class="section-search">
                     <span class="bsc-input">
                         <input type="text" v-model="searchValue" />
                         <Button type="text" size="small" @click="getFiles(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
                     </span>
                 </div>
-                <p class="style-name-info" v-if="fileInfo">文件数大于50请使用搜索(前缀匹配)</p>
+                <p class="style-name-info" v-if="fileInfo">{{$t('VIDEO.SEARCH_INFO')}}</p>
             </div>
             <div class="form-item">
                 <span class="form-label"></span>
@@ -100,12 +100,12 @@
                 </Radio-group>
             </div>
             <div class="form-item" v-if="MPOpen">
-                <span class="form-label required-item">MasterPlaylist文件名 : </span>
+                <span class="form-label required-item">{{$t('VIDEO.HLS_FILE_NAME')}} : </span>
                 <Input v-model="job.Playlists.Name" placeholder="MasterPlaylist" class="line-width"></Input>
                 <p class="style-name-info redFont" v-if="MPNameError">{{$t('VIDEO.MP_NAME_INFO')}}</p>
             </div>
             <div class="form-item" v-if="MPOpen">
-                <span class="form-label">输出文件名 : </span>
+                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME')}} : </span>
                 <Select v-model="job.Playlists.OutputKeys" multiple class="line-width">
                     <Option v-for="ots in MPNames" :value="ots" :key="ots">{{ ots }}</Option>
                 </Select>
@@ -207,7 +207,7 @@ export default {
             searchValue: '',
             aspectRatioList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
             outputsHeader: [{
-                title: '输出文件名',
+                title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
                 key: 'Key',
                 width: 120
             }, {
@@ -383,7 +383,7 @@ export default {
             let segmentsSet = new Set()
 
             if (!this.job.Inputs[0].Key) {
-                this.$Message.warning('请选择输入源文件')
+                this.$Message.warning(this.$t('VIDEO.SRC_FILE_INFO'))
                 return
             }
             if (this.MPOpen) {
@@ -426,7 +426,7 @@ export default {
                 this.$Loading.start()
                 await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/jobs', job)
                 this.$Loading.finish()
-                this.$Message.success('操作成功')
+                this.$Message.success(this.$t('VIDEO.CREATED'))
                 this.$router.push({ name: 'job' })
             } catch (error) {
                 this.$Loading.error()
