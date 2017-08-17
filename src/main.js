@@ -1,9 +1,10 @@
+import 'es6-promise/auto'
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store/'
-import 'babel-polyfill'
 import 'core-js/es6/promise'
 import VueI18n from 'vue-i18n'
 import iView from 'iview'
