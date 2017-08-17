@@ -993,7 +993,7 @@ export const messages = {
             EXPRESSION_INCORRECT: '表达式错误',
             INPUT_BUCKET: '输入Bucket',
             OUTPUT_BUCKET: '输出Bucket',
-            OUTPUT_KEY_PREFIX: '输出文件key前缀',
+            OUTPUT_KEY_PREFIX: '输出文件前缀',
             OUTPUT_RULES: '输出规则',
             VIDEO_SCREENSHOTS_RULES: '视频截图规则',
             AT_LEAST_ONE_RULE: '输出规则和视频截图规则至少存在一个',
