@@ -449,30 +449,9 @@ const aclConvert2Save = data => {
     }
 
     .editBlock {
-        margin: 20px 0 10px;
         .form-item {
-            margin-bottom: 20px;
-
             .form-label {
-                display: inline-block;
-                width: @edit-output-item-span;
-                font-size: 14px;
-                padding-right: 5px;
-                line-height: 30px;
-                text-align: right;
                 vertical-align: top;
-            }
-
-            .line-width {
-                width: @edit-output-line-width;
-            }
-
-            .style-name-info {
-                padding: 5px 0 0 @edit-output-item-span;
-            }
-
-            .redFont {
-                color: red !important;
             }
 
             .ivu-select .ivu-select-dropdown {

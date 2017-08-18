@@ -297,21 +297,7 @@ const audioOnly = ['flac', 'mp3']
 <style lang="less" scoped>
 @import '../../styles/index.less';
 
-@edit-styles-border-color: #d7dde4;
 @edit-output-item-span: 115px;
 
-.@{css-prefix}template-edit {
-    .editBlock {
-        .form-item {
-            .style-name-info {
-                padding: 5px 0 0 @edit-output-item-span;
-                .sc(12px,#8492a6);
-            }
-        }
-        .form-label {
-            width: @edit-output-item-span !important;
-        }
-    }
-}
 </style>
 

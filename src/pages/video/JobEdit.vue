@@ -615,21 +615,12 @@ const shotDefult = {
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
-@edit-output-item-span: 160px;
+@edit-output-item-span: 165px;
+@edit-modal-item-span: 155px;
 
 .@{css-prefix}job-edit {
     .section-search .bsc-input {
         width: 475px;
-    }
-    .editBlock {
-        .form-item {
-            .style-name-info {
-                padding: 5px 0 0 @edit-output-item-span;
-            }
-        }
-        .form-label {
-            width: @edit-output-item-span !important;
-        }
     }
 }
 </style>
