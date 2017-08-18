@@ -1,5 +1,5 @@
 <template>
-    <div class="bsc-pipeline-edit">
+    <div class="bsc-edit">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
                 <Breadcrumb-item href="/video/pipeline">{{$t('VIDEO.PIPELINE_MANAGEMENT')}}</Breadcrumb-item>
@@ -439,24 +439,14 @@ const aclConvert2Save = data => {
 <style lang="less" scope>
 @import '../../styles/index.less';
 
-@edit-styles-border-color: #d7dde4;
 @edit-output-item-span: 175px;
 @edit-output-line-width: 530px;
 
-.@{css-prefix}pipeline-edit {
-    .separator-line {
-        border-bottom: 1px solid @edit-styles-border-color;
-    }
-
+.@{css-prefix}edit {
     .editBlock {
         .form-item {
             .form-label {
                 vertical-align: top;
-            }
-
-            .ivu-select .ivu-select-dropdown {
-                max-height: 130px !important;
-                overflow: auto;
             }
 
             .new-user-input {
