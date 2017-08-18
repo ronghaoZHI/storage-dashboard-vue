@@ -60,7 +60,7 @@
                     <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="transcode.outputs" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
                 </div>
                 <br>
-                <p class="style-name-info redFont button-add-item" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
+                <p class="style-name-info redFont" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
                 <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
             </div>
             <div class="form-item">
@@ -69,7 +69,7 @@
                     <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="transcode.snapshots" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
                 </div>
                 <br>
-                <p class="style-name-info redFont button-add-item" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
+                <p class="style-name-info redFont" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
                 <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
             </div>
         </div>
@@ -132,7 +132,7 @@
             <div class="form-item" v-if="auxiliary.MP">
                 <span class="form-label required-item">{{$t('VIDEO.MASTER_PLAYLIST_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="transcode.master_playlist.name" placeholder="MasterPlaylist" class="line-width"></Input>
-                <p class="style-name-info redFont button-add-item" v-if="MPNameError">{{$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')}}</p>
+                <p class="style-name-info redFont" v-if="MPNameError">{{$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')}}</p>
             </div>
         </div>
         <div class="separator-line"></div>
@@ -1040,6 +1040,8 @@ const isEmpty = obj => {
 </style>
 <style lang="less" scope>
 @import '../../styles/index.less';
+@edit-output-item-span: 205px;
+@edit-modal-item-span: 155px;
 
 .@{css-prefix}output-edit{
     .editBlock {
@@ -1051,6 +1053,7 @@ const isEmpty = obj => {
             .sub-setting-input {
                 width: 200px;
             }
+
         }
     }
 
