@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-pipeline-list">
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket" type="primary" @click="goPipelineEdit('none', 'none')">{{$t('VIDEO.NEW_PIPELINE')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="goPipelineEdit('none')">{{$t('VIDEO.NEW_PIPELINE')}}</Button>
         </div>
         <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="pipelineList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <div class="section-paging">
@@ -123,7 +123,7 @@ export default {
                         },
                         on: {
                             click: () => {
-                                this.goPipelineEdit(params.row.input_bucket, params.row.id)
+                                this.goPipelineEdit(params.row.id)
                             }
                         }
                     }, [h('Icon', {
@@ -222,8 +222,8 @@ export default {
         nextPage () {
             this.listPipelines(this.pageToken)
         },
-        goPipelineEdit (bucket, id) {
-            this.$router.push({ name: 'pipelineEdit', params: { bucket: bucket, id: id } })
+        goPipelineEdit (id) {
+            this.$router.push({ name: 'pipelineEdit', params: { id: id } })
         },
         deletePipelineConfirm (pipeline) {
             this.$Modal.confirm({

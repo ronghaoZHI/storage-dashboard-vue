@@ -82,7 +82,7 @@ const layoutChild = [{
     meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
     component: PipelineList
 }, {
-    path: '/video/pipelineEdit/bucket/:bucket/id/:id',
+    path: '/video/pipelineEdit/id/:id',
     name: 'pipelineEdit',
     meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
     component: PipelineEdit
