@@ -1612,9 +1612,9 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
-deepmerge@^1.3.1:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-1.5.0.tgz#00bc5b88fd23b8130f9f5049071c3420e07a5465"
+deepmerge@^1.5.0:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-1.5.1.tgz#c053bf06fd7276f1994f70c09a0760cb61a56237"
 
 defined@^1.0.0:
   version "1.0.0"
@@ -2982,13 +2982,13 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-iview@2.0.0-rc.18:
-  version "2.0.0-rc.18"
-  resolved "https://registry.yarnpkg.com/iview/-/iview-2.0.0-rc.18.tgz#c00a11643622626feeb277e0de83b45077a8787c"
+iview@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/iview/-/iview-2.1.0.tgz#b6962a0e54b80c4ee83ffc29b3154b9dd99d2d3d"
   dependencies:
     async-validator "^1.7.1"
     core-js "^2.4.1"
-    deepmerge "^1.3.1"
+    deepmerge "^1.5.0"
     popper.js "^0.6.4"
 
 jmespath@0.15.0:

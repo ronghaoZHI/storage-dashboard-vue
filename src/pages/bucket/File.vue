@@ -115,7 +115,13 @@ export default {
                 ellipsis: true,
                 sortable: true,
                 render: (h, params) => {
-                    return h('div', [
+                    return h('div', {
+                        on: {
+                            click: () => {
+                                params.row.Type !== 'file' && this.openFolder(params.row)
+                            }
+                        }
+                    }, [
                         h('Icon', {
                             props: {
                                 type: params.row.Type === 'file' ? 'document' : 'folder',
@@ -130,11 +136,6 @@ export default {
                         h('strong', {
                             'class': {
                                 'link-folder': params.row.Type !== 'file'
-                            },
-                            on: {
-                                click: () => {
-                                    params.row.Type !== 'file' && this.openFolder(params.row)
-                                }
                             }
                         }, params.row.Key)
                     ])
