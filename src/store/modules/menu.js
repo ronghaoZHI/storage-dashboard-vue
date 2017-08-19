@@ -11,24 +11,28 @@ import iconVideo from '../../assets/icon-video.png'
 const bucket = {
     index: 1,
     name: 'bucket',
+    show: true,
     icon: iconBucket
 }
 
 const dashboard = {
     index: 2,
     name: 'dashboard',
+    show: true,
     icon: iconDashboard
 }
 
 const keychain = {
     index: 3,
     name: 'keychain',
+    show: true,
     icon: iconKey
 }
 
 const machine = {
     index: 5,
     name: 'machine',
+    show: true,
     icon: iconMachine
 }
 
@@ -43,6 +47,7 @@ const videoChildren = [{
 const video = {
     index: 4,
     name: 'video',
+    show: window.dashboard_conf.appID === '6',
     icon: iconVideo,
     children: videoChildren
 }
@@ -50,6 +55,7 @@ const video = {
 const userManage = {
     index: 6,
     name: 'user',
+    show: true,
     icon: iconUser
 }
 

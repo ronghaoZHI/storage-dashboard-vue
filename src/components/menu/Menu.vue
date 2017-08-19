@@ -27,8 +27,12 @@ export default {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            openName: this.$route.meta.parent || '',
-            menuList: menuState.state.menuList
+            openName: this.$route.meta.parent || ''
+        }
+    },
+    computed: {
+        menuList: function () {
+            return _.filter(menuState.state.menuList, item => item.show)
         }
     },
     methods: {
