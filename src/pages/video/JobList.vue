@@ -178,7 +178,7 @@ export default {
         async cancelJob (job) {
             try {
                 this.$Loading.start()
-                await transcoder('cancelJob', {Id: job.Id})
+                await transcoder('cancelJob', {Id: job.Id}, this.$t('VIDEO.JOB_CANCEL_ERROR'))
                 this.jobList.splice(job._index, 1)
                 this.$Loading.finish()
                 this.$Message.success($t('VIDEO.DELETED'))
@@ -188,7 +188,7 @@ export default {
         },
         deleteJobConfirm (job) {
             this.$Modal.confirm({
-                content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: job.name}),
+                content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: job.Id}),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
                 onOk: () => this.cancelJob(job)
@@ -212,12 +212,12 @@ const convert2Front = async (data) => {
             const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
             front.cTime = `${date.getFullYear()}-${month}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 
-            front.outputNames = item.Outputs.map(item => {
+            front.outputNames = item.Outputs ? item.Outputs.map(item => {
                 return item.Key
-            })
-            front.templates = item.Outputs.map(item => {
+            }) : ''
+            front.templates = item.Outputs ? item.Outputs.map(item => {
                 return `${item.PresetId}:${templateInfo.templateName[item.PresetId]}`
-            })
+            }) : ''
 
             frontList.push(front)
         })

@@ -493,6 +493,8 @@ export const messages = {
             OUTPUTKEY_SUFFIX_REQUIRED: 'File name suffixis required',
             REG_ERROR: 'Invalid regular expression',
             MP_NAME_ERROR: 'Invalid MasterPlaylist file name suffix',
+            TEMPLATE_DELETED_ERROR: 'The preset is currently being used',
+            JOB_CANCEL_ERROR: 'The job is progressing',
             HLS_REQUIRED: 'HLS file name is required'
         },
         i: {
@@ -1083,6 +1085,8 @@ export const messages = {
             REG_ERROR: '正则表达式错误',
             MP_NAME_ERROR: 'MasterPlaylist文件名后缀无效',
             PIPILINE: '',
+            TEMPLATE_DELETED_ERROR: '不能删除正在使用的模版',
+            JOB_CANCEL_ERROR: '不能删除正在运行的任务',
             HLS_REQUIRED: '请填写自适应HLS文件名'
         },
         i: {

@@ -41,16 +41,18 @@ export const handler = async (method, params = '', host = HOST.awsHost, s3ForceP
     }
 }
 
-export const transcoder = async (method, params = '') => {
+export const transcoder = async (method, params = '', errorMsg = 'Bad Request') => {
     await config(1000, HOST.transcoderHOST, false)
     try {
         let elastictranscoder = new AWS.ElasticTranscoder({paramValidation: false, convertResponseTypes: false})
         return await new Promise((resolve, reject) => elastictranscoder[method](params, (error, data) => {
-            error && iView.Message.error(error.message, 5)
+            if (error) {
+                error.message === 'Conflict' || error.message === 'Bad Request' ? iView.Message.error(errorMsg) : iView.Message.error(error.message, 5)
+            }
             return error ? reject(error) : resolve(data)
         }))
     } catch (error) {
-        iView.Message.error(error.message, 5)
+        console.error(error)
         return Promise.reject(error)
     }
 }

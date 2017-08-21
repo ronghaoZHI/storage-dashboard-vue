@@ -147,7 +147,7 @@ export default {
         async deletePreset (rule) {
             try {
                 this.$Loading.start()
-                await transcoder('deletePreset', {Id: rule.id})
+                await transcoder('deletePreset', {Id: rule.id}, this.$t('VIDEO.TEMPLATE_DELETED_ERROR'))
                 this.templateList.splice(rule._index, 1)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('VIDEO.DELETED_SUCCESSFULLY'))
