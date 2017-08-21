@@ -102,6 +102,8 @@
             <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">{{ $t("DASHBOARD.DOWNLOAD_SPACE")}}</button>
             <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">{{ $t("DASHBOARD.DOWNLOAD_COUNT")}}</button>
             <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">{{ $t("DASHBOARD.UPLOAD_COUNT")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 5}" @click="tabToggle(5,'deleteCountLine')">{{ $t("DASHBOARD.DELETE_COUNT")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 6}" @click="tabToggle(6,'deleteSpaceLine')">{{ $t("DASHBOARD.DELETE_SPACE")}}</button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
@@ -116,8 +118,14 @@
              <div class="card-chart" v-show="showChart === 3">
                 <chart :options="downloadsOptions" auto-resize ref="downloadsLine"></chart>
             </div>
-             <div class="card-chart" v-show="showChart === 4">
+            <div class="card-chart" v-show="showChart === 4">
                 <chart :options="uploadsOptions" auto-resize ref="uploadsLine"></chart>
+            </div>
+            <div class="card-chart" v-show="showChart === 5">
+                <chart :options="deleteCountOptins" auto-resize ref="deleteCountLine"></chart>
+            </div>
+            <div class="card-chart" v-show="showChart === 6">
+                <chart :options="deleteSpaceOptions" auto-resize ref="deleteSpaceLine"></chart>
             </div>
         </div>
     </div>
@@ -158,7 +166,9 @@ export default {
             uploadTrafficOptions: lineOptions,
             downloadTrafficOptions: lineOptions,
             downloadsOptions: lineOptions,
-            uploadsOptions: lineOptions
+            uploadsOptions: lineOptions,
+            deleteCountOptins: lineOptions,
+            deleteSpaceOptions: lineOptions
         }
     },
     components: {
@@ -209,6 +219,12 @@ export default {
                 }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
                     this.uploadCountData = res
                     this.uploadsOptions = InitOptions(this.uploadCountData)
+                }), this.$http.get(this.getApiURL('delete_count')).then(res => {
+                    this.deleteCountData = res
+                    this.deleteCountOptins = InitOptions(this.deleteCountData)
+                }), this.$http.get(this.getApiURL('delete_space')).then(res => {
+                    this.deleteSpaceData = res
+                    this.deleteSpaceOptions = InitOptions(this.deleteSpaceData)
                 })]).then(res => {
                     this.data = []
                     _.each(this.capacityData.data.map(data => data[0]), (time, index) => {
@@ -273,6 +289,12 @@ export default {
         },
         'uploadCountData' (to, from) {
             chartReload(to.data, this.$refs.uploadsLine)
+        },
+        'deleteCountData' (to, from) {
+            chartReload(to.data, this.$refs.deleteCountLine)
+        },
+        'deleteSpaceData' (to, from) {
+            chartReload(to.data, this.$refs.deleteSpaceLine)
         }
     }
 }
