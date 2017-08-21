@@ -164,7 +164,16 @@
             <Tab-pane :label='$t("STORAGE.PIC_IDEN")' name="pic">
                 We've got somethings special for you
             </Tab-pane>
+            <Tab-pane :label='$t("STORAGE.CORS_CONFIG")' name="cors">
+                <Button class="button-bsc-add-rule" type="primary" @click="addCorsRule">{{$t('STORAGE.ADD_RULE')}}</Button>
+                <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+            </Tab-pane>
         </Tabs>
+        <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="my-modal">
+            <div class="form-item">
+                <span class="form-label required-item">{{$t('STORAGE.ALLOWED_ORIGINS')}} : </span>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -188,6 +197,80 @@ export default {
                     WRITE_ACP: false
                 }
             },
+            corsRulesList: [],
+            showCorsModal: false,
+            listHeader: [{
+                title: this.$t('STORAGE.ALLOWED_ORIGINS'),
+                key: 'allowed_origins',
+                width: 160
+            }, {
+                title: this.$t('STORAGE.ALLOWED_METHODS'),
+                key: 'allowed_methods',
+                width: 120
+            }, {
+                title: this.$t('STORAGE.ALLOWED_HEADERS'),
+                key: 'allowed_headers',
+                width: 120
+            }, {
+                title: this.$t('STORAGE.EXPOSE_HEADERS'),
+                key: 'expose_headers',
+                width: 120
+            }, {
+                title: this.$t('STORAGE.CACHE_TIME'),
+                key: 'cache_time',
+                width: 120
+            }, {
+                title: this.$t('STORAGE.TABLE_ACTION'),
+                key: 'actions',
+                width: 160,
+                align: 'right',
+                render: (h, params) => {
+                    return h('div', [h('Tooltip', {
+                        props: {
+                            content: this.$t('PUBLIC.EDIT'),
+                            delay: 500,
+                            placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
+                        }
+                    }, [h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                // edit
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'compose',
+                            size: this.iconSize
+                        }
+                    })])]), h('Tooltip', {
+                        props: {
+                            content: this.$t('PUBLIC.DELETE'),
+                            delay: 500,
+                            placement: 'top'
+                        }
+                    }, [h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                // delete confirm
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'ios-trash',
+                            size: this.iconSize
+                        }
+                    })])])])
+                }
+            }],
             iconSize: 16,
             deleteList: [],
             tabName: 'permission'
@@ -261,6 +344,33 @@ export default {
             } catch (error) {
             }
             this.$Loading.finish()
+        },
+        async listCorsRules () {
+            try {
+                this.$Loading.start()
+                let res = await handler('getBucketCors', { Bucket: this.bucket })
+                this.corsRulesList = await this.convert2FrontCorsRules(res.CORSRules)
+                this.$Loading.finish()
+            } catch (error) {
+                this.$$Loading.error()
+            }
+        },
+        convert2FrontCorsRules (data) {
+            let frontList = []
+            data.forEach(item => {
+                const frontItem = {
+                    allowed_origins: item.AllowedOrigins.join('\n'),
+                    allowed_methods: item.AllowedMethods.join('\n'),
+                    allowed_headers: item.AllowedHeaders ? item.AllowedHeaders.join('\n') : '--',
+                    expose_headers: item.ExposeHeaders ? item.ExposeHeaders.join('\n') : '--',
+                    cache_time: item.MaxAgeSeconds ? item.MaxAgeSeconds : 0
+                }
+                frontList.push(frontItem)
+            })
+            return frontList
+        },
+        addCorsRule () {
+            this.showCorsModal = true
         },
         deleteUser (item) {
             item.Permission = {
@@ -372,6 +482,8 @@ const convertNewUserItem = item => {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
+
 .layout-bsc-toolbar {
     padding-bottom: 8px;
     border-bottom: 1px solid #f2f1f6;
@@ -390,5 +502,8 @@ const convertNewUserItem = item => {
 }
 .table-permission th.percent30 {
     width:30%;
+}
+.button-bsc-add-rule {
+    margin-bottom: 10px
 }
 </style>
