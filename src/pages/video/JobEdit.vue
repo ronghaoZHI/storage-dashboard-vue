@@ -372,7 +372,10 @@ export default {
     },
     methods: {
         async createdMethods () {
-            this.pipes = await listPipelines()
+            let pipesAll = await listPipelines()
+            this.pipes = pipesAll.filter(pipe => {
+                return pipe.Status === 'Active'
+            })
             this.job.PipelineId = this.pipes[0].Id
             this.pipeInputBucket = this.pipes[0].InputBucket
             this.templateInfo = await getTemplateInfo()
