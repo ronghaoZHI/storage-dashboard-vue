@@ -236,13 +236,12 @@ export default {
         async deletePipeline (pipeline) {
             try {
                 this.$Loading.start()
-                await transcoder('deletePipeline', { Id: pipeline.id })
+                await transcoder('deletePipeline', { Id: pipeline.id }, this.$t('VIDEO.PIPELINE_DELETE_ERROR'))
                 this.pipelineList.splice(pipeline._index, 1)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('VIDEO.DELETED_SUCCESSFULLY'))
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.error(this.$t('VIDEO.FAILED_TO_DELETE'))
             }
         },
         async changeStatus (data) {
