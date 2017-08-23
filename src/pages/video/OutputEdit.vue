@@ -145,50 +145,7 @@
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.USER_GROUP_PERMISSIONS')}} : </span>
-                <table class="table-permission" style="display:inline-block;width:475px">
-                    <thead>
-                        <tr>
-                            <th style="width:170px;"> {{$t("STORAGE.ACL_GROUP")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.ACL_GROUP_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                            <th style="width:135px;">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_OBJECT_PERMISSIONS_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                            <th style="width:170px;">{{$t("STORAGE.ACL_PERMISSIONS")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_ACL_PERMISSIONS_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in groupACLList">
-                            <td>
-                                {{item.Grantee}}
-                            </td>
-                            <td>
-                                <Checkbox v-model="item.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
-                            </td>
-                            <td>
-                                <Checkbox v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <group-acl :aclData='groupACLList'></group-acl>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.USER_PERMISSIONS')}} : </span>
@@ -376,11 +333,13 @@ import InputNumber from '@/components/input-number/input-number.vue'
 import { putBucketPolicy, getTranscodes, getTemplateInfo } from '@/pages/video/data'
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
+import groupAcl from '@/components/ACL/groupAcl.vue'
 export default {
     data () {
         return {
             iconSize: 18,
             self: this,
+            groupACLListChild: groupACLListChild,
             transcode: _.cloneDeep(transcodeDefult),
             inputBucket: '',
             bucketList: this.bucketList,
@@ -393,7 +352,23 @@ export default {
             shotModal: _.clone(shotDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
             HLSShow: false,
-            groupACLList: _.cloneDeep(groupACLListDefult),
+            groupACLList: [{
+                GranteeType: 'Group',
+                Grantee: 'AllUsers',
+                Access: {
+                    Read: false,
+                    ReadAcp: false,
+                    WriteAcp: false
+                }
+            }, {
+                GranteeType: 'Group',
+                Grantee: 'AuthenticatedUsers',
+                Access: {
+                    Read: false,
+                    ReadAcp: false,
+                    WriteAcp: false
+                }
+            }],
             isAddUser: false,
             newUserItem: _.cloneDeep(newUserItemDefult),
             userACLList: [],
@@ -593,8 +568,8 @@ export default {
             return this.transcode.snapshots.length === 0 && this.transcode.outputs.length === 0
         }
     },
-    components: { InputNumber },
-    created () {
+    components: { InputNumber, groupAcl },
+    mounted () {
         this.getTranscode()
     },
     methods: {
@@ -610,6 +585,7 @@ export default {
 
             if (this.id === 'none') {
                 this.userACLList = [this.owerACL]
+                this.groupACLList = ['test']
                 await this.getBucketNames()
                 this.inputBucket = this.bucketList[0]
                 this.transcode.output_bucket = this.bucketList[0]
@@ -700,6 +676,7 @@ export default {
             this.transcode.snapshots.splice(index, 1)
         },
         beforeSubmit () {
+            this.groupACLList = groupACLListChild
             let segments = []
             if (this.regError) {
                 this.$Message.warning(this.$t('VIDEO.REG_ERROR'))
@@ -843,9 +820,9 @@ export default {
                 })
             }
 
-            let groug = this.groupACLList
+            let group = this.groupACLList
             let user = this.userACLList
-            saved.output_acls = _.without([...groug, ...user].map(item => {
+            saved.output_acls = _.without([...group, ...user].map(item => {
                 const { Read, ReadAcp, WriteAcp } = item.Access
                 if (Read || ReadAcp || WriteAcp) {
                     return aclConvert2Save(item)
@@ -933,6 +910,11 @@ export default {
                 }
             })
         }
+    },
+    watch: {
+        groupACLList (to, from) {
+            console.log('from', from, 'to', to)
+        }
     }
 }
 const groupGrantee = ['AllUsers', 'AuthenticatedUsers']
@@ -946,21 +928,21 @@ const newUserItemDefult = {
     }
 }
 
-const groupACLListDefult = [{
+const groupACLListChild = [{
     GranteeType: 'Group',
     Grantee: 'AllUsers',
     Access: {
-        Read: false,
-        ReadAcp: false,
-        WriteAcp: false
+        Read: true,
+        ReadAcp: true,
+        WriteAcp: true
     }
 }, {
     GranteeType: 'Group',
     Grantee: 'AuthenticatedUsers',
     Access: {
-        Read: false,
-        ReadAcp: false,
-        WriteAcp: false
+        Read: true,
+        ReadAcp: true,
+        WriteAcp: true
     }
 }]
 
