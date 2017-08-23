@@ -1,205 +1,43 @@
 <template >
     <div>
-        <div class="section-separator">
-            <div class="separator-body">
-                <span class="separator-icon"></span>
-                <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
+        <file-acl :aclData='groupACLList' :userAcl='userACLList'>
+            <div class="section-separator" slot="groupTitle">
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t("STORAGE.ACL_USER_GROUP")}}</span>
+                </div>
             </div>
-        </div>
-        <table class="table-permission">
-            <thead>
-                <tr>
-                    <th class="percent30"> {{$t("STORAGE.ACL_GROUP")}}
-                        <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
-                            <div slot="content">
-                                <p style="white-space: normal !important;">{{$t("STORAGE.ACL_GROUP_INFO")}}</p>
-                            </div>
-                        </Tooltip>
-                    </th>
-                    <th class="percent25">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
-                        <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
-                            <div slot="content">
-                                <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_OBJECT_PERMISSIONS_INFO")}}</p>
-                            </div>
-                        </Tooltip>
-                    </th>
-                    <th class="percent30">{{$t("STORAGE.ACL_PERMISSIONS")}}
-                        <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
-                            <div slot="content">
-                                <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_ACL_PERMISSIONS_INFO")}}</p>
-                            </div>
-                        </Tooltip>
-                    </th>
-                    <th class="percent25"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in GroupACLList">
-                    <td>
-                        {{item.Grantee | userType}}
-                    </td>
-                    <td>
-                        <Checkbox v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
-                    </td>
-                    <td>
-                        <Checkbox v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
-                        <Checkbox v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
-                    </td>
-                    <td>
-                        <Button style="margin: 0 6px;visibility:hidden;" size="small">
-                            <Icon type="ios-plus" :size="iconSize"></Icon>
-                        </Button>
-                        <Button style="margin: 0 6px;visibility:hidden;" size="small">
-                            <Icon type="ios-minus" :size="iconSize"></Icon>
-                        </Button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="section-separator">
-            <div class="separator-body">
-                <span class="separator-icon"></span>
-                <span class="separator-info">User</span>
+            <div class="section-separator" slot="userTitle">
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">User</span>
+                </div>
             </div>
-        </div>
-        <table class="table-permission">
-            <thead>
-                <tr>
-                    <th class="percent30"> {{$t("STORAGE.USER")}}
-                        <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
-                            <div slot="content">
-                                <p style="white-space: normal !important;">{{$t("STORAGE.ACL_USER_INFO")}}</p>
-                            </div>
-                        </Tooltip>
-                    </th>
-                    <th class="percent25">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
-                        <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
-                            <div slot="content">
-                                <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_OBJECT_PERMISSIONS_INFO")}}</p>
-                            </div>
-                        </Tooltip>
-                    </th>
-                    <th class="percent30">{{$t("STORAGE.ACL_PERMISSIONS")}}
-                        <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
-                            <div slot="content">
-                                <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_ACL_PERMISSIONS_INFO")}}</p>
-                            </div>
-                        </Tooltip>
-                    </th>
-                    <th class="percent25"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="isAdd">
-                    <td>
-                        <input class="new-user-input" v-model="newUserItem.name">
-                        <Button class="new-user-button" @click="isAdd = false"
-                                size="small">Cancle</Button>
-                    </td>
-                    <td>
-                        <Checkbox v-model="newUserItem.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
-                    </td>
-                    <td>
-                        <Checkbox v-model="newUserItem.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
-                        <Checkbox v-model="newUserItem.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr v-for="(item,index) in UserACLList">
-                    <td>
-                        {{item.Grantee | userType}}
-                    </td>
-                    <td>
-                        <Checkbox :disabled="owner == item.Grantee.ID"
-                                  v-model="item.Permission.READ">{{$t("STORAGE.READ")}}</Checkbox>
-                    </td>
-                    <td>
-                        <Checkbox :disabled="owner == item.Grantee.ID"
-                                  v-model="item.Permission.READ_ACP">{{$t("STORAGE.READ")}}</Checkbox>
-                        <Checkbox :disabled="owner == item.Grantee.ID"
-                                  v-model="item.Permission.WRITE_ACP">{{$t("STORAGE.WRITE")}}</Checkbox>
-                    </td>
-                    <td>
-                        <Tooltip placement="bottom">
-                            <Button v-if="index == 0"
-                                style="margin: 0 6px;"
-                                size="small"
-                                @click="newUserItemInit();isAdd = true">
-                            <Icon type="ios-plus"
-                                  :size="iconSize"></Icon>
-                            </Button>
-                            <Button v-else
-                                    style="margin: 0 6px;visibility:hidden;"
-                                    size="small">
-                                <Icon type="ios-plus"
-                                    :size="iconSize"></Icon>
-                            </Button>
-                            <div slot="content">
-                                <p>{{$t("STORAGE.ADD_USER")}}</p>
-                            </div>
-                        </Tooltip>
-                        <Tooltip placement="bottom">
-                            <Button :disabled="owner == item.Grantee.ID"
-                                style="margin: 0 6px;"
-                                size="small"
-                                @click="deleteUser(item)">
-                                <Icon type="ios-minus"
-                                    :size="iconSize"></Icon>
-                            </Button>
-                            <div slot="content">
-                                <p>{{$t("STORAGE.DELETE_USER")}}</p>
-                            </div>
-                        </Tooltip>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <Tooltip content="Invalid new user" :disabled="isAdd && !!isAddVerified" placement="top" class="pull-right">
-            <Button class="pull-right button-reset"
-                    type="primary"
-                    :disabled="isAdd && !isAddVerified"
-                    @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
-        </Tooltip>
+        </file-acl>
+        <Button class="pull-right button-reset"
+                type="primary"
+                @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
     </div>
 </template> 
 <script>
 import { handler } from '@/service/Aws'
 import { convertPrefix2Router } from '@/service/bucketService'
+import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
     data () {
         return {
             self: this,
-            GroupACLList: this.GroupACLList,
-            UserACLList: this.UserACLList,
-            isAdd: false,
+            groupACLList: this.groupACLList,
+            userACLList: this.userACLList,
             owner: this.owner,
-            newUserItem: {
-                name: '',
-                Permission: {
-                    READ: false,
-                    READ_ACP: false,
-                    WRITE_ACP: false
-                }
-            },
-            iconSize: 16,
-            deleteList: []
+            iconSize: 16
         }
     },
+    components: { fileAcl },
     props: ['bucket', 'filePrefix', 'itemKey'],
     computed: {
         prefix () {
             return this.filePrefix + this.itemKey
-        },
-        isAddVerified () {
-            let name = this.newUserItem.name
-            let { READ, READ_ACP, WRITE_ACP } = this.newUserItem.Permission
-            return name && (READ || READ_ACP || WRITE_ACP)
         },
         breadcrumb () {
             return convertPrefix2Router(this.prefix)
@@ -216,8 +54,9 @@ export default {
                     Bucket: this.bucket,
                     Key: this.prefix
                 })
-                this.GroupACLList = convertGrants(res.Grants)[0]
-                this.UserACLList = convertGrants(res.Grants)[1]
+                this.groupACLList = convertGrants(res.Grants)[0]
+                this.userACLList = convertGrants(res.Grants)[1]
+                console.log('this.groupACLList', this.groupACLList)
                 this.Data = {
                     bucket: this.bucket,
                     grants: res.Grants,
@@ -225,23 +64,25 @@ export default {
                 }
                 this.owner = res.Owner.ID
             } catch (error) {
+                console.log(error)
                 this.$Message.error(this.$t('STORAGE.GET_PERMISSION_FAILED'))
             }
             this.$Loading.finish()
         },
         async ACLsubmitForm () {
             this.$Loading.start()
-            let originItems = [...this.GroupACLList, ...this.UserACLList, ...this.deleteList]
+            let originItems = [...this.groupACLList, ...this.userACLList]
             let items = _.cloneDeep(originItems)
-            if (this.isAdd) {
-                this.newUserItemPut = convertNewUserItem(this.newUserItem)
-                items = items.concat(this.newUserItemPut)
-            }
-            items = _.filter(items, value => {
+            let saved = items.map(item => {
+                return acl2save(item)
+            })
+            console.log(saved)
+            saved = _.filter(saved, value => {
                 value.Permission = convertObject2String(value.Permission)
                 return value.Permission.length > 0
             })
-            if (items.length === 0) {
+            console.log(saved)
+            if (saved.length === 0) {
                 this.$Message.error(this.$t('STORAGE.PERMISSION_EMPTY'))
                 return false
             }
@@ -249,92 +90,57 @@ export default {
                 Bucket: this.bucket,
                 Key: this.prefix,
                 AccessControlPolicy: {
-                    Grants: items,
+                    Grants: saved,
                     Owner: this.Data.owner
                 }
             }
             try {
                 await handler('putObjectAcl', params)
                 this.$Message.success(this.$t('STORAGE.PERMISSION_SUCCESS'))
-                this.deleteList = []
-                if (this.isAdd) {
-                    this.UserACLList = this.UserACLList.concat(convertNewUserItem(this.newUserItem))
-                    this.isAdd = false
-                }
                 this.$emit('permissionSuccess')
             } catch (error) {
                 this.$Message.error(this.$t('STORAGE.PERMISSION_FAILED'))
             }
             this.$Loading.finish()
         },
-        deleteUser (item) {
-            item.Permission = {
-                READ: false,
-                READ_ACP: false,
-                WRITE_ACP: false
-            }
-            this.deleteList.push(item)
-            this.UserACLList = this.UserACLList.filter(val => val !== item)
-        },
-        newUserItemInit () {
-            this.newUserItem = {
-                Permission: { ...permissionFalse },
-                name: ''
-            }
-        },
         getUrl (prefix) {
             return `/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
         }
     }
 }
-
-const permissionFalse = {
-    READ: false,
-    READ_ACP: false,
-    WRITE_ACP: false
-}
-const gropItemsDefaultInit = () => {
-    const gropItemsDefault = [{
-        Permission: { ...permissionFalse },
-        Grantee: {
-            URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
-            Type: 'Group'
+const acl2save = item => {
+    let savedItem = {}
+    if (item.GranteeOrigin) {
+        savedItem = {
+            Grantee: item.GranteeOrigin,
+            Permission: item.Access
         }
-    }, {
-        Permission: { ...permissionFalse },
-        Grantee: {
-            URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
-            Type: 'Group'
-        }
-    }]
-    return gropItemsDefault
-}
-
-const userItemsDefaultInit = () => {
-    let userACLItemsDefault = {
-        Permission: { ...permissionFalse },
-        Grantee: {}
+    } else {
+        savedItem.Grantee = item.Grantee.includes('@') ? { Type: 'AmazonCustomerByEmail', EmailAddress: item.Grantee } : { Type: 'CanonicalUser', ID: item.Grantee }
+        savedItem.Permission = item.Access
     }
-    return userACLItemsDefault
+    return savedItem
 }
+
 const convertGrants = grants => {
     let userACLItems = []
     if (grants.length) {
         let IDArry = []
-        var gropItemsDefault = gropItemsDefaultInit()
+        var gropItemsDefault = _.cloneDeep(groupACLListDefult)
         _.each(grants, grant => {
             if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers') {
                 convertPermission(gropItemsDefault[0], grant.Permission)
+                gropItemsDefault[0].GranteeOrigin = grant.Grantee
             } else if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers') {
                 convertPermission(gropItemsDefault[1], grant.Permission)
+                gropItemsDefault[1].GranteeOrigin = grant.Grantee
             } else if (grant.Grantee.ID) {
                 let id = grant.Grantee.ID
                 let ObjIndex = IDArry.findIndex(val => val === id)
                 if (IDArry.includes(id)) {
                     convertPermission(userACLItems[ObjIndex], grant.Permission)
                 } else {
-                    let userItemsDefault = userItemsDefaultInit()
-                    userItemsDefault.Grantee = grant.Grantee
+                    let userItemsDefault = user2front(grant)
                     convertPermission(userItemsDefault, grant.Permission)
                     userACLItems.push(userItemsDefault)
                     IDArry.push(id)
@@ -344,30 +150,65 @@ const convertGrants = grants => {
     }
     return [gropItemsDefault, userACLItems]
 }
+const user2front = (grant) => {
+    return {
+        GranteeType: grant.Grantee.Type,
+        GranteeOrigin: grant.Grantee,
+        Grantee: grant.Grantee.ID || grant.Grantee.EmailAddress,
+        Access: {
+            Read: false,
+            ReadAcp: false,
+            WriteAcp: false
+        }
+    }
+}
 const convertPermission = (grant, permission) => {
     if (permission === 'FULL_CONTROL') {
-        grant.Permission = {
-            READ: true,
-            READ_ACP: true,
-            WRITE_ACP: true
+        grant.Access = {
+            Read: true,
+            ReadAcp: true,
+            WriteAcp: true
         }
     } else {
-        grant.Permission[permission] = true
+        grant.Access[per2acc[permission]] = true
     }
 }
 const convertObject2String = (object) => {
-    let truePermission = {}
+    let truePermission = []
     _.each(object, function (value, key) {
-        if (value) { truePermission[key] = true }
+        if (value) { truePermission.push(acc2per[key]) }
     })
-    return _.keys(truePermission).toString()
+    return truePermission.join(',')
 }
-const convertNewUserItem = item => {
-    let newItem = { ...item }
-    newItem.Grantee = item.name.includes('@') ? { Type: 'AmazonCustomerByEmail', EmailAddress: item.name } : { Type: 'CanonicalUser', ID: item.name }
-    delete newItem.name
-    return newItem
-}
+
+const per2acc = {READ: 'Read', READ_ACP: 'ReadAcp', WRITE_ACP: 'WriteAcp'}
+const acc2per = {Read: 'READ', ReadAcp: 'READ_ACP', WriteAcp: 'WRITE_ACP'}
+const groupACLListDefult = [{
+    GranteeType: 'Group',
+    Grantee: 'AllUsers',
+    Access: {
+        Read: false,
+        ReadAcp: false,
+        WriteAcp: false
+    },
+    GranteeOrigin: {
+        Type: 'Group',
+        URI: 'http://acs.amazonaws.com/groups/global/AllUsers'
+    }
+}, {
+    GranteeType: 'Group',
+    Grantee: 'AuthenticatedUsers',
+    Access: {
+        Read: false,
+        ReadAcp: false,
+        WriteAcp: false
+    },
+    GranteeOrigin: {
+        Type: 'Group',
+        URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers'
+    }
+}]
+
 </script>
 <style type="less">
 .pull-right {

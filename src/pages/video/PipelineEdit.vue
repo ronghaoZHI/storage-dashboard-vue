@@ -35,161 +35,10 @@
                 </div>
             </div>
             <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.USER_GROUP_PERMISSIONS')}} : </span>
-                <table class="table-permission" style="display:inline-block;width:530px">
-                    <thead>
-                        <tr>
-                            <th style="width:150px;"> {{$t("STORAGE.ACL_GROUP")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.ACL_GROUP_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                            <th style="width:150px;">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_OBJECT_PERMISSIONS_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                            <th style="width:230px;">{{$t("STORAGE.ACL_PERMISSIONS")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_ACL_PERMISSIONS_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in groupACLList">
-                            <td>
-                                {{item.Grantee}}
-                            </td>
-                            <td>
-                                <Checkbox v-model="item.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
-                            </td>
-                            <td>
-                                <Checkbox v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.USER_PERMISSIONS')}} : </span>
-                <table class="table-permission" style="display:inline-block;width:530px">
-                    <thead>
-                        <tr>
-                            <th style="width:150px;"> {{$t("STORAGE.USER")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.ACL_USER_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                            <th style="width:150px;">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_OBJECT_PERMISSIONS_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                            <th style="width:140px;">{{$t("STORAGE.ACL_PERMISSIONS")}}
-                                <Tooltip placement="right">
-                                    <span><Icon type="ios-help"></Icon></span>
-                                    <div slot="content">
-                                        <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_ACL_PERMISSIONS_INFO")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </th>
-                            <th style="width:90px;"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-if="isAddUser">
-                            <td>
-                                <input class="new-user-input" v-model="newUserItem.Grantee">
-                            </td>
-                            <td>
-                                <Checkbox v-model="newUserItem.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
-                            </td>
-                            <td>
-                                <Checkbox v-model="newUserItem.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox v-model="newUserItem.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
-                            </td>
-                            <td>
-                                <Tooltip placement="bottom" :delay="1000">
-                                    <Button style="margin: 0 2px;" size="small" :disabled="newUserDisabled" @click="addUserOK">
-                                        <Icon type="ios-checkmark" :size="iconSize"></Icon>
-                                    </Button>
-                                    <div slot="content">
-                                        <p>{{$t('VIDEO.ADD')}}</p>
-                                    </div>
-                                </Tooltip>
-                                <Tooltip placement="bottom" :delay="1000">
-                                    <Button style="margin: 0 2px;" size="small" @click="isAddUser = false">
-                                        <Icon type="ios-close" :size="iconSize"></Icon>
-                                    </Button>
-                                    <div slot="content">
-                                        <p>{{$t('VIDEO.CANCEL')}}</p>
-                                    </div>
-                                </Tooltip>
-                            </td>
-                        </tr>
-                        <tr v-for="(item,index) in userACLList">
-                            <td>
-                                {{item.Grantee}}
-                            </td>
-                            <td>
-                                <Checkbox :disabled="username === item.Grantee" v-model="item.Access.Read">{{$t("STORAGE.READ")}}</Checkbox>
-                            </td>
-                            <td>
-                                <Checkbox :disabled="username === item.Grantee" v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
-                                <Checkbox :disabled="username === item.Grantee" v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
-                            </td>
-                            <td>
-                                <Tooltip placement="bottom" :delay="1000">
-                                    <Button v-if="index === 0"
-                                        style="margin: 0 2px;"
-                                        size="small"
-                                        @click="addUser">
-                                    <Icon type="ios-plus"
-                                        :size="iconSize"></Icon>
-                                    </Button>
-                                    <Button v-else
-                                            style="margin: 0 2px;visibility:hidden;"
-                                            size="small">
-                                        <Icon type="ios-plus"
-                                            :size="iconSize"></Icon>
-                                    </Button>
-                                    <div slot="content">
-                                        <p>{{$t("STORAGE.ADD_USER")}}</p>
-                                    </div>
-                                </Tooltip>
-                                <Tooltip placement="bottom" :delay="1000">
-                                    <Button :disabled="username === item.Grantee"
-                                        style="margin: 0 2px;"
-                                        size="small"
-                                        @click="deleteUser(index)">
-                                        <Icon type="ios-minus"
-                                            :size="iconSize"></Icon>
-                                    </Button>
-                                    <div slot="content">
-                                        <p>{{$t("STORAGE.DELETE_USER")}}</p>
-                                    </div>
-                                </Tooltip>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <file-acl :aclData='groupACLList' :userAcl='userACLList'>
+                    <span class="form-label" slot="groupTitle">{{$t('VIDEO.USER_GROUP_PERMISSIONS')}} : </span>
+                    <span class="form-label" slot="userTitle">{{$t('VIDEO.USER_PERMISSIONS')}} : </span>
+                </file-acl>
             </div>
         </div>
         <div class="separator-line"></div>
@@ -224,15 +73,14 @@
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
 import { getTranscoderUrl } from '@/service/API'
+import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
     data () {
         return {
             iconSize: 18,
             pipeline: _.cloneDeep(pipelineDefult),
             groupACLList: _.cloneDeep(groupACLListDefult),
-            newUserItem: _.cloneDeep(newUserItemDefult),
             bucketList: [],
-            isAddUser: false,
             userACLList: []
         }
     },
@@ -242,11 +90,6 @@ export default {
         },
         nameError () {
             return this.pipeline.Name.length === 0 || (new TextEncoder('utf-8').encode(this.pipeline.Name)).length > 40
-        },
-        newUserDisabled () {
-            const name = this.newUserItem.Grantee
-            const { Read, ReadAcp, WriteAcp } = this.newUserItem.Access
-            return name === '' || !(Read || ReadAcp || WriteAcp)
         },
         username () {
             return user.state.username
@@ -263,6 +106,7 @@ export default {
             }
         }
     },
+    components: { fileAcl },
     created () {
         this.readPipeline()
     },
@@ -315,21 +159,11 @@ export default {
                     } else {
                         this.groupACLList[1] = item
                     }
+                    this.groupACLList = _.cloneDeep(this.groupACLList)
                 } else {
                     this.userACLList.push(item)
                 }
             })
-        },
-        addUser () {
-            this.isAddUser = true
-            this.newUserItem = _.cloneDeep(newUserItemDefult)
-        },
-        addUserOK () {
-            this.userACLList.push(this.newUserItem)
-            this.isAddUser = false
-        },
-        deleteUser (index) {
-            this.userACLList.splice(index, 1)
         },
         async addPipeline () {
             if (this.nameError === true) {
@@ -405,15 +239,6 @@ const groupACLListDefult = [{
         WriteAcp: false
     }
 }]
-
-const newUserItemDefult = {
-    Grantee: '',
-    Access: {
-        Read: false,
-        ReadAcp: false,
-        WriteAcp: false
-    }
-}
 
 const aclConvert2Save = data => {
     const saved = {
