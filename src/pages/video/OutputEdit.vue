@@ -154,7 +154,7 @@
         <div class="editBlock">
             <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
         </div>
-        <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="my-modal">
+        <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="edit-modal">
             <div class="form-item">
                 <span class="form-label required-item">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
                 <Select v-model="outputModal.preset_id" class="line-width" @on-change="templateChange">
@@ -176,7 +176,7 @@
                 <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
-        <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="my-modal">
+        <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="edit-modal">
             <div class="form-item">
                 <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                 <Input v-model="shotModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>

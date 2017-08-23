@@ -169,9 +169,48 @@
                 <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
             </Tab-pane>
         </Tabs>
-        <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="my-modal">
+        <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">
             <div class="form-item">
                 <span class="form-label required-item">{{$t('STORAGE.ALLOWED_ORIGINS')}} : </span>
+                <Input v-model="input_allowed_origin" placeholder="http://www.baishancloud.com" class="line-width" @on-enter="addAllowedOrigin"></Input>
+                <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
+                <div class="tag-margin-left">
+                    <Tag type="border" color="blue" v-for="item in corsModal.AllowedOrigins" :key="item" :name="item" closable @on-close="tagCloseAllowedOrigin">{{item}}</Tag>
+                </div>
+            </div>
+            <div class="form-item">
+                <span class="form-label required-item">{{$t('STORAGE.ALLOWED_METHODS')}} : </span>
+                <Checkbox-group style="display:inline" v-model="corsModal.AllowedMethods">
+                    <Checkbox class="modal-checkbox" label="GET" >GET</Checkbox>
+                    <Checkbox class="modal-checkbox" label="PUT">PUT</Checkbox>
+                    <Checkbox class="modal-checkbox" label="HEAD">HEAD</Checkbox>
+                    <Checkbox class="modal-checkbox" label="POST">POST</Checkbox>
+                    <Checkbox class="modal-checkbox" label="DELETE">DELETE</Checkbox>
+                </Checkbox-group>
+            </div>
+            <div class="form-item">
+                <span class="form-label">{{$t('STORAGE.ALLOWED_HEADERS')}} : </span>
+                <Input v-model="input_allowed_header" class="line-width" @on-enter="addAllowedHeader"></Input>
+                <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
+                <div class="tag-margin-left">
+                    <Tag type="border" color="blue" v-for="item in corsModal.AllowedHeaders" :key="item" :name="item" closable @on-close="tagCloseAllowedHeader">{{item}}</Tag>
+                </div>
+            </div>
+            <div class="form-item">
+                <span class="form-label">{{$t('STORAGE.EXPOSE_HEADERS')}} : </span>
+                <Input v-model="input_expose_header" class="line-width" @on-enter="addExposeHeader"></Input>
+                <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
+                <div class="tag-margin-left">
+                    <Tag type="border" color="blue" v-for="item in corsModal.ExposeHeaders" :key="item" :name="item" closable @on-close="tagCloseExposeHeader">{{item}}</Tag>
+                </div>
+            </div>
+            <div class="form-item">
+                <span class="form-label">{{$t('STORAGE.CACHE_TIME')}} : </span>
+                <Input style="width:100px" v-model="corsModal.MaxAgeSeconds" class="line-width"></Input>
+                <span>s</span>
+            </div>
+            <div slot="footer">
+                <Button type="primary" @click="putBucketCors">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
     </div>
@@ -197,32 +236,57 @@ export default {
                     WRITE_ACP: false
                 }
             },
+            index_to_edit_cors_rule: '',
+            input_allowed_origin: '',
+            input_allowed_header: '',
+            input_expose_header: '',
+            corsModal: {
+                AllowedOrigins: [],
+                AllowedMethods: ['GET'],
+                AllowedHeaders: [],
+                ExposeHeaders: [],
+                MaxAgeSeconds: ''
+            },
+            putBucketCorsParams: {
+                Bucket: '',
+                CORSConfiguration: {
+                    CORSRules: []
+                }
+            },
             corsRulesList: [],
             showCorsModal: false,
             listHeader: [{
                 title: this.$t('STORAGE.ALLOWED_ORIGINS'),
-                key: 'allowed_origins',
-                width: 160
+                width: 200,
+                render: (h, params) => {
+                    return h('div', params.row.allowed_origins_front.map(item => h('p', item)))
+                }
             }, {
                 title: this.$t('STORAGE.ALLOWED_METHODS'),
-                key: 'allowed_methods',
-                width: 120
+                width: 150,
+                render: (h, params) => {
+                    return h('div', params.row.allowed_methods_front.map(item => h('p', item)))
+                }
             }, {
                 title: this.$t('STORAGE.ALLOWED_HEADERS'),
-                key: 'allowed_headers',
-                width: 120
+                width: 150,
+                render: (h, params) => {
+                    return h('div', params.row.allowed_headers_front.map(item => h('p', item)))
+                }
             }, {
                 title: this.$t('STORAGE.EXPOSE_HEADERS'),
-                key: 'expose_headers',
-                width: 120
+                width: 150,
+                render: (h, params) => {
+                    return h('div', params.row.expose_headers_front.map(item => h('p', item)))
+                }
             }, {
                 title: this.$t('STORAGE.CACHE_TIME'),
                 key: 'cache_time',
-                width: 120
+                width: 150
             }, {
                 title: this.$t('STORAGE.TABLE_ACTION'),
                 key: 'actions',
-                width: 160,
+                width: 100,
                 align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
@@ -240,7 +304,7 @@ export default {
                         },
                         on: {
                             click: () => {
-                                // edit
+                                this.addCorsRule(params.row._index)
                             }
                         }
                     }, [h('Icon', {
@@ -260,7 +324,7 @@ export default {
                         },
                         on: {
                             click: () => {
-                                // delete confirm
+                                this.deleteCorsRuleConfirm(params.row._index)
                             }
                         }
                     }, [h('Icon', {
@@ -289,6 +353,7 @@ export default {
     },
     created () {
         this.getACLList()
+        this.listCorsRules()
     },
     methods: {
         async getACLList () {
@@ -345,32 +410,133 @@ export default {
             }
             this.$Loading.finish()
         },
+        addAllowedOrigin () {
+            this.corsModal.AllowedOrigins.push(this.input_allowed_origin)
+            this.input_allowed_origin = ''
+        },
+        addAllowedHeader () {
+            this.corsModal.AllowedHeaders.push(this.input_allowed_header)
+            this.input_allowed_header = ''
+        },
+        addExposeHeader () {
+            this.corsModal.ExposeHeaders.push(this.input_expose_header)
+            this.input_expose_header = ''
+        },
+        tagCloseAllowedOrigin (event, name) {
+            const index = this.corsModal.AllowedOrigins.indexOf(name)
+            this.corsModal.AllowedOrigins.splice(index, 1)
+        },
+        tagCloseAllowedHeader (event, name) {
+            const index = this.corsModal.AllowedHeaders.indexOf(name)
+            this.corsModal.AllowedHeaders.splice(index, 1)
+        },
+        tagCloseExposeHeader (event, name) {
+            const index = this.corsModal.ExposeHeaders.indexOf(name)
+            this.corsModal.ExposeHeaders.splice(index, 1)
+        },
+        async putBucketCors () {
+            if (this.corsModal.AllowedOrigins.length === 0) {
+                this.$Message.error(this.$t('STORAGE.ALLOWED_ORIGINS_CANNOT_EMPTY'))
+                return
+            }
+            if (this.corsModal.AllowedMethods.length === 0) {
+                this.$Message.error(this.$t('STORAGE.ALLOWED_METHODS_CANNOT_EMPTY'))
+                return
+            }
+            if (this.corsModal.MaxAgeSeconds && isNaN(this.corsModal.MaxAgeSeconds)) {
+                this.$Message.error(this.$t('STORAGE.CACHE_TIME_BE_NUMBER'))
+                return
+            }
+            let putCorsModal = {}
+            _.forEach(this.corsModal, (value, key) => {
+                if (value) {
+                    putCorsModal[key] = value
+                }
+            })
+            try {
+                this.$Loading.start()
+                this.putBucketCorsParams.Bucket = this.bucket
+                if (typeof this.index_to_edit_cors_rule === 'number') {
+                    this.putBucketCorsParams.CORSConfiguration.CORSRules[this.index_to_edit_cors_rule] = putCorsModal
+                    this.index_to_edit_cors_rule = ''
+                } else {
+                    this.putBucketCorsParams.CORSConfiguration.CORSRules.push(putCorsModal)
+                }
+                await handler('putBucketCors', this.putBucketCorsParams)
+                this.$Loading.finish()
+                this.showCorsModal = false
+                this.$Message.success(this.$t('STORAGE.SET_SUCCESS'))
+                this.listCorsRules()
+            } catch (error) {
+                this.$Loading.error()
+            }
+        },
         async listCorsRules () {
             try {
                 this.$Loading.start()
                 let res = await handler('getBucketCors', { Bucket: this.bucket })
                 this.corsRulesList = await this.convert2FrontCorsRules(res.CORSRules)
+                this.putBucketCorsParams.Bucket = this.bucket
+                this.putBucketCorsParams.CORSConfiguration.CORSRules = res.CORSRules
                 this.$Loading.finish()
             } catch (error) {
-                this.$$Loading.error()
+                this.$Loading.error()
             }
         },
         convert2FrontCorsRules (data) {
             let frontList = []
             data.forEach(item => {
                 const frontItem = {
-                    allowed_origins: item.AllowedOrigins.join('\n'),
-                    allowed_methods: item.AllowedMethods.join('\n'),
-                    allowed_headers: item.AllowedHeaders ? item.AllowedHeaders.join('\n') : '--',
-                    expose_headers: item.ExposeHeaders ? item.ExposeHeaders.join('\n') : '--',
-                    cache_time: item.MaxAgeSeconds ? item.MaxAgeSeconds : 0
+                    allowed_origins_front: item.AllowedOrigins,
+                    allowed_methods_front: item.AllowedMethods,
+                    allowed_headers_front: item.AllowedHeaders,
+                    expose_headers_front: item.ExposeHeaders,
+                    cache_time: item.MaxAgeSeconds
                 }
                 frontList.push(frontItem)
             })
             return frontList
         },
-        addCorsRule () {
+        async addCorsRule (index) {
             this.showCorsModal = true
+            if (typeof index === 'number') {
+                let res = await handler('getBucketCors', { Bucket: this.bucket })
+                let currentCorsRule = res.CORSRules[index]
+                this.corsModal.AllowedOrigins = currentCorsRule.AllowedOrigins
+                this.corsModal.AllowedMethods = currentCorsRule.AllowedMethods
+                this.corsModal.AllowedHeaders = currentCorsRule.AllowedHeaders
+                this.corsModal.ExposeHeaders = currentCorsRule.ExposeHeaders
+                this.corsModal.MaxAgeSeconds = currentCorsRule.MaxAgeSeconds
+                this.index_to_edit_cors_rule = index
+            } else {
+                this.corsModal.AllowedOrigins = []
+                this.corsModal.AllowedMethods = ['GET']
+                this.corsModal.AllowedHeaders = []
+                this.corsModal.ExposeHeaders = []
+                this.corsModal.MaxAgeSeconds = ''
+                this.index_to_edit_cors_rule = ''
+            }
+        },
+        deleteCorsRuleConfirm (index) {
+            this.$Modal.confirm({
+                content: this.$t('STORAGE.DELETE_CORS_CONFIRMED'),
+                okText: this.$t('PUBLIC.CONFIRMED'),
+                cancelText: this.$t('PUBLIC.CANCLE'),
+                onOk: () => this.deleteCorsRule(index)
+            })
+        },
+        async deleteCorsRule (index) {
+            try {
+                this.$Loading.start()
+                this.putBucketCorsParams.Bucket = this.bucket
+                this.putBucketCorsParams.CORSConfiguration.CORSRules.splice(index, 1)
+                this.putBucketCorsParams.CORSConfiguration.CORSRules.length !== 0 ? await handler('putBucketCors', this.putBucketCorsParams) : await handler('deleteBucketCors', { Bucket: this.bucket })
+                this.$Loading.finish()
+                this.$Message.success(this.$t('STORAGE.DELETE_SUCCESS'))
+                this.corsRulesList.splice(index, 1)
+            } catch (error) {
+                this.$Loading.error()
+            }
         },
         deleteUser (item) {
             item.Permission = {
@@ -505,5 +671,17 @@ const convertNewUserItem = item => {
 }
 .button-bsc-add-rule {
     margin-bottom: 10px
+}
+.info {
+    margin: 5px 0 5px 133px
+}
+.tag-margin-left {
+    margin-left: 133px
+}
+.modal-checkbox {
+    width: 90px
+}
+.edit-modal .form-item .form-label {
+    width: 130px
 }
 </style>
