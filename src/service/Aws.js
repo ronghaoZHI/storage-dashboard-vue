@@ -6,36 +6,31 @@ import axios from './axios-bsc'
 import user from '@/store/modules/user'
 import { logout, isSSOLogin } from '@/service/Helper'
 
-let key = {}
+let awsKey = {}
 
-export const clear = () => key = {}
+export const clear = () => awsKey = {}
 
-export const getKey = () => {
-    return axios.get(ACCESSKEY).then(res => key = res[0])
+export const getKey = async () => {
+    return !isSSOLogin ? logout('Login status is invalid') : awsKey = user.state.type === 'admin' ? awsKey = user.state.subUser.keys[0] : awsKey.accesskey ? awsKey : axios.get(ACCESSKEY).then(res => awsKey = res[0])
 }
 
-export const config = ({ accesskey, secretkey }, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1') => {
-    AWS.config.update({ accessKeyId: accesskey, secretAccessKey: secretkey })
+export const config = async ({key, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1'}) => {
+    let _key = key || await getKey()
+    AWS.config.update({ accessKeyId: _key.accesskey, secretAccessKey: _key.secretkey })
     AWS.config.region = region
     AWS.config.httpOptions = { timeout: timeout }
     AWS.config.endpoint = 'http://' + host
     AWS.config.s3ForcePathStyle = s3ForcePathStyle
-    return new AWS.S3()
 }
 
-export const getAWS = async (timeout = 10000, host = HOST.awsHost, s3ForcePathStyle = true) => {
-    if (!isSSOLogin) logout('Login status is invalid')
-    if (user.state.type === 'admin') {
-        key = user.state.subUser.keys[0]
-    } else if (!key.accesskey) {
-        key = await getKey()
-    }
-    return config(key, timeout, host, s3ForcePathStyle)
+export const getS3 = async ({key, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle = true}) => {
+    await config({key, timeout, host, s3ForcePathStyle})
+    return new AWS.S3()
 }
 
 export const handler = async (method, params = '', host = HOST.awsHost, s3ForcePathStyle = true, timeout = 10000) => {
     try {
-        const s3 = await getAWS(timeout, host, s3ForcePathStyle)
+        const s3 = await getS3({timeout, host, s3ForcePathStyle})
         return new Promise((resolve, reject) => s3[method](params, (error, data) => {
             error && iView.Message.error(error.message, 5)
             return error ? reject(error) : resolve(data)
@@ -47,7 +42,7 @@ export const handler = async (method, params = '', host = HOST.awsHost, s3ForceP
 }
 
 export const transcoder = async (method, params = '') => {
-    await getAWS(1000, HOST.transcoderHOST, false)
+    await config(1000, HOST.transcoderHOST, false)
     try {
         let elastictranscoder = new AWS.ElasticTranscoder({paramValidation: false, convertResponseTypes: false})
         return await new Promise((resolve, reject) => elastictranscoder[method](params, (error, data) => {

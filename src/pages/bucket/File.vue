@@ -71,7 +71,7 @@
     </div>
 </template>
 <script>
-import { getAWS, handler } from '@/service/Aws'
+import { getS3, handler } from '@/service/Aws'
 import { bytes, keyFilter, convertPrefix2Router } from '@/service/bucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
 import upload from '@/components/upload/upload'
@@ -581,12 +581,13 @@ const isImage = (file) => !!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key)
 const getURL = async (bucket, file, prefix) => {
     try {
         let params = { Bucket: bucket, Key: prefix + file.Key }
-        let s3 = await getAWS()
+        let s3 = await getS3({key: undefined})
         let url = await s3.getSignedUrl('getObject', params)
         let acl = await handler('getObjectAcl', params)
         let isAllUser = _.find(acl.Grants, (item) => item.Grantee.URI && item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers')
         return isAllUser ? url.split('?')[0] : url
     } catch (error) {
+        console.log(error)
         this.$Loading.error()
         return Promise.reject(error)
     }

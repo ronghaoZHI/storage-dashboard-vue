@@ -32,7 +32,7 @@
     </div>
 </template>
 <script>
-    import { getAWS } from '@/service/Aws'
+    import { getS3 } from '@/service/Aws'
     import moment from 'moment'
     import { bytes } from '@/service/bucketService'
     export default {
@@ -83,7 +83,7 @@
                     ContentType: file.type,
                     Body: file
                 }
-                let aws = await getAWS(3600000)
+                let aws = await getS3({timeout: 3600000})
                 let request = aws.upload(params, { partSize: 1024 * 1024 * 10000 })
                 request.on('httpUploadProgress', function (evt) {
                     item.progress = parseInt((evt.loaded * 100) / evt.total)

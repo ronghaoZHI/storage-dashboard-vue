@@ -1,10 +1,10 @@
-import { getAWS, handler, transcoder } from '@/service/Aws'
+import { getS3, handler, transcoder } from '@/service/Aws'
 import { HOST } from '@/service/HOST'
 import iView from 'iview'
 
 const getBucketPolicy = async (bucket) => {
-    let aws = await getAWS(10000, HOST.policyHOST)
-    return new Promise((resolve, reject) => aws.getBucketPolicy({Bucket: bucket}, (error, data) => {
+    let s3 = await getS3({timeout: 10000, host: HOST.policyHOST})
+    return new Promise((resolve, reject) => s3.getBucketPolicy({Bucket: bucket}, (error, data) => {
         return error && error.code !== 'PolicyNotFound' ? reject(error) : resolve({bucket, data: data})
     }))
 }

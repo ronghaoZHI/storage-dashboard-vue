@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { getAWS, handler, config } from '@/service/Aws'
+import { getS3, handler } from '@/service/Aws'
 import { prefix, Utf8ArrayToStr } from '@/service/bucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
@@ -300,7 +300,7 @@ export default {
                 Bucket: this.bucket,
                 Key: prefix.overlay + fileName
             })
-            const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
+            const s3 = getS3({key: {accesskey: previewAccessKey, secretkey: previewSecretKey}})
             return new Promise((resolve, reject) => s3.putObject({
                 Bucket: 'image-example',
                 Key: prefix.overlay + fileName,
@@ -331,7 +331,7 @@ export default {
 const getURL = async (bucket, key) => {
     try {
         let params = { Bucket: bucket, Key: key }
-        let s3 = await getAWS()
+        let s3 = await getS3({key: undefined})
         let url = await s3.getSignedUrl('getObject', params)
         let acl = await handler('getObjectAcl', params)
         let isAllUser = _.find(acl.Grants, (item) => item.Grantee.URI && item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers')

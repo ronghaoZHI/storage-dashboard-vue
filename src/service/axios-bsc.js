@@ -39,7 +39,7 @@ async function requestConf (config) {
 }
 
 async function getTranscodeUrlConfig (config) {
-    let headers = await getAWSByHttpHeaders(config)
+    let headers = await getS3ByHttpHeaders(config)
     config.headers.Authorization = headers.Authorization
     config.headers['Content-Type'] = headers['Content-Type']
     config.headers['X-Amz-Date'] = headers['X-Amz-Date']
@@ -49,7 +49,7 @@ async function getTranscodeUrlConfig (config) {
 
 // get aws sign for http request 
 // transcode need some params that can't sent by aws sdk
-async function getAWSByHttpHeaders (config) {
+async function getS3ByHttpHeaders (config) {
     let key = await getKey()
     let signed = aws4.sign({
         host: config.url.split('http://')[1].split('/')[0],

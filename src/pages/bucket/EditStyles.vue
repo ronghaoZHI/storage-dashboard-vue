@@ -342,7 +342,7 @@
     </div>
 </template>
 <script>
-import { handler, config } from '@/service/Aws'
+import { handler, getS3 } from '@/service/Aws'
 import { prefix } from '@/service/bucketService'
 import upload from '@/components/upload/upload'
 import styleList from '@/pages/bucket/PictureStyles'
@@ -662,7 +662,7 @@ const colorTest = (hex) => {
 }
 const putOverlayFile = (name, body) => {
     const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
-    const s3 = config({ accesskey: previewAccessKey, secretkey: previewSecretKey })
+    const s3 = getS3({key: {accesskey: previewAccessKey, secretkey: previewSecretKey}})
     return new Promise((resolve, reject) => s3.putObject({
         Bucket: 'image-example',
         Key: prefix.overlay + name,
