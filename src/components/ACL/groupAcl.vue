@@ -1,6 +1,6 @@
 <template >
     <div>
-        <table class="table-permission" style="display:inline-block;width:475px">{{aclData[0]}}
+        <table class="table-permission" style="display:inline-block;width:475px">
             <thead>
                 <tr>
                     <th style="width:170px;"> {{$t("STORAGE.ACL_GROUP")}}
@@ -51,7 +51,6 @@
 export default {
     data () {
         return {
-            // group: _.cloneDeep(this.data),
             iconSize: 16
         }
     },
@@ -62,18 +61,6 @@ export default {
                 return groupACLListDefult
             }
         }
-    },
-    computed: {
-    },
-    mounted () {
-        this.$nextTick(function () {
-            console.log('moun', this.aclData[0], this.aclData.indexOf(this.aclData[0]))
-        })
-    },
-    methods: {
-    },
-    watch: {
-
     }
 }
 const groupACLListDefult = [{

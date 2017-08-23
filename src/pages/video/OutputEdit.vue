@@ -339,7 +339,6 @@ export default {
         return {
             iconSize: 18,
             self: this,
-            groupACLListChild: groupACLListChild,
             transcode: _.cloneDeep(transcodeDefult),
             inputBucket: '',
             bucketList: this.bucketList,
@@ -352,23 +351,7 @@ export default {
             shotModal: _.clone(shotDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
             HLSShow: false,
-            groupACLList: [{
-                GranteeType: 'Group',
-                Grantee: 'AllUsers',
-                Access: {
-                    Read: false,
-                    ReadAcp: false,
-                    WriteAcp: false
-                }
-            }, {
-                GranteeType: 'Group',
-                Grantee: 'AuthenticatedUsers',
-                Access: {
-                    Read: false,
-                    ReadAcp: false,
-                    WriteAcp: false
-                }
-            }],
+            groupACLList: [],
             isAddUser: false,
             newUserItem: _.cloneDeep(newUserItemDefult),
             userACLList: [],
@@ -585,7 +568,7 @@ export default {
 
             if (this.id === 'none') {
                 this.userACLList = [this.owerACL]
-                this.groupACLList = ['test']
+                this.groupACLList = _.cloneDeep(groupACLListDefult)
                 await this.getBucketNames()
                 this.inputBucket = this.bucketList[0]
                 this.transcode.output_bucket = this.bucketList[0]
@@ -676,7 +659,6 @@ export default {
             this.transcode.snapshots.splice(index, 1)
         },
         beforeSubmit () {
-            this.groupACLList = groupACLListChild
             let segments = []
             if (this.regError) {
                 this.$Message.warning(this.$t('VIDEO.REG_ERROR'))
@@ -905,6 +887,7 @@ export default {
                     } else {
                         this.groupACLList[1] = item
                     }
+                    this.groupACLList = _.cloneDeep(this.groupACLList)
                 } else {
                     this.userACLList.push(item)
                 }
@@ -912,8 +895,11 @@ export default {
         }
     },
     watch: {
-        groupACLList (to, from) {
-            console.log('from', from, 'to', to)
+        groupACLList: {
+            handler (to, from) {
+                console.log('from', from, 'to', to)
+            },
+            deep: true
         }
     }
 }
@@ -928,21 +914,21 @@ const newUserItemDefult = {
     }
 }
 
-const groupACLListChild = [{
+const groupACLListDefult = [{
     GranteeType: 'Group',
     Grantee: 'AllUsers',
     Access: {
         Read: true,
-        ReadAcp: true,
-        WriteAcp: true
+        ReadAcp: false,
+        WriteAcp: false
     }
 }, {
     GranteeType: 'Group',
     Grantee: 'AuthenticatedUsers',
     Access: {
-        Read: true,
-        ReadAcp: true,
-        WriteAcp: true
+        Read: false,
+        ReadAcp: false,
+        WriteAcp: false
     }
 }]
 
