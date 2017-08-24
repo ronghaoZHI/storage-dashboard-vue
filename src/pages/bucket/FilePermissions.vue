@@ -27,8 +27,8 @@ export default {
     data () {
         return {
             self: this,
-            groupACLList: this.groupACLList,
-            userACLList: this.userACLList,
+            groupACLList: [],
+            userACLList: [],
             owner: this.owner,
             iconSize: 16
         }
@@ -56,7 +56,6 @@ export default {
                 })
                 this.groupACLList = convertGrants(res.Grants)[0]
                 this.userACLList = convertGrants(res.Grants)[1]
-                console.log('this.groupACLList', this.groupACLList)
                 this.Data = {
                     bucket: this.bucket,
                     grants: res.Grants,
@@ -76,12 +75,10 @@ export default {
             let saved = items.map(item => {
                 return acl2save(item)
             })
-            console.log(saved)
             saved = _.filter(saved, value => {
                 value.Permission = convertObject2String(value.Permission)
                 return value.Permission.length > 0
             })
-            console.log(saved)
             if (saved.length === 0) {
                 this.$Message.error(this.$t('STORAGE.PERMISSION_EMPTY'))
                 return false

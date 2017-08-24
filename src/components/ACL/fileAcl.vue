@@ -1,10 +1,10 @@
 <template >
     <div>
         <slot name="groupTitle"></slot>
-        <table class="table-permission" style="display:inline-block;width:475px">
+        <table class="table-permission" :class="{ 'dis-in-b': isInline}" :style="tableStyle">
             <thead>
                 <tr>
-                    <th style="width:170px;"> {{$t("STORAGE.ACL_GROUP")}}
+                    <th class="percent30" :style="td30Style"> {{$t("STORAGE.ACL_GROUP")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -12,7 +12,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th style="width:135px;">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent20" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -20,7 +20,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th style="width:170px;">{{$t("STORAGE.ACL_PERMISSIONS")}}
+                    <th class="percent25" :style="td25Style">{{$t("STORAGE.ACL_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -28,6 +28,7 @@
                             </div>
                         </Tooltip>
                     </th>
+                    <th class="percent25" :style="td25Style"></th>
                 </tr>
             </thead>
             <tbody>
@@ -42,15 +43,16 @@
                         <Checkbox v-model="item.Access.ReadAcp">{{$t("STORAGE.READ")}}</Checkbox>
                         <Checkbox v-model="item.Access.WriteAcp">{{$t("STORAGE.WRITE")}}</Checkbox>
                     </td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
         <br>
         <slot name="userTitle"></slot>
-        <table class="table-permission" style="display:inline-block;width:475px">
+        <table class="table-permission" :class="{ 'dis-in-b': isInline}" :style="tableStyle">
             <thead>
                 <tr>
-                    <th style="width:200px;"> {{$t("STORAGE.USER")}}
+                    <th class="percent30" :style="td30Style"> {{$t("STORAGE.USER")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -58,7 +60,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th style="width:135px;">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent20" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -66,7 +68,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th style="width:170px;">{{$t("STORAGE.ACL_PERMISSIONS")}}
+                    <th class="percent25" :style="td25Style">{{$t("STORAGE.ACL_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -74,7 +76,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th style="width:135px;"></th>
+                    <th class="percent25" :style="td25Style"></th>
                 </tr>
             </thead>
             <tbody>
@@ -179,20 +181,43 @@ export default {
         },
         username () {
             return user.state.username
+        },
+        tableStyle () {
+            return this.width ? {width: `${this.width}px`} : {}
+        },
+        td30Style () {
+            return this.width ? {width: `${(this.width - parseInt(this.width * 0.2) - parseInt(this.width * 0.25 * 2))}px`} : {}
+        },
+        td20Style () {
+            return this.width ? {width: `${parseInt(this.width * 0.2)}px`} : {}
+        },
+        td25Style () {
+            return this.width ? {width: `${parseInt(this.width * 0.25)}px`} : {}
         }
     },
     props: {
         aclData: {
             type: Array,
+            required: true,
             default () {
                 return groupACLListDefult
             }
         },
         userAcl: {
             type: Array,
+            required: true,
             default () {
                 return this.owerACL
             }
+        },
+        isInline: {
+            type: Boolean,
+            default () {
+                return false
+            }
+        },
+        width: {
+            type: Number
         }
     },
     methods: {
@@ -237,3 +262,26 @@ const groupACLListDefult = [{
     }
 }]
 </script>
+<style lang="less">
+.table-permission th.percent20 {
+    width:20%;
+}
+.table-permission th.percent25 {
+    width:25%;
+}
+.table-permission th.percent30 {
+    width:30%;
+}
+.dis-in-b {
+    display: inline-block !important;
+}
+.dis-in-b th.percent20 {
+    width:20%;
+}
+.dis-in-b th.percent25 {
+    width:25%;
+}
+.dis-in-b th.percent30 {
+    width:30%;
+}
+</style>
