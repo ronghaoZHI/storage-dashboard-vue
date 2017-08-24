@@ -165,14 +165,15 @@
                 We've got somethings special for you
             </Tab-pane>
             <Tab-pane :label='$t("STORAGE.CORS_CONFIG")' name="cors">
-                <Button class="button-add-rule" type="primary" @click="addCorsRule">{{$t('STORAGE.ADD_RULE')}}</Button>
+                <Button :disabled="rulesNumber===100" class="button-add-rule" type="primary" @click="addCorsRule">{{$t('STORAGE.ADD_RULE')}}</Button>
+                <span class="rules-number" v-model="rulesNumber">{{$t('STORAGE.RULES_AT_MOST', { rulesNumber: rulesNumber })}}</span>
                 <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
             </Tab-pane>
         </Tabs>
         <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">
             <div class="form-item">
                 <span class="form-label required-item">Allowed Origins : </span>
-                <Input v-model="AllowedOrigins" placeholder="http://www.baishancloud.com" class="line-width" @on-enter="addCorsModalTag('AllowedOrigins')"></Input>
+                <Input v-model="AllowedOrigins" placeholder="http://www.example.com" class="line-width" @on-enter="addCorsModalTag('AllowedOrigins')"></Input>
                 <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
                 <div class="tag-margin-left">
                     <Tag type="border" color="blue" v-for="item in corsModal.AllowedOrigins" :key="item" :name="item" closable @on-close="deleteCorsModalTag('AllowedOrigins',item)">{{item}}</Tag>
@@ -236,6 +237,7 @@ export default {
                     WRITE_ACP: false
                 }
             },
+            rulesNumber: 0,
             indexToEditCorsRule: '',
             AllowedOrigins: '',
             AllowedHeaders: '',
@@ -251,7 +253,7 @@ export default {
             showCorsModal: false,
             listHeader: [{
                 title: 'Allowed Origins',
-                width: 200,
+                width: 160,
                 render: (h, params) => {
                     return h('div', params.row.AllowedOrigins.map(item => h('p', item)))
                 }
@@ -263,13 +265,13 @@ export default {
                 }
             }, {
                 title: 'Allowed Headers',
-                width: 185,
+                width: 170,
                 render: (h, params) => {
                     return h('div', params.row.AllowedHeaders.map(item => h('Tag', item)))
                 }
             }, {
                 title: 'Expose Headers',
-                width: 185,
+                width: 170,
                 render: (h, params) => {
                     return h('div', params.row.ExposeHeaders.map(item => h('Tag', item)))
                 }
@@ -437,6 +439,7 @@ export default {
                 this.corsRulesList = _.cloneDeep(this.corsRulesList)
             } else {
                 this.corsRulesList.push(putCorsModal)
+                this.rulesNumber = this.rulesNumber + 1
             }
             let putParams = {
                 Bucket: this.bucket,
@@ -460,6 +463,7 @@ export default {
                 this.$Loading.start()
                 let res = await handler('getBucketCors', { Bucket: this.bucket })
                 this.corsRulesList = res.CORSRules
+                this.rulesNumber = res.CORSRules.length
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
@@ -499,6 +503,7 @@ export default {
             try {
                 this.$Loading.start()
                 this.corsRulesList.length !== 0 ? await handler('putBucketCors', putParams) : await handler('deleteBucketCors', { Bucket: this.bucket })
+                this.rulesNumber = this.rulesNumber - 1
                 this.$Loading.finish()
                 this.$Message.success(this.$t('STORAGE.DELETE_SUCCESS'))
             } catch (error) {
@@ -642,6 +647,9 @@ const convertNewUserItem = item => {
     }
     .button-add-rule {
         margin-bottom: 10px
+    }
+    .rules-number {
+        float: right
     }
 }
 .edit-modal {
