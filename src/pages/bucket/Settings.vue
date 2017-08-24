@@ -434,6 +434,7 @@ export default {
             if (typeof this.indexToEditCorsRule === 'number') {
                 this.corsRulesList[this.indexToEditCorsRule] = putCorsModal
                 this.indexToEditCorsRule = ''
+                this.corsRulesList = _.cloneDeep(this.corsRulesList)
             } else {
                 this.corsRulesList.push(putCorsModal)
             }
@@ -449,7 +450,6 @@ export default {
                 this.$Loading.finish()
                 this.showCorsModal = false
                 this.$Message.success(this.$t('STORAGE.SET_SUCCESS'))
-                this.listCorsRules()
             } catch (error) {
                 this.$Loading.error()
                 this.listCorsRules()
