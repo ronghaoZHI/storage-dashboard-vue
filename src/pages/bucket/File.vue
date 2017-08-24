@@ -611,28 +611,23 @@ const getURL = async (bucket, file, prefix) => {
             margin-right: 1px;
         }
     }
-
-    .section-img {
-        width: 100%;
-        text-align: center;
-        img {
-            max-width: 844px;
-            max-height: 600px;
+    .section-paging {
+        .wh(100%,40px);
+        .fb(flex-end,center);
+        button {
+            width: 70px;
+            margin-left: 6px;
         }
     }
 
 }
-</style>
 
-<style lang="less">
-@import '../../styles/index.less';
-
-.section-paging {
-    .wh(100%,40px);
-    .fb(flex-end,center);
-    button {
-        width: 70px;
-        margin-left: 6px;
+.section-img {
+    width: 100%;
+    text-align: center;
+    img {
+        max-width: 100%;
+        max-height: 600px;
     }
 }
 </style>
