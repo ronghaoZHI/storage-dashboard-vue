@@ -41,8 +41,8 @@ export const handler = async (method, params = '', host = HOST.awsHost, s3ForceP
     }
 }
 
-export const transcoder = async (method, params = '', errorMsg = 'Bad Request') => {
-    await config(1000, HOST.transcoderHOST, false)
+export const transcoder = async (method, params = '', errorMsg = 'Bad Request', host = HOST.transcoderHOST, timeout = 10000) => {
+    await config({timeout, host})
     try {
         let elastictranscoder = new AWS.ElasticTranscoder({paramValidation: false, convertResponseTypes: false})
         return await new Promise((resolve, reject) => elastictranscoder[method](params, (error, data) => {
