@@ -14,6 +14,7 @@ import _ from 'lodash'
 import axios from '@/service/axios-bsc'
 import { messages } from '@/service/translate'
 import $ from 'jquery'
+import { getCookie } from '@/service/Helper'
 
 window._ = _
 window.$ = $
@@ -26,7 +27,7 @@ Vue.prototype.$http = axios
 Object.keys(messages).forEach(function (lang) {
     Vue.locale(lang, messages[lang])
 })
-Vue.config.lang = sessionStorage.getItem('lang') ? sessionStorage.getItem('lang') : 'cn'
+Vue.config.lang = getCookie('uc_lang') || 'cn'
 new Vue({
     el: '#app',
     store,
