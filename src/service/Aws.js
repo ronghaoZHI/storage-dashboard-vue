@@ -1,4 +1,4 @@
-import iView from 'iview'
+import iView from 'iview-bsc'
 import { HOST } from './HOST'
 import AWS from 'aws-sdk'
 import { ACCESSKEY } from './API'

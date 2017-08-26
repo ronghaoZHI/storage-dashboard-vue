@@ -1,5 +1,5 @@
 import axios from 'axios'
-import iView from 'iview'
+import iView from 'iview-bsc'
 import store from '@/store'
 import { aws4 } from '@/service/aws4/aws4'
 import { getKey } from '@/service/Aws'

@@ -1,5 +1,5 @@
 import store from '@/store'
-import iView from 'iview'
+import iView from 'iview-bsc'
 import { clear } from '@/service/Aws'
 import { SSO_LOGOUT } from '@/service/API'
 

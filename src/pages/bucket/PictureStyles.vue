@@ -32,7 +32,7 @@ import { getS3, handler } from '@/service/Aws'
 import { prefix, Utf8ArrayToStr } from '@/service/bucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
-import iView from 'iview'
+import iView from 'iview-bsc'
 export default {
     data () {
         return {

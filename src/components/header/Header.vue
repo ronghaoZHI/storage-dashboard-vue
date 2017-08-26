@@ -140,9 +140,6 @@ export default {
         background-color: #1d8ce0;
     }
 }
-.ivu-form-item{
-    margin-bottom: 0
-}
 .icon-top-down {
     .sc(16px,@menu-text-color);
     padding-left: 8px;

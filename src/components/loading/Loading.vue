@@ -44,14 +44,6 @@ export default {
     margin: 0 auto;
     margin: -100px 0 0 -25px;
 }
-.ivu-spin-fix{
-    background: 0;
-}
-.ivu-spin-text{
-    div{
-        font-size: 16px;
-    }
-}
 .spin-icon-load {
     animation: loading 1s linear infinite;
 }

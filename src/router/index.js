@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import routes from './routerItem'
-import iView from 'iview'
+import iView from 'iview-bsc'
 import store from '@/store'
 
 Vue.use(Router)

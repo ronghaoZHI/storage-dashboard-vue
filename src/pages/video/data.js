@@ -1,6 +1,6 @@
 import { getS3, handler, transcoder } from '@/service/Aws'
 import { HOST } from '@/service/HOST'
-import iView from 'iview'
+import iView from 'iview-bsc'
 
 const getBucketPolicy = async (bucket) => {
     let s3 = await getS3({timeout: 10000, host: HOST.policyHOST})

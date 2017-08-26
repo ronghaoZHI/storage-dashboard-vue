@@ -2982,14 +2982,15 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-iview@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/iview/-/iview-2.1.0.tgz#b6962a0e54b80c4ee83ffc29b3154b9dd99d2d3d"
+iview-bsc@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/iview-bsc/-/iview-bsc-2.1.2.tgz#56f640899c932e61329760a5f01cf8b67efbd2ef"
   dependencies:
     async-validator "^1.7.1"
     core-js "^2.4.1"
     deepmerge "^1.5.0"
     popper.js "^0.6.4"
+    tinycolor2 "^1.4.1"
 
 jmespath@0.15.0:
   version "0.15.0"
@@ -4846,7 +4847,7 @@ tiny-emitter@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.1.tgz#e65919d91e488e2a78f7ebe827a56c6b188d51af"
 
-tinycolor2@^1.1.2:
+tinycolor2@^1.1.2, tinycolor2@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
 
