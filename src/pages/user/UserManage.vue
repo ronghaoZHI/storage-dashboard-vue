@@ -78,6 +78,7 @@
                 </tbody>
             </table>
         </Modal>
+        <Spin size="large" fix v-if="spinShow"></Spin>
     </div>
 </template>
 <script>
@@ -94,6 +95,7 @@ export default {
             createSubUserModal: false,
             createUserModal: false,
             bindUserModal: false,
+            spinShow: true,
             isEditSubUser: false,
             iconSize: 18,
             isAdmin: user.state && user.state.type === 'admin',
@@ -239,6 +241,7 @@ export default {
     methods: {
         async getUserList () {
             this.$Loading.start()
+            this.spinShow = true
             try {
                 if (this.isAdmin) {
                     this.userList = _.each(await this.$http.get(BOUND_USER), (user) => {
@@ -276,9 +279,11 @@ export default {
                         })
                     })
                     this.$Loading.finish()
+                    this.spinShow = false
                 }
             } catch (error) {
                 this.$Loading.error()
+                this.spinShow = false
                 console.log(error)
             }
         },

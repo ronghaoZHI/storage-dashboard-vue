@@ -1,5 +1,6 @@
 <template>
     <div class="bsc-flex-section">
+        <Spin size="large" fix v-if="spinShow"></Spin>
         <machine-card v-for="item in machineList" :key="item.hostname" :data="item"></machine-card>
     </div>
 </template>
@@ -9,6 +10,7 @@ import machineCard from './MachineCard'
 export default {
     data () {
         return {
+            spinShow: true,
             machineList: []
         }
     },
@@ -20,11 +22,14 @@ export default {
     },
     methods: {
         async getMachineList () {
+            this.spinShow = true
             this.$Loading.start()
             try {
                 this.machineList = await this.$http.get(NODE)
+                this.spinShow = false
                 this.$Loading.finish()
             } catch (error) {
+                this.spinShow = false
                 this.$Loading.error()
             }
         }

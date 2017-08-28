@@ -42,6 +42,7 @@ export default {
     .layout-container {
         flex: 1;
         margin-left: @layout-margin-left;
+        position: relative;
     }
 }
 

@@ -6,6 +6,7 @@
         <div class="section-card-list">
             <keychain-card v-for="(key, index) in data" :keychain="key" :work="index === 0" v-on:deleteKey="deleteKeychain" :key="key.ts"></keychain-card>
         </div>
+        <Spin size="large" fix v-if="spinShow"></Spin>
     </div>
 </template>
 <script>
@@ -17,6 +18,7 @@ export default {
     data () {
         return {
             data: [],
+            spinShow: true,
             isAdmin: user.state.type === 'admin'
         }
     },
@@ -28,6 +30,7 @@ export default {
     },
     methods: {
         async getKeychainList () {
+            this.spinShow = true
             this.$Loading.start()
             try {
                 let keys = user.state.type === 'admin' ? user.state.subUser.keys : await this.$http.get(ACCESSKEY)
@@ -35,8 +38,10 @@ export default {
                     item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
                 })
                 this.$Loading.finish()
+                this.spinShow = false
             } catch (error) {
                 this.$Loading.error()
+                this.spinShow = false
                 this.$Message.warning(error)
             }
         },

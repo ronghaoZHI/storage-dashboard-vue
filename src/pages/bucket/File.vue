@@ -26,6 +26,7 @@
                 </div>
             </Col>
         </Row>
+        <Spin size="large" fix v-if="spinShow"></Spin>
         <Modal v-model="copyModal">
             <div style="text-align:left">
                 {{$t("STORAGE.COPY_LINK_CONFIRM",{selectedFileKey})}}
@@ -103,6 +104,7 @@ export default {
             self: this,
             showHeader: true,
             iconSize: 18,
+            spinShow: true,
             fileHeader: [{
                 type: 'selection',
                 width: 30,
@@ -365,7 +367,7 @@ export default {
     methods: {
         async getData (nextMarker, searchValue = '') {
             this.$Loading.start()
-            // this.setLoading(true)
+            this.spinShow = true
             try {
                 let self = this
                 let res = await handler('listObjects', {
@@ -389,10 +391,11 @@ export default {
                     item.LastModified = moment(item.LastModified).format('YYYY-MM-DD HH:mm')
                 }))
                 document.querySelector('#app').scrollTop = 0
+                this.spinShow = false
                 this.$Loading.finish()
             } catch (error) {
+                this.spinShow = false
                 this.$Loading.error()
-                console.log(error)
             }
         },
         async rename () {
@@ -497,15 +500,18 @@ export default {
                 if (file.Type === 'file') {
                     await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + file.Key })
                 } else {
+                    this.spinShow = true
                     let res = await handler('listObjects', {
                         Bucket: this.bucket,
                         Prefix: file.Prefix
                     })
-                    batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
+                    await batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
+                    this.spinShow = false
                 }
                 this.fileList.splice(file._index, 1)
                 this.$Message.success(this.$t('STORAGE.DELETE_FILES_SUCCESS'))
             } catch (error) {
+                this.spinShow = false
                 this.$Message.error(this.$t('STORAGE.DELETE_FILES_FAILED'))
             }
         },
