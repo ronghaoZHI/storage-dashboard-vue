@@ -63,10 +63,11 @@
 import { USERINFO, BOUND_USER } from '@/service/API'
 import user from '@/store/modules/user'
 import Vue from 'vue'
+import { getCookie } from '@/service/Helper'
 export default {
     data () {
         return {
-            lang: localStorage.getItem('lang') || 'cn',
+            lang: getCookie('uc_lang') || 'cn',
             selectedCustomer: '',
             isLogin: !(!!user.state && user.state.type === 'admin'),
             keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,

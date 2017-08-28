@@ -407,8 +407,10 @@ export default {
             this.$Loading.finish()
         },
         addCorsModalTag (arg) {
-            this.corsModal[arg].push(this[arg])
-            this[arg] = ''
+            if (this[arg].length > 0) {
+                this.corsModal[arg].push(this[arg])
+                this[arg] = ''
+            }
         },
         deleteCorsModalTag (arg, name) {
             const index = this.corsModal[arg].indexOf(name)

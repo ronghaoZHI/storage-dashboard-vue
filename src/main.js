@@ -19,15 +19,25 @@ import { getCookie } from '@/service/Helper'
 window._ = _
 window.$ = $
 window.Promise = Bluebird
+
 Vue.use(VueI18n)
 Vue.use(Vuex)
 Vue.use(iView)
+
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+
+iView.LoadingBar.config({
+    color: '#fff',
+    failedColor: '#f0ad4e',
+    height: 3
+})
+
 Object.keys(messages).forEach(function (lang) {
     Vue.locale(lang, messages[lang])
 })
 Vue.config.lang = getCookie('uc_lang') || 'cn'
+
 new Vue({
     el: '#app',
     store,
