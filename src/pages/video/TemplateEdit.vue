@@ -153,7 +153,7 @@ export default {
             videoDisabled: false,
             template: _.cloneDeep(templateDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
-            containerList: ['flac', 'flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts'],
+            containerList: ['flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts'],
             videoCodecList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto', container: ['flac', 'flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts']}, {name: 'gif', value: 'gif', container: ['gif']}, {name: 'H.264', value: 'H.264', container: ['flv', 'mp4', 'ts']}, {name: 'H.265', value: 'H.265', container: ['flv', 'mp4', 'ts']}, {name: 'mpeg2', value: 'mpeg2', container: ['mpg']}],
             videoProfileList: ['baseline', 'main', 'high'],
             videoLevelList: ['1', '1b', '1.1', '1.2', '1.3', '2', '2.1', '2.2', '3', '3.1', '3.2', '4', '4.1'],
