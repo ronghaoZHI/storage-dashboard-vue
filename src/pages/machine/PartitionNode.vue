@@ -40,9 +40,9 @@ export default {
 @import '../../styles/index.less';
 
 .@{css-prefix}partition-node {
-    .wh(42px,20px);
+    .wh(44px,20px);
     border: @common-border;
-    margin: 2px;
+    margin: 1px;
 
     & > span:first-child {
         width: 30px;
@@ -58,8 +58,8 @@ export default {
         position: relative;
         font-size: 12px;
         top: -16px;
-        left: 4px;
-        width: 32px;
+        left: 1px;
+        width: 40px;
         height: 16px;
     }
 }
