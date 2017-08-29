@@ -28,9 +28,19 @@
             </Form>
         </Modal>
         <Modal v-model="bindUserModal" :title='$t("USER.BIND_USER")' width="880" @on-ok="bindUser">
-            <div class="bsc-user-box">
-                <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in boundUserList" :key="user.username">
-                    {{user.email}}
+            <div class="bind-modal-wrap">
+                <Spin size="large" fix v-if="spinShow"></Spin>
+                <Input
+                    size="small"
+                    v-model="searchBindUserInput"
+                    @on-change="handleSearchBindUser"
+                    placeholder="input here"
+                    style="width:300px">
+                </Input>
+                <div class="bsc-user-box">
+                    <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in searchBindUserList" :key="user.username">
+                        {{user.email}}
+                    </div>
                 </div>
             </div>
         </Modal>
@@ -95,6 +105,8 @@ export default {
             createSubUserModal: false,
             createUserModal: false,
             bindUserModal: false,
+            searchBindUserInput: '',
+            searchBindUserList: [],
             spinShow: true,
             isEditSubUser: false,
             iconSize: 18,
@@ -279,8 +291,8 @@ export default {
                         })
                     })
                     this.$Loading.finish()
-                    this.spinShow = false
                 }
+                this.spinShow = false
             } catch (error) {
                 this.$Loading.error()
                 this.spinShow = false
@@ -288,21 +300,31 @@ export default {
             }
         },
         async openBindUserModal () {
-            let [allUser, boundUser] = await Promise.all([this.$http.get(ALL_USER), this.$http.get(BOUND_USER)])
-            let boundUserEmailList = []
-            _.each(boundUser, user => {
-                boundUserEmailList.push(user.email)
-            })
-            _.each(allUser, user => {
-                if (boundUserEmailList.indexOf(user.email) > 0) {
-                    user.show = false
-                } else {
-                    user.show = true
-                    user.selected = false
-                }
-            })
-            this.boundUserList = allUser
             this.bindUserModal = true
+            if (this.boundUserList.length === 0) {
+                this.spinShow = true
+                let [allUser, boundUser] = await Promise.all([this.$http.get(ALL_USER), this.$http.get(BOUND_USER)])
+                let boundUserEmailList = []
+                _.each(boundUser, user => {
+                    boundUserEmailList.push(user.email)
+                })
+                _.each(allUser, user => {
+                    if (boundUserEmailList.indexOf(user.email) > 0) {
+                        user.show = false
+                    } else {
+                        user.show = true
+                        user.selected = false
+                    }
+                })
+                this.searchBindUserList = this.boundUserList = allUser
+                this.spinShow = false
+            }
+        },
+        handleSearchBindUser () {
+            if (!this.searchBindUserInput) return false
+            let searchArr = this.searchBindUserInput.split('')
+            let reg = new RegExp(searchArr.join('.*'))
+            this.searchBindUserList = this.boundUserList.filter(item => reg.exec(item.email) || reg.exec(item.username))
         },
         async bindUser () {
             this.$Loading.start()
@@ -511,42 +533,47 @@ const convertArray2Object = (array) => {
     }
 }
 
-.@{css-prefix}user-box {
-    min-height: 100%;
-    max-height: 600px;
-    overflow: scroll;
-    width: 100%;
-    display: inline-flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
+.bind-modal-wrap{
+    min-height: 400px;
+    position: relative;
 
-    .user-card {
-        width: @user-card-width;
-        height: @user-card-height;
-        color: @user-card-text-color;
-        background-color: @user-card-backgrand;
-        line-height: @user-card-height;
-        text-align: center;
-        border-radius: @common-radius;
-        margin: 3px 3px 0 0;
-        padding: 0 3px;
-        text-overflow: ellipsis;
-        overflow:hidden;
-        white-space:nowrap;
-        cursor: pointer;
+    .@{css-prefix}user-box {
+        min-height: 100%;
+        max-height: 600px;
+        overflow: scroll;
+        width: 100%;
+        display: inline-flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-top: 8px;
 
-        &:hover {
+        .user-card {
+            width: @user-card-width;
+            height: @user-card-height;
+            color: @user-card-text-color;
+            background-color: @user-card-backgrand;
+            line-height: @user-card-height;
+            text-align: center;
+            border-radius: @common-radius;
+            margin: 3px 3px 0 0;
+            padding: 0 3px;
+            text-overflow: ellipsis;
+            overflow:hidden;
+            white-space:nowrap;
+            cursor: pointer;
+
+            &:hover {
+                background-color: @user-card-backgrand-hover;
+            }
+        }
+
+        .user-card-selected {
             background-color: @user-card-backgrand-hover;
         }
     }
-
-    .user-card-selected {
-        background-color: @user-card-backgrand-hover;
-    }
 }
-
 
 .table-bucket-acl {
     width: 100%;    
