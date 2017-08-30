@@ -88,7 +88,7 @@
                 </tbody>
             </table>
         </Modal>
-        <Spin size="large" fix v-if="spinShow"></Spin>
+        <Spin size="bigger" fix v-if="spinShow"></Spin>
     </div>
 </template>
 <script>

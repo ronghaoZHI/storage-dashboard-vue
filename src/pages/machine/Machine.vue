@@ -1,6 +1,6 @@
 <template>
     <div class="bsc-flex-section">
-        <Spin size="large" fix v-if="spinShow"></Spin>
+        <Spin size="bigger" fix v-if="spinShow"></Spin>
         <machine-card v-for="item in machineList" :key="item.hostname" :data="item"></machine-card>
     </div>
 </template>

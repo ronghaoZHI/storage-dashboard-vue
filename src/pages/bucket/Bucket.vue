@@ -12,7 +12,7 @@
             <div class="bucket" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
-            <Spin size="large" fix v-if="spinShow"></Spin>
+            <Spin size="bigger" fix v-if="spinShow"></Spin>
         </div>
         <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="createBucketValue = ''">
             <Input v-model="createBucketValue" @on-change="check" :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")' pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/">
@@ -36,6 +36,7 @@ export default {
             createBucketModal: false,
             selectedBucket: {},
             inputCheck: false,
+            bucketList: [],
             self: this,
             iconSize: 18,
             spinShow: true

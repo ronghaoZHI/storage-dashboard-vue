@@ -26,7 +26,7 @@
                 </div>
             </Col>
         </Row>
-        <Spin size="large" fix v-if="spinShow"></Spin>
+        <Spin size="bigger" fix v-if="spinShow"></Spin>
         <Modal v-model="copyModal">
             <div style="text-align:left">
                 {{$t("STORAGE.COPY_LINK_CONFIRM",{selectedFileKey})}}
