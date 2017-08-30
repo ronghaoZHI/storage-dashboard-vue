@@ -36,7 +36,6 @@ export const handler = async (method, params = '', host = HOST.awsHost, s3ForceP
             return error ? reject(error) : resolve(data)
         }))
     } catch (error) {
-        console.dir(error)
         iView.Message.error(error.message || error.show_msg, 5)
         return Promise.reject(error)
     }
