@@ -64,7 +64,7 @@
                     <span slot="open">{{$t('VIDEO.ON')}}</span>
                     <span slot="close">{{$t('VIDEO.OFF')}}</span>
                 </i-switch>
-                <Input-number :min='1' :max='100000' v-model="template.Video.KeyframesMaxDist" :disabled="!template.Video.FixedGOP"></Input-number> {{$t('VIDEO.SECOND')}} (1~100000)
+                <InputNumber :min='1' :max='100000' v-model="template.Video.KeyframesMaxDist" :disabled="!template.Video.FixedGOP"></InputNumber> {{$t('VIDEO.SECOND')}} (1~100000)
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.BIT_RATE')}} : </span>
@@ -72,7 +72,7 @@
                     <Radio label="auto" :disabled="videoDisabled">{{$t('VIDEO.ADAPTIVE')}}</Radio>
                     <Radio label="value" :disabled="videoDisabled">{{$t('VIDEO.USER_DEFINED')}}</Radio>
                 </Radio-group>
-                <Input-number :min='1' v-model="auxiliary.videoBitRateValue" :disabled="auxiliary.videoBitRate === 'auto'"></Input-number> Kbps
+                <InputNumber :min='1' v-model="auxiliary.videoBitRateValue" :disabled="auxiliary.videoBitRate === 'auto'"></InputNumber> Kbps
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.FRAME_RATE')}} : </span>
@@ -86,8 +86,8 @@
                     <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>
                     <Radio label="value">{{$t('VIDEO.USER_DEFINED')}}</Radio>
                 </Radio-group>
-                <Input-number :min='1' v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></Input-number>
-                <Input-number :min='1' v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></Input-number>
+                <InputNumber :min='1' v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
+                <InputNumber :min='1' v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
             </div>
             <div class="form-item" v-if="template.Video.Codec !== 'auto'">
                 <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
@@ -129,7 +129,7 @@
                     <Radio label="value">{{$t('VIDEO.USER_DEFINED')}}</Radio>
                 </Radio-group>
                 <Slider v-model="auxiliary.audioBitRateValue" :min='64' :max='320' :disabled="auxiliary.audioBitRate === 'auto'" class="my-slider" ></Slider>
-                <Input-number :min='64' :max='320' v-model="auxiliary.audioBitRateValue" :disabled="auxiliary.audioBitRate === 'auto'"></Input-number>
+                <InputNumber :min='64' :max='320' v-model="auxiliary.audioBitRateValue" :disabled="auxiliary.audioBitRate === 'auto'"></InputNumber>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.CHANNELS')}} : </span>
@@ -146,7 +146,6 @@
 </template>
 <script>
 import { transcoder } from '@/service/Aws'
-import InputNumber from '@/components/input-number/input-number.vue'
 export default {
     data () {
         return {
@@ -165,7 +164,6 @@ export default {
             audioChannelsList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1', value: '1'}, {name: '2', value: '2'}, {name: '3', value: '3'}, {name: '4', value: '4'}, {name: '5', value: '5'}, {name: '6', value: '6'}, {name: '7', value: '7'}, {name: '8', value: '8'}, {name: '9', value: '9'}, {name: '10', value: '10'}, {name: '11', value: '11'}, {name: '12', value: '12'}, {name: '13', value: '13'}, {name: '14', value: '14'}, {name: '15', value: '15'}, {name: '16', value: '16'}]
         }
     },
-    components: { InputNumber },
     computed: {
         templateId () {
             return this.$route.params.id

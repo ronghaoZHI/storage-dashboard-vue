@@ -4,7 +4,7 @@
         <table class="table-permission" :class="{ 'dis-in-b': isInline}" :style="tableStyle">
             <thead>
                 <tr>
-                    <th class="percent30" :style="td30Style"> {{$t("STORAGE.ACL_GROUP")}}
+                    <th class="percent27" :style="td30Style"> {{$t("STORAGE.ACL_GROUP")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -12,7 +12,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent20" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent23" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -52,7 +52,7 @@
         <table class="table-permission" :class="{ 'dis-in-b': isInline}" :style="tableStyle">
             <thead>
                 <tr>
-                    <th class="percent30" :style="td30Style"> {{$t("STORAGE.USER")}}
+                    <th class="percent27" :style="td30Style"> {{$t("STORAGE.USER")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -60,7 +60,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent20" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent23" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -263,25 +263,16 @@ const groupACLListDefult = [{
 }]
 </script>
 <style lang="less">
-.table-permission th.percent20 {
-    width:20%;
+.table-permission th.percent23 {
+    width:23%;
 }
 .table-permission th.percent25 {
     width:25%;
 }
-.table-permission th.percent30 {
-    width:30%;
+.table-permission th.percent27 {
+    width:27%;
 }
 .dis-in-b {
     display: inline-block !important;
-}
-.dis-in-b th.percent20 {
-    width:20%;
-}
-.dis-in-b th.percent25 {
-    width:25%;
-}
-.dis-in-b th.percent30 {
-    width:30%;
 }
 </style>
