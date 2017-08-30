@@ -168,7 +168,7 @@
             <div class="form-item" v-if="HLSShow" >
                 <span class="form-label">{{$t('VIDEO.HLS_SLICE_LENGTH')}} : </span>
                 <Slider v-model="outputModal.segment_duration" :min='0' :max='50' class="my-slider"></Slider>
-                <Input-number :min='0' :max='50' v-model="outputModal.segment_duration"></Input-number>
+                <InputNumber :min='0' :max='50' v-model="outputModal.segment_duration"></InputNumber>
                 <p class="style-name-info redFont" v-if="outputsDisabled">{{$t('VIDEO.HLS_SLICE_LENGTH_CANNOT_BE_0')}}</p>
             </div>
             <div style="height:90px;"></div>
@@ -186,15 +186,15 @@
             </div>
             <div class="form-item">
                 <span class="form-label required-item">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
-                <Input-number :min='1' v-model="shotModal.time"></Input-number> S
+                <InputNumber :min='1' v-model="shotModal.time"></InputNumber> S
             </div>
            <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.SCREENSHOT_INTERVAL')}} : </span>
-                <Input-number :min='1' v-model="shotModal.interval"></Input-number> S
+                <InputNumber :min='1' v-model="shotModal.interval"></InputNumber> S
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.SCREENSHOT_MAX_NUMBER')}} : </span>
-                <Input-number :min='1' v-model="shotModal.number"></Input-number>
+                <InputNumber :min='1' v-model="shotModal.number"></InputNumber>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
@@ -202,8 +202,8 @@
                     <Radio label="auto">{{$t('VIDEO.WH_UNALTERED')}}</Radio>
                     <Radio label="value"></Radio>
                 </Radio-group>
-                <Input-number :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></Input-number>
-                <Input-number :min='1' v-model="shotModal.height" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></Input-number>
+                <InputNumber :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
+                <InputNumber :min='1' v-model="shotModal.height" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
@@ -218,7 +218,6 @@
     </div>
 </template>
 <script>
-import InputNumber from '@/components/input-number/input-number.vue'
 import { putBucketPolicy, getTranscodes, getTemplateInfo } from '@/pages/video/data'
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
@@ -433,7 +432,7 @@ export default {
             return this.transcode.snapshots.length === 0 && this.transcode.outputs.length === 0
         }
     },
-    components: { InputNumber, fileAcl },
+    components: { fileAcl },
     created () {
         this.getTranscode()
     },
