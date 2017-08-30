@@ -587,7 +587,7 @@ const isImage = (file) => !!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key)
 const getURL = async (bucket, file, prefix) => {
     try {
         let params = { Bucket: bucket, Key: prefix + file.Key }
-        let s3 = await getS3({key: undefined})
+        let s3 = await getS3()
         let url = await s3.getSignedUrl('getObject', params)
         let acl = await handler('getObjectAcl', params)
         let isAllUser = _.find(acl.Grants, (item) => item.Grantee.URI && item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers')

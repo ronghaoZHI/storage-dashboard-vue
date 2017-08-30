@@ -331,7 +331,7 @@ export default {
 const getURL = async (bucket, key) => {
     try {
         let params = { Bucket: bucket, Key: key }
-        let s3 = await getS3({key: undefined})
+        let s3 = await getS3()
         let url = await s3.getSignedUrl('getObject', params)
         let acl = await handler('getObjectAcl', params)
         let isAllUser = _.find(acl.Grants, (item) => item.Grantee.URI && item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers')

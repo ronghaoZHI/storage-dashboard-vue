@@ -15,7 +15,7 @@ export const getKey = async () => {
 }
 
 export const config = async ({key, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1'}) => {
-    let _key = key || await getKey()
+    let _key = key && key.accesskey && key.accesskey.length > 0 ? key : await getKey()
     AWS.config.update({ accessKeyId: _key.accesskey, secretAccessKey: _key.secretkey })
     AWS.config.region = region
     AWS.config.httpOptions = { timeout: timeout }
@@ -23,7 +23,7 @@ export const config = async ({key, timeout = 10000, host = HOST.awsHost, s3Force
     AWS.config.s3ForcePathStyle = s3ForcePathStyle
 }
 
-export const getS3 = async ({key, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle = true}) => {
+export const getS3 = async ({timeout = 10000, key = awsKey, host = HOST.awsHost, s3ForcePathStyle = true} = {}) => {
     await config({key, timeout, host, s3ForcePathStyle})
     return new AWS.S3()
 }
@@ -32,10 +32,11 @@ export const handler = async (method, params = '', host = HOST.awsHost, s3ForceP
     try {
         const s3 = await getS3({timeout, host, s3ForcePathStyle})
         return new Promise((resolve, reject) => s3[method](params, (error, data) => {
-            error && iView.Message.error(error.message, 5)
+            error && iView.Message.error(error.message, 5) && console.log(error)
             return error ? reject(error) : resolve(data)
         }))
     } catch (error) {
+        console.dir(error)
         iView.Message.error(error.message || error.show_msg, 5)
         return Promise.reject(error)
     }
