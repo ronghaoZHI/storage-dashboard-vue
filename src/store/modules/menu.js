@@ -41,7 +41,13 @@ const videoChildren = [{
     name: 'template'
 }, {
     index: 2,
+    name: 'pipeline'
+}, {
+    index: 3,
     name: 'output'
+}, {
+    index: 4,
+    name: 'job'
 }]
 
 const video = {

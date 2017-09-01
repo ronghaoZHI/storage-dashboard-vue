@@ -161,9 +161,6 @@
                 <Button type="primary" v-if="!isAdd || isAdd && isAddVerified" @click="ACLsubmitForm()">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
                 <Button type="primary" v-else disabled :title='$t("STORAGE.INVALID_NEW_USER")'>{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
             </Tab-pane>
-            <Tab-pane :label='$t("STORAGE.PIC_IDEN")' name="pic">
-                We've got somethings special for you
-            </Tab-pane>
             <Tab-pane :label='$t("STORAGE.CORS_CONFIG")' name="cors">
                 <Button :disabled="rulesNumber===100" class="button-add-rule" type="primary" @click="addCorsRule">{{$t('STORAGE.ADD_RULE')}}</Button>
                 <span class="rules-number" v-model="rulesNumber">{{$t('STORAGE.RULES_AT_MOST', { rulesNumber: rulesNumber })}}</span>
