@@ -60,7 +60,7 @@
     </div>
 </template>
 <script>
-import { USERINFO, BOUND_USER } from '@/service/API'
+import { LOGIN, BOUND_USER } from '@/service/API'
 import user from '@/store/modules/user'
 import Vue from 'vue'
 import { getCookie } from '@/service/Helper'
@@ -98,7 +98,7 @@ export default {
                 this.$Loading.start()
                 // save user email
                 this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
-                this.$http.get(USERINFO).then(res => {
+                this.$http.post(LOGIN, {...this.loginForm}).then(res => {
                     res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
                     this.$Loading.finish()
                 }, error => {
@@ -131,7 +131,10 @@ export default {
             })
         },
         async toIndex (data, router = '/') {
+            console.log(data.token)
             await this.$store.dispatch('setUserInfo', data)
+            await this.$store.dispatch('setToken', data.token)
+            this.$http.defaults.headers.common['Authorization'] = data.token
             await this.refreshMenu()
 
             let redirect = this.$route.query.redirect // get redirect path

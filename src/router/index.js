@@ -12,7 +12,7 @@ router.beforeEach((to, from, next) => {
     iView.LoadingBar.start()
     if (to.matched.some(record => record.meta.requiresAuth)) {
         store.state.token ? next() : next({
-            path: '/bridge',
+            path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
             ticket: { redirect: to.fullPath }
         })
     } else {

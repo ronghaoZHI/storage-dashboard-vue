@@ -1,6 +1,7 @@
 import store from '@/store'
 import iView from 'iview-bsc'
 import { clear } from '@/service/Aws'
+import router from '@/router'
 import { SSO_LOGOUT } from '@/service/API'
 
 export const logout = async (message) => {
@@ -17,7 +18,16 @@ export const isSSOLogin = () => {
 }
 
 function dataClearAndLocation () {
-    store.dispatch('logout').then(() => clear()).then(() => window.location = SSO_LOGOUT)
+    store.dispatch('logout').then(() => clear()).then(() => {
+        if (window.dashboard_conf.onlineMode === 'True') {
+            window.location = SSO_LOGOUT
+        } else {
+            router.push({
+                path: '/login',
+                query: { redirect: router.fullPath }
+            })
+        }
+    })
 }
 
 export function getCookie (name) {
