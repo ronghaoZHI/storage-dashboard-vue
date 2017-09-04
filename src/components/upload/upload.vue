@@ -10,8 +10,8 @@
                 :multiple="multiple"
                 :accept="accept">
             <slot></slot>
-            <div style="padding: 50px 0px;"><i class="ivu-icon ivu-icon-ios-cloud-upload"
-                   style="font-size: 52px; color: rgb(51, 153, 255);"></i>
+            <div class="upload-area" style="padding: 50px 0px;">
+                <Icon type="upload"></Icon>
                 <p>{{$t("STORAGE.FILE_UPLOAD_LIM")}}</p>
                 <p class='upload-info'>{{validateMessage}}</p>
             </div>
@@ -204,6 +204,15 @@
 
         p {
             font-size: 16px;
+        }
+
+        .upload-area {
+            padding: 50px 0px;
+
+            i {
+                font-size: 52px;
+                color: rgb(51, 153, 255);
+            }
         }
 
         &:hover {

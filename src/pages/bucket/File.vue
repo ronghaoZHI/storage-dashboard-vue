@@ -509,10 +509,10 @@ export default {
                     this.spinShow = false
                 }
                 this.fileList.splice(file._index, 1)
-                this.$Message.success(this.$t('STORAGE.DELETE_FILES_SUCCESS'))
+                this.$Message.success(this.$t('STORAGE.DELETE_FILES_SUCCESS', {fileName: file.Key}))
             } catch (error) {
                 this.spinShow = false
-                this.$Message.error(this.$t('STORAGE.DELETE_FILES_FAILED'))
+                this.$Message.error(this.$t('STORAGE.DELETE_FILES_FAILED', {fileName: file.Key}))
             }
         },
         async batchDelete () {
