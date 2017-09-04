@@ -107,7 +107,7 @@ export default {
             spinShow: true,
             fileHeader: [{
                 type: 'selection',
-                width: 30,
+                width: 40,
                 align: 'center'
             },
             {
