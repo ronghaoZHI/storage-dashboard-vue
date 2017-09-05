@@ -23,6 +23,7 @@ export default {
             }, {
                 title: this.$t('VIDEO.STATUS'),
                 width: 75,
+                align: 'center',
                 render: (h, params) => {
                     if (params.row.is_enabled === 'true') {
                         return h('Icon', {

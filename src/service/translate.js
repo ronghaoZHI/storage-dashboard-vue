@@ -513,6 +513,7 @@ export const messages = {
             TEMPLATE_DELETED_ERROR: 'The preset is currently being used',
             JOB_CANCEL_ERROR: 'The job is progressing',
             PIPELINE_DELETE_ERROR: 'Delete failed: the pipeline is being used',
+            BASE_INFO: 'Basic information',
             HLS_REQUIRED: 'HLS file name is required'
         },
         i: {
@@ -1123,6 +1124,7 @@ export const messages = {
             TEMPLATE_DELETED_ERROR: '不能删除正在使用的模版',
             JOB_CANCEL_ERROR: '不能删除正在运行的任务',
             PIPELINE_DELETE_ERROR: '删除失败：该管道正被占用',
+            BASE_INFO: '基本信息',
             HLS_REQUIRED: '请填写自适应HLS文件名'
         },
         i: {

@@ -8,6 +8,12 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
+            <div class="section-separator">
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t('VIDEO.BASE_INFO')}}</span>
+                </div>
+            </div>
             <div class="form-item">
                 <span class="form-label required-item">{{$t('VIDEO.TEMPLATE_NAME')}} : </span>
                 <Input v-model="template.Name" :placeholder='$t("VIDEO.TEMPLATE_NAME")' class="line-width"></Input>
