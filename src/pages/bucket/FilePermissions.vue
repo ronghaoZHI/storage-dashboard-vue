@@ -173,13 +173,13 @@ const convertPermission = (grant, permission) => {
 const convertObject2String = (object) => {
     let truePermission = []
     _.each(object, function (value, key) {
-        if (value) { truePermission.push(acc2per[key]) }
+        if (value && key !== 'Write') { truePermission.push(acc2per[key]) }
     })
     return truePermission.join(',')
 }
 
-const per2acc = {READ: 'Read', READ_ACP: 'ReadAcp', WRITE_ACP: 'WriteAcp'}
-const acc2per = {Read: 'READ', ReadAcp: 'READ_ACP', WriteAcp: 'WRITE_ACP'}
+const per2acc = {READ: 'Read', WRITE: 'Write', READ_ACP: 'ReadAcp', WRITE_ACP: 'WriteAcp'}
+const acc2per = {Read: 'READ', Write: 'WRITE', ReadAcp: 'READ_ACP', WriteAcp: 'WRITE_ACP'}
 const groupACLListDefult = [{
     GranteeType: 'Group',
     Grantee: 'AllUsers',
