@@ -132,6 +132,7 @@
                                 <span class="form-label">{{$t("STORAGE.ANGLE")}} : </span>
                                 <div class="input-text-box">
                                     <input type='number' v-model="general.angle">
+                                    <span>°</span>
                                 </div>
                             </div><!--angle-->
                             <div class="form-item">
@@ -308,7 +309,7 @@
             <Tab-pane :label='$t("STORAGE.ADV_EDIT")' name='senior'>
                 <Row>
                     <Col span="8" class="page-left">
-                        <span class="form-label">{{$t("STORAGE.PREVIEW")}}:</span>
+                        <span class="preview-span">{{$t("STORAGE.PREVIEW")}}:</span>
                         <div class="test-img">
                             <img :src='seniorUrl'>
                             <div class="img-button">

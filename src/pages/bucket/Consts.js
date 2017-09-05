@@ -261,6 +261,6 @@ export const defaultFontStyle = {
     font_family: 'Songti SC',
     font_size: 16,
     background: '#ffffff',
-    font_color: '#ffffff'
+    font_color: '#000000'
 }
 
