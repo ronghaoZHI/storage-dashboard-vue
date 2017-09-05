@@ -191,7 +191,7 @@ export default {
         async convertBucketList () {
             try {
                 let res = await getBucketList()
-                this.bucketList = [...res.Buckets, { Name: 'All Buckets' }]
+                this.bucketList = [{ Name: 'All Buckets' }, ...res.Buckets]
             } catch (error) {
                 console.log(error)
                 this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
