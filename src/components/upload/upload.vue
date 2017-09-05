@@ -173,7 +173,7 @@
                                 this.uploadFile(file).then(res => {
                                     this.$emit('uploadSuccess', file.name)
                                 }, e => {
-                                    this.$Message.error(`Upload ${file.name} fail`, 5)
+                                    this.$Message.error(this.$t('STORAGE.UPLOAD_FAILED', { fileName: file.name }), 5)
                                 })
                             } else {
                                 this.fileList.splice(this.fileList.indexOf(file), 1)

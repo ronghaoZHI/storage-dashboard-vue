@@ -240,7 +240,7 @@ export default {
                 })
             } catch (error) {
                 console.log(error)
-                this.$Message.warning('Get data error')
+                this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
             }
         },
         convertData (item) {

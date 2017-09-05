@@ -363,14 +363,14 @@ export default {
                     self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
                         self.createUserForm = { username: '', email: '', password: '', company: '', type: 'normal' }
                         this.getUserList()
-                        this.$Message.success('Create user success')
+                        this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
                         this.$Loading.finish()
                     }, error => {
                         this.$Loading.error()
                         this.$Message.error(error)
                     })
                 } else {
-                    this.$Message.error('Input validate failed')
+                    this.$Message.error(this.$t('USER.CREATE_INFO'))
                 }
             })
         },
@@ -406,9 +406,9 @@ export default {
                         }
                     }))
                     this.getUserList()
-                    this.$Message.success('Create sub user success')
+                    this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
                 } catch (error) {
-                    this.$Message.error('Create sub user error')
+                    this.$Message.error(this.$t('USER.CREATE_SUB_ERROR'))
                     this.$Loading.error()
                 }
             }
@@ -445,9 +445,9 @@ export default {
                     })
                 }))
                 this.getUserList()
-                this.$Message.success('Update sub user success')
+                this.$Message.success(this.$t('USER.UPDATE_SUB_SUCCESS'))
             } catch (error) {
-                this.$Message.error('Update sub user error')
+                this.$Message.error(this.$t('USER.UPDATE_SUB_ERROR'))
                 this.$Loading.error()
             }
             this.isEditSubUser = false

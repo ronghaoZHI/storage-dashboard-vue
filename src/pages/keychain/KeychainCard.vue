@@ -41,7 +41,7 @@ export default {
     props: ['keychain', 'work'],
     methods: {
         copy () {
-            this.$Message.success('Copied!')
+            this.$Message.success(this.$t('STORAGE.COPIED'))
         },
         deleteConfirmModal (accesskey) {
             this.$Modal.confirm({
