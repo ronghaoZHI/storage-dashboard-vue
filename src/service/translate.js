@@ -816,7 +816,7 @@ export const messages = {
             MORE_SET: '更多设置',
             FLIP_MODE: '翻转模式',
             ANGLE: '角度',
-            FILTER_EFFECTS: '滤镜与特效：',
+            FILTER_EFFECTS: '滤镜与特效:',
             FILTER_EFFECTS_NONE: '原图',
             GRAYSCALE: '灰度',
             AUTO_CONTRAST: '自动对比度',
