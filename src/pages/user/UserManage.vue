@@ -83,7 +83,7 @@
                     <tr v-for="row in createSubUserForm.acl">
                         <td>{{row.bucket}}</td>
                         <td><Checkbox v-model="row.bucket_acl_obj.READ">{{$t("USER.READ")}}</Checkbox> <Checkbox v-model="row.bucket_acl_obj.WRITE">{{$t("USER.WRITE")}}</Checkbox></td>
-                        <td><Checkbox v-model="row.file_acl_obj.READ">{{$t("USER.READ")}}</Checkbox> <Checkbox v-model="row.file_acl_obj.WRITE">{{$t("USER.WRITE")}}</Checkbox></td>
+                        <td><Checkbox v-model="row.file_acl_obj.READ">{{$t("USER.READ")}}</Checkbox></td>
                     </tr>
                 </tbody>
             </table>
@@ -216,8 +216,8 @@ export default {
                     key: 'acl',
                     render: (h, params) => {
                         return params.row.acl ? Array.map(params.row.acl, (acl) => {
-                            return `${acl.bucket} - bucket:${acl.bucket_acl} - file:${acl.file_acl}`
-                        }) : ''
+                            return h('Tag', {props: {type: 'border'}}, `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${acl.file_acl}`)
+                        }) : 'No acl'
                     }
                 },
                 {
@@ -382,7 +382,7 @@ export default {
                     return {
                         bucket: bucket.Name,
                         bucket_acl_obj: { READ: false, WRITE: false },
-                        file_acl_obj: { READ: false, WRITE: false }
+                        file_acl_obj: { READ: false }
                     }
                 }))
             })
@@ -421,7 +421,7 @@ export default {
                     return {
                         bucket: bucket.Name,
                         bucket_acl_obj: { READ: false, WRITE: false },
-                        file_acl_obj: { READ: false, WRITE: false },
+                        file_acl_obj: { READ: false },
                         redirect: false
                     }
                 }))})
@@ -468,7 +468,7 @@ const initSubUser = (acls) => {
         acl: acls || [{
             bucket: '',
             bucket_acl_obj: { READ: false, WRITE: false },
-            file_acl_obj: { READ: false, WRITE: false }
+            file_acl_obj: { READ: false }
         }]
     }
 }
@@ -483,7 +483,7 @@ const convertBucketList = (user, bucketList) => {
                 user.acl.push({
                     bucket: bucket.Name,
                     bucket_acl_obj: { READ: false, WRITE: false },
-                    file_acl_obj: { READ: false, WRITE: false },
+                    file_acl_obj: { READ: false },
                     redirect: false
                 })
             }
