@@ -763,14 +763,6 @@ export default {
                 }
             })
         }
-    },
-    watch: {
-        groupACLList: {
-            handler (to, from) {
-                console.log('from', from, 'to', to)
-            },
-            deep: true
-        }
     }
 }
 const groupGrantee = ['AllUsers', 'AuthenticatedUsers']

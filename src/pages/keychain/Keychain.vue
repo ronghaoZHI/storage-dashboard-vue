@@ -59,7 +59,6 @@ export default {
         async deleteKeychain (accesskey) {
             this.$Loading.start()
             try {
-                console.log(accesskey)
                 await this.$http.delete(ACCESSKEY, {params: {accesskey: accesskey}})
                 this.getKeychainList()
                 this.$Loading.finish()
