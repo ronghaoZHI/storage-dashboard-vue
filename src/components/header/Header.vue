@@ -6,10 +6,16 @@
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
                     <Tooltip :content='$t("STORAGE.DOCUMENTATION")' placement="bottom">
-                        <Icon type="help-circled" :size="18"></Icon>
+                        <Icon type="help-circled" :size="26"></Icon>
                     </Tooltip>
                 </div>
-                <Dropdown style="margin-left: 3px"
+                <div class="button-document">
+                    <i-switch :only-text="true" :true-value="'en'" :false-value="'cn'" v-model="lang" @on-change="toggleLanguage">
+                        <span slot="open">中</span>
+                        <span slot="close">EN</span>
+                    </i-switch>
+                </div>
+                <Dropdown style="margin-left: 13px"
                           @on-click="menuClick"
                           placement="bottom-end">
                     <a class="dropdown-link"
@@ -42,13 +48,15 @@
     </div>
 </template>
 <script>
+import Vue from 'vue'
 import { REPASSWORD } from '@/service/API'
-import { logout } from '@/service/Helper'
+import { logout, getCookie, createCookie } from '@/service/Helper'
 import user from '@/store/modules/user'
 export default {
     data () {
         return {
             rePasswordModal: false,
+            lang: getCookie('uc_lang') !== 'en',
             isAdminMode: user.state.type === 'admin',
             rePasswordForm: {
                 password: ''
@@ -91,6 +99,11 @@ export default {
         },
         openDoc () {
             window.open('http://doc.bscstorage.com')
+        },
+        toggleLanguage (bol) {
+            let lang = bol ? 'cn' : 'en'
+            Vue.config.lang = lang
+            createCookie('uc_lang', lang)
         }
     }
 }
@@ -111,20 +124,19 @@ export default {
         .fb(center,center);
     }
     .dropdown-link {
-        .sc(18px,@menu-text-color);
+        .sc(22px,@menu-text-color);
     }
 }
 
 .button-document {
-    .sc(18px,@menu-text-color);
+    .sc(22px,@menu-text-color);
     font-weight: bolder;
-    padding-right: 10px;
-    margin-right: 10px;
+    padding: 0 10px;
     border-right: 1px solid #1b8de2;
     cursor: pointer;
     i {
         position: relative;
-        top: 1px;
+        top: 2px;
         left: -4px;
     }
 }
@@ -132,7 +144,7 @@ export default {
 .layout-header-left {
     a {
         .fb(center,center);
-        .sc(18px,@menu-text-color);
+        .sc(22px,@menu-text-color);
         font-weight: bolder;
         .wh(140px,60px);
     }

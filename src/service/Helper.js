@@ -30,6 +30,13 @@ function dataClearAndLocation () {
     })
 }
 
+export function createCookie (name, value) {
+    let date = new Date()
+    date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000))
+    let expires = `;expires=${date.toUTCString()}`
+    document.cookie = `${name}=${value}${expires}; path=/`
+}
+
 export function getCookie (name) {
     if (document.cookie.length > 0) {
         let start = document.cookie.indexOf(name + '=')
