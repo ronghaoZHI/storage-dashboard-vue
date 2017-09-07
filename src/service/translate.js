@@ -12,6 +12,10 @@ export const messages = {
             COPY: 'Copy',
             LOADING: 'Loading...',
             LINK_CONVERSION: 'Link conversion',
+            FORM_VALID_FAILED: 'Form validation failed!',
+            NUM_PLEASE: 'Please enter a numeric value',
+            NOT_LESS: 'Not less than{num}',
+            NOT_GREATER: 'Not greater than{num}',
             EDIT: 'Edit'
         },
         LOGIN: {
@@ -372,6 +376,7 @@ export const messages = {
             USER_TYPE: 'User type'
         },
         VIDEO: {
+            TEMPLATE_NAME_REQUIRED: 'Please enter a template name',
             NEW_TEMPLATE: 'New template',
             ENCODING: 'Encoding',
             CODING_PROFILE: 'Coding profile',
@@ -390,10 +395,8 @@ export const messages = {
             FAILED_TO_DELETE: 'Failed to delete!',
             TEMPLATE_CONFIGURATION: 'Template configuration',
             TEMPLATE_NAME: 'Template name',
-            TEMPLATE_NAME_CHAR_NUMBER: 'Not less than 1 character, and not more than 20 characters',
-            TEMPLATE_NAME_WARING: 'Invalid template name',
-            TEMPLATE_DESCRIPTION_WARING: 'Invalid description',
-            TEMPLATE_DESCRIPTION: 'Description',
+            TEMPLATE_NAME_CHAR_NUMBER: 'Not more than 20 characters',
+            TEMPLATE_DESCRIPTION: 'Description : ',
             TEMPLATE_DESCRIPTION_CHAR_NUMBER: 'Not more than 100 characters',
             ENTER_THE_TEMPLATE_DESCRIPTION_TEXT: 'Enter the template description text',
             PACKAGE_FORMAT: 'Package format',
@@ -627,6 +630,10 @@ export const messages = {
             COPY: '复制',
             LOADING: '加载中...',
             LINK_CONVERSION: 'url转换',
+            FORM_VALID_FAILED: '表单验证失败!',
+            NUM_PLEASE: '请输入数字值',
+            NOT_LESS: '输入值不能小于{num}',
+            NOT_GREATER: '输入值不能大于{num}',
             EDIT: '编辑'
         },
         LOGIN: {
@@ -986,6 +993,7 @@ export const messages = {
             USER_TYPE: '账号类型'
         },
         VIDEO: {
+            TEMPLATE_NAME_REQUIRED: '请输入模版名名称',
             NEW_TEMPLATE: '新建模板',
             ENCODING: '编码方式',
             CODING_PROFILE: '编码Profile',
@@ -1003,11 +1011,9 @@ export const messages = {
             DELETED_SUCCESSFULLY: '删除成功！',
             FAILED_TO_DELETE: '删除失败！',
             TEMPLATE_CONFIGURATION: '模板配置',
-            TEMPLATE_NAME: '模板名称',
-            TEMPLATE_NAME_CHAR_NUMBER: '不少于1个字符，不超过20个字符',
-            TEMPLATE_NAME_WARING: '模版名称无效',
-            TEMPLATE_DESCRIPTION_WARING: '描述信息无效',
-            TEMPLATE_DESCRIPTION: '模板描述',
+            TEMPLATE_NAME: '模板名称 : ',
+            TEMPLATE_NAME_CHAR_NUMBER: '模版名称不能超过20个字符',
+            TEMPLATE_DESCRIPTION: '模板描述 : ',
             TEMPLATE_DESCRIPTION_CHAR_NUMBER: '不超过100个字符',
             ENTER_THE_TEMPLATE_DESCRIPTION_TEXT: '输入模板描述文字',
             PACKAGE_FORMAT: '输出封装格式',
@@ -1119,7 +1125,7 @@ export const messages = {
             CONTAINER: '输出格式',
             VIDEO: '视频',
             AUDIO: '音频',
-            TEMPLATE_NAME_TABLE: '模版名称',
+            TEMPLATE_NAME_TABLE: '模版名称 : ',
             CONF: '配置',
             WH_UNALTERED: '根据分辨率计算',
             OUTPUTKEY_REQUIRED: '请填写输出文件名',

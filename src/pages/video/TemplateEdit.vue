@@ -6,38 +6,40 @@
                 <Breadcrumb-item>{{$t('VIDEO.NEW_TEMPLATE')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <div class="separator-line"></div>
-        <div class="editBlock">
-            <div class="section-separator">
-                <div class="separator-body">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info">{{$t('VIDEO.BASE_INFO')}}</span>
+        <Form ref="basicValidate" :model="template" :rules="ruleValidate" :label-width="175">
+            <div class="separator-line"></div>
+            <div class="editBlock">
+                <div class="section-separator">
+                    <div class="separator-body">
+                        <span class="separator-icon"></span>
+                        <span class="separator-info">{{$t('VIDEO.BASE_INFO')}}</span>
+                    </div>
                 </div>
+                <div class="form-item">
+                    <FormItem :label='$t("VIDEO.TEMPLATE_NAME")' prop="Name">
+                        <Input v-model="template.Name" :placeholder='$t("VIDEO.TEMPLATE_NAME")' class="line-width"></Input>
+                    </FormItem>
+                </div>
+                <div class="form-item">
+                    <FormItem :label='$t("VIDEO.TEMPLATE_DESCRIPTION")' prop="Description">
+                        <Input v-model="template.Description" :placeholder='$t("VIDEO.ENTER_THE_TEMPLATE_DESCRIPTION_TEXT")' type="textarea" :autosize="true" class="line-width"></Input>
+                    </FormItem>
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.PACKAGE_FORMAT')}} : </span>
+                    <Radio-group v-model="template.Container" @on-change="containerChange">
+                        <Radio v-for='con in containerList' :key="con" :label='con'>{{con}}</Radio>
+                    </Radio-group>
+                </div>
+                <div class="form-item" v-if="template.Container === 'mp4'" >
+                    <span class="form-label">FastStart : </span>
+                    <i-switch v-model="template.FastStart">
+                        <span slot="open">{{$t('VIDEO.ON')}}</span>
+                        <span slot="close">{{$t('VIDEO.OFF')}}</span>
+                    </i-switch>
+                </div> 
             </div>
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.TEMPLATE_NAME')}} : </span>
-                <Input v-model="template.Name" :placeholder='$t("VIDEO.TEMPLATE_NAME")' class="line-width"></Input>
-                <p class="style-name-info redFont" v-if="nameError" >{{$t('VIDEO.TEMPLATE_NAME_CHAR_NUMBER')}}</p>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.TEMPLATE_DESCRIPTION')}} : </span>
-                <Input v-model="template.Description" :placeholder='$t("VIDEO.ENTER_THE_TEMPLATE_DESCRIPTION_TEXT")' type="textarea" :autosize="true" class="line-width"></Input>
-                <p class="style-name-info redFont" v-if="descriptionError">{{$t('VIDEO.TEMPLATE_DESCRIPTION_CHAR_NUMBER')}}</p>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.PACKAGE_FORMAT')}} : </span>
-                <Radio-group v-model="template.Container" @on-change="containerChange">
-                    <Radio v-for='con in containerList' :key="con" :label='con'>{{con}}</Radio>
-                </Radio-group>
-            </div>
-             <div class="form-item" v-if="template.Container === 'mp4'" >
-                <span class="form-label">FastStart : </span>
-                <i-switch v-model="template.FastStart">
-                    <span slot="open">{{$t('VIDEO.ON')}}</span>
-                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
-                </i-switch>
-            </div> 
-        </div>
+        </Form>
         <div class="separator-line"></div>
         <div class="editBlock">
             <div class="section-separator">
@@ -65,12 +67,16 @@
                 </Radio-group>
             </div>
             <div class="form-item" v-if="template.Video.Codec === 'H.264' || template.Video.Codec === 'H.265'">
-                <span class="form-label">{{$t('VIDEO.FIXED_KEY_FRAME_SPACING')}} : </span>
-                <i-switch v-model="template.Video.FixedGOP">
-                    <span slot="open">{{$t('VIDEO.ON')}}</span>
-                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
-                </i-switch>
-                <InputNumber :min='1' :max='100000' v-model="template.Video.KeyframesMaxDist" :disabled="!template.Video.FixedGOP"></InputNumber> {{$t('VIDEO.SECOND')}} (1~100000)
+                <Form ref="videoValidate" :model="template.Video" :rules="ruleValidate" :label-width="5" inline>
+                    <span class="form-label">{{$t('VIDEO.FIXED_KEY_FRAME_SPACING')}} : </span>
+                    <i-switch v-model="template.Video.FixedGOP">
+                        <span slot="open">{{$t('VIDEO.ON')}}</span>
+                        <span slot="close">{{$t('VIDEO.OFF')}}</span>
+                    </i-switch>
+                    <FormItem prop="KeyframesMaxDist">
+                        <InputNumber v-model="template.Video.KeyframesMaxDist" :disabled="!template.Video.FixedGOP"></InputNumber> {{$t('VIDEO.SECOND')}} (1~100000)
+                    </FormItem>
+                </Form>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.BIT_RATE')}} : </span>
@@ -146,7 +152,7 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="createPreset">{{$t('VIDEO.SAVE')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
         </div>
     </div>
 </template>
@@ -167,32 +173,46 @@ export default {
             audioCodecList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto', container: ['flac', 'flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts']}, {name: 'AAC', value: 'AAC', container: ['flac', 'mp4', 'ts']}, {name: 'mp3', value: 'mp3', container: ['flv', 'mp4', 'ts']}, {name: 'mp2', value: 'mp2', container: ['mpg']}],
             audioProfileList: [{name: this.$t('VIDEO.ADAPTIVE'), value: 'auto'}, {name: 'AAC-LC', value: 'AAC-LC'}, {name: 'HE-AAC', value: 'HE-AAC'}, {name: 'HE-AACv2', value: 'HE-AACv2'}],
             audioSampleRateList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '22050', value: '22050'}, {name: '32000', value: '32000'}, {name: '44100', value: '44100'}, {name: '48000', value: '48000'}, {name: '96000', value: '96000'}],
-            audioChannelsList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1', value: '1'}, {name: '2', value: '2'}, {name: '3', value: '3'}, {name: '4', value: '4'}, {name: '5', value: '5'}, {name: '6', value: '6'}, {name: '7', value: '7'}, {name: '8', value: '8'}, {name: '9', value: '9'}, {name: '10', value: '10'}, {name: '11', value: '11'}, {name: '12', value: '12'}, {name: '13', value: '13'}, {name: '14', value: '14'}, {name: '15', value: '15'}, {name: '16', value: '16'}]
+            audioChannelsList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1', value: '1'}, {name: '2', value: '2'}, {name: '3', value: '3'}, {name: '4', value: '4'}, {name: '5', value: '5'}, {name: '6', value: '6'}, {name: '7', value: '7'}, {name: '8', value: '8'}, {name: '9', value: '9'}, {name: '10', value: '10'}, {name: '11', value: '11'}, {name: '12', value: '12'}, {name: '13', value: '13'}, {name: '14', value: '14'}, {name: '15', value: '15'}, {name: '16', value: '16'}],
+            ruleValidate: {
+                Name: [
+                    { validator: this.validateName, trigger: 'change' },
+                    { type: 'string', max: 20, message: this.$t('VIDEO.'), trigger: 'change' }
+                ],
+                Description: [
+                    { validator: this.validateDiscription, trigger: 'change' }
+                ],
+                KeyframesMaxDist: [
+                    { validator: this.validateMaxDist, trigger: 'change' }
+                ]
+            }
         }
     },
     computed: {
         templateId () {
             return this.$route.params.id
-        },
-        nameError () {
-            return this.template.Name.length === 0 || (new TextEncoder('utf-8').encode(this.template.Name)).length > 20
-        },
-        descriptionError () {
-            return (new TextEncoder('utf-8').encode(this.template.Description)).length > 100
         }
     },
     created () {
         this.readPreset()
     },
     methods: {
+        async beforeSubmit () {
+            this.$refs['basicValidate'].validate((valid) => {
+                if (!valid) {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                } else {
+                    this.$refs['videoValidate'].validate((valid) => {
+                        if (!valid) {
+                            this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                        } else {
+                            this.createPreset()
+                        }
+                    })
+                }
+            })
+        },
         async createPreset () {
-            if (this.nameError) {
-                this.$Message.warning(this.$t('VIDEO.TEMPLATE_NAME_WARING'))
-                return
-            } else if (this.descriptionError) {
-                this.$Message.warning(this.$t('VIDEO.TEMPLATE_DESCRIPTION_WARING'))
-                return
-            }
             let template = convert2Save(this.template, this.auxiliary)
             try {
                 this.$Loading.start()
@@ -223,6 +243,35 @@ export default {
                 this.videoDisabled = true
             } else if (this.videoDisabled) {
                 this.videoDisabled = false
+            }
+        },
+        validateDiscription (rule, value, callback) {
+            if ((new TextEncoder('utf-8').encode(value)).length > 100) {
+                callback(new Error(this.$t('VIDEO.TEMPLATE_DESCRIPTION_CHAR_NUMBER')))
+            } else {
+                callback()
+            }
+        },
+        validateName (rule, value, callback) {
+            if (!value) {
+                callback(new Error(this.$t('VIDEO.TEMPLATE_NAME_REQUIRED')))
+            } else if ((new TextEncoder('utf-8').encode(value)).length > 20) {
+                callback(new Error(this.$t('VIDEO.TEMPLATE_NAME_CHAR_NUMBER')))
+            } else {
+                callback()
+            }
+        },
+        validateMaxDist (rule, value, callback) {
+            if (!Number.isInteger(value)) {
+                callback(new Error(this.$t('PUBLIC.NUM_PLEASE')))
+            } else {
+                if (value < 1) {
+                    callback(new Error(this.$t('PUBLIC.NOT_LESS', {num: '1'})))
+                } else if (value > 100000) {
+                    callback(new Error(this.$t('PUBLIC.NOT_GREATER', {num: '100000'})))
+                } else {
+                    callback()
+                }
             }
         }
     }
@@ -296,12 +345,10 @@ const templateDefult = {
 }
 
 const audioOnly = ['flac', 'mp3']
+
 </script>
 
 <style lang="less" scoped>
 @import '../../styles/index.less';
-
-@edit-output-item-span: 115px;
-
+@edit-output-item-span: 175px;
 </style>
-
