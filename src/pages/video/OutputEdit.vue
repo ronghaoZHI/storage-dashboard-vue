@@ -144,7 +144,7 @@
                 </div>
             </div>
             <div class="form-item">
-                <file-acl :aclData='groupACLList' :userAcl='userACLList' :isInline='true' :width='500'>
+                <file-acl :aclData='groupACLList' :userAcl='userACLList' :isInline='true' width='600'>
                     <span class="form-label" slot="groupTitle">{{$t('VIDEO.USER_GROUP_PERMISSIONS')}} : </span>
                     <span class="form-label" slot="userTitle">{{$t('VIDEO.USER_PERMISSIONS')}} : </span>
                 </file-acl>

@@ -12,7 +12,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent23" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent23" :style="td25Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -28,7 +28,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent25" :style="td25Style"></th>
+                    <th class="percent25" :style="td20Style"></th>
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +60,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent23" :style="td20Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
+                    <th class="percent23" :style="td25Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
                             <span><Icon type="ios-help"></Icon></span>
                             <div slot="content">
@@ -76,7 +76,7 @@
                             </div>
                         </Tooltip>
                     </th>
-                    <th class="percent25" :style="td25Style"></th>
+                    <th class="percent25" :style="td20Style"></th>
                 </tr>
             </thead>
             <tbody>
