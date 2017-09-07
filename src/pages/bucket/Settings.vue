@@ -171,6 +171,8 @@
             <div class="form-item">
                 <span class="form-label required-item">Allowed Origins : </span>
                 <Input v-model="AllowedOrigins" placeholder="http://www.example.com" class="line-width" @on-enter="addCorsModalTag('AllowedOrigins')"></Input>
+                <p class="style-error-info redFont" v-if="originsEmptyError">{{$t('STORAGE.FILL_IN_ONE_AT_LEAST')}}</p>
+                <p class="style-error-info redFont" v-if="AllowedOrigins">{{$t('STORAGE.PRESS_ENTER_KEY')}}</p>
                 <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
                 <div class="tag-margin-left">
                     <Tag type="border" color="blue" v-for="item in corsModal.AllowedOrigins" :key="item" :name="item" closable @on-close="deleteCorsModalTag('AllowedOrigins',item)">{{item}}</Tag>
@@ -185,10 +187,12 @@
                     <Checkbox class="modal-checkbox" label="POST">POST</Checkbox>
                     <Checkbox class="modal-checkbox" label="DELETE">DELETE</Checkbox>
                 </Checkbox-group>
+                <p class="style-error-info redFont" v-if="methodsError">{{$t('STORAGE.SELECT_ONE_AT_LEAST')}}</p>
             </div>
             <div class="form-item">
                 <span class="form-label">Allowed Headers : </span>
                 <Input v-model="AllowedHeaders" class="line-width" @on-enter="addCorsModalTag('AllowedHeaders')"></Input>
+                <p class="style-error-info redFont" v-if="AllowedHeaders">{{$t('STORAGE.PRESS_ENTER_KEY')}}</p>
                 <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
                 <div class="tag-margin-left">
                     <Tag type="border" color="blue" v-for="item in corsModal.AllowedHeaders" :key="item" :name="item" closable @on-close="deleteCorsModalTag('AllowedHeaders',item)">{{item}}</Tag>
@@ -197,6 +201,7 @@
             <div class="form-item">
                 <span class="form-label">Expose Headers : </span>
                 <Input v-model="ExposeHeaders" class="line-width" @on-enter="addCorsModalTag('ExposeHeaders')"></Input>
+                <p class="style-error-info redFont" v-if="ExposeHeaders">{{$t('STORAGE.PRESS_ENTER_KEY')}}</p>
                 <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
                 <div class="tag-margin-left">
                     <Tag type="border" color="blue" v-for="item in corsModal.ExposeHeaders" :key="item" :name="item" closable @on-close="deleteCorsModalTag('ExposeHeaders',item)">{{item}}</Tag>
@@ -206,6 +211,7 @@
                 <span class="form-label">Max Age Seconds : </span>
                 <Input style="width:100px" v-model="corsModal.MaxAgeSeconds" class="line-width"></Input>
                 <span>s</span>
+                <p class="style-error-info redFont" v-if="secondsError">{{$t('STORAGE.CACHE_TIME_BE_NUMBER')}}</p>
             </div>
             <div slot="footer">
                 <Button type="primary" @click="putBucketCors">{{$t('VIDEO.OK')}}</Button>
@@ -338,6 +344,15 @@ export default {
         bucket () {
             return this.$route.params.bucket
         },
+        originsEmptyError () {
+            return this.corsModal.AllowedOrigins.length === 0 && !this.AllowedOrigins
+        },
+        methodsError () {
+            return this.corsModal.AllowedMethods.length === 0
+        },
+        secondsError () {
+            return this.corsModal.MaxAgeSeconds && isNaN(this.corsModal.MaxAgeSeconds)
+        },
         isAddVerified () {
             let name = this.newUserItem.name
             let { READ, WRITE, READ_ACP, WRITE_ACP } = this.newUserItem.Permission
@@ -469,6 +484,9 @@ export default {
             }
         },
         async addCorsRule (index) {
+            this.AllowedOrigins = ''
+            this.AllowedHeaders = ''
+            this.ExposeHeaders = ''
             this.showCorsModal = true
             if (typeof index === 'number') {
                 let res = await handler('getBucketCors', { Bucket: this.bucket })
@@ -664,6 +682,9 @@ const convertNewUserItem = item => {
         }
         .modal-checkbox {
             width: 90px
+        }
+        .style-error-info {
+            padding-left: 134px
         }
     }
 }
