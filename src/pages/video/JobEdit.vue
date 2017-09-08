@@ -1,4 +1,3 @@
-
 <template>
     <div class="bsc-job-edit bsc-edit">
         <div class="layout-bsc-toolbar">
@@ -7,173 +6,184 @@
                 <Breadcrumb-item>{{$t('VIDEO.JOB_CREATE')}}</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <div class="separator-line"></div>
-        <div class="editBlock">
-            <div class="section-separator">
-                <div class="separator-body">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info">{{$t('VIDEO.BASIC_SET')}}</span>
+        <Form ref="jobForm" :model="job" :rules="ruleValidate" :label-width="170">
+            <div class="separator-line"></div>
+            <div class="editBlock">
+                <div class="section-separator">
+                    <div class="separator-body">
+                        <span class="separator-icon"></span>
+                        <span class="separator-info">{{$t('VIDEO.BASIC_SET')}}</span>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <FormItem :label="$t('VIDEO.JOB_PIPE')" prop="PipelineId" required>
+                        <Select v-model="job.PipelineId" class="line-width" @on-change="pipeChange">
+                            <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
+                        </Select>
+                    </FormItem>
                 </div>
             </div>
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.JOB_PIPE')}} : </span>
-                <Select v-model="job.PipelineId" class="line-width" @on-change="pipeChange">
-                    <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
-                </Select>
-            </div>
-        </div>
-        <div class="separator-line"></div>
-        <div class="editBlock">
-            <div class="section-separator">
-                <div class="separator-body">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info">{{$t('VIDEO.INPUT_CONFIGURATION')}}</span>
+            <div class="separator-line"></div>
+            <div class="editBlock">
+                <div class="section-separator">
+                    <div class="separator-body">
+                        <span class="separator-icon"></span>
+                        <span class="separator-info">{{$t('VIDEO.INPUT_CONFIGURATION')}}</span>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <span class="form-label required-item">{{$t('VIDEO.SRC_FILE')}} : </span>
+                    <div class="section-search">
+                        <span class="bsc-input">
+                            <input type="text" v-model="searchValue" />
+                            <Button type="text" size="small" @click="getFiles(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
+                        </span>
+                    </div>
+                    <p class="style-name-info" v-if="fileInfo">{{$t('VIDEO.SEARCH_INFO')}}</p>
+                </div>
+                <div class="form-item">
+                    <FormItem prop="Inputs">
+                        <Select v-model="job.Inputs[0].Key" class="line-width">
+                            <Option v-for="file in fileList" :value="file.Key" :key="file.Key">{{ file.Key }}</Option>
+                        </Select>
+                    </FormItem>
                 </div>
             </div>
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.SRC_FILE')}} : </span>
-                <div class="section-search">
-                    <span class="bsc-input">
-                        <input type="text" v-model="searchValue" />
-                        <Button type="text" size="small" @click="getFiles(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
-                    </span>
+            <div class="separator-line"></div>
+            <div class="editBlock">
+                <div class="section-separator">
+                    <div class="separator-body">
+                        <span class="separator-icon"></span>
+                        <span class="separator-info">{{$t('VIDEO.OUTPUT_CONFIGURATION')}}</span>
+                    </div>
                 </div>
-                <p class="style-name-info" v-if="fileInfo">{{$t('VIDEO.SEARCH_INFO')}}</p>
-            </div>
-            <div class="form-item">
-                <span class="form-label"></span>
-                <Select v-model="job.Inputs[0].Key" class="line-width">
-                    <Option v-for="file in fileList" :value="file.Key" :key="file.Key">{{ file.Key }}</Option>
-                </Select>
-            </div>
-        </div>
-        <div class="separator-line"></div>
-        <div class="editBlock">
-            <div class="section-separator">
-                <div class="separator-body">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info">{{$t('VIDEO.OUTPUT_CONFIGURATION')}}</span>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.OUTPUT_KEY_PREFIX')}} : </span>
+                    <Input v-model="job.OutputKeyPrefix" :placeholder='$t("VIDEO.OUTPUT_KEY_PREFIX")' class="line-width"></Input>
                 </div>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_KEY_PREFIX')}} : </span>
-                <Input v-model="job.OutputKeyPrefix" :placeholder='$t("VIDEO.OUTPUT_KEY_PREFIX")' class="line-width"></Input>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_RULES')}} : </span>
-                <div class="table-box line-width">
-                    <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="job.Outputs" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.OUTPUT_RULES')}} : </span>
+                    <div class="table-box line-width">
+                        <Table border size='small' :context="self" :stripe="true" :columns="outputsHeader" :data="job.Outputs" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
+                    </div>
+                    <br>
+                    <p class="style-name-info redFont" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
+                    <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
                 </div>
-                <br>
-·                <p class="style-name-info redFont" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
-                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.VIDEO_SCREENSHOTS_RULES')}} : </span>
-                <div class="table-box line-width">
-                    <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="job.Snapshots" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
-                </div>
-                <br>
-                <p class="style-name-info redFont" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
-                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
-            </div>
-        </div>
-        <div class="separator-line"></div>
-        <div class="editBlock">
-            <div class="section-separator">
-                <div class="separator-body">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info">{{$t('VIDEO.MASTER_PLAYLIST_CONFIGURATION')}}</span>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.VIDEO_SCREENSHOTS_RULES')}} : </span>
+                    <div class="table-box line-width">
+                        <Table border size='small' :context="self" :stripe="true" :columns="shotsHeader" :data="job.Snapshots" :no-data-text='$t("VIDEO.AT_LEAST_ONE_RULE")'></Table>
+                    </div>
+                    <br>
+                    <p class="style-name-info redFont" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
+                    <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
                 </div>
             </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.WHETHER_TO_OPEN')}} : </span>
-                <i-switch v-model="MPOpen">
-                    <span slot="open">{{$t('VIDEO.ON')}}</span>
-                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
-                </i-switch>
+            <div class="separator-line"></div>
+            <div class="editBlock">
+                <div class="section-separator">
+                    <div class="separator-body">
+                        <span class="separator-icon"></span>
+                        <span class="separator-info">{{$t('VIDEO.MASTER_PLAYLIST_CONFIGURATION')}}</span>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.WHETHER_TO_OPEN')}} : </span>
+                    <i-switch v-model="MPOpen">
+                        <span slot="open">{{$t('VIDEO.ON')}}</span>
+                        <span slot="close">{{$t('VIDEO.OFF')}}</span>
+                    </i-switch>
+                </div>
+                <div class="form-item" v-if="MPOpen">
+                    <span class="form-label">{{$t('VIDEO.SLICE_FORMAT')}} : </span>
+                    <Radio-group v-model="job.Playlists.Format">
+                        <Radio key="HLSv3" label='HLSv3'>HLSv3</Radio>
+                    </Radio-group>
+                </div>
+                <div class="form-item" v-if="MPOpen">
+                    <FormItem :label="$t('VIDEO.HLS_FILE_NAME')" prop="Playlists.Name" required>
+                        <Input v-model="job.Playlists.Name" placeholder="MasterPlaylist" class="line-width"></Input>
+                    </FormItem>
+                </div>
+                <div class="form-item" v-if="MPOpen">
+                    <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME')}} : </span>
+                    <Select v-model="job.Playlists.OutputKeys" multiple class="line-width">
+                        <Option v-for="ots in MPNames" :value="ots" :key="ots">{{ ots }}</Option>
+                    </Select>
+                </div>
             </div>
-            <div class="form-item" v-if="MPOpen">
-                <span class="form-label">{{$t('VIDEO.SLICE_FORMAT')}} : </span>
-                <Radio-group v-model="job.Playlists.Format">
-                    <Radio key="HLSv3" label='HLSv3'>HLSv3</Radio>
-                </Radio-group>
+            <div class="separator-line"></div>
+            <div class="editBlock">
+                <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" >{{$t('VIDEO.SAVE')}}</Button>
             </div>
-            <div class="form-item" v-if="MPOpen">
-                <span class="form-label required-item">{{$t('VIDEO.HLS_FILE_NAME')}} : </span>
-                <Input v-model="job.Playlists.Name" placeholder="MasterPlaylist" class="line-width"></Input>
-                <p class="style-name-info redFont" v-if="MPNameError">{{$t('VIDEO.MP_NAME_INFO')}}</p>
-            </div>
-            <div class="form-item" v-if="MPOpen">
-                <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME')}} : </span>
-                <Select v-model="job.Playlists.OutputKeys" multiple class="line-width">
-                    <Option v-for="ots in MPNames" :value="ots" :key="ots">{{ ots }}</Option>
-                </Select>
-            </div>
-        </div>
-        <div class="separator-line"></div>
-        <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" >{{$t('VIDEO.SAVE')}}</Button>
-        </div>
+        </Form>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="edit-modal">
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
-                <Select v-model="outputModal.PresetId" class="line-width" @on-change="templateChange" filterable>
-                    <Option v-for="template in templateInfo.templateList" :value="template.Id" :key="template.Id">{{template.Name}}</Option>
-                </Select>
-            </div>
-            <div class="form-item">
-                <span class="form-label required-item">{{$t("VIDEO.OUTPUT_FILE_NAME")}} : </span>
-                <Input v-model="outputModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME")' class="line-width"></Input>
-            </div>
-            <div class="form-item" v-if="HLSShow" >
-                <span class="form-label">{{$t('VIDEO.HLS_SLICE_LENGTH')}} : </span>
-                <Slider v-model="outputModal.SegmentDuration" :min='0' :max='50' class="my-slider"></Slider>
-                <InputNumber :min='0' :max='50' v-model="outputModal.SegmentDuration"></InputNumber>
-                <p class="style-name-info redFont" v-if="outputsDisabled">{{$t('VIDEO.HLS_SLICE_LENGTH_CANNOT_BE_0')}}</p>
-            </div>
+            <Form ref="outputForm" :model="outputModal" :label-width="155" :rules="ruleValidate">
+                <FormItem :label="$t('VIDEO.TRANSCODING_TEMPLATE') + ' : '" prop="PresetId" required>
+                    <Select v-model="outputModal.PresetId" class="line-width" @on-change="templateChange" filterable>
+                        <Option v-for="template in templateInfo.templateList" :value="template.Id" :key="template.Id">{{template.Name}}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem :label="$t('VIDEO.OUTPUT_FILE_NAME') + ' : '" prop="Key" required>
+                    <Input v-model="outputModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME")' class="line-width"></Input>
+                </FormItem>
+                <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH') + ' : '" prop="SegmentDuration" v-if="HLSShow">
+                    <Slider v-model="outputModal.SegmentDuration" :min='0' :max='50' class="my-slider" show-input></Slider>
+                </FormItem>
+            </Form>
             <div style="height:90px;"></div>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">{{$t('VIDEO.OK')}}</Button>
+                <Button type="primary" @click="beforeUpdateOutputs">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
         <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="edit-modal">
+            <Form ref="shotsForm" :model="shotModal" :label-width="0" :rules="ruleValidate" inline>
+                <div class="form-item mar-bot-0">
+                    <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
+                    <FormItem prop="Key" required>
+                        <Input v-model="shotModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
+                    </FormItem>
+                    <Select v-model="shotModal.Format" style="width:100px;display:inline-block">
+                        <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
+                    </Select>
+                </div>
+                <div class="form-item mar-bot-0">
+                    <span class="form-label">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
+                    <FormItem prop="Time">
+                        <InputNumber v-model="shotModal.Time"></InputNumber> S
+                    </FormItem>
+                </div>
             <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
-                <Input v-model="shotModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
-                <Select v-model="shotModal.Format" style="width:100px;display:inline-block">
-                    <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
-                </Select>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
-                <InputNumber :min='1' v-model="shotModal.Time"></InputNumber> S
-            </div>
-           <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.SCREENSHOT_INTERVAL')}} : </span>
-                <InputNumber :min='1' v-model="shotModal.Interval"></InputNumber> S
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.SCREENSHOT_MAX_NUMBER')}} : </span>
-                <InputNumber :min='1' v-model="shotModal.Number"></InputNumber>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
-                <Radio-group v-model="shotModal.Resolution">
-                    <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>
-                    <Radio label="value"></Radio>
-                </Radio-group>
-                <InputNumber :min='1' v-model="shotModal.width" :disabled="shotModal.Resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
-                <InputNumber :min='1' v-model="shotModal.height" :disabled="shotModal.Resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
-                <Radio-group v-model="shotModal.AspectRatio">
-                    <Radio v-for='asp in aspectRatioList' :key="asp.value" :label='asp.value'>{{asp.name}}</Radio>
-                </Radio-group>
-            </div>
+                    <span class="form-label">{{$t('VIDEO.SCREENSHOT_INTERVAL')}} : </span>
+                    <InputNumber :min='1' v-model="shotModal.Interval"></InputNumber> S
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.SCREENSHOT_MAX_NUMBER')}} : </span>
+                    <InputNumber :min='1' v-model="shotModal.Number"></InputNumber>
+                </div>
+                <div class="form-item mar-bot-0">
+                    <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
+                    <Radio-group v-model="shotModal.Resolution">
+                        <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>
+                        <Radio label="value"></Radio>
+                    </Radio-group>
+                    <FormItem prop="width">
+                        <InputNumber v-model="shotModal.width" :disabled="shotModal.Resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
+                    </FormItem>
+                    <FormItem prop="height">
+                        <InputNumber v-model="shotModal.height" :disabled="shotModal.Resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
+                    </FormItem>
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
+                    <Radio-group v-model="shotModal.AspectRatio">
+                        <Radio v-for='asp in aspectRatioList' :key="asp.value" :label='asp.value'>{{asp.name}}</Radio>
+                    </Radio-group>
+                </div>
+            </Form>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="updateShots">{{$t('VIDEO.OK')}}</Button>
+                <Button type="primary" @click="beforeUpdateShots">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
     </div>
@@ -204,6 +214,32 @@ export default {
             fileList: [],
             fileInfo: false,
             searchValue: '',
+            ruleValidate: {
+                'Playlists.Name': [
+                    { validator: this.validateName, trigger: 'change' }
+                ],
+                Inputs: [
+                    { validator: this.validateInputs, trigger: 'change' }
+                ],
+                SegmentDuration: [
+                    { validator: this.validateSegment, trigger: 'blur' }
+                ],
+                PresetId: [
+                    { required: true, message: this.$t('VIDEO.PERSET_REQUIRED'), trigger: 'change' }
+                ],
+                Key: [
+                    { required: true, message: this.$t('VIDEO.KEY_SUFFIX_REQUIRED'), trigger: 'change' }
+                ],
+                Time: [
+                    { type: 'number', min: 1, message: this.$t('PUBLIC.NOT_LESS', {num: '1'}), trigger: 'change' }
+                ],
+                width: [
+                    { validator: this.validateWidth, trigger: 'change' }
+                ],
+                height: [
+                    { validator: this.validateWidth, trigger: 'change' }
+                ]
+            },
             aspectRatioList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
             outputsHeader: [{
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
@@ -355,12 +391,6 @@ export default {
         }
     },
     computed: {
-        outputsDisabled () {
-            return this.isTS(this.outputModal.PresetId) && this.outputModal.SegmentDuration === 0 && this.MPOpen
-        },
-        MPNameError () {
-            return this.MPOpen && !this.job.Playlists.Name
-        },
         osError () {
             return this.job.Snapshots.length === 0 && this.job.Outputs.length === 0
         }
@@ -375,16 +405,28 @@ export default {
             this.pipes = pipesAll.filter(pipe => {
                 return pipe.Status === 'Active'
             })
-            this.job.PipelineId = this.pipes[0].Id
-            this.pipeInputBucket = this.pipes[0].InputBucket
+            if (this.pipes[0]) {
+                this.job.PipelineId = this.pipes[0].Id
+                this.pipeInputBucket = this.pipes[0].InputBucket
+            } else {
+                this.$Message.warning(this.$t('VIDEO.PIPE_FIRST'))
+            }
         },
         async beforeSubmit () {
+            this.$refs['jobForm'].validate((valid) => {
+                if (!valid) {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                } else if (this.otherRule()) {
+                    this.createJob()
+                }
+            })
+        },
+        otherRule () {
             let segments = []
             let segmentsSet = new Set()
-
-            if (!this.job.Inputs[0].Key) {
-                this.$Message.warning(this.$t('VIDEO.SRC_FILE_INFO'))
-                return
+            if (this.osError) {
+                this.$Message.warning(this.$t('VIDEO.AT_LEAST_ONE_RULE'))
+                return false
             }
             if (this.MPOpen) {
                 this.job.Outputs.forEach(item => {
@@ -396,35 +438,25 @@ export default {
                 if (segments.length === 0) {
                     this.$Message.warning(this.$t('VIDEO.ADAPTIVE_EXIST_TS_FORMAT'))
                     this.HLSError = true
-                    return
+                    return false
                 }
                 if (segmentsSet.size !== 1) {
                     this.$Message.warning(this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT'))
                     this.HLSError = true
-                    return
+                    return false
                 } else if (segments[0] === 0) {
                     this.$Message.warning(this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0'))
                     this.HLSError = true
-                    return
+                    return false
                 }
             }
-
-            if (this.osError) {
-                this.$Message.warning(this.$t('VIDEO.AT_LEAST_ONE_RULE'))
-                return
-            }
-
-            if (this.MPNameError) {
-                this.$Message.warning(this.$t('VIDEO.HLS_REQUIRED'))
-                return
-            }
-            let saved = await this.convert2Save(this.job)
-            this.createJob(saved)
+            return true
         },
         async createJob (job) {
+            let saved = await this.convert2Save(this.job)
             try {
                 this.$Loading.start()
-                await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/jobs', job)
+                await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/jobs', saved)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('VIDEO.CREATED'))
                 this.$router.push({ name: 'job' })
@@ -487,14 +519,16 @@ export default {
             this.showOutputsModal = true
             this.HLSError = false
         },
+        beforeUpdateOutputs () {
+            this.$refs['outputForm'].validate((valid) => {
+                if (!valid) {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                } else {
+                    this.updateOutputs()
+                }
+            })
+        },
         updateOutputs () {
-            if (!this.outputModal.PresetId) {
-                this.$Message.warning(this.$t('VIDEO.OUTPUTEMPLATE_REQUIRED'))
-                return
-            } else if (this.outputModal.Key.length < 1) {
-                this.$Message.warning(this.$t('VIDEO.OUTPUTKEY_REQUIRED'))
-                return
-            }
             const ln = this.job.Outputs.length
             this.outputModal.template = `${this.outputModal.PresetId}+${this.templateInfo.templateName[this.outputModal.PresetId]}`
             if (this.outputIndex === ln) {
@@ -514,12 +548,16 @@ export default {
             this.shotIndex = this.job.Snapshots.length
             this.showShotsModal = true
         },
+        beforeUpdateShots () {
+            this.$refs['shotsForm'].validate((valid) => {
+                if (!valid) {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                } else {
+                    this.updateShots()
+                }
+            })
+        },
         updateShots () {
-            if (this.shotModal.Key.length < 1) {
-                this.$Message.warning(this.$t('VIDEO.SHOTKEY_REQUIRED'))
-                return
-            }
-
             const ln = this.job.Snapshots.length
             let data = _.clone(this.shotModal)
             if (data.Resolution !== 'auto') {
@@ -581,6 +619,43 @@ export default {
             })
             this.fileList = res.Contents
             this.fileInfo = !!res.IsTruncated
+        },
+        validateName (rule, value, callback) {
+            if (!value && this.MPOpen) {
+                callback(new Error(this.$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')))
+            } else {
+                callback()
+            }
+        },
+        validateInputs (rule, value, callback) {
+            console.log('value', value, !value[0].Key)
+            if (!value[0].Key) {
+                callback(new Error(this.$t('VIDEO.SRC_FILE_INFO')))
+            } else {
+                callback()
+            }
+        },
+        validateSegment (rule, value, callback) {
+            if (this.isTS(this.outputModal.PresetId) && this.MPOpen && value === 0) {
+                callback(new Error(this.$t('VIDEO.HLS_SLICE_LENGTH_CANNOT_BE_0')))
+            } else {
+                callback()
+            }
+        },
+        validateWidth (rule, value, callback) {
+            if (this.shotModal.Resolution !== 'auto') {
+                if (!Number.isInteger(value)) {
+                    callback(new Error(this.$t('PUBLIC.NUM_PLEASE')))
+                } else {
+                    if (value < 1) {
+                        callback(new Error(this.$t('PUBLIC.NOT_LESS', {num: '1'})))
+                    } else {
+                        callback()
+                    }
+                }
+            } else {
+                callback()
+            }
         }
     }
 }
@@ -615,7 +690,7 @@ const shotDefult = {
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
-@edit-output-item-span: 165px;
+@edit-output-item-span: 170px;
 @edit-modal-item-span: 155px;
 
 .@{css-prefix}job-edit {

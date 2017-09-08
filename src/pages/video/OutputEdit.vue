@@ -171,7 +171,6 @@
                 </FormItem>
                 <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH')" prop="segment_duration" v-if="HLSShow">
                     <Slider v-model="outputModal.segment_duration" :min='0' :max='50' class="my-slider" show-input></Slider>
-                    <!-- <InputNumber :min='0' :max='50' v-model="outputModal.segment_duration"></InputNumber> -->
                 </FormItem>
             </Form>
             <div style="height:90px;"></div>
@@ -225,7 +224,7 @@
                 </div>
             </Form>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="beforeUpdateShots">{{$t('VIDEO.OK')}}===</Button>
+                <Button type="primary" @click="beforeUpdateShots">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
     </div>
@@ -274,7 +273,7 @@ export default {
                     { validator: this.validateSegment, trigger: 'blur' }
                 ],
                 time: [
-                    { type: 'number', min: 1, trigger: 'change' }
+                    { type: 'number', min: 1, message: this.$t('PUBLIC.NOT_LESS', {num: '1'}), trigger: 'change' }
                 ],
                 width: [
                     { validator: this.validateWidth, trigger: 'change' }
