@@ -22,12 +22,15 @@
                 </Radio-group>
             </div>
             <div class="form-item">
-                <span class="form-label"></span>
+                <span class="form-label" v-if="auxiliary.reg === 'extension'"></span>
                 <Input v-if="auxiliary.reg === 'extension'" v-model="auxiliary.path" :placeholder='$t("VIDEO.PATH")' class="sub-setting-input"></Input>
                 <Input v-if="auxiliary.reg === 'extension'" v-model="auxiliary.extension" :placeholder='$t("VIDEO.EXTENSION_NAME")' class="sub-setting-input"></Input>
                 <span v-if="auxiliary.reg === 'extension'">{{$t('VIDEO.SEPARATE_EXTENSION_NAMES')}}</span>
-                <Input v-if="auxiliary.reg === 'regular'" v-model="auxiliary.regular" :placeholder='$t("VIDEO.REGULAR_EXPRESSION")' class="sub-setting-input"></Input>
-                <span class="style-name-info redFont" v-if="regError">{{$t('VIDEO.EXPRESSION_INCORRECT')}}</span>
+                <Form ref="auxiliaryForm" :model="auxiliary" :rules="ruleValidate" :label-width="205">
+                    <FormItem prop="regular" v-if="auxiliary.reg === 'regular'">
+                        <Input v-model="auxiliary.regular" :placeholder='$t("VIDEO.REGULAR_EXPRESSION")' class="sub-setting-input"></Input>
+                    </FormItem>
+                </Form>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.INPUT_BUCKET')}} : </span>
@@ -130,9 +133,11 @@
                 </Radio-group>
             </div>
             <div class="form-item" v-if="auxiliary.MP">
-                <span class="form-label required-item">{{$t('VIDEO.MASTER_PLAYLIST_FILE_NAME_SUFFIX')}} : </span>
-                <Input v-model="transcode.master_playlist.name" placeholder="MasterPlaylist" class="line-width"></Input>
-                <p class="style-name-info redFont" v-if="MPNameError">{{$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')}}</p>
+                <Form ref="nameForm" :model="transcode.master_playlist" :rules="ruleValidate" :label-width="205">
+                    <FormItem :label='$t("VIDEO.MASTER_PLAYLIST_FILE_NAME_SUFFIX")' prop="name" >
+                        <Input v-model="transcode.master_playlist.name" placeholder="MasterPlaylist" class="line-width"></Input>
+                    </FormItem>
+                </Form>
             </div>
         </div>
         <div class="separator-line"></div>
@@ -155,64 +160,72 @@
             <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
         </div>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="edit-modal">
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.TRANSCODING_TEMPLATE')}} : </span>
-                <Select v-model="outputModal.preset_id" class="line-width" @on-change="templateChange">
-                    <Option v-for="template in templateList" :value="template.Id" :key="template.Id">{{template.Name}}</Option>
-                </Select>
-            </div>
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
-                <Input v-model="outputModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' class="line-width"></Input>
-            </div>
-            <div class="form-item" v-if="HLSShow" >
-                <span class="form-label">{{$t('VIDEO.HLS_SLICE_LENGTH')}} : </span>
-                <Slider v-model="outputModal.segment_duration" :min='0' :max='50' class="my-slider"></Slider>
-                <InputNumber :min='0' :max='50' v-model="outputModal.segment_duration"></InputNumber>
-                <p class="style-name-info redFont" v-if="outputsDisabled">{{$t('VIDEO.HLS_SLICE_LENGTH_CANNOT_BE_0')}}</p>
-            </div>
+            <Form ref="outputForm" :model="outputModal" :label-width="155" :rules="ruleValidate">
+                <FormItem :label="$t('VIDEO.TRANSCODING_TEMPLATE')" prop="preset_id">
+                    <Select v-model="outputModal.preset_id" class="line-width" @on-change="templateChange">
+                        <Option v-for="template in templateList" :value="template.Id" :key="template.Id">{{template.Name}}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem :label="$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')" prop="key_suffix">
+                    <Input v-model="outputModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' class="line-width"></Input>
+                </FormItem>
+                <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH')" prop="segment_duration" v-if="HLSShow">
+                    <Slider v-model="outputModal.segment_duration" :min='0' :max='50' class="my-slider" show-input></Slider>
+                    <!-- <InputNumber :min='0' :max='50' v-model="outputModal.segment_duration"></InputNumber> -->
+                </FormItem>
+            </Form>
             <div style="height:90px;"></div>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="updateOutputs" :disabled="outputsDisabled">{{$t('VIDEO.OK')}}</Button>
+                <Button type="primary" @click="beforeUpdateOutputs">{{$t('VIDEO.OK')}}</Button>
             </div>
         </Modal>
         <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="edit-modal">
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
-                <Input v-model="shotModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
-                <Select v-model="shotModal.format" style="width:100px;display:inline-block">
-                    <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
-                </Select>
-            </div>
-            <div class="form-item">
-                <span class="form-label required-item">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
-                <InputNumber :min='1' v-model="shotModal.time"></InputNumber> S
-            </div>
-           <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.SCREENSHOT_INTERVAL')}} : </span>
-                <InputNumber :min='1' v-model="shotModal.interval"></InputNumber> S
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.SCREENSHOT_MAX_NUMBER')}} : </span>
-                <InputNumber :min='1' v-model="shotModal.number"></InputNumber>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
-                <Radio-group v-model="shotModal.resolution">
-                    <Radio label="auto">{{$t('VIDEO.WH_UNALTERED')}}</Radio>
-                    <Radio label="value"></Radio>
-                </Radio-group>
-                <InputNumber :min='1' v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
-                <InputNumber :min='1' v-model="shotModal.height" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
-            </div>
-            <div class="form-item">
-                <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
-                <Radio-group v-model="shotModal.aspect_ratio">
-                    <Radio v-for='asp in aspectRatioList' :key="asp.value" :label='asp.value'>{{asp.name}}</Radio>
-                </Radio-group>
-            </div>
+            <Form ref="shotsForm" :model="shotModal" :label-width="0" :rules="ruleValidate" inline>
+                <div class="form-item mar-bot-0">
+                    <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
+                    <FormItem prop="key_suffix" required>
+                        <Input v-model="shotModal.key_suffix" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
+                    </FormItem>
+                    <Select v-model="shotModal.format" style="width:100px;display:inline-block">
+                        <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
+                    </Select>
+                </div>
+                <div class="form-item mar-bot-0">
+                    <span class="form-label required-item">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
+                    <FormItem prop="time">
+                        <InputNumber v-model="shotModal.time"></InputNumber> S
+                    </FormItem>
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.SCREENSHOT_INTERVAL')}} : </span>
+                    <InputNumber :min='1' v-model="shotModal.interval"></InputNumber> S
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.SCREENSHOT_MAX_NUMBER')}} : </span>
+                    <InputNumber :min='1' v-model="shotModal.number"></InputNumber>
+                </div>
+                <div class="form-item mar-bot-0">
+                    <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
+                    <Radio-group v-model="shotModal.resolution">
+                        <Radio label="auto">{{$t('VIDEO.WH_UNALTERED')}}</Radio>
+                        <Radio label="value"></Radio>
+                    </Radio-group>
+                    <FormItem prop="width">
+                        <InputNumber v-model="shotModal.width" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
+                    </FormItem>
+                    <FormItem prop="height">
+                        <InputNumber v-model="shotModal.height" :disabled="shotModal.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
+                    </FormItem>
+                </div>
+                <div class="form-item">
+                    <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
+                    <Radio-group v-model="shotModal.aspect_ratio">
+                        <Radio v-for='asp in aspectRatioList' :key="asp.value" :label='asp.value'>{{asp.name}}</Radio>
+                    </Radio-group>
+                </div>
+            </Form>
             <div slot="footer" class="copy-modal-footer">
-                <Button type="primary" @click="updateShots">{{$t('VIDEO.OK')}}</Button>
+                <Button type="primary" @click="beforeUpdateShots">{{$t('VIDEO.OK')}}===</Button>
             </div>
         </Modal>
     </div>
@@ -244,6 +257,32 @@ export default {
             templateContainer: {},
             templateName: {},
             HLSError: false,
+            ruleValidate: {
+                regular: [
+                    { validator: this.validateRegular, trigger: 'change' }
+                ],
+                name: [
+                    { validator: this.validateName, trigger: 'change' }
+                ],
+                preset_id: [
+                    { required: true, message: this.$t('VIDEO.PERSET_REQUIRED'), trigger: 'change' }
+                ],
+                key_suffix: [
+                    { required: true, message: this.$t('VIDEO.KEY_SUFFIX_REQUIRED'), trigger: 'change' }
+                ],
+                segment_duration: [
+                    { validator: this.validateSegment, trigger: 'blur' }
+                ],
+                time: [
+                    { type: 'number', min: 1, trigger: 'change' }
+                ],
+                width: [
+                    { validator: this.validateWidth, trigger: 'change' }
+                ],
+                height: [
+                    { validator: this.validateWidth, trigger: 'change' }
+                ]
+            },
             outputsHeader: [{
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX'),
                 key: 'key_suffix',
@@ -414,20 +453,6 @@ export default {
                 }
             }
         },
-        outputsDisabled () {
-            return this.isTS(this.outputModal.preset_id) && this.outputModal.segment_duration === 0 && this.auxiliary.MP
-        },
-        regError () {
-            try {
-                new RegExp(this.auxiliary.regular)
-            } catch (error) {
-                return true
-            }
-            return false
-        },
-        MPNameError () {
-            return this.auxiliary.MP && !this.transcode.master_playlist.name
-        },
         osError () {
             return this.transcode.snapshots.length === 0 && this.transcode.outputs.length === 0
         }
@@ -481,14 +506,16 @@ export default {
             this.showOutputsModal = true
             this.HLSError = false
         },
+        beforeUpdateOutputs () {
+            this.$refs['outputForm'].validate((valid) => {
+                if (!valid) {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                } else {
+                    this.updateOutputs()
+                }
+            })
+        },
         updateOutputs () {
-            if (!this.outputModal.preset_id) {
-                this.$Message.warning(this.$t('VIDEO.OUTPUTEMPLATE_REQUIRED'))
-                return
-            } else if (this.outputModal.key_suffix.length < 1) {
-                this.$Message.warning(this.$t('VIDEO.OUTPUTKEY_SUFFIX_REQUIRED'))
-                return
-            }
             const ln = this.transcode.outputs.length
             this.outputModal.template = `${this.outputModal.preset_id}+${this.templateName[this.outputModal.preset_id]}`
             if (this.outputIndex === ln) {
@@ -506,12 +533,16 @@ export default {
             this.shotIndex = this.transcode.snapshots.length
             this.showShotsModal = true
         },
+        beforeUpdateShots () {
+            this.$refs['shotsForm'].validate((valid) => {
+                if (!valid) {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                } else {
+                    this.updateShots()
+                }
+            })
+        },
         updateShots () {
-            if (this.shotModal.key_suffix.length < 1) {
-                this.$Message.warning(this.$t('VIDEO.OUTPUTKEY_SUFFIX_REQUIRED'))
-                return
-            }
-
             const ln = this.transcode.snapshots.length
             let data = _.clone(this.shotModal)
             if (data.resolution !== 'auto') {
@@ -540,14 +571,33 @@ export default {
             this.transcode.snapshots.splice(index, 1)
         },
         beforeSubmit () {
+            this.$refs['auxiliaryForm'].validate((valid) => {
+                if (!valid) {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                } else {
+                    if (this.auxiliary.MP) {
+                        this.$refs['nameForm'].validate((valid) => {
+                            if (!valid) {
+                                this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                            } else {
+                                if (this.otherRule()) {
+                                    this.addTranscode()
+                                }
+                            }
+                        })
+                    } else {
+                        if (this.otherRule()) {
+                            this.addTranscode()
+                        }
+                    }
+                }
+            })
+        },
+        otherRule () {
             let segments = []
-            if (this.regError) {
-                this.$Message.warning(this.$t('VIDEO.REG_ERROR'))
-                return
-            }
-            if (this.regError) {
-                this.$Message.warning(this.$t('VIDEO.ADAPTIVE_EXIST_TS_FORMAT'))
-                return
+            if (this.osError) {
+                this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                return false
             }
             if (this.auxiliary.MP) {
                 this.transcode.outputs.forEach(item => {
@@ -556,33 +606,22 @@ export default {
                     }
                 })
                 if (segments.length === 0) {
-                    this.$Message.warning(this.$t('VIDEO.ADAPTIVE_EXIST_TS_FORMAT'))
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                     this.HLSError = true
-                    return
+                    return false
                 }
                 const unified = segments.filter(seg => parseInt(seg) === parseInt(segments[0]))
                 if (unified.length !== segments.length) {
-                    this.$Message.warning(this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT'))
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                     this.HLSError = true
-                    return
+                    return false
                 } else if (segments[0] === 0) {
-                    this.$Message.warning(this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0'))
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                     this.HLSError = true
-                    return
-                }
-
-                if (this.MPNameError) {
-                    this.$Message.warning(this.$t('VIDEO.MP_NAME_ERROR'))
-                    return
+                    return false
                 }
             }
-
-            if (this.osError) {
-                this.$Message.warning(this.$t('VIDEO.AT_LEAST_ONE_RULE'))
-                return
-            }
-
-            this.addTranscode()
+            return true
         },
         async addTranscode () {
             if (this.id === 'none') {
@@ -762,8 +801,52 @@ export default {
                     this.userACLList.push(item)
                 }
             })
+        },
+        validateRegular (rule, value, callback) {
+            if (isREG(value)) {
+                callback(new Error(this.$t('VIDEO.EXPRESSION_INCORRECT')))
+            } else {
+                callback()
+            }
+        },
+        validateName (rule, value, callback) {
+            if (!value && this.auxiliary.MP) {
+                callback(new Error(this.$t('VIDEO.FILE_NAME_SUFFIX_CANNOT_EMPTY')))
+            } else {
+                callback()
+            }
+        },
+        validateSegment (rule, value, callback) {
+            if (this.isTS(this.outputModal.preset_id) && this.auxiliary.MP && value === 0) {
+                callback(new Error(this.$t('VIDEO.HLS_SLICE_LENGTH_CANNOT_BE_0')))
+            } else {
+                callback()
+            }
+        },
+        validateWidth (rule, value, callback) {
+            if (this.shotModal.resolution !== 'auto') {
+                if (!Number.isInteger(value)) {
+                    callback(new Error(this.$t('PUBLIC.NUM_PLEASE')))
+                } else {
+                    if (value < 1) {
+                        callback(new Error(this.$t('PUBLIC.NOT_LESS', {num: '1'})))
+                    } else {
+                        callback()
+                    }
+                }
+            } else {
+                callback()
+            }
         }
     }
+}
+const isREG = (vlaue) => {
+    try {
+        new RegExp(vlaue)
+    } catch (error) {
+        return true
+    }
+    return false
 }
 const groupGrantee = ['AllUsers', 'AuthenticatedUsers']
 

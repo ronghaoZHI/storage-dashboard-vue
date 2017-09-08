@@ -377,6 +377,8 @@ export const messages = {
         },
         VIDEO: {
             TEMPLATE_NAME_REQUIRED: 'Please enter a template name',
+            PERSET_REQUIRED: 'Please select a template',
+            KEY_SUFFIX_REQUIRED: 'Please enter a file name suffix',
             NEW_TEMPLATE: 'New template',
             ENCODING: 'Encoding',
             CODING_PROFILE: 'Coding profile',
@@ -994,6 +996,8 @@ export const messages = {
         },
         VIDEO: {
             TEMPLATE_NAME_REQUIRED: '请输入模版名名称',
+            PERSET_REQUIRED: '请选择转码模版',
+            KEY_SUFFIX_REQUIRED: '请输入输出文件名后缀',
             NEW_TEMPLATE: '新建模板',
             ENCODING: '编码方式',
             CODING_PROFILE: '编码Profile',

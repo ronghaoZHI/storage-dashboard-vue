@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <FormItem :label='$t("VIDEO.TEMPLATE_NAME")' prop="Name">
+                    <FormItem :label='$t("VIDEO.TEMPLATE_NAME")' prop="Name" required>
                         <Input v-model="template.Name" :placeholder='$t("VIDEO.TEMPLATE_NAME")' class="line-width"></Input>
                     </FormItem>
                 </div>
@@ -176,8 +176,7 @@ export default {
             audioChannelsList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1', value: '1'}, {name: '2', value: '2'}, {name: '3', value: '3'}, {name: '4', value: '4'}, {name: '5', value: '5'}, {name: '6', value: '6'}, {name: '7', value: '7'}, {name: '8', value: '8'}, {name: '9', value: '9'}, {name: '10', value: '10'}, {name: '11', value: '11'}, {name: '12', value: '12'}, {name: '13', value: '13'}, {name: '14', value: '14'}, {name: '15', value: '15'}, {name: '16', value: '16'}],
             ruleValidate: {
                 Name: [
-                    { validator: this.validateName, trigger: 'change' },
-                    { type: 'string', max: 20, message: this.$t('VIDEO.'), trigger: 'change' }
+                    { validator: this.validateName, trigger: 'change' }
                 ],
                 Description: [
                     { validator: this.validateDiscription, trigger: 'change' }
@@ -202,13 +201,17 @@ export default {
                 if (!valid) {
                     this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                 } else {
-                    this.$refs['videoValidate'].validate((valid) => {
-                        if (!valid) {
-                            this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
-                        } else {
-                            this.createPreset()
-                        }
-                    })
+                    if (this.template.Video.FixedGOP) {
+                        this.$refs['videoValidate'].validate((valid) => {
+                            if (!valid) {
+                                this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                            } else {
+                                this.createPreset()
+                            }
+                        })
+                    } else {
+                        this.createPreset()
+                    }
                 }
             })
         },
