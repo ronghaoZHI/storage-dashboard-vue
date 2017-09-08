@@ -39,11 +39,10 @@
             </div>
         </Modal>
         <Modal v-model="createFolderModal" :title='$t("STORAGE.ADD_FOLDER")' @on-ok="addFolder" @on-cancel="createFolderValue = ''">
-            <Input v-model="createFolderValue" @on-change="check" :placeholder='$t("STORAGE.FOLDER_PLACEHOLDER")'></Input>
-            <span class="info-input-error">{{inputCheck ? $t("STORAGE.FOLDER_CHECKINFO") : ''}}</span>
+            <Input v-model="createFolderValue" :placeholder='$t("STORAGE.FOLDER_PLACEHOLDER")'></Input>
         </Modal>
         <Modal v-model="renameModal" :title='$t("STORAGE.RENAME")' @on-ok="rename" @on-cancel="renameKey = ''">
-            <Input v-model="renameKey" @on-change="check" :placeholder='$t("STORAGE.RENAME_PLACEHOLDER")'></Input>
+            <Input v-model="renameKey" :placeholder='$t("STORAGE.RENAME_PLACEHOLDER")'></Input>
         </Modal>
         <Modal v-model="showImageModal" :title='selectedFileKey || $t("STORAGE.NO_TITLE")'  width="900">
             <div class="section-img">
@@ -201,6 +200,7 @@ export default {
                             on: {
                                 click: () => {
                                     this.selectedFileKey = params.row.Key
+                                    this.renameKey = params.row.Key
                                     this.renameModal = true
                                 }
                             }
@@ -545,9 +545,6 @@ export default {
             } else {
                 this.canUpload = true
             }
-        },
-        check () {
-            this.inputCheck = !this.createFolderValue.length > 0
         },
         select (selection) {
             this.selectedFileList = selection

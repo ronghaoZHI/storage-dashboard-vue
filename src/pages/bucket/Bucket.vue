@@ -14,8 +14,8 @@
             </div>
             <Spin size="bigger" fix v-if="spinShow"></Spin>
         </div>
-        <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="createBucketValue = ''">
-            <Input v-model="createBucketValue" @on-change="check" :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")' pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/">
+        <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="inputCheck=false;createBucketValue = ''">
+            <Input v-model="createBucketValue" autofocus :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")' pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/">
             </Input>
             <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
         </Modal>
@@ -131,9 +131,6 @@ export default {
                 this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
             }
         },
-        check () {
-            this.inputCheck = !this.createBucketValue.length > 2
-        },
         dbClick (item) {
             this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
         },
@@ -147,6 +144,11 @@ export default {
                 this.$Message.error(this.$t('STORAGE.GET_ADULT_FAILED'))
             }
             return polify
+        }
+    },
+    watch: {
+        'createBucketValue' (to, from) {
+            this.inputCheck = !(to.length > 3)
         }
     }
 }
