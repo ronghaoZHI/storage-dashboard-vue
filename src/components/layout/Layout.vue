@@ -58,7 +58,7 @@ export default {
 
 .layout-content {
     flex: 1;
-    padding: 20px;
+    padding: 16px;
     background: #fff;
     border-radius: 4px;
     margin-top: 60px;

@@ -3272,12 +3272,12 @@ istanbul@^0.4.0:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
-iview-bsc@^2.1.6:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/iview-bsc/-/iview-bsc-2.1.6.tgz#096e076e8c602a59bd96d018767e14f755dfdd09"
+iview-bsc@^2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/iview-bsc/-/iview-bsc-2.1.8.tgz#e3cda1ff75c0fce1b6687aa4a4f01d0c6bda60ab"
   dependencies:
     async-validator "^1.7.1"
-    core-js "^2.4.1"
+    core-js "^2.5.0"
     deepmerge "^1.5.0"
     popper.js "^0.6.4"
     tinycolor2 "^1.4.1"

@@ -1,5 +1,10 @@
 import Vue from 'vue'
 const bytes = (bytes, digit = 1) => {
+    let bytesArray = bytesSpliteUnits(bytes, digit = 1)
+
+    return bytesArray[0] + ' ' + bytesArray[1]
+}
+const bytesSpliteUnits = (bytes, digit = 1) => {
     if (typeof bytes !== 'number') {
         bytes = parseFloat(bytes)
     }
@@ -14,7 +19,7 @@ const bytes = (bytes, digit = 1) => {
     const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
     const number = (bytes / Math.pow(1024, Math.floor(exponent))).toFixed(digit)
 
-    return number + ' ' + units[exponent]
+    return [number, units[exponent]]
 }
 const times = (times) => {
     times = typeof (times) === 'string' ? times : times.toString()
@@ -36,6 +41,18 @@ const timesK = (times) => {
         return '-'
     } else {
         return (times / 1000).toFixed(1) + 'K'
+    }
+}
+const timesSpliteUnits = (times) => {
+    if (typeof times !== 'number') {
+        times = parseFloat(times)
+    }
+    if (times < 1000) {
+        return [times]
+    } else if (isNaN(times) || !isFinite(times)) {
+        return ['-']
+    } else {
+        return [(times / 1000).toFixed(1), 'K']
     }
 }
 const date = (value) => {
@@ -112,4 +129,4 @@ const Utf8ArrayToStr = array => {
     }
     return out
 }
-export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr }
+export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits }
