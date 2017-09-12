@@ -1,8 +1,10 @@
 <template>
-    <div>
-        <div class="layout-bsc-toolbar">
+    <div class="bsc-dashboard">
+        <Spin size="bigger" fix v-if="spinShow"></Spin>
+        <div class="toolbar">
             <div class="button-datepicker">
-                <Select v-model="bucket" style="width:40%;float:left;margin-right:16px;" @on-change="getInitData">
+                <Select :prepend="true" v-model="bucket" style="width:40%;float:left;margin-right:16px;" @on-change="getInitData">
+                    <p slot="prepend" style="font-size:12px">数据</p>
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
                 <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 50%;float:left;"></Date-picker>
@@ -16,85 +18,84 @@
                 </Button-group>
             </div>
         </div>
-        <div class="section-separator visible-dashboard-separator">
-            <div class="separator-body">
-                <span class="separator-icon"></span>
-                <span class="separator-info">Overview</span>
-            </div>
-        </div>
-        <div class="section-overview">
-            <div>
-                <p><span class="big-blue">{{convertData(originOverview.capacity ) }}</span></p>
-                <p class="info">
-                    <span>{{ $t("DASHBOARD.CAPACITY_ALL")}}</span>
-                    <span><Icon type="ios-help"></Icon></span>
-                    <Tooltip placement="right" class="relative-tooltip">
-                        <span class="hidden"><Icon type="ios-help"></Icon></span>
-                        <div slot="content">
-                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.CAPACITY_ALL_INFO")}}</p>
+        <div class="overview">
+            <Row>
+                <Col span="7" class="capacity-traffic">
+                    <div class="capacity">
+                        <Tooltip :content='$t("DASHBOARD.CAPACITY_ALL_INFO")'>
+                            <div class="content">
+                                <span>{{originOverview.capacity && originOverview.capacity[0]}}</span>
+                                <span>{{originOverview.capacity && originOverview.capacity[1]}}</span>
+                                <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help"></Icon></p>
+                            </div>
+                        </Tooltip>
+                    </div>
+                    <div class="traffic">
+                        <div class="upload-traffic">
+                            <Tooltip :content='$t("DASHBOARD.UPLOAD_SPACE_ALL_INFO")'>
+                                <div class="content">
+                                    <span>{{originOverview.upload_space && originOverview.upload_space[0]}}</span>
+                                    <span>{{originOverview.upload_space && originOverview.upload_space[1]}}</span>
+                                    <p>{{ $t("DASHBOARD.UPLOAD_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                                </div>
+                            </Tooltip>
                         </div>
-                    </Tooltip>
-                </p>
-            </div>
-            <div>
-                <p><span class="big-blue">{{convertData(originOverview.upload_space)}}</span></p>
-                <p class="info">
-                    <span>{{ $t("DASHBOARD.UPLOAD_SPACE_ALL")}}</span>
-                    <span><Icon type="ios-help"></Icon></span>
-                    <Tooltip placement="bottom" class="relative-tooltip">
-                        <span class="hidden"><Icon type="ios-help"></Icon></span>
-                        <div slot="content">
-                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.UPLOAD_SPACE_ALL_INFO")}}</p>
+                        <div class="download-traffic">
+                            <Tooltip :content='$t("DASHBOARD.DOWNLOAD_SPACE_ALL_INFO")'>
+                                <div class="content">
+                                    <span>{{originOverview.download_space && originOverview.download_space[0]}}</span>
+                                    <span>{{originOverview.download_space && originOverview.download_space[1]}}</span>
+                                    <p>{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                                </div>
+                            </Tooltip>
                         </div>
-                    </Tooltip>
-                </p>
-            </div>
-            <div>
-                <p><span class="big-blue">{{convertData(originOverview.download_space)}}</span></p>
-                <p class="info">
-                    <span>{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL")}}</span>
-                    <span><Icon type="ios-help"></Icon></span>
-                    <Tooltip placement="bottom" class="relative-tooltip">
-                        <span class="hidden"><Icon type="ios-help"></Icon></span>
-                        <div slot="content">
-                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL_INFO")}}</p>
+                    </div>
+                </Col>
+                <Col span="17">
+                    <div class="view-card">
+                        <div>
+                            <img src="../../assets/dashboard/read.png" alt="download_count">
+                            <Tooltip :content='$t("DASHBOARD.DOWNLOAD_COUNT_ALL_INFO")'>
+                                <div class="content">
+                                    <span>{{originOverview.download_count && originOverview.download_count[0]}}</span>
+                                    <span>{{originOverview.download_count && originOverview.download_count[1]}}</span>
+                                    <p>{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
+                                </div>
+                            </Tooltip>
                         </div>
-                    </Tooltip>
-                </p>
-            </div>
-            <div>
-                <p><span class="big-blue">{{convertData(originOverview.download_count)}}</span></p>
-                <p class="info">
-                    <span>{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL")}}</span>
-                    <span><Icon type="ios-help"></Icon></span>
-                    <Tooltip placement="bottom" class="relative-tooltip">
-                        <span class="hidden"><Icon type="ios-help"></Icon></span>
-                        <div slot="content">
-                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL_INFO")}}</p>
+                        <div>
+                            <img src="../../assets/dashboard/write.png" alt="upload_count">
+                            <Tooltip :content='$t("DASHBOARD.UPLOAD_COUNT_ALL_INFO")'>
+                                <div class="content">
+                                    <span>{{originOverview.upload_count && originOverview.upload_count[0]}}</span>
+                                    <span>{{originOverview.upload_count && originOverview.upload_count[1]}}</span>
+                                    <p>{{ $t("DASHBOARD.UPLOAD_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
+                                </div>
+                            </Tooltip>
                         </div>
-                    </Tooltip>
-                </p>
-            </div>
-            <div>
-                <p><span class="big-blue">{{convertData(originOverview.upload_count)}}</span></p>
-                <p class="info">
-                    <span>{{ $t("DASHBOARD.UPLOAD_COUNT_ALL")}}</span>
-                    <span><Icon type="ios-help"></Icon></span>
-                    <Tooltip placement="left" class="relative-tooltip">
-                        <span class="hidden"><Icon type="ios-help"></Icon></span>
-                        <div slot="content">
-                            <p style="white-space: normal !important;">{{ $t("DASHBOARD.UPLOAD_COUNT_ALL_INFO")}}</p>
+                        <div>
+                            <img src="../../assets/dashboard/delete-request.png" alt="delete_count">
+                            <Tooltip :content='$t("DASHBOARD.DELETE_COUNT_ALL_INFO")'>
+                                <div class="content">
+                                    <span>{{originOverview.delete_count && originOverview.delete_count[0]}}</span>
+                                    <span>{{originOverview.delete_count && originOverview.delete_count[1]}}</span>
+                                    <p>{{ $t("DASHBOARD.DELETE_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
+                                </div>
+                            </Tooltip>
                         </div>
-                    </Tooltip>
-                </p>
-            </div>
-        </div>
-        <div class="section-separator">
-            <div class="separator-body">
-                <span class="separator-icon"></span>
-                <span class="separator-info">Data charts</span>
-            </div>
-            <Button @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
+                        <div>
+                            <img src="../../assets/dashboard/delete-traffic.png" alt="delete_space">
+                            <Tooltip :content='$t("DASHBOARD.DELETE_SPACE_ALL_INFO")'>
+                                <div class="content">
+                                    <span>{{originOverview.delete_space && originOverview.delete_space[0]}}</span>
+                                    <span>{{originOverview.delete_space && originOverview.delete_space[1]}}</span>
+                                    <p>{{ $t("DASHBOARD.DELETE_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                                </div>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">{{ $t("DASHBOARD.CAPACITY")}}</button>
@@ -140,7 +141,7 @@ import 'echarts/lib/component/title'
 import { getBucketList } from '@/service/Data'
 import { getAnalysisUrl } from '@/service/API'
 import user from '@/store/modules/user'
-import { bytes, times, timesK, date } from '@/service/bucketService'
+import { bytes, times, timesK, date, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
@@ -162,6 +163,7 @@ export default {
                 }
             },
             data: [],
+            spinShow: true,
             capacityOptions: lineOptions,
             uploadTrafficOptions: lineOptions,
             downloadTrafficOptions: lineOptions,
@@ -198,12 +200,21 @@ export default {
             }
         },
         async getInitData () {
+            this.spinShow = true
             if (!this.dateSelect) return
             this.showChart = 0
 
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
-                    this.originOverview = res.data
+                    this.originOverview = {
+                        capacity: this.convertData(res.data.capacity, true),
+                        upload_space: this.convertData(res.data.upload_space, true),
+                        download_space: this.convertData(res.data.download_space, true),
+                        delete_space: this.convertData(res.data.delete_space, true),
+                        upload_count: this.convertData(res.data.upload_count, true),
+                        download_count: this.convertData(res.data.download_count, true),
+                        delete_count: this.convertData(res.data.delete_count, true)
+                    }
                 }), this.$http.get((this.getApiURL('capacity'))).then(res => {
                     this.capacityData = res
                     this.capacityOptions = InitOptions(this.capacityData)
@@ -237,17 +248,19 @@ export default {
                             uploadCount: this.uploadCountData.data[index][1]
                         })
                     })
+                    this.spinShow = false
                 })
             } catch (error) {
                 console.log(error)
+                this.spinShow = false
                 this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
             }
         },
-        convertData (item) {
+        convertData (item, splite = false) {
             if (!item) {
                 return '000'
             }
-            return item.unit === 'byte' ? bytes(item.value) : times(item.value)
+            return splite ? item.unit === 'byte' ? bytesSpliteUnits(item.value) : timesSpliteUnits(item.value) : item.unit === 'byte' ? bytes(item.value) : times(item.value)
         },
         getApiURL (operation) {
             let path = operation
@@ -393,7 +406,7 @@ const InitOptions = data => {
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = '时间 : ' + date(params[0].value[0])
+                let res = 'Date : ' + date(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/>' + item.seriesName + ' : '
                     res += data.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
@@ -417,137 +430,289 @@ const chartReload = (data, chart) => {
 }
 </script>
 <style lang='less' scoped>
-.layout-bsc-toolbar {
-    margin-bottom:20px;
-    .button-datepicker {
-        width: 50%;
-    }
-    .button-daterange {
-        button {
-            margin: 0;
-            font-size:14px;
-            color:#475669;
-            height:30px;
-            background: #fff;
-            line-height: 16px;
-            border: 1px solid #d3dce6;
-            border-left:none;
-        }
-        button:first-child {
-            border-left: 1px solid #d3dce6;
-        }
-    }
-    button:focus,
-    .buttonFocus {
-        outline: 0;
-        background: #20a0ff !important;
-        border-color: #20a0ff;
-        color: #fff !important;
-    }
-}
+@import '../../styles/index.less';
 
-.section-overview {
-    width: 100%;
-    display: -webkit-flex;
-    display: flex;
-    padding: 15px 15px;
-    border-top: 1px solid #e5e9f2;
-    border-bottom: 1px solid #e5e9f2;
-    margin: 10px 0 20px 0;
-    height:120px;
-    &>div {
-        flex-grow: 1;
-        text-align: center;
-        border-right: 1px solid #e5e9f2;
-        padding: 5px;
-        height:92px;
-    }
-    &>div:nth-last-child(1) {
-        border-right: 0;
-    }
-    .big-blue {
-        font-size: 30px;
-        color: #20a0ff;
-        font-family: Arial, Helvetica, sans-serif
-    }
-    .info {
-        font-size: 14px;
-        color: #8492a6;
-    }
-}
+@overview-height: 180px;
 
-.section-chart-tab {
-    width: 100%;
-    height: 40px;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 10px;
-    border: 1px solid #d3dce6;
-    border-bottom:0;
-    button {
+.@{css-prefix}dashboard {
+    .toolbar {
+        margin-bottom: 16px;
+        height: 32px;
+
+        .button-datepicker {
+            width: 50%;
+        }
+
+        .button-daterange {
+            float: right;
+
+            button {
+                margin: 0;
+                font-size: 14px;
+                color: #475669;
+                height: 30px;
+                background: #fff;
+                line-height: 16px;
+                border: 1px solid #d3dce6;
+                border-left: none;
+            }
+            button:first-child {
+                border-left: 1px solid #d3dce6;
+            }
+        }
+
+        button:focus,
+        .buttonFocus {
+            outline: 0;
+            background: #20a0ff !important;
+            border-color: #20a0ff;
+            color: #fff !important;
+        }
+    }
+
+    .overview {
+        border-top: @common-border;
+        height: @overview-height;
+
+        .capacity-traffic {
+            margin-top: 16px;
+            .fb(space-between, stretch, flex, column);
+            border: @common-border;
+
+            .capacity {
+                flex: 4;
+                background-image: url('../../assets/dashboard/capacity.png');
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+                border: 0;
+                color: #fff;
+                text-align: center;
+            }
+
+            .traffic {
+                flex: 3;
+
+                .upload-traffic,
+                .download-traffic {
+                    display: inline-block;
+                    @border: 2px;
+                    width: calc(~'50% - @{border}');
+                    text-align: center;
+                }
+
+                .upload-traffic {
+                    border-right: @common-border;
+                }
+            }
+        }
+
+        .view-card {
+            margin-top: 16px;
+            margin-left: 16px;
+            border: @common-border;
+
+            &>div {
+                display: inline-block;
+                @border: 3px;
+                width: calc(~'25% - @{border}');
+                text-align: center;
+                border-right: @common-border;
+
+                .bsc-tooltip {
+                    display: block;
+                }
+
+                .content {
+                    margin-top: 10px;
+                }
+            }
+
+            &>div:last-child {
+                border: 0;
+            }
+        }
+    }
+
+    .section-chart-tab {
         width: 100%;
-        height: 100%;
-        text-align: center;
-        vertical-align: middle;
-        -ms-touch-action: manipulation;
-        touch-action: manipulation;
-        cursor: pointer;
-        background-image: none;
-        border:none;
-        border-right: 1px solid #d3dce6;
-        border-bottom: 1px solid #d3dce6;
-        white-space: nowrap;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        font-size: 14px;
-        transform: translateZ(0);
-        transition: color .2s linear,background-color .2s linear;
-        color: #a1acb5;
-        background-color: #f9fafc;
-    }
-    &>button:nth-last-child(1) {
-        border-right: 0;
-    }
-    button:focus,
-    .buttonFocus {
-        outline: 0;
-        background: #fff;
+        height: 40px;
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        margin-top: 16px;
+        border: 1px solid #d3dce6;
         border-bottom: 0;
-        color: #475669;
+        button {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            background-image: none;
+            border: none;
+            border-right: 1px solid #d3dce6;
+            border-bottom: 1px solid #d3dce6;
+            white-space: nowrap;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            font-size: 14px;
+            transform: translateZ(0);
+            transition: color .2s linear, background-color .2s linear;
+            color: #a1acb5;
+            background-color: #f9fafc;
+        }
+        &>button:nth-last-child(1) {
+            border-right: 0;
+        }
+        button:focus,
+        .buttonFocus {
+            outline: 0;
+            background: #fff;
+            border-bottom: 0;
+            color: #475669;
+        }
+    }
+
+    .card-chart {
+        width: 100%;
+        padding: 4px 4px 10px;
+        border: 1px solid #d3dce6;
+        border-top: 0;
+        margin-bottom: 16px;
+        transition: all .2s ease-in-out;
+        span {
+            display: inline-block;
+            margin-top: 10px;
+            margin-left: 10px;
+            font-size: 20px;
+        }
+        .echarts {
+            width: initial;
+            margin-left: 8px;
+        }
     }
 }
 
-.card-chart {
-    width: 100%;
-    padding: 4px 4px 10px;
-    border: 1px solid #d3dce6;
-    border-top:0;
-    margin-bottom: 16px;
-    transition: all .2s ease-in-out;
-    span {
-        display: inline-block;
-        margin-top: 10px;
-        margin-left: 10px;
-        font-size: 20px;
+@media(max-height:860px) {
+    .capacity-traffic {
+        height: @overview-height;
+
+        .capacity {
+            .content {
+                margin-top: 30px;
+
+                span:first-child {
+                    font: 26px bolder;
+                }
+
+                p {
+                    color: #fff;
+                }
+            }
+        }
+
+        .upload-traffic,
+        .download-traffic {
+            margin-top: 15px;
+        }
     }
-    .echarts {
-        width: initial;
-        margin-left: 8px;
+
+    .view-card {
+        height: @overview-height;
+
+        &>div {
+            margin-top: 40px;
+
+            img {
+                width: 32px;
+            }
+        }
+    }
+
+    .content {
+        text-align: center;
+
+        span:first-child {
+            font: 24px bolder;
+        }
+
+        span:nth-child(2) {
+            font: 14px bolder;
+        }
+
+        p {
+            color: #a1acb5;
+
+            i {
+                margin-left: 4px;
+            }
+        }
     }
 }
-.relative-tooltip{
-    margin-left:-15px;
-}
-.hidden{
-    visibility:hidden;
-}
-@media(max-height:840px){
-    .visible-dashboard-separator{
-        display:none;
+
+@media(min-height:860px) {
+    .capacity-traffic {
+        height: @overview-height * 1.5;
+
+        .capacity {
+            .content {
+                margin-top: 30px;
+
+                span:first-child {
+                    font: 36px bolder;
+                }
+
+                span:nth-child(2) {
+                    font: 20px bolder;
+                }
+
+                p {
+                    color: #fff;
+                }
+            }
+        }
+
+        .upload-traffic,
+        .download-traffic {
+            margin-top: 30px;
+        }
+    }
+
+    .view-card {
+        height: @overview-height * 1.5;
+
+        &>div {
+            margin-top: 60px;
+
+            img {
+                width: 72px;
+            }
+        }
+    }
+
+    .content {
+        text-align: center;
+
+        span:first-child {
+            font: 30px bolder;
+        }
+
+        span:nth-child(2) {
+            font: 16px bolder;
+        }
+
+        p {
+            color: #a1acb5;
+
+            i {
+                margin-left: 4px;
+            }
+        }
     }
 }
 </style>
