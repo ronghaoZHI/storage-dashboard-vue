@@ -1434,9 +1434,11 @@ const mark2Front = data => {
         border-radius: 5px;
         box-shadow: 0 0 0 2px rgba(237,63,20,.2);
     }
-    .red-border .section-file-upload:hover,
-    .red-border .section-file-upload {
-        border: none !important;
-    }
+}
+</style>
+<style lang="less">
+.red-border .bsc-upload .section-file-upload:hover,
+.red-border .bsc-upload .section-file-upload {
+    border: none !important;
 }
 </style>
