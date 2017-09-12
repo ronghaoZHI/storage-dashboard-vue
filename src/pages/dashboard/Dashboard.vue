@@ -3,13 +3,13 @@
         <Spin size="bigger" fix v-if="spinShow"></Spin>
         <div class="toolbar">
             <div class="button-datepicker">
-                <Select :prepend="true" v-model="bucket" style="width:40%;float:left;margin-right:16px;" @on-change="getInitData">
+                <Select :prepend="true" v-model="bucket" style="width:30%;float:left;margin-right:16px;" @on-change="getInitData">
                     <p slot="prepend" style="font-size:12px">数据</p>
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
-                <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 50%;float:left;"></Date-picker>
+                <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 40%;float:left;"></Date-picker>
+                <Button style="width:15%;float:left;margin-left:16px;" @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
             </div>
-    
             <div class="button-daterange">
                 <Button-group>
                     <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">{{ $t("DASHBOARD.SEVEN_DAYS")}}</Button>
@@ -440,7 +440,7 @@ const chartReload = (data, chart) => {
         height: 32px;
 
         .button-datepicker {
-            width: 50%;
+            width: 60%;
         }
 
         .button-daterange {
