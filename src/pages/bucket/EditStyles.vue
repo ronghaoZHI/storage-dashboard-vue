@@ -261,7 +261,7 @@
                                 <div v-if="mark.type == 'img'">
                                     <div class="form-item">
                                         <span class="form-label required-item">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
-                                        <div class="upload-box">
+                                        <div class="upload-box" :class="{'red-border': imgError}">
                                             <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" :checkFileType="true" :validateMessage="$t('STORAGE.WATER_PNG_VALID_INFO')" :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
                                         </div>
                                     </div><!--image-->
@@ -305,7 +305,7 @@
                             <div class="separator-line"></div>
                             <div class="form-item clearfix line-button">
                                 <div class="img-button">
-                                    <Button type="primary" @click="beforeBasicSubmit" :disabled="imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                    <Button type="primary" @click="beforeBasicSubmit">{{$t("PUBLIC.CONFIRMED")}}</Button>
                                 </div>
                             </div>
                         </Form>
@@ -504,7 +504,7 @@ export default {
             }
         },
         beforeBasicSubmit () {
-            if (this.padColorError || this.borderColorError || this.fontColorError || this.fontbackColorError) {
+            if (this.padColorError || this.borderColorError || this.fontColorError || this.fontbackColorError || this.imgError) {
                 this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
             } else {
                 this.$refs['basicForm'].validate((valid) => {
@@ -1198,6 +1198,7 @@ const mark2Front = data => {
                 width: 475px;
                 display: inline-block;
                 vertical-align: text-top;
+                outline:none;
             }
 
             .color-selector {
@@ -1427,6 +1428,15 @@ const mark2Front = data => {
     .color-error {
         border:1px solid #ed3f14 !important;
         box-shadow: 0 0 2px #ed3f14;
+    }
+    .red-border{
+        border: 1px dashed #ed3f14;
+        border-radius: 5px;
+        box-shadow: 0 0 0 2px rgba(237,63,20,.2);
+    }
+    .red-border .section-file-upload:hover,
+    .red-border .section-file-upload {
+        border: none !important;
     }
 }
 </style>
