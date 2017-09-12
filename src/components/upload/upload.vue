@@ -206,6 +206,11 @@
             font-size: 16px;
         }
 
+        p.upload-info {
+            padding-top: 10px;
+            font-size: 12px;
+        }
+
         .upload-area {
             padding: 50px 0px;
 
