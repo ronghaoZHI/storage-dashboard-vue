@@ -297,6 +297,10 @@ export const messages = {
             NO_LIST: 'No data',
             GET_DATA_ERROR: 'Get data error',
             COLOR_ERROR: 'Invalid color value',
+            RULENAME_EMPTY_INFO: 'Rule name is required',
+            COLOR_EMPTY_INFO: 'Please choose the color',
+            INS_REQUIRED: 'instructions is required',
+            RULENAME_EXISTS: 'The rule name already exists',
 
             TITLE: 'My Storage',
             FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
@@ -922,6 +926,10 @@ export const messages = {
             NO_LIST: '列表为空',
             GET_DATA_ERROR: '获取数据失败',
             COLOR_ERROR: '颜色值不合法',
+            RULENAME_EMPTY_INFO: '请输入规则名称',
+            COLOR_EMPTY_INFO: '请选择颜色',
+            INS_REQUIRED: '请输入处理参数',
+            RULENAME_EXISTS: '文件名已存在',
 
             TITLE: '我的存储',
             FILE_UPLOAD_LIM: '点击或拖拽上传',

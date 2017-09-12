@@ -20,289 +20,295 @@
                         </div>
                     </Col>
                     <Col span="16" class="page-right">
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
-                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' class="line-width"></Input>
-                            <p class="style-name-info" :class="{'redFont':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
-                        </div>
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.STYLE_CROP")}} : </span>
-                            <Radio-group v-model="general.crop" style='vertical-align: text-top'>
-                                <Radio label="noCrop">{{$t("STORAGE.CROP_NONE")}}</Radio>
-                                <Radio label="scale">{{$t("STORAGE.CROP_SCALE")}}</Radio>
-                                <Radio label="fit">{{$t("STORAGE.CROP_FIT")}}</Radio>
-                                <Radio label="fill">{{$t("STORAGE.CROP_FILL")}}</Radio>
-                                <p style='height: 10px;'></p>
-                                <Radio label="crop">{{$t("STORAGE.CROP_CROP")}}</Radio>
-                                <Radio label="thumb">{{$t("STORAGE.CROP_THUMB")}}</Radio>
-                                <Radio label="pad">{{$t("STORAGE.CROP_PAD")}}</Radio>
-                            </Radio-group>
-                        </div>
-                        <div class="form-item" v-if="general.crop === 'fit'">
-                            <Select v-model="general.fitType" class="sub-select">
-                                <Option v-for="item in fitList" :value="item.value" :key="item">{{ item.label }}</Option>
-                            </Select>
-                        </div>
-                        <div class="form-item" v-if="general.crop === 'pad'">
-                            <Select v-model="general.padType" class="sub-select" style="margin-right:8px">
-                                <Option v-for="item in padList" :value="item.value" :key="item">{{ item.label }}</Option>
-                            </Select>
-                            <div class="color-box" :class="{'color-error': padColorError}">
-                                <color-picker class="color-trigger" :parentColor="general.padColor" v-on:onChange="padColorChange"></color-picker>
-                                <input type='text' v-model="general.padColor" class="color-input">
-                            </div><!--padColor-->
-                        </div>
-                        <div class="form-item" v-if="general.crop === 'fill'">
-                            <Select v-model="general.fillType" class="sub-select">
-                                <Option v-for="item in fillList" :value="item.value" :key="item">{{ item.label }}</Option>
-                            </Select>
-                        </div>
-                        <div class="form-item" v-if="general.crop === 'thumb'">
-                            <Select v-model="general.thumbType" class="sub-select">
-                                <Option v-for="item in thumbList" :value="item.value" :key="item">{{ item.label }}</Option>
-                            </Select>
-                        </div><!--thumb gravity-->
-                        <div class="gravity-preview clearfix" v-if="general.crop === 'crop'">
-                            <div class="left">
-                                <div class="form-item">
-                                    <span class="form-label">{{$t('STORAGE.SELECT_LOCATION')}} : </span>
-                                    <Select v-model="general.gravity" style="width:265px">
-                                        <Option v-for="item in cropGravityList" :value="item.value" :key="item">{{ item.label }}</Option>
-                                    </Select>
-                                </div>
-                                <div class="form-item" v-if="general.gravity === 'xy_center' || general.gravity === 'noGravity'">
-                                    <div class="gravity-xy">
-                                        <span class="input-box-label">x : </span>
-                                        <div class="input-text-box">
-                                            <input type='number' v-model="general.x">
-                                            <span>px</span>
-                                        </div>
-                                        <span class="input-box-label">y : </span>
-                                        <div class="input-text-box">
-                                            <input type='number' v-model="general.y">
-                                            <span>px</span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <Form ref="basicForm" :model="this" :rules="ruleValidate" :label-width="0" inline>
+                            <div class="form-item mar-b-0">
+                                <span class="form-label required-item">{{$t("STORAGE.STYLE_NAME")}} : </span>
+                                <FormItem prop="transformation">
+                                    <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' class="line-width"></Input>
+                                </FormItem>
                             </div>
-                            <div :class="['right', gravityImg]"></div>
-                        </div><!--crop gravity & xy-->
-                        <div class="form-item" v-if="general.crop !== 'noCrop'">
-                            <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
-                            <Radio-group v-model="general.dataType">
-                                <Radio label="pixel">{{$t("STORAGE.PIXEL")}}(px)</Radio>
-                                <Radio label="percent">{{$t("STORAGE.PERCENT")}}(%)</Radio>
-                            </Radio-group>
-                            <span>W : </span>
-                            <div class="input-text-box">
-                                <input type='number' v-model.number="general.width">
-                                <span v-if="general.dataType === 'pixel'">px</span>
-                                <span v-else>%</span>
-                            </div>
-                            <span>H : </span>
-                            <div class="input-text-box">
-                                <input type='number' v-model.number="general.height">
-                                <span v-if="general.dataType === 'pixel'">px</span>
-                                <span v-else>%</span>
-                            </div>
-                        </div><!--width & height-->
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.STYLE_QUALITY")}} : </span>
-                            <Slider class="pic-slider" :min='1' v-model="general.quality"></Slider>
-                            <Input v-model="general.quality" class="slider-input" number></Input>
-                        </div><!--quality-->
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.STYLE_FORMAT")}} : </span>
-                            <Select v-model="general.format" class="line-width">
-                                <Option v-for="item in formatList" :value="item" :key="item">{{ item }}</Option>
-                            </Select>
-                        </div><!--format-->
-                        <div class="separator-line"></div>
-                        <div class="form-item">
-                            <Button type="ghost" @click="setMore = !setMore">{{$t("STORAGE.MORE_SET")}} <Icon type="chevron-down" v-if="!setMore"></Icon><Icon type="chevron-up" v-else></Icon></Button>
-                        </div>
-                        <div v-if="setMore">
                             <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.FLIP_MODE")}} : </span>
-                                <Radio-group v-model="general.angleType" style='vertical-align: text-top'>
-                                    <Radio v-for="item in angleList" :label="item.value" :key="item.value">{{item.label}}</Radio>
+                                <span class="form-label">{{$t("STORAGE.STYLE_CROP")}} : </span>
+                                <Radio-group v-model="general.crop" style='vertical-align: text-top'>
+                                    <Radio label="noCrop">{{$t("STORAGE.CROP_NONE")}}</Radio>
+                                    <Radio label="scale">{{$t("STORAGE.CROP_SCALE")}}</Radio>
+                                    <Radio label="fit">{{$t("STORAGE.CROP_FIT")}}</Radio>
+                                    <Radio label="fill">{{$t("STORAGE.CROP_FILL")}}</Radio>
+                                    <p style='height: 10px;'></p>
+                                    <Radio label="crop">{{$t("STORAGE.CROP_CROP")}}</Radio>
+                                    <Radio label="thumb">{{$t("STORAGE.CROP_THUMB")}}</Radio>
+                                    <Radio label="pad">{{$t("STORAGE.CROP_PAD")}}</Radio>
                                 </Radio-group>
-                            </div><!--angleType-->
-                            <div class="form-item" v-if="general.angleType === 'angle'">
-                                <span class="form-label">{{$t("STORAGE.ANGLE")}} : </span>
+                            </div>
+                            <div class="form-item" v-if="general.crop === 'fit'">
+                                <Select v-model="general.fitType" class="sub-select">
+                                    <Option v-for="item in fitList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                </Select>
+                            </div>
+                            <div class="form-item" v-if="general.crop === 'pad'">
+                                <Select v-model="general.padType" class="sub-select" style="margin-right:8px">
+                                    <Option v-for="item in padList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                </Select>
+                                <FormItem prop="general.padColor">
+                                    <div class="color-box" :class="{'color-error': padColorError}">
+                                        <color-picker class="color-trigger" :parentColor="general.padColor" v-on:onChange="padColorChange"></color-picker>
+                                        <input type='text' v-model="general.padColor" class="color-input">
+                                    </div><!--padColor-->
+                                </FormItem>
+                            </div>
+                            <div class="form-item" v-if="general.crop === 'fill'">
+                                <Select v-model="general.fillType" class="sub-select">
+                                    <Option v-for="item in fillList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                </Select>
+                            </div>
+                            <div class="form-item" v-if="general.crop === 'thumb'">
+                                <Select v-model="general.thumbType" class="sub-select">
+                                    <Option v-for="item in thumbList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                </Select>
+                            </div><!--thumb gravity-->
+                            <div class="gravity-preview clearfix" v-if="general.crop === 'crop'">
+                                <div class="left">
+                                    <div class="form-item">
+                                        <span class="form-label">{{$t('STORAGE.SELECT_LOCATION')}} : </span>
+                                        <Select v-model="general.gravity" style="width:265px">
+                                            <Option v-for="item in cropGravityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                        </Select>
+                                    </div>
+                                    <div class="form-item" v-if="general.gravity === 'xy_center' || general.gravity === 'noGravity'">
+                                        <div class="gravity-xy">
+                                            <span class="input-box-label">x : </span>
+                                            <div class="input-text-box">
+                                                <input type='number' v-model="general.x">
+                                                <span>px</span>
+                                            </div>
+                                            <span class="input-box-label">y : </span>
+                                            <div class="input-text-box">
+                                                <input type='number' v-model="general.y">
+                                                <span>px</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div :class="['right', gravityImg]"></div>
+                            </div><!--crop gravity & xy-->
+                            <div class="form-item" v-if="general.crop !== 'noCrop'">
+                                <span class="form-label">{{$t("STORAGE.FIT_STYLE")}} : </span>
+                                <Radio-group v-model="general.dataType">
+                                    <Radio label="pixel">{{$t("STORAGE.PIXEL")}}(px)</Radio>
+                                    <Radio label="percent">{{$t("STORAGE.PERCENT")}}(%)</Radio>
+                                </Radio-group>
+                                <span>W : </span>
                                 <div class="input-text-box">
-                                    <input type='number' v-model="general.angle">
-                                    <span>°</span>
+                                    <input type='number' v-model.number="general.width">
+                                    <span v-if="general.dataType === 'pixel'">px</span>
+                                    <span v-else>%</span>
                                 </div>
-                            </div><!--angle-->
+                                <span>H : </span>
+                                <div class="input-text-box">
+                                    <input type='number' v-model.number="general.height">
+                                    <span v-if="general.dataType === 'pixel'">px</span>
+                                    <span v-else>%</span>
+                                </div>
+                            </div><!--width & height-->
                             <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.FILTER_EFFECTS")}}</span>
-                                <div class="form-item-right">
-                                    <div class="effect-radio-box" v-for="item in effectList">
-                                        <input type='radio' :value="item.value" :name="item.value" :class="['effect-radio', item.value]" v-model="general.effect">
-                                        <label :for="item.value"><span class="effect-span-center">{{item.name}}</span></label>
-                                    </div>
-                                </div>
-                            </div><!--effect-->
-                            <div class="form-item" v-if="general.effect === 'brightness'">
-                                <span class="form-label">{{$t("STORAGE.BRIGHTNESS_VALUE")}} : </span>
-                                <Slider class="pic-slider" :min='-300' :max='300' v-model="general.brightnessValue"></Slider>
-                                <Input v-model="general.brightnessValue" class="slider-input" number></Input>
-                            </div><!--brightnessValue-->
-                            <div class="form-item" v-if="general.effect === 'blur'">
-                                <span class="form-label">{{$t("STORAGE.BLUR_VALUE")}} : </span>
-                                <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.blurValue"></Slider>
-                                <Input v-model="general.blurValue" class="slider-input" number></Input>
-                            </div><!--blurValue-->
-                            <div class="form-item" v-if="general.effect === 'sharpen'">
-                                <span class="form-label">{{$t("STORAGE.SHARPEN_VALUE")}} : </span>
-                                <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.sharpenValue"></Slider>
-                                <Input v-model="general.sharpenValue" class="slider-input" number></Input>
-                            </div><!--sharpenValue-->
-                            <div class="form-item" v-if="general.effect === 'oil_paint'">
-                                <span class="form-label">{{$t("STORAGE.OIL_VALUE")}}: </span>
-                                <Slider class="pic-slider mar-l15" :min='1' :max='8' v-model="general.oilValue"></Slider>
-                                <Input v-model="general.oilValue" class="slider-input" number></Input>
-                            </div><!--oilValue-->
-                            <div class="form-item" v-if="general.effect === 'color'">
-                                <span class="form-label">{{$t("STORAGE.COLOR")}} : </span>
-                                <div class="form-item-right">
-                                    <div class="effect-radio-box" v-for="item in colorList">
-                                        <input type='radio' :value="item.value" :name="item.value" :class="['effect-radio', item.value]" v-model="general.color">
-                                        <label :for="item.value"><span class="effect-span-center">{{item.name}}</span></label>
-                                    </div>
-                                </div>
-                            </div><!--color-->
-                            <div class="form-item" v-if="general.effect === 'color'">
-                                <span class="form-label">{{$t("STORAGE.COLOR_VALUE")}} : </span>
-                                <Slider class="pic-slider" :min='1' :max='100' v-model="general.colorValue"></Slider>
-                                <Input v-model="general.colorValue" class="slider-input" number></Input>
-                            </div><!--colorValue-->
-                            <div class="form-item" v-if="general.effect === 'pixelate'">
-                                <span class="form-label">{{$t("STORAGE.PX_VALUE")}} : </span>
-                                <Slider class="pic-slider" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
-                                <Input v-model="general.pixelateValue" class="slider-input"></Input>
-                            </div><!--pixelateValue-->
+                                <span class="form-label">{{$t("STORAGE.STYLE_QUALITY")}} : </span>
+                                <Slider class="pic-slider" :min='1' v-model="general.quality"></Slider>
+                                <Input v-model="general.quality" class="slider-input" number></Input>
+                            </div><!--quality-->
                             <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.BORDER")}} : </span>
-                                <i-switch v-model="general.border" size="large">
+                                <span class="form-label">{{$t("STORAGE.STYLE_FORMAT")}} : </span>
+                                <Select v-model="general.format" class="line-width">
+                                    <Option v-for="item in formatList" :value="item" :key="item.value">{{ item }}</Option>
+                                </Select>
+                            </div><!--format-->
+                            <div class="separator-line"></div>
+                            <div class="form-item">
+                                <Button type="ghost" @click="setMore = !setMore">{{$t("STORAGE.MORE_SET")}} <Icon type="chevron-down" v-if="!setMore"></Icon><Icon type="chevron-up" v-else></Icon></Button>
+                            </div>
+                            <div v-if="setMore">
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.FLIP_MODE")}} : </span>
+                                    <Radio-group v-model="general.angleType" style='vertical-align: text-top'>
+                                        <Radio v-for="item in angleList" :label="item.value" :key="item.value">{{item.label}}</Radio>
+                                    </Radio-group>
+                                </div><!--angleType-->
+                                <div class="form-item" v-if="general.angleType === 'angle'">
+                                    <span class="form-label">{{$t("STORAGE.ANGLE")}} : </span>
+                                    <div class="input-text-box">
+                                        <input type='number' v-model="general.angle">
+                                        <span>°</span>
+                                    </div>
+                                </div><!--angle-->
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.FILTER_EFFECTS")}}</span>
+                                    <div class="form-item-right">
+                                        <div class="effect-radio-box" v-for="item in effectList">
+                                            <input type='radio' :value="item.value" :name="item.value" :class="['effect-radio', item.value]" v-model="general.effect">
+                                            <label :for="item.value"><span class="effect-span-center">{{item.name}}</span></label>
+                                        </div>
+                                    </div>
+                                </div><!--effect-->
+                                <div class="form-item" v-if="general.effect === 'brightness'">
+                                    <span class="form-label">{{$t("STORAGE.BRIGHTNESS_VALUE")}} : </span>
+                                    <Slider class="pic-slider" :min='-300' :max='300' v-model="general.brightnessValue"></Slider>
+                                    <Input v-model="general.brightnessValue" class="slider-input" number></Input>
+                                </div><!--brightnessValue-->
+                                <div class="form-item" v-if="general.effect === 'blur'">
+                                    <span class="form-label">{{$t("STORAGE.BLUR_VALUE")}} : </span>
+                                    <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.blurValue"></Slider>
+                                    <Input v-model="general.blurValue" class="slider-input" number></Input>
+                                </div><!--blurValue-->
+                                <div class="form-item" v-if="general.effect === 'sharpen'">
+                                    <span class="form-label">{{$t("STORAGE.SHARPEN_VALUE")}} : </span>
+                                    <Slider class="pic-slider mar-l15" :min='1' :max='2000' v-model="general.sharpenValue"></Slider>
+                                    <Input v-model="general.sharpenValue" class="slider-input" number></Input>
+                                </div><!--sharpenValue-->
+                                <div class="form-item" v-if="general.effect === 'oil_paint'">
+                                    <span class="form-label">{{$t("STORAGE.OIL_VALUE")}}: </span>
+                                    <Slider class="pic-slider mar-l15" :min='1' :max='8' v-model="general.oilValue"></Slider>
+                                    <Input v-model="general.oilValue" class="slider-input" number></Input>
+                                </div><!--oilValue-->
+                                <div class="form-item" v-if="general.effect === 'color'">
+                                    <span class="form-label">{{$t("STORAGE.COLOR")}} : </span>
+                                    <div class="form-item-right">
+                                        <div class="effect-radio-box" v-for="item in colorList">
+                                            <input type='radio' :value="item.value" :name="item.value" :class="['effect-radio', item.value]" v-model="general.color">
+                                            <label :for="item.value"><span class="effect-span-center">{{item.name}}</span></label>
+                                        </div>
+                                    </div>
+                                </div><!--color-->
+                                <div class="form-item" v-if="general.effect === 'color'">
+                                    <span class="form-label">{{$t("STORAGE.COLOR_VALUE")}} : </span>
+                                    <Slider class="pic-slider" :min='1' :max='100' v-model="general.colorValue"></Slider>
+                                    <Input v-model="general.colorValue" class="slider-input" number></Input>
+                                </div><!--colorValue-->
+                                <div class="form-item" v-if="general.effect === 'pixelate'">
+                                    <span class="form-label">{{$t("STORAGE.PX_VALUE")}} : </span>
+                                    <Slider class="pic-slider" :min='1' :max='400' v-model="general.pixelateValue"></Slider>
+                                    <Input v-model="general.pixelateValue" class="slider-input"></Input>
+                                </div><!--pixelateValue-->
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.BORDER")}} : </span>
+                                    <i-switch v-model="general.border" size="large">
+                                        <span slot="open">{{$t("STORAGE.ON")}}</span>
+                                        <span slot="close">{{$t("STORAGE.OFF")}}</span>
+                                    </i-switch>
+                                    <div class="input-text-box" v-if="general.border">
+                                        <input type='number' v-model="general.borderSize">
+                                        <span>px</span>
+                                    </div><!--borderSize-->
+                                    <div class="color-box" :class="{'color-error': borderColorError}" v-if="general.border">
+                                        <color-picker class="color-trigger" :parentColor="general.borderColor" v-on:onChange="borderColorChange"></color-picker>
+                                        <input type='text' v-model="general.borderColor" class="color-input">
+                                    </div><!--borderColor-->
+                                </div><!--border-->
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.RADIUS")}} : </span>
+                                    <Slider class="pic-slider" :min='0' :max='1001' v-model="general.radius" :tip-format="radiusFormater"></Slider>
+                                    <Input v-model="radiusValue" class="slider-input" @on-change="radiusChange"></Input>
+                                </div><!--radius-->
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
+                                    <Slider class="pic-slider" v-model="general.opacity" :disabled="!isOpacity"></Slider>
+                                    <Input v-model="general.opacity" class="slider-input" number></Input>
+                                </div><!--opacity-->
+                            </div>
+                            <div class="separator-line"></div>
+                            <div class="form-item">
+                                <span class="form-label">{{$t("STORAGE.STYLE_WATERMARKER")}} : </span>
+                                <i-switch v-model="mark.open" size="large">
                                     <span slot="open">{{$t("STORAGE.ON")}}</span>
                                     <span slot="close">{{$t("STORAGE.OFF")}}</span>
                                 </i-switch>
-                                <div class="input-text-box" v-if="general.border">
-                                    <input type='number' v-model="general.borderSize">
-                                    <span>px</span>
-                                </div><!--borderSize-->
-                                <div class="color-box" :class="{'color-error': borderColorError}" v-if="general.border">
-                                    <color-picker class="color-trigger" :parentColor="general.borderColor" v-on:onChange="borderColorChange"></color-picker>
-                                    <input type='text' v-model="general.borderColor" class="color-input">
-                                </div><!--borderColor-->
-                            </div><!--border-->
-                            <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.RADIUS")}} : </span>
-                                <Slider class="pic-slider" :min='0' :max='1001' v-model="general.radius" :tip-format="radiusFormater"></Slider>
-                                <Input v-model="radiusValue" class="slider-input" @on-change="radiusChange"></Input>
-                            </div><!--radius-->
-                            <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
-                                <Slider class="pic-slider" v-model="general.opacity" :disabled="!isOpacity"></Slider>
-                                <Input v-model="general.opacity" class="slider-input" number></Input>
-                            </div><!--opacity-->
-                        </div>
-                        <div class="separator-line"></div>
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.STYLE_WATERMARKER")}} : </span>
-                            <i-switch v-model="mark.open" size="large">
-                                <span slot="open">{{$t("STORAGE.ON")}}</span>
-                                <span slot="close">{{$t("STORAGE.OFF")}}</span>
-                            </i-switch>
-                        </div><!--watermarkerOpen-->
-                        <div v-if="mark.open">
-                            <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.WATERMARKER_TYPE")}} : </span>
-                                <Radio-group v-model="mark.type">
-                                    <Radio label="text">{{$t("STORAGE.TEXT_WATERMARKER")}}</Radio>
-                                    <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
-                                </Radio-group>
-                            </div><!--watermarkerType-->
-                            <div v-if="mark.type == 'text'">
+                            </div><!--watermarkerOpen-->
+                            <div v-if="mark.open">
                                 <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
-                                    <Input v-model="mark.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
-                                    <p class="redFont style-name-info" v-if="textError">{{$t("STORAGE.TEXT_CONTENT_INFO")}}</p>
-                                </div><!--text-->
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
-                                    <Select v-model="fontStyle.font_family" style="width:135px;margin-right:10px;">
-                                        <Option v-for="item in fontList" :value="item.value" :key="item">{{ item.label }}</Option>
-                                    </Select><!--font_family-->
-                                    <div class="input-text-box">
-                                        <input type='number' v-model="fontStyle.font_size">
-                                        <span>px</span>
-                                    </div><!--font_size-->
-                                    <div class="color-box" :class="{'color-error': fontColorError}">
-                                        <color-picker class="color-trigger" :parentColor="fontStyle.font_color" v-on:onChange="fontColorChange"></color-picker>
-                                        <input type='text' v-model="fontStyle.font_color" class="color-input">
-                                    </div><!--fontColor-->
-                                </div>
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.BACKGROUBD")}} : </span>
-                                    <div class="color-box" :class="{'color-error': fontbackColorError}">
-                                        <color-picker class="color-trigger" :parentColor="fontStyle.background" v-on:onChange="fontbackColorChange"></color-picker>
-                                        <input type='text' v-model="fontStyle.background" class="color-input">
-                                    </div><!--fontColor-->
-                                </div><!--fontBack-->
-                            </div>
-                            <div v-if="mark.type == 'img'">
-                                <div class="form-item">
-                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
-                                    <div class="upload-box">
-                                        <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" :checkFileType="true" :validateMessage="$t('STORAGE.WATER_PNG_VALID_INFO')" :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
-                                    </div>
-                                </div><!--image-->
-                            </div>
-                            <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
-                                <div class="gravity-selector">
-                                    <input type="radio" value="north_west" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="north" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="north_east" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="west" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="center" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="east" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="south_west" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="south" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="south_east" v-model="mark.gravity"></Radio>
-                                </div>
-                                <div class="padding-setting">
+                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_TYPE")}} : </span>
+                                    <Radio-group v-model="mark.type">
+                                        <Radio label="text">{{$t("STORAGE.TEXT_WATERMARKER")}}</Radio>
+                                        <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
+                                    </Radio-group>
+                                </div><!--watermarkerType-->
+                                <div v-if="mark.type == 'text'">
+                                    <div class="form-item mar-b-0">
+                                        <span class="form-label required-item">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
+                                        <FormItem prop="mark.text">
+                                            <Input v-model="mark.text" :placeholder='$t("STORAGE.TEXT_CONTENT")' class="line-width"></Input>
+                                        </FormItem>
+                                    </div><!--text-->
                                     <div class="form-item">
-                                        <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
+                                        <span class="form-label">{{$t("STORAGE.TEXT_STYLE")}} : </span>
+                                        <Select v-model="fontStyle.font_family" style="width:135px;margin-right:10px;">
+                                            <Option v-for="item in fontList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                        </Select><!--font_family-->
                                         <div class="input-text-box">
-                                            <input type='number' v-model="mark.x">
+                                            <input type='number' v-model="fontStyle.font_size">
                                             <span>px</span>
-                                        </div>
+                                        </div><!--font_size-->
+                                        <div class="color-box" :class="{'color-error': fontColorError}">
+                                            <color-picker class="color-trigger" :parentColor="fontStyle.font_color" v-on:onChange="fontColorChange"></color-picker>
+                                            <input type='text' v-model="fontStyle.font_color" class="color-input">
+                                        </div><!--fontColor-->
                                     </div>
                                     <div class="form-item">
-                                        <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
-                                        <div class="input-text-box">
-                                            <input type='number' v-model="mark.y">
-                                            <span>px</span>
+                                        <span class="form-label">{{$t("STORAGE.BACKGROUBD")}} : </span>
+                                        <div class="color-box" :class="{'color-error': fontbackColorError}">
+                                            <color-picker class="color-trigger" :parentColor="fontStyle.background" v-on:onChange="fontbackColorChange"></color-picker>
+                                            <input type='text' v-model="fontStyle.background" class="color-input">
+                                        </div><!--fontColor-->
+                                    </div><!--fontBack-->
+                                </div>
+                                <div v-if="mark.type == 'img'">
+                                    <div class="form-item">
+                                        <span class="form-label required-item">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
+                                        <div class="upload-box">
+                                            <upload :bucket="bucket" :prefix="uploadPrefix" accept="image/png" :checkFileType="true" :validateMessage="$t('STORAGE.WATER_PNG_VALID_INFO')" :validation="uploadValidation" v-on:uploadSuccess="uploadSuccess"></upload>
+                                        </div>
+                                    </div><!--image-->
+                                </div>
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
+                                    <div class="gravity-selector">
+                                        <input type="radio" value="north_west" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="north" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="north_east" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="west" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="center" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="east" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="south_west" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="south" v-model="mark.gravity"></Radio>
+                                        <input type="radio" value="south_east" v-model="mark.gravity"></Radio>
+                                    </div>
+                                    <div class="padding-setting">
+                                        <div class="form-item">
+                                            <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
+                                            <div class="input-text-box">
+                                                <input type='number' v-model="mark.x">
+                                                <span>px</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-item">
+                                            <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
+                                            <div class="input-text-box">
+                                                <input type='number' v-model="mark.y">
+                                                <span>px</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div><!--location-->
-                            <div class="form-item">
-                                <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
-                                <Slider class="pic-slider" v-model="mark.opacity"></Slider>
-                                <Input v-model="mark.opacity" class="slider-input" number></Input>
-                            </div><!--opacity-->
-                        </div>
-                        <div class="separator-line"></div>
-                        <div class="form-item clearfix line-button">
-                            <div class="img-button">
-                                <Button type="primary" @click="beforeSubmit" :disabled="transformationError || textError || imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                </div><!--location-->
+                                <div class="form-item">
+                                    <span class="form-label">{{$t("STORAGE.OPACITY")}} : </span>
+                                    <Slider class="pic-slider" v-model="mark.opacity"></Slider>
+                                    <Input v-model="mark.opacity" class="slider-input" number></Input>
+                                </div><!--opacity-->
                             </div>
-                        </div>
+                            <div class="separator-line"></div>
+                            <div class="form-item clearfix line-button">
+                                <div class="img-button">
+                                    <Button type="primary" @click="beforeBasicSubmit" :disabled="imgError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                </div>
+                            </div>
+                        </Form>
                     </Col>
                 </Row>
             </Tab-pane>
@@ -318,24 +324,29 @@
                         </div>
                     </Col>
                     <Col span="16" class="page-right">
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.STYLE_NAME")}} : </span>
-                            <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 475px"></Input>
-                            <p class="style-name-info" :class="{'redFont':transformationError}">{{$t("STORAGE.RULENAME_INFO")}}</p>
-                        </div>
-                        <div class="form-item">
-                            <span class="form-label">{{$t("STORAGE.PROSCESS_PARAM")}} : </span>
-                            <Input v-model="instructions" type="textarea" :rows="6" :placeholder='$t("STORAGE.SENIOR_INFO")' style="width: 475px"></Input>
-                            <p class="style-name-info">{{$t("STORAGE.PIC_EXAMPLE")}}</p>
-                            <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
-                            <p class="style-name-info dis-inline">{{$t("STORAGE.PARA_DESC")}}</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">{{$t("STORAGE.SEE_COCUMENT")}}</a>
-                        </div>
-                        <div class="separator-line"></div>
-                        <div class="form-item clearfix line-button">
-                            <div class="img-button">
-                                <Button type="primary" @click="submitStyles" :disabled="transformationError">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                        <Form ref="seniorForm" :model="this" :rules="ruleValidate" :label-width="0" inline>
+                            <div class="form-item mar-b-0">
+                                <span class="form-label required-item">{{$t("STORAGE.STYLE_NAME")}} : </span>
+                                <FormItem prop="transformation">
+                                    <Input v-model="transformation" :placeholder='$t("STORAGE.STYLE_NAME")' style="width: 475px"></Input>
+                                </FormItem>
                             </div>
-                        </div>
+                            <div class="form-item">
+                                <span class="form-label required-item">{{$t("STORAGE.PROSCESS_PARAM")}} : </span>
+                                <FormItem prop="instructions">
+                                    <Input v-model="instructions" type="textarea" :rows="6" :placeholder='$t("STORAGE.SENIOR_INFO")' style="width: 475px"></Input>
+                                </FormItem>
+                                <p class="style-name-info">{{$t("STORAGE.PIC_EXAMPLE")}}</p>
+                                <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
+                                <p class="style-name-info dis-inline">{{$t("STORAGE.PARA_DESC")}}</p><a href="http://doc.bscstorage.com/doc/imgx/imgx_manual.html">{{$t("STORAGE.SEE_COCUMENT")}}</a>
+                            </div>
+                            <div class="separator-line"></div>
+                            <div class="form-item clearfix line-button">
+                                <div class="img-button">
+                                    <Button type="primary" @click="beforeSeniorSubmit">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                </div>
+                            </div>
+                        </Form>
                     </Col>
                 </Row>
             </Tab-pane>
@@ -376,7 +387,21 @@ export default {
             angleList: [{value: 'angle', label: this.$t('STORAGE.ANGLE_ROTATION')}, {value: 'vflip', label: this.$t('STORAGE.ANGLE_VFLIP')}, {value: 'hflip', label: this.$t('STORAGE.ANGLE_HFLIP')}],
             cropGravityList: [{value: 'north_west', label: this.$t('STORAGE.GRAVITY_NORTH_WEST')}, {value: 'north', label: this.$t('STORAGE.GRAVITY_NORTH')}, {value: 'north_east', label: this.$t('STORAGE.GRAVITY_NORTH_EAST')}, {value: 'west', label: this.$t('STORAGE.GRAVITY_WEST')}, {value: 'center', label: this.$t('STORAGE.GRAVITY_CENTER')}, {value: 'east', label: this.$t('STORAGE.GRAVITY_EAST')}, {value: 'south_west', label: this.$t('STORAGE.GRAVITY_SOUTH_WEST')}, {value: 'south', label: this.$t('STORAGE.GRAVITY_SOUTH')}, {value: 'south_east', label: this.$t('STORAGE.GRAVITY_SOUTH_EAST')}, {value: 'noGravity', label: this.$t('STORAGE.GRAVITY_NOGRAVITY')}, {value: 'xy_center', label: this.$t('STORAGE.GRAVITY_XY_CENTER')}, {value: 'face', label: this.$t('STORAGE.CROP_FACE')}, {value: 'faces', label: this.$t('STORAGE.CROP_FACES')}, {value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER')}, {value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER')}],
             effectList: [{name: this.$t('STORAGE.FILTER_EFFECTS_NONE'), value: 'noEffect'}, {name: this.$t('STORAGE.GRAYSCALE'), value: 'grayscale'}, {name: this.$t('STORAGE.AUTO_CONTRAST'), value: 'auto_contrast'}, {name: this.$t('STORAGE.BRIGHTNESS'), value: 'brightness'}, {name: this.$t('STORAGE.NEGATE'), value: 'negate'}, {name: this.$t('STORAGE.SHARPEN'), value: 'sharpen'}, {name: this.$t('STORAGE.BLUR'), value: 'blur'}, {name: this.$t('STORAGE.OIL_PAINT'), value: 'oil_paint'}, {name: this.$t('STORAGE.PIXELATE'), value: 'pixelate'}, {name: this.$t('STORAGE.ADD_COLOR'), value: 'color'}, {name: this.$t('STORAGE.IMPROVE'), value: 'improve'}],
-            colorList: [{name: this.$t('STORAGE.SEPIA'), value: 'sepia'}, {name: this.$t('STORAGE.RED'), value: 'red'}, {name: this.$t('STORAGE.GREEN'), value: 'green'}, {name: this.$t('STORAGE.BLUE'), value: 'blue'}, {name: this.$t('STORAGE.YELLOW'), value: 'yellow'}, {name: this.$t('STORAGE.CYAN'), value: 'cyan'}, {name: this.$t('STORAGE.MAGENTA'), value: 'magenta'}]
+            colorList: [{name: this.$t('STORAGE.SEPIA'), value: 'sepia'}, {name: this.$t('STORAGE.RED'), value: 'red'}, {name: this.$t('STORAGE.GREEN'), value: 'green'}, {name: this.$t('STORAGE.BLUE'), value: 'blue'}, {name: this.$t('STORAGE.YELLOW'), value: 'yellow'}, {name: this.$t('STORAGE.CYAN'), value: 'cyan'}, {name: this.$t('STORAGE.MAGENTA'), value: 'magenta'}],
+            ruleValidate: {
+                transformation: [
+                    { validator: this.validateName, trigger: 'change' }
+                ],
+                'mark.text': [
+                    { validator: this.validateText, trigger: 'change' }
+                ],
+                instructions: [
+                    { validator: this.validateInstructions, trigger: 'change' }
+                ],
+                'general.padColor': [
+                    { validator: this.validateColor, trigger: 'change' }
+                ]
+            }
         }
     },
     components: {upload, colorPicker},
@@ -393,12 +418,6 @@ export default {
         key () {
             return this.$route.params.ruleName ? prefix.rules + this.$route.params.ruleName + '.json' : ''
         },
-        transformationError () {
-            return !(/^[a-z0-9_]{1,20}$/).test(this.transformation)
-        },
-        textError () {
-            return this.mark.open && this.mark.type === 'text' && !(/.+/).test(this.mark.text)
-        },
         imgError () {
             return this.mark.open && this.mark.type === 'img' && !(this.imgName)
         },
@@ -412,7 +431,7 @@ export default {
             return (this.general.radius >= 0 && this.general.radius <= 1000) ? this.general.radius : 'max'
         },
         primaryPreviewError () {
-            return this.textError || (this.mark.open && this.mark.type === 'img' && !this.imgName)
+            return this.mark.open && this.mark.type === 'img' && !this.imgName
         },
         gravityImg () {
             return this.general.gravity.split(':')[0]
@@ -469,12 +488,7 @@ export default {
             }
         },
         async submitStyles () {
-            let ruleList = await this.getRuleList()
-            if (ruleList.includes(this.transformation)) {
-                this.$Message.warning(this.$t('STORAGE.RULE_NAME_EXISTS'))
-                return
-            }
-            if (!this.transformationError && !this.textError && this.styles2Save()) {
+            if (this.styles2Save()) {
                 const file = new Blob([JSON.stringify(this.styles2Save())], {'type': 'application/json'})
                 try {
                     await handler('putObject', {
@@ -489,12 +503,27 @@ export default {
                 }
             }
         },
-        beforeSubmit () {
-            if (this.padColorError || this.borderColorError || this.borderColorError || this.fontColorError || this.fontbackColorError) {
-                this.$Message.warning(this.$t('STORAGE.COLOR_ERROR'))
+        beforeBasicSubmit () {
+            if (this.padColorError || this.borderColorError || this.fontColorError || this.fontbackColorError) {
+                this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
             } else {
-                this.submitStyles()
+                this.$refs['basicForm'].validate((valid) => {
+                    if (valid) {
+                        this.submitStyles()
+                    } else {
+                        this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                    }
+                })
             }
+        },
+        beforeSeniorSubmit () {
+            this.$refs['seniorForm'].validate((valid) => {
+                if (valid) {
+                    this.submitStyles()
+                } else {
+                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                }
+            })
         },
         async primaryPreview () {
             const general = general2Save(this.general)
@@ -550,10 +579,6 @@ export default {
                 }
             } else {
                 const insArray = this.instructions.split('--')
-                if (insArray.length > 4) {
-                    this.$Message.error(this.$t('STORAGE.NO_MORE_4'))
-                    return false
-                }
                 insArray.forEach(instruction => {
                     const item = {}
                     instruction.split(',').forEach(ins => {
@@ -639,6 +664,49 @@ export default {
         },
         borderColorChange (color) {
             this.general.borderColor = color
+        },
+        async isRuleNameUnique () {
+            let ruleList = await this.getRuleList()
+            if (ruleList.includes(this.transformation)) {
+                this.$Message.warning(this.$t('STORAGE.RULE_NAME_EXISTS'))
+                return false
+            }
+            return true
+        },
+        validateName (rule, value, callback) {
+            if (!value) {
+                callback(new Error(this.$t('STORAGE.RULENAME_EMPTY_INFO')))
+            } else if (!(/^[a-z0-9_]{1,20}$/).test(value)) {
+                callback(new Error(this.$t('STORAGE.RULENAME_INFO')))
+            } else if (!this.isRuleNameUnique()) {
+                callback(new Error(this.$t('STORAGE.RULENAME_EXISTS')))
+            } else {
+                callback()
+            }
+        },
+        validateText (rule, value, callback) {
+            if (this.mark.open && this.mark.type === 'text' && !(/.+/).test(value)) {
+                callback(new Error(this.$t('STORAGE.TEXT_CONTENT_INFO')))
+            } else {
+                callback()
+            }
+        },
+        validateInstructions (rule, value, callback) {
+            const insArray = value.split('--')
+            if (!value) {
+                callback(new Error(this.$t('STORAGE.INS_REQUIRED')))
+            } else if (insArray.length > 4) {
+                callback(new Error(this.$t('STORAGE.NO_MORE_4')))
+            } else {
+                callback()
+            }
+        },
+        validateColor (rule, value, callback) {
+            if (colorTest(value)) {
+                callback()
+            } else {
+                callback(new Error(this.$t('STORAGE.INS_REQUIRED')))
+            }
         }
     },
     watch: {
@@ -648,17 +716,17 @@ export default {
     }
 }
 const color2Save = (hex) => {
-    const regHex3 = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+    const regHex3 = /^#([a-f\d])([a-f\d])([a-f\d])$/i
     if (regHex3.test(hex)) {
         hex = hex.replace(regHex3, (m, r, g, b) => {
-            return r + r + g + g + b + b
+            return `#${r}${r}${g}${g}${b}${b}`
         })
     }
     return hex.substr(1).toLowerCase()
 }
 const colorTest = (hex) => {
-    const regHex6 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
-    const regHex3 = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+    const regHex6 = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
+    const regHex3 = /^#([a-f\d])([a-f\d])([a-f\d])$/i
     return regHex6.test(hex) || regHex3.test(hex)
 }
 const putOverlayFile = (name, body) => {
@@ -943,7 +1011,7 @@ const mark2Front = data => {
             display: inline-block;
             width: 90px;
             font-size: 14px;
-            padding-right: 5px;
+            padding-right: 12px;
             line-height: 30px;
             text-align: right;
             vertical-align: top;
@@ -1357,8 +1425,8 @@ const mark2Front = data => {
     }
 
     .color-error {
-        border:1px solid red !important;
-        box-shadow: 0 0 5px red;
+        border:1px solid #ed3f14 !important;
+        box-shadow: 0 0 2px #ed3f14;
     }
 }
 </style>

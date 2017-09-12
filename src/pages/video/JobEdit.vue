@@ -139,7 +139,7 @@
         </Modal>
         <Modal v-model="showShotsModal" :title='$t("VIDEO.SNAPSHOTS_RULES")' width="700" class="edit-modal">
             <Form ref="shotsForm" :model="shotModal" :label-width="0" :rules="ruleValidate" inline>
-                <div class="form-item mar-bot-0">
+                <div class="form-item mar-b-0">
                     <span class="form-label required-item">{{$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')}} : </span>
                     <FormItem prop="Key" required>
                         <Input v-model="shotModal.Key" :placeholder='$t("VIDEO.OUTPUT_FILE_NAME_SUFFIX")' style="width:160px;"></Input>
@@ -148,7 +148,7 @@
                         <Option v-for="format in formatList" :value="format" :key="format">{{format}}</Option>
                     </Select>
                 </div>
-                <div class="form-item mar-bot-0">
+                <div class="form-item mar-b-0">
                     <span class="form-label">{{$t('VIDEO.SCREENSHOT_START_TIME')}} : </span>
                     <FormItem prop="Time">
                         <InputNumber v-model="shotModal.Time"></InputNumber> S
@@ -162,7 +162,7 @@
                     <span class="form-label">{{$t('VIDEO.SCREENSHOT_MAX_NUMBER')}} : </span>
                     <InputNumber :min='1' v-model="shotModal.Number"></InputNumber>
                 </div>
-                <div class="form-item mar-bot-0">
+                <div class="form-item mar-b-0">
                     <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
                     <Radio-group v-model="shotModal.Resolution">
                         <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>

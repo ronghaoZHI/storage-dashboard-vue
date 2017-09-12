@@ -296,8 +296,5 @@ const aclConvert2Save = data => {
             }
         }
     }
-    .bsc-form .bsc-form-item-label {
-        font-size: 14px;
-    }
 }
 </style>
