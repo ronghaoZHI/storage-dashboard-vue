@@ -53,6 +53,7 @@ export const messages = {
             TEMPLATE: 'Template',
             OUTPUT: 'Output',
             PIPELINE: 'Pipeline',
+            STATISTICS: 'Statistics',
             JOB: 'Job'
         },
         KEYCHAIN: {
@@ -689,6 +690,7 @@ export const messages = {
             TEMPLATE: '转码模版',
             OUTPUT: '自动转码配置',
             PIPELINE: '管道管理',
+            STATISTICS: '数据统计',
             JOB: '任务管理'
         },
         STORAGE: {

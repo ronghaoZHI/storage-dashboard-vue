@@ -48,6 +48,9 @@ const videoChildren = [{
 }, {
     index: 4,
     name: 'job'
+}, {
+    index: 5,
+    name: 'statistics'
 }]
 
 const video = {

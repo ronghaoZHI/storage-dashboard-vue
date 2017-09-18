@@ -20,6 +20,7 @@ import JobEdit from '@/pages/video/JobEdit'
 import Notfound from '@/pages/404/404'
 import Bridge from '@/pages/bridge/Bridge'
 import Upgrade from '@/pages/upgrade/Upgrade'
+import DataStatistics from '@/pages/video/DataStatistics'
 import PipelineList from '@/pages/video/PipelineList'
 import PipelineEdit from '@/pages/video/PipelineEdit'
 
@@ -106,6 +107,11 @@ const layoutChild = [{
     name: 'jobEdit',
     meta: { title: 'Video', ali: 'job', parent: 'video' },
     component: JobEdit
+}, {
+    path: '/video/statistics',
+    name: 'statistics',
+    meta: { title: 'Video', ali: 'statistics', parent: 'video' },
+    component: DataStatistics
 }, {
     path: '/machine',
     name: 'machine',
