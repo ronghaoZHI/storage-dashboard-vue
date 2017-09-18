@@ -29,4 +29,6 @@ export const UNBIND_USER = group('administrator/unbind/user')
 
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 
+export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)
+
 export const getTranscoderUrl = (url) => groupTranscoder(url)
