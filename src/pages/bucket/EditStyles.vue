@@ -715,9 +715,9 @@ const colorTest = (hex) => {
     const regHex3 = /^#([a-f\d])([a-f\d])([a-f\d])$/i
     return regHex6.test(hex) || regHex3.test(hex)
 }
-const putOverlayFile = (name, body) => {
+const putOverlayFile = async (name, body) => {
     const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
-    const s3 = getS3({key: {accesskey: previewAccessKey, secretkey: previewSecretKey}})
+    const s3 = await getS3({key: {accesskey: previewAccessKey, secretkey: previewSecretKey}})
     return new Promise((resolve, reject) => s3.putObject({
         Bucket: 'image-example',
         Key: prefix.overlay + name,

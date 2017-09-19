@@ -300,7 +300,7 @@ export default {
                 Bucket: this.bucket,
                 Key: prefix.overlay + fileName
             })
-            const s3 = getS3({key: {accesskey: previewAccessKey, secretkey: previewSecretKey}})
+            const s3 = await getS3({key: {accesskey: previewAccessKey, secretkey: previewSecretKey}})
             return new Promise((resolve, reject) => s3.putObject({
                 Bucket: 'image-example',
                 Key: prefix.overlay + fileName,
