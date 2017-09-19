@@ -628,7 +628,6 @@ export default {
             }
         },
         validateInputs (rule, value, callback) {
-            console.log('value', value, !value[0].Key)
             if (!value[0].Key) {
                 callback(new Error(this.$t('VIDEO.SRC_FILE_INFO')))
             } else {

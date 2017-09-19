@@ -460,7 +460,6 @@ export default {
                             this.fontStyle = fontStyle
                             this.fontStyle.font_color = '#' + fontStyle.font_color
                             this.fontStyle.background = '#' + fontStyle.background
-                            console.log('fontStyle', this.fontStyle)
                         } else {
                             this.imgName = overlay
                         }
