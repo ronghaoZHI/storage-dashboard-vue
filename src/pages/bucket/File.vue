@@ -400,6 +400,7 @@ export default {
         },
         async rename () {
             if (this.renameKey.length > 0) {
+                if (this.selectedFileKey === this.renameKey) { return false }
                 try {
                     this.$Loading.start()
                     await handler('copyObject', { Bucket: this.bucket, CopySource: encodeURIComponent(this.bucket + '/' + this.prefix + this.selectedFileKey), Key: this.prefix + this.renameKey })
