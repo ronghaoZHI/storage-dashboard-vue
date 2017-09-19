@@ -49,12 +49,7 @@
                                 <Select v-model="general.padType" class="sub-select" style="margin-right:8px">
                                     <Option v-for="item in padList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                 </Select>
-                                <FormItem prop="general.padColor">
-                                    <div class="color-box" :class="{'color-error': padColorError}">
-                                        <color-picker class="color-trigger" :parentColor="general.padColor" v-on:onChange="padColorChange"></color-picker>
-                                        <input type='text' v-model="general.padColor" class="color-input">
-                                    </div><!--padColor-->
-                                </FormItem>
+                                <ColorPickerInput v-model="general.padColor" style="display:inline"/>
                             </div>
                             <div class="form-item" v-if="general.crop === 'fill'">
                                 <Select v-model="general.fillType" class="sub-select">
@@ -197,10 +192,8 @@
                                         <input type='number' v-model="general.borderSize">
                                         <span>px</span>
                                     </div><!--borderSize-->
-                                    <div class="color-box" :class="{'color-error': borderColorError}" v-if="general.border">
-                                        <color-picker class="color-trigger" :parentColor="general.borderColor" v-on:onChange="borderColorChange"></color-picker>
-                                        <input type='text' v-model="general.borderColor" class="color-input">
-                                    </div><!--borderColor-->
+                                    <ColorPickerInput v-if="general.border" v-model="general.borderColor" style="display:inline"/>
+                                    <!--borderColor-->
                                 </div><!--border-->
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.RADIUS")}} : </span>
@@ -245,17 +238,13 @@
                                             <input type='number' v-model="fontStyle.font_size">
                                             <span>px</span>
                                         </div><!--font_size-->
-                                        <div class="color-box" :class="{'color-error': fontColorError}">
-                                            <color-picker class="color-trigger" :parentColor="fontStyle.font_color" v-on:onChange="fontColorChange"></color-picker>
-                                            <input type='text' v-model="fontStyle.font_color" class="color-input">
-                                        </div><!--fontColor-->
+                                        <ColorPickerInput v-model="fontStyle.font_color" style="display:inline"/>{{fontStyle.font_color}}
+                                        <!--fontColor-->
                                     </div>
                                     <div class="form-item">
                                         <span class="form-label">{{$t("STORAGE.BACKGROUBD")}} : </span>
-                                        <div class="color-box" :class="{'color-error': fontbackColorError}">
-                                            <color-picker class="color-trigger" :parentColor="fontStyle.background" v-on:onChange="fontbackColorChange"></color-picker>
-                                            <input type='text' v-model="fontStyle.background" class="color-input">
-                                        </div><!--fontColor-->
+                                        <ColorPickerInput v-model="fontStyle.background" style="display:inline"/>{{fontStyle.background}}
+                                        <!--fontbackColor-->
                                     </div><!--fontBack-->
                                 </div>
                                 <div v-if="mark.type == 'img'">
@@ -360,7 +349,6 @@ import upload from '@/components/upload/upload'
 import styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview-bsc'
 import encoding from 'text-encoding'
-import colorPicker from '@/components/vueColorPicker/vueColorPicker'
 import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
     data () {
@@ -397,14 +385,11 @@ export default {
                 ],
                 instructions: [
                     { validator: this.validateInstructions, trigger: 'change' }
-                ],
-                'general.padColor': [
-                    { validator: this.validateColor, trigger: 'change' }
                 ]
             }
         }
     },
-    components: {upload, colorPicker},
+    components: {upload},
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -475,6 +460,7 @@ export default {
                             this.fontStyle = fontStyle
                             this.fontStyle.font_color = '#' + fontStyle.font_color
                             this.fontStyle.background = '#' + fontStyle.background
+                            console.log('fontStyle', this.fontStyle)
                         } else {
                             this.imgName = overlay
                         }
@@ -667,7 +653,7 @@ export default {
         },
         async isRuleNameUnique () {
             let ruleList = await this.getRuleList()
-            if (ruleList.includes(this.transformation)) {
+            if (this.ruleName !== 'noRuleName' && ruleList.includes(this.transformation)) {
                 this.$Message.warning(this.$t('STORAGE.RULE_NAME_EXISTS'))
                 return false
             }
@@ -1159,37 +1145,6 @@ const mark2Front = data => {
                 line-height:30px;
             }
 
-            .color-box {
-                width: 105px;
-                height: 32px;
-                border: 1px solid @edit-styles-border-color;
-                border-radius: 4px;
-                position: relative;
-                display: inline-block;
-                vertical-align: middle;
-                .color-trigger {
-                    float: left;
-                    outline: none;
-                    left: 3px;
-                    top: 4px;
-                }
-                input.color-input {
-                    border: none;
-                    line-height: 30px;
-                    width: 70px;
-                    float: left;
-                    padding-left: 15px;
-                    color: #657180;
-                    outline: none;
-                    border-top-right-radius: 4px;
-                    border-bottom-right-radius: 4px;
-                }
-            }
-
-            .redFont {
-                color: red !important;
-            }
-
             .dis-inline {
                 display: inline
             }
@@ -1423,11 +1378,6 @@ const mark2Front = data => {
         .img-button {
             margin-left: 250px;
         }
-    }
-
-    .color-error {
-        border:1px solid #ed3f14 !important;
-        box-shadow: 0 0 2px #ed3f14;
     }
     .red-border{
         border: 1px dashed #ed3f14;
