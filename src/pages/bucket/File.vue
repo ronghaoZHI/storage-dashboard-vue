@@ -64,9 +64,14 @@
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
         <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
         <div class="section-paging">
-            <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
-            <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
-            <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="nextMarker" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+            <div>
+                <Tag>{{fileList.length}} files in this page</Tag>
+            </div>
+            <div>
+                <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
+                <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
+                <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="nextMarker" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+            </div>
         </div>
     </div>
 </template>
@@ -617,7 +622,14 @@ const getURL = async (bucket, file, prefix) => {
     }
     .section-paging {
         .wh(100%,40px);
-        .fb(flex-end,center);
+        .fb(space-between,center);
+
+        .bsc-tag {
+            height: 34px;
+            line-height: 34px;
+            font-size: 14px;
+        }
+
         button {
             width: 70px;
             margin-left: 6px;
