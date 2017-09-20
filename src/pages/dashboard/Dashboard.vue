@@ -3,7 +3,7 @@
         <Spin size="bigger" fix v-if="spinShow"></Spin>
         <div class="toolbar">
             <div class="button-datepicker">
-                <Select :prepend="true" v-model="bucket" style="width:30%;float:left;margin-right:16px;" @on-change="getInitData">
+                <Select :prepend="true" v-model="bucketDefalut" style="width:30%;float:left;margin-right:16px;" @on-change="getInitData">
                     <p slot="prepend" style="font-size:12px">数据</p>
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
@@ -149,20 +149,20 @@ export default {
         return {
             showChart: 0,
             bucketList: this.bucketList,
-            bucket: 'All Buckets',
+            bucketDefalut: 'All Buckets',
             dateDefault: {
                 seven_days: [lastNDays(7), lastNDays(1)],
                 this_month: [new Date(new Date().setDate(1)), lastNDays(1)],
                 thirty_days: [lastNDays(30), lastNDays(1)]
             },
-            dateSelect: this.dateSelect,
+            dateSelect: [lastNDays(7), lastNDays(1)],
             originOverview: {},
             dateOptions: {
                 disabledDate (date) {
                     return date && date.valueOf() > Date.now() - 86400000
                 }
             },
-            data: [],
+            exportData: [],
             spinShow: true,
             capacityOptions: lineOptions,
             uploadTrafficOptions: lineOptions,
@@ -185,7 +185,6 @@ export default {
         }
     },
     created () {
-        this.dateSelect = this.dateDefault.seven_days
         this.convertBucketList()
         this.getInitData()
     },
@@ -206,6 +205,7 @@ export default {
 
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
+                    // overview data
                     this.originOverview = {
                         capacity: this.convertData(res.data.capacity, true),
                         upload_space: this.convertData(res.data.upload_space, true),
@@ -215,37 +215,27 @@ export default {
                         download_count: this.convertData(res.data.download_count, true),
                         delete_count: this.convertData(res.data.delete_count, true)
                     }
-                }), this.$http.get((this.getApiURL('capacity'))).then(res => {
-                    this.capacityData = res
-                    this.capacityOptions = InitOptions(this.capacityData)
-                }), this.$http.get((this.getApiURL('upload_space'))).then(res => {
-                    this.uploadSpaceData = res
-                    this.uploadTrafficOptions = InitOptions(this.uploadSpaceData)
-                }), this.$http.get((this.getApiURL('download_space'))).then(res => {
-                    this.downloadSpaceData = res
-                    this.downloadTrafficOptions = InitOptions(this.downloadSpaceData)
-                }), this.$http.get((this.getApiURL('download_count'))).then(res => {
-                    this.downloadCountData = res
-                    this.downloadsOptions = InitOptions(this.downloadCountData)
-                }), this.$http.get((this.getApiURL('upload_count'))).then(res => {
-                    this.uploadCountData = res
-                    this.uploadsOptions = InitOptions(this.uploadCountData)
-                }), this.$http.get(this.getApiURL('delete_count')).then(res => {
-                    this.deleteCountData = res
-                    this.deleteCountOptins = InitOptions(this.deleteCountData)
-                }), this.$http.get(this.getApiURL('delete_space')).then(res => {
-                    this.deleteSpaceData = res
-                    this.deleteSpaceOptions = InitOptions(this.deleteSpaceData)
+                }), this.$http.get(this.getApiURL('entire')).then(res => {
+                    // echarts data
+                    _.extend(this, res)
+                    this.capacityOptions = InitOptions(this.capacity)
+                    this.uploadTrafficOptions = InitOptions(this.upload_space)
+                    this.downloadTrafficOptions = InitOptions(this.download_space)
+                    this.downloadsOptions = InitOptions(this.download_count)
+                    this.uploadsOptions = InitOptions(this.upload_count)
+                    this.deleteCountOptins = InitOptions(this.delete_count)
+                    this.deleteSpaceOptions = InitOptions(this.delete_space)
                 })]).then(res => {
-                    this.data = []
-                    _.each(this.capacityData.data.map(data => data[0]), (time, index) => {
-                        this.data.push({
+                    // export data
+                    this.exportData = []
+                    _.each(this.capacity.data.map(data => data[0]), (time, index) => {
+                        this.exportData.push({
                             time: date(time),
-                            capacity: this.capacityData.data[index][1],
-                            uploadSpace: this.uploadSpaceData.data[index][1],
-                            downloadSpace: this.downloadSpaceData.data[index][1],
-                            downloadCount: this.downloadCountData.data[index][1],
-                            uploadCount: this.uploadCountData.data[index][1]
+                            capacity: this.capacity.data[index][1],
+                            uploadSpace: this.upload_space.data[index][1],
+                            downloadSpace: this.download_space.data[index][1],
+                            downloadCount: this.download_count.data[index][1],
+                            uploadCount: this.upload_count.data[index][1]
                         })
                     })
                     this.spinShow = false
@@ -288,25 +278,25 @@ export default {
         'dateSelect' (to, from) {
             to[0] && this.getInitData()
         },
-        'capacityData' (to, from) {
+        'capacity' (to, from) {
             chartReload(to.data, this.$refs.capacityLine)
         },
-        'uploadSpaceData' (to, from) {
+        'upload_space' (to, from) {
             chartReload(to.data, this.$refs.uploadTrafficLine)
         },
-        'downloadSpaceData' (to, from) {
+        'download_space' (to, from) {
             chartReload(to.data, this.$refs.downloadTrafficLine)
         },
-        'downloadCountData' (to, from) {
+        'download_count' (to, from) {
             chartReload(to.data, this.$refs.downloadsLine)
         },
-        'uploadCountData' (to, from) {
+        'upload_count' (to, from) {
             chartReload(to.data, this.$refs.uploadsLine)
         },
-        'deleteCountData' (to, from) {
+        'delete_count' (to, from) {
             chartReload(to.data, this.$refs.deleteCountLine)
         },
-        'deleteSpaceData' (to, from) {
+        'delete_space' (to, from) {
             chartReload(to.data, this.$refs.deleteSpaceLine)
         }
     }
