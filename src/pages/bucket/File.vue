@@ -65,7 +65,7 @@
         <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
         <div class="section-paging">
             <div>
-                <Tag>{{fileList.length}} files in this page</Tag>
+                <Tag>{{fileList.length}} files or folders in this page</Tag>
             </div>
             <div>
                 <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
@@ -623,12 +623,6 @@ const getURL = async (bucket, file, prefix) => {
     .section-paging {
         .wh(100%,40px);
         .fb(space-between,center);
-
-        .bsc-tag {
-            height: 34px;
-            line-height: 34px;
-            font-size: 14px;
-        }
 
         button {
             width: 70px;
