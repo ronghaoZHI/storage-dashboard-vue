@@ -19,6 +19,7 @@
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'overviewLine')">{{ $t("DASHBOARD.TRANSCODER_OVERVIEW")}}</button>
             <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'distributionLine')">{{ $t("DASHBOARD.TRANSCODER_DISTRIBUTION")}}</button>
+            <button disabled></button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
@@ -38,7 +39,7 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { getTranscoderAnalysisUrl } from '@/service/API'
-import { date } from '@/service/bucketService'
+import { time, date } from '@/service/bucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
 export default {
@@ -94,18 +95,18 @@ export default {
                     this.data = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
                         this.data.push({
-                            time: date(time),
-                            视频转码任务数: this.overviewData.video_transcoding[index][1],
-                            音频转码任务数: this.overviewData.audio_transcoding[index][1],
-                            视频截图张数: this.overviewData.snapshot[index][1],
-                            转封装任务数: this.overviewData.container_only[index][1],
-                            SD240: this.distributionData.SD240[index][1],
-                            SD480: this.distributionData.SD480[index][1],
-                            SD: this.distributionData.SD[index][1],
-                            HD: this.distributionData.HD[index][1],
-                            '2K': this.distributionData['2K'][index][1],
-                            '4K': this.distributionData['4K'][index][1],
-                            audio: this.distributionData.audio[index][1]
+                            date: date(time),
+                            '视频转码任务数(个)': this.overviewData.video_transcoding[index][1],
+                            '音频转码任务数(个)': this.overviewData.audio_transcoding[index][1],
+                            '视频截图张数(个)': this.overviewData.snapshot[index][1],
+                            '转封装任务数(个)': this.overviewData.container_only[index][1],
+                            'SD240(s)': this.distributionData.SD240[index][1],
+                            'SD480(s)': this.distributionData.SD480[index][1],
+                            'SD(s)': this.distributionData.SD[index][1],
+                            'HD(s)': this.distributionData.HD[index][1],
+                            '2K(s)': this.distributionData['2K'][index][1],
+                            '4K(s)': this.distributionData['4K'][index][1],
+                            'audio(s)': this.distributionData.audio[index][1]
                         })
                     })
                     this.spinShow = false
@@ -209,6 +210,16 @@ const lineOptions = {
 }
 const InitOverviewOptions = data => {
     let newOptions = _.defaultsDeep({}, lineOptions, {
+        tooltip: {
+            formatter: function (params, ticket, callback) {
+                let res = 'Date : ' + date(params[0].value[0])
+                _.each(params, function (item) {
+                    res += '<br/>' + item.seriesName + ' : '
+                    res += item.value[1]
+                })
+                return res
+            }
+        },
         yAxis: {
             name: '个'
         },
@@ -263,8 +274,22 @@ const InitOverviewOptions = data => {
 }
 const InitDistributionOptions = data => {
     let newOptions = _.defaultsDeep({}, lineOptions, {
+        tooltip: {
+            formatter: function (params, ticket, callback) {
+                let res = 'Date : ' + date(params[0].value[0])
+                _.each(params, function (item) {
+                    res += '<br/>' + item.seriesName + ' : '
+                    res += time(item.value[1], 2)
+                })
+                return res
+            }
+        },
         yAxis: {
-            name: 's'
+            axisLabel: {
+                formatter: function (value) {
+                    return time(value)
+                }
+            }
         },
         legend: {
             data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', 'audio'],
@@ -395,18 +420,14 @@ const chartReload = (data, chart) => {
     .section-chart-tab {
         width: 100%;
         height: 40px;
-        display: inline-flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
         margin-top: 16px;
         border: 1px solid #d3dce6;
         border-bottom: 0;
         button {
-            width: 100%;
+            float: left;
+            width: 20%;
             height: 100%;
             text-align: center;
-            vertical-align: middle;
             -ms-touch-action: manipulation;
             touch-action: manipulation;
             cursor: pointer;
@@ -427,6 +448,15 @@ const chartReload = (data, chart) => {
         }
         &>button:nth-last-child(1) {
             border-right: 0;
+            width: 60%;
+            cursor: default;
+        }
+        &>button:nth-last-child(2) {
+            border-right: 0;
+        }
+        &>button:nth-last-child(2):focus,
+        &>button:nth-last-child(2).buttonFocus {
+            border-right: 1px solid #d3dce6;
         }
         button:focus,
         .buttonFocus {

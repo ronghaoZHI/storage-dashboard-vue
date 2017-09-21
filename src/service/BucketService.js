@@ -1,4 +1,26 @@
 import Vue from 'vue'
+const time = (time, digit = 1) => {
+    let timeArray = timeSpliteUnits(time, digit = 1)
+
+    return timeArray[0] + ' ' + timeArray[1]
+}
+const timeSpliteUnits = (time, digit = 1) => {
+    if (typeof time !== 'number') {
+        time = parseFloat(time)
+    }
+
+    if (time < 1) {
+        return '0 s'
+    } else if (isNaN(time) || !isFinite(time)) {
+        return '-'
+    }
+
+    const units = ['s', 'min', 'h']
+    const exponent = Math.min(Math.floor(Math.log(time) / Math.log(60)), units.length - 1)
+    const number = (time / Math.pow(60, Math.floor(exponent))).toFixed(digit)
+
+    return [number, units[exponent]]
+}
 const bytes = (bytes, digit = 1) => {
     let bytesArray = bytesSpliteUnits(bytes, digit = 1)
 
@@ -129,4 +151,4 @@ const Utf8ArrayToStr = array => {
     }
     return out
 }
-export { bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits }
+export { time, bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits }
