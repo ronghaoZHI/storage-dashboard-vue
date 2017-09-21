@@ -110,6 +110,8 @@ export default {
             }
         },
         async adminMode (data) {
+            await this.$store.dispatch('setToken', data.token)
+            this.$http.defaults.headers.common['Authorization'] = data.token
             let res = await this.$http.get(BOUND_USER)
             this.userInfo = data
             if (res.length > 0) {
@@ -120,7 +122,7 @@ export default {
                     subUserList: this.subUserList
                 })
             } else {
-                this.toIndex(data, 'user')
+                this.switchUser(data, 'user')
             }
         },
         selectSubUser (user) {

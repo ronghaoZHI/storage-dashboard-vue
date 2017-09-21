@@ -3,7 +3,7 @@
         <Spin size="bigger" fix v-if="spinShow"></Spin>
         <div class="toolbar">
             <div class="button-datepicker">
-                <Select :prepend="true" v-model="bucketDefalut" style="width:30%;float:left;margin-right:16px;" @on-change="getInitData">
+                <Select :prepend="true" v-model="selectedBucket" style="width:30%;float:left;margin-right:16px;" @on-change="getInitData">
                     <p slot="prepend" style="font-size:12px">数据</p>
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
@@ -149,7 +149,7 @@ export default {
         return {
             showChart: 0,
             bucketList: this.bucketList,
-            bucketDefalut: 'All Buckets',
+            selectedBucket: 'All Buckets',
             dateDefault: {
                 seven_days: [lastNDays(7), lastNDays(1)],
                 this_month: [new Date(new Date().setDate(1)), lastNDays(1)],
@@ -254,8 +254,8 @@ export default {
         },
         getApiURL (operation) {
             let path = operation
-            if (this.bucket && this.bucket !== 'All Buckets') {
-                path += '/' + this.bucket
+            if (this.selectedBucket && this.selectedBucket !== 'All Buckets') {
+                path += '/' + this.selectedBucket
             }
             path += '?custom_range=' + this.dateRange
             if (user.state.type === 'admin') {
