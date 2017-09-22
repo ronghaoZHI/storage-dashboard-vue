@@ -223,6 +223,7 @@ const InitOverviewOptions = data => {
         yAxis: {
             name: '个'
         },
+        color: ['#9f61fc', '#1e9fff', '#0cce66', '#ffac2a'],
         legend: {
             data: ['视频转码任务数', '音频转码任务数', '视频截图张数', '转封装任务数'],
             top: '20px',
@@ -291,6 +292,7 @@ const InitDistributionOptions = data => {
                 }
             }
         },
+        color: ['#9f61fc', '#1e9fff', '#0cce66', '#1212ee', '#ffac2a', '#8492a6', '#c4cfdf'],
         legend: {
             data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', 'audio'],
             top: '20px',
