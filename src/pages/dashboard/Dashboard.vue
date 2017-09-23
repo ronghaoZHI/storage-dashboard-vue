@@ -269,7 +269,7 @@ export default {
             setTimeout(() => { vm.$refs[ref].resize() }, 100)
         },
         exportCsv () {
-            let content = Csv(_.keys(this.data[0]), this.data, ',')
+            let content = Csv(_.keys(this.exportData[0]), this.exportData, ',')
             let file = new File(Array.from(content), this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
             fileSaver.saveAs(file)
         }
