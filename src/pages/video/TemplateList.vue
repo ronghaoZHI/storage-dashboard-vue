@@ -27,19 +27,26 @@ export default {
                 title: this.$t('VIDEO.TEMPLATE_NAME_TABLE'),
                 width: 100,
                 render: (h, params) => {
-                    return h('Poptip', {
-                        props: {
-                            placement: 'right',
-                            trigger: 'hover'
-                        }
-                    }, [h('div', [params.row.name, h('Icon', {
-                        props: {
-                            type: 'ios-information-outline',
-                            size: '14'
-                        }
-                    })]), h('div', {
-                        slot: 'content'
-                    }, params.row.description)])
+                    if (!params.row.description) {
+                        return params.row.name
+                    } else {
+                        return h('Poptip', {
+                            props: {
+                                placement: 'right',
+                                trigger: 'hover'
+                            }
+                        }, [h('div', [params.row.name, h('Icon', {
+                            props: {
+                                type: 'ios-information-outline',
+                                size: '14'
+                            },
+                            'class': {
+                                'icon-disc': true
+                            }
+                        })]), h('div', {
+                            slot: 'content'
+                        }, params.row.description)])
+                    }
                 }
             }, {
                 title: this.$t('VIDEO.CONTAINER'),
@@ -219,7 +226,10 @@ const videoMust = ['Codec', 'FrameRate', 'Resolution', 'BitRate', 'AspectRatio']
 const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
 
 </script>
-<style lang="less" scoped>
-
+<style lang="less">
+.icon-disc{
+    padding-left: 5px;
+    vertical-align: text-top;
+}
 </style>
 
