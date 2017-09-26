@@ -50,6 +50,7 @@
 <script>
 import Vue from 'vue'
 import { REPASSWORD } from '@/service/API'
+import { clear } from '@/service/Aws'
 import { logout, getCookie, createCookie } from '@/service/Helper'
 import user from '@/store/modules/user'
 export default {
@@ -81,6 +82,7 @@ export default {
             } else if (name === 'rePasssword') {
                 this.rePasswordModal = true
             } else if (name === 'selectSubUser') {
+                await clear()
                 this.$router.push('/login')
             }
         },
