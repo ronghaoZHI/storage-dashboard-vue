@@ -272,7 +272,7 @@ export default {
         },
         exportCsv () {
             let content = Csv(_.keys(this.exportData[0]), this.exportData, ',')
-            let file = new File(Array.from(content), this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
+            let file = new File(Array.from(content), user.state.username + '-' + this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
             fileSaver.saveAs(file)
         }
     },
