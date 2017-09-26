@@ -235,7 +235,9 @@ export default {
                             uploadSpace: this.upload_space.data[index][1],
                             downloadSpace: this.download_space.data[index][1],
                             downloadCount: this.download_count.data[index][1],
-                            uploadCount: this.upload_count.data[index][1]
+                            uploadCount: this.upload_count.data[index][1],
+                            delete_count: this.delete_count.data[index][1],
+                            delete_space: this.delete_space.data[index][1]
                         })
                     })
                     this.spinShow = false
