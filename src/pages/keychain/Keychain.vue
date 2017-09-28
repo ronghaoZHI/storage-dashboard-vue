@@ -11,6 +11,7 @@
 </template>
 <script>
 import { ACCESSKEY } from '@/service/API'
+import { clear } from '@/service/Aws'
 import keychainCard from './KeychainCard'
 import user from '@/store/modules/user'
 import moment from 'moment'
@@ -60,6 +61,7 @@ export default {
             this.$Loading.start()
             try {
                 await this.$http.delete(ACCESSKEY, {params: {accesskey: accesskey}})
+                await clear()
                 this.getKeychainList()
                 this.$Loading.finish()
             } catch (error) {

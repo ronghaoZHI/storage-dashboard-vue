@@ -126,6 +126,9 @@ export default {
                             click: () => {
                                 params.row.Type !== 'file' && this.openFolder(params.row)
                             }
+                        },
+                        style: {
+                            cursor: params.row.Type === 'file' ? 'default' : 'pointer'
                         }
                     }, [
                         h('Icon', {
@@ -625,6 +628,10 @@ const getURL = async (bucket, file, prefix) => {
     .section-paging {
         .wh(100%,40px);
         .fb(space-between,center);
+
+        .bsc-tag {
+            cursor: default;
+        }
 
         button {
             width: 70px;
