@@ -39,10 +39,10 @@
             </div>
         </Modal>
         <Modal v-model="createFolderModal" :title='$t("STORAGE.ADD_FOLDER")' @on-ok="addFolder" @on-cancel="createFolderValue = ''">
-            <Input v-model="createFolderValue" :placeholder='$t("STORAGE.FOLDER_PLACEHOLDER")'></Input>
+            <Input v-model="createFolderValue" @on-enter="addFolder" :placeholder='$t("STORAGE.FOLDER_PLACEHOLDER")'></Input>
         </Modal>
         <Modal v-model="renameModal" :title='$t("STORAGE.RENAME")' @on-ok="rename" @on-cancel="renameKey = ''">
-            <Input v-model="renameKey" :placeholder='$t("STORAGE.RENAME_PLACEHOLDER")'></Input>
+            <Input v-model="renameKey" @on-enter="rename" :placeholder='$t("STORAGE.RENAME_PLACEHOLDER")'></Input>
         </Modal>
         <Modal v-model="showImageModal" :title='selectedFileKey || $t("STORAGE.NO_TITLE")'  width="900">
             <div class="section-img">
@@ -62,7 +62,7 @@
             </div>
         </Modal>
         <a download id="element-download" style="display:none"><span id="span-download"></span></a>
-        <Table :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="fileHeader" :data="fileList" @on-selection-change="select" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
+        <Table :show-header="showHeader" :stripe="true" :context="self" :columns="fileHeader" :data="fileList" @on-selection-change="select" :no-data-text='$t("STORAGE.NO_FILE")'></Table>
         <div class="section-paging">
             <div>
                 <Tag>{{fileList.length}} files or folders in this page</Tag>
@@ -404,6 +404,7 @@ export default {
             }
         },
         async rename () {
+            this.renameModal = false
             if (this.renameKey.length > 0) {
                 if (this.selectedFileKey === this.renameKey) { return false }
                 try {
@@ -434,6 +435,7 @@ export default {
         },
         async addFolder () {
             if (!this.createFolderValue) return
+            this.createFolderModal = false
             try {
                 await handler('putObject', { Bucket: this.bucket, Key: this.prefix + this.createFolderValue + '/', Body: '' })
                 this.$Message.success(this.$t('STORAGE.ADD_FOLDER_SUCCESS'))

@@ -10,7 +10,7 @@
             <Button type="primary" @click="goCreateStyle">{{$t("STORAGE.CREATE_STYLE")}}</Button>
             <Button type="primary" @click="uploadModal" >{{$t("STORAGE.IMPORT_STYLE")}}</Button>
         </div>
-        <Table border :show-header="showHeader" :stripe="true" :context="self" :highlight-row="true" :columns="styleHeader" :data="styleList" :no-data-text='$t("STORAGE.NO_STYLE")'></Table>
+        <Table border :show-header="showHeader" :stripe="true" :context="self" :columns="styleHeader" :data="styleList" :no-data-text='$t("STORAGE.NO_STYLE")'></Table>
         <Modal v-model="showImageModal" :title='selectedStyleName' width="900">
             <div class="section-img">
                 <img :src="clipUrl" />

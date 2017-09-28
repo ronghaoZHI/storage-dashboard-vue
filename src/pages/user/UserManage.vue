@@ -3,7 +3,7 @@
         <Button type="primary" v-show="!isAdmin" @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
         <Button type="primary" v-show="isAdmin" @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
         <Button type="primary" v-show="isAdmin" @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
-        <Table class="table" :show-header="true" :stripe="true" :context="self" :highlight-row="true" :columns="userHeader" :data="userList" :no-data-text='$t("USER.NO_USER")'></Table>
+        <Table class="table" :show-header="true" :stripe="true" :context="self" :columns="userHeader" :data="userList" :no-data-text='$t("USER.NO_USER")'></Table>
         <Modal v-model="createUserModal" :title='$t("USER.CREATE_USER")' @on-ok="createUser" @on-cancel="createBucketValue = ''">
             <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
                 <Form-item :label='$t("USER.USER_NAME")' prop="username">

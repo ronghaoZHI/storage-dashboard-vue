@@ -3,7 +3,7 @@
         <div class="layout-bsc-toolbar">
             <Button class="button-bsc-add-bucket" type="primary" @click="goTemplateEdit">{{$t('VIDEO.NEW_TEMPLATE')}}</Button>
         </div>
-        <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+        <Table border :context="self" :stripe="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <div class="section-paging">
             <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="listPresets();pageToken.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
             <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>

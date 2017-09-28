@@ -3,7 +3,7 @@
         <div class="layout-bsc-toolbar">
             <Button class="button-bsc-add-bucket" type="primary" @click="goOutputEdit('none', 'none')">{{$t('VIDEO.NEW_CONFIGURATION')}}</Button>
         </div>
-        <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="policyFront" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+        <Table border :context="self" :stripe="true" :columns="listHeader" :data="policyFront" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
     </div>
 </template>
 <script>

@@ -201,7 +201,6 @@ export default {
         async getInitData () {
             this.spinShow = true
             if (!this.dateSelect) return
-            this.showChart = 0
 
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {

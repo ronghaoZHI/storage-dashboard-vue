@@ -164,7 +164,7 @@
             <Tab-pane :label='$t("STORAGE.CORS_CONFIG")' name="cors">
                 <Button :disabled="rulesNumber===100" class="button-add-rule" type="primary" @click="addCorsRule">{{$t('STORAGE.ADD_RULE')}}</Button>
                 <span class="rules-number" v-model="rulesNumber">{{$t('STORAGE.RULES_AT_MOST', { rulesNumber: rulesNumber })}}</span>
-                <Table border :context="self" :stripe="true" :highlight-row="true" :columns="listHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+                <Table border :context="self" :stripe="true" :columns="listHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
             </Tab-pane>
         </Tabs>
         <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">

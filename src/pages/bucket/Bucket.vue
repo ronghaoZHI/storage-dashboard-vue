@@ -15,7 +15,7 @@
             <Spin size="bigger" fix v-if="spinShow"></Spin>
         </div>
         <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="inputCheck=false;createBucketValue = ''">
-            <Input v-model="createBucketValue" autofocus :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")' pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/">
+            <Input v-model="createBucketValue" autofocus @on-enter="addBucket" :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")' pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/">
             </Input>
             <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
         </Modal>
@@ -119,14 +119,13 @@ export default {
             this.selectedBucket = this.selectedBucket === item ? {} : item
         },
         async addBucket () {
-            // the 'this' in arrow function is not point to vue
-            let self = this
+            this.createBucketModal = false
             if (this.createBucketValue.length > 2) {
                 await handler('createBucket', { Bucket: this.createBucketValue })
-                self.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
+                this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
                 await this.$store.dispatch('setBucketList', await handler('listBuckets'))
-                self.convertBucketList()
-                self.createBucketValue = ''
+                this.convertBucketList()
+                this.createBucketValue = ''
             } else {
                 this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
             }

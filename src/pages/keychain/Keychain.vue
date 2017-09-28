@@ -4,7 +4,7 @@
             <Button type="primary" @click="addKeychain">{{$t("KEYCHAIN.ADD_KEY")}}</Button>
         </div>
         <div class="section-card-list">
-            <keychain-card v-for="(key, index) in data" :keychain="key" :work="index === 0" v-on:deleteKey="deleteKeychain" :key="key.ts"></keychain-card>
+            <keychain-card v-for="(key, index) in data" :keychain="key" :work="data.length === 1" v-on:deleteKey="deleteKeychain" :key="key.ts"></keychain-card>
         </div>
         <Spin size="bigger" fix v-if="spinShow"></Spin>
     </div>
