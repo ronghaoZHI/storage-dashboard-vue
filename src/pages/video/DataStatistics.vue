@@ -42,6 +42,7 @@ import { getTranscoderAnalysisUrl } from '@/service/API'
 import { time, date } from '@/service/bucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
+import user from '@/store/modules/user'
 export default {
     data () {
         return {
@@ -120,6 +121,9 @@ export default {
         getApiURL (operation) {
             let path = operation
             path += '?custom_range=' + this.dateRange
+            if (user.state.type === 'admin') {
+                path += '&customer=' + user.state.subUser.username
+            }
             return getTranscoderAnalysisUrl(path)
         },
         tabToggle (index, ref) {
