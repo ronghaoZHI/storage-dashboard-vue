@@ -21,33 +21,6 @@ export default {
                 key: 'id',
                 width: 165
             }, {
-                title: this.$t('VIDEO.STATUS'),
-                width: 75,
-                align: 'center',
-                render: (h, params) => {
-                    if (params.row.is_enabled === 'true') {
-                        return h('Icon', {
-                            props: {
-                                type: 'record',
-                                size: '14'
-                            },
-                            style: {
-                                color: '#19be6b'
-                            }
-                        })
-                    } else {
-                        return h('Icon', {
-                            props: {
-                                type: 'record',
-                                size: '14'
-                            },
-                            style: {
-                                color: '#ed3f14'
-                            }
-                        })
-                    }
-                }
-            }, {
                 title: this.$t('VIDEO.INPUT_BUCKET'),
                 width: 150,
                 key: 'input_bucket'
@@ -65,7 +38,6 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.OUTPUT_KEY_PREFIX'),
-                key: 'actions',
                 width: 150,
                 render: (h, params) => {
                     return h('p', [params.row.output_key_prefix])
@@ -84,12 +56,12 @@ export default {
             }, {
                 title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
-                width: 160,
+                width: 170,
                 align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
-                            content: params.row.is_enabled === 'true' ? this.$t('VIDEO.CLOSE') : this.$t('VIDEO.OPEN'),
+                            content: this.$t('VIDEO.STATUS'),
                             delay: 1000,
                             placement: 'top'
                         },
@@ -98,14 +70,19 @@ export default {
                         }
                     }, [h('i-switch', {
                         props: {
-                            value: params.row.is_enabled === 'true'
+                            value: params.row.is_enabled === 'true',
+                            size: 'large'
                         },
                         on: {
                             input: () => {
                                 this.changeStatus(params.row)
                             }
                         }
-                    })]), h('Tooltip', {
+                    }, [h('span', {
+                        slot: 'open'
+                    }, this.$t('VIDEO.OPEN')), h('span', {
+                        slot: 'close'
+                    }, this.$t('VIDEO.CLOSE'))])]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.EDIT'),
                             delay: 1000,

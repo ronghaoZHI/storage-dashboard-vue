@@ -59,40 +59,14 @@ export default {
                     )
                 }
             }, {
-                title: this.$t('VIDEO.STATUS'),
-                width: 80,
-                render: (h, params) => {
-                    if (params.row.is_enabled === 'true') {
-                        return h('Icon', {
-                            props: {
-                                type: 'record',
-                                size: '14'
-                            },
-                            style: {
-                                color: '#19be6b'
-                            }
-                        })
-                    } else {
-                        return h('Icon', {
-                            props: {
-                                type: 'record',
-                                size: '14'
-                            },
-                            style: {
-                                color: '#ed3f14'
-                            }
-                        })
-                    }
-                }
-            }, {
                 title: this.$t('VIDEO.ACTIONS'),
                 key: 'actions',
-                width: 160,
+                width: 170,
                 align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
-                            content: params.row.is_enabled === 'true' ? this.$t('VIDEO.CLOSE') : this.$t('VIDEO.OPEN'),
+                            content: this.$t('VIDEO.STATUS'),
                             delay: 500,
                             placement: 'top'
                         },
@@ -101,14 +75,19 @@ export default {
                         }
                     }, [h('i-switch', {
                         props: {
-                            value: params.row.is_enabled === 'true'
+                            value: params.row.is_enabled === 'true',
+                            size: 'large'
                         },
                         on: {
                             input: () => {
                                 this.changeStatus(params.row)
                             }
                         }
-                    })]), h('Tooltip', {
+                    }, [h('span', {
+                        slot: 'open'
+                    }, this.$t('VIDEO.OPEN')), h('span', {
+                        slot: 'close'
+                    }, this.$t('VIDEO.CLOSE'))])]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.EDIT'),
                             delay: 500,
