@@ -170,7 +170,7 @@ export default {
                         props: {
                             content: this.$t('STORAGE.DELETE_FOLDER'),
                             delay: 1000,
-                            placement: 'top'
+                            placement: 'top-end'
                         },
                         'class': {
                             'mar-r-5': true
@@ -511,19 +511,39 @@ export default {
                 if (file.Type === 'file') {
                     await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + file.Key })
                 } else {
-                    this.spinShow = true
-                    let res = await handler('listObjects', {
-                        Bucket: this.bucket,
-                        Prefix: file.Prefix
-                    })
-                    await batchDeleteFileHandle(res.Contents, this.bucket, this.prefix)
-                    this.spinShow = false
+                    this.deleteFolders(file)
                 }
                 this.fileList.splice(file._index, 1)
                 this.$Message.success(this.$t('STORAGE.DELETE_FILES_SUCCESS', {fileName: file.Key}))
             } catch (error) {
                 this.spinShow = false
                 this.$Message.error(this.$t('STORAGE.DELETE_FILES_FAILED', {fileName: file.Key}))
+            }
+        },
+        async deleteFolders (folder, marker = '') {
+            this.spinShow = true
+            try {
+                let res = await handler('listObjects', {
+                    Bucket: this.bucket,
+                    Prefix: folder.Prefix,
+                    MaxKeys: 1000,
+                    Marker: marker
+                })
+                await handler('deleteObjects', {
+                    Bucket: this.bucket,
+                    Delete: {
+                        Objects: res.Contents.map(file => _.pick(file, 'Key'))
+                    }
+                })
+                if (res.Contents.length === 1000) {
+                    this.deleteFolders(folder, res.Contents[100].Key)
+                } else {
+                    this.spinShow = false
+                }
+            } catch (error) {
+                this.spinShow = false
+                this.$Loading.error()
+                this.$Message.error(`Delete the folder [${folder.Key}] error`)
             }
         },
         async batchDelete () {
@@ -584,10 +604,6 @@ const repliceAllString = (str, oldStr, newStr) => {
         str = str.replace(oldStr, newStr)
     }
     return str
-}
-
-const batchDeleteFileHandle = async (list, bucket, prefix) => {
-    await Promise.all(Array.map(list, (file) => handler('deleteObject', { Bucket: bucket, Key: file.Key })))
 }
 
 const isImage = (file) => !!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key)
