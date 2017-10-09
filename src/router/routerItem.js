@@ -2,7 +2,8 @@ import Layout from '@/components/layout'
 import Bucket from '@/pages/bucket/Bucket'
 import File from '@/pages/bucket/File'
 import Dashboard from '@/pages/dashboard/Dashboard'
-import Machine from '@/pages/machine/Machine'
+import Machine from '@/pages/system/Machine'
+import Group from '@/pages/system/Group'
 import Keychain from '@/pages/keychain/Keychain'
 import UserManage from '@/pages/user/UserManage'
 import Login from '@/pages/login/Login'
@@ -113,10 +114,15 @@ const layoutChild = [{
     meta: { title: 'Video', ali: 'statistics', parent: 'video' },
     component: DataStatistics
 }, {
-    path: '/machine',
+    path: '/system/machine',
     name: 'machine',
     meta: { title: 'Machine', ali: 'machine' },
     component: Machine
+}, {
+    path: '/system/group',
+    name: 'group',
+    meta: { title: 'Group', ali: 'group' },
+    component: Group
 }, {
     path: '/user',
     name: 'user',
