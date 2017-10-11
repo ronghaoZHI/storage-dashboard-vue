@@ -27,6 +27,8 @@ export const ALL_USER = group('administrator/list/user')
 export const BIND_USER = group('administrator/bind/user')
 export const UNBIND_USER = group('administrator/unbind/user')
 
+export const GROUP_LIST = group('group/list')
+
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 
 export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)
