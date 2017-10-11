@@ -170,7 +170,7 @@ export default {
             videoLevelList: ['1', '1b', '1.1', '1.2', '1.3', '2', '2.1', '2.2', '3', '3.1', '3.2', '4', '4.1'],
             videoFrameRateList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '10', value: '10'}, {name: '15', value: '15'}, {name: '23.97', value: '23.97'}, {name: '24', value: '24'}, {name: '25', value: '25'}, {name: '29.97', value: '29.97'}, {name: '30', value: '30'}, {name: '50', value: '50'}, {name: '60', value: '60'}],
             aspectRatioList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1:1', value: '1:1'}, {name: '4:3', value: '4:3'}, {name: '3:2', value: '3:2'}, {name: '16:9', value: '16:9'}],
-            audioCodecList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto', container: ['flac', 'flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts', 'wmv', 'wma', 'mp2']}, {name: 'AAC', value: 'AAC', container: ['flac', 'mp4', 'ts']}, {name: 'mp3', value: 'mp3', container: ['flv', 'mp4', 'ts']}, {name: 'mp2', value: 'mp2', container: ['mpg', 'mp2']}, {name: 'wmav2', value: 'wmav2', container: ['wmv', 'wma']}],
+            audioCodecList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto', container: ['flac', 'flv', 'gif', 'mp4', 'mpg', 'ts', 'wmv']}, {name: 'AAC', value: 'AAC', container: ['mp4', 'ts', 'flv']}, {name: 'mp3', value: 'mp3', container: ['flv', 'mp4', 'ts', 'mp3']}, {name: 'mp2', value: 'mp2', container: ['mpg', 'mp2']}, {name: 'wmav2', value: 'wmav2', container: ['wmv', 'wma']}],
             audioProfileList: [{name: this.$t('VIDEO.ADAPTIVE'), value: 'auto'}, {name: 'AAC-LC', value: 'AAC-LC'}, {name: 'HE-AAC', value: 'HE-AAC'}, {name: 'HE-AACv2', value: 'HE-AACv2'}],
             audioSampleRateList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '22050', value: '22050'}, {name: '32000', value: '32000'}, {name: '44100', value: '44100'}, {name: '48000', value: '48000'}, {name: '96000', value: '96000'}],
             audioChannelsList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '1', value: '1'}, {name: '2', value: '2'}, {name: '3', value: '3'}, {name: '4', value: '4'}, {name: '5', value: '5'}, {name: '6', value: '6'}, {name: '7', value: '7'}, {name: '8', value: '8'}, {name: '9', value: '9'}, {name: '10', value: '10'}, {name: '11', value: '11'}, {name: '12', value: '12'}, {name: '13', value: '13'}, {name: '14', value: '14'}, {name: '15', value: '15'}, {name: '16', value: '16'}],
@@ -244,8 +244,10 @@ export default {
                 this.auxiliary.videoBitRate = 'auto'
                 this.template.Video.FrameRate = 'auto'
                 this.videoDisabled = true
+                this.template.Audio.Codec = container2codec[this.template.Container]
             } else if (this.videoDisabled) {
                 this.videoDisabled = false
+                this.template.Audio.Codec = 'auto'
             }
         },
         validateDiscription (rule, value, callback) {
@@ -348,7 +350,7 @@ const templateDefult = {
 }
 
 const audioOnly = ['flac', 'mp3', 'wma', 'mp2']
-
+const container2codec = { mp3: 'mp3', wma: 'wmav2', mp2: 'mp2' }
 </script>
 
 <style lang="less" scoped>
