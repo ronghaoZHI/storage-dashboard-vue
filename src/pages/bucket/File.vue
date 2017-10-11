@@ -538,6 +538,7 @@ export default {
                 if (res.Contents.length === 1000) {
                     this.deleteFolders(folder, res.Contents[100].Key)
                 } else {
+                    await handler('deleteObject', { Bucket: this.bucket, Key: this.prefix + folder.Key })
                     this.spinShow = false
                 }
             } catch (error) {
@@ -549,7 +550,6 @@ export default {
         async batchDelete () {
             let self = this
             await Promise.all(Array.map(self.selectedFileList, (file) => self.deleteFile(file)))
-            self.getData()
         },
         async batchDownload () {
             let self = this
