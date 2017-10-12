@@ -4,18 +4,18 @@
             <div class="search">
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
                     <Icon slot="prepend" size="18" type="ios-grid-view"></Icon>
-                    <Option value="group_id">group_id</Option>
-                    <Option value="node_id">node_id</Option>
-                    <Option value="partition_id">partition_id</Option>
+                    <Option value="group_id">Group ID</Option>
+                    <Option value="node_id">Node ID</Option>
+                    <Option value="partition_id">Partition ID</Option>
                 </Select>
                 <Input v-model="searchValue" :placeholder="'请输入'+ searchType" style="width:260px"></Input>
-                <Button type="primary">搜索</Button>
+                <Button type="primary" @click="getGroupList">搜索</Button>
             </div>
             <div class="status">
                 <span class="group-status-prefix">group 状态:</span>
-                <Button type="text" size="small">全部</Button>
-                <Button type="primary" size="small">只读</Button>
-                <Button type="text" size="small">可写</Button>
+                <button v-bind:class="{statusButtonFocus: read_only === 'None'}" @click="read_only = 'None'">全部(先不要点我哦)</button>
+                <button v-bind:class="{statusButtonFocus: read_only === 1}" @click="read_only = 1">只读</button>
+                <button v-bind:class="{statusButtonFocus: read_only === 0}" @click="read_only = 0">可写</button>
             </div>
         </div>
         <div class="content">
@@ -25,12 +25,17 @@
                 <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">IO</button>
                 <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">容量</button>
                 <div class="refresh-section">
-                    <Icon type="refresh" size="20"></Icon>
+                    <span @click="getGroupList"><Icon type="refresh" size="20"></Icon></span>
                 </div>
             </div>
             <div class="section-chart">
+                <Spin size="bigger" fix v-if="spinShow"></Spin>
                 <div class="card-chart" v-show="showChart === 0">
                     <group-card v-for="group in groupList" :key="group.group_id" :data="group"></group-card>
+                    <div class="show-more" v-show="nextGroupId !== null" @click="getGroupList(true)">
+                        <p>show more</p>
+                        <Icon type="chevron-down"></Icon>
+                    </div>
                 </div>
                 <div class="card-chart" v-show="showChart === 1">
                     
@@ -52,9 +57,12 @@ export default {
         return {
             searchType: 'group_id',
             searchValue: '',
-            statue: 'all',
+            read_only: 0,
             showChart: 0,
-            groupList: []
+            groupList: [],
+            nextGroupId: 0,
+            spinShow: true,
+            pageCount: 20
         }
     },
     created () {
@@ -67,21 +75,31 @@ export default {
         tabToggle (index, ref) {
             this.showChart = index
         },
-        async getGroupList () {
+        async getGroupList (isAppend = false) {
             this.spinShow = true
             this.$Loading.start()
             try {
-                let groupData = await this.$http.get(GROUP_LIST, {params: {
-                    start_group_id: 0,
-                    count: 20
+                let groupData = await this.$http.get(GROUP_LIST, { params: {
+                    start_group_id: this.searchValue.replace(/\s+/g, '') || this.nextGroupId || 0,
+                    [this.searchType]: this.searchValue.replace(/\s+/g, ''),
+                    count: this.pageCount,
+                    read_only: this.read_only
                 }})
-                this.groupList = groupData.group.reverse()
+                this.nextGroupId = groupData.next_group_id
+                this.groupList = isAppend ? this.groupList.concat(groupData.group) : groupData.group
                 this.spinShow = false
                 this.$Loading.finish()
             } catch (error) {
                 this.spinShow = false
                 this.$Loading.error()
             }
+        }
+    },
+    watch: {
+        'read_only' (to, from) {
+            this.start_group_id = 0
+            this.searchValue = ''
+            this.getGroupList()
         }
     }
 }
@@ -113,7 +131,27 @@ export default {
             }
 
             & > button {
-                margin: 0 4px;
+                padding: 2px 6px;
+                margin: 0 6px;
+                cursor: pointer;
+                background-image: none;
+                border: none;
+                border-radius: 3px;
+                white-space: nowrap;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                font-size: 12px;
+                background: #fff;
+                color: #475669;
+            }
+
+            & > button:focus,
+            .statusButtonFocus {
+                outline: 0;
+                background: @primary-color;
+                color: #fff;
             }
         }
     }
@@ -161,7 +199,7 @@ export default {
                 border-bottom: @group-common-border;
                 background-color: #f9fafc;
 
-                i {
+                span {
                     float: right;
                     margin: 10px 10px 0 0;
                     color: @primary-color;
@@ -182,14 +220,35 @@ export default {
             }
         }
 
-        .card-chart {
-            width: 100%;
-            .fb(flex-start, flex-start);
-            flex-wrap: wrap;
-            padding: 10px;
-            border: @group-common-border;
-            border-top: 0;
-            transition: all .2s ease-in-out;
+        .section-chart {
+            margin-top: 1px;
+            position: relative;
+
+            .card-chart {
+                width: 100%;
+                .fb(flex-start, flex-start);
+                flex-wrap: wrap;
+                padding: 10px;
+                border: @group-common-border;
+                border-top: 0;
+                transition: all .2s ease-in-out;
+
+                .show-more {
+                    width: 250px;
+                    height: 180px;
+                    line-height: 30px;
+                    padding-top: 60px;
+                    font-size: 24px;
+                    text-align: center;
+                    cursor: pointer;
+                    margin: 60px;
+                    font-weight: bold;
+
+                    &:hover {
+                        border: @group-common-border;
+                    }
+                }
+            }
         }
     }
 }

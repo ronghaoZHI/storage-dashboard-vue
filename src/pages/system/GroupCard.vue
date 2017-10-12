@@ -24,14 +24,14 @@
                     <li>{{pt.inn_ips[0]}}/{{pt.partition_idx}}</li>
                     <li>{{Math.floor(pt.space * 100)}}%</li>
                     <li>{{Math.floor(pt.ioutil * 100)}}%</li>
-                    <li>{{Math.floor(pt.cpu * 100)}}</li>
+                    <li>{{Math.round(pt.cpu * 100) / 100}}</li>
                     <li><span class="ip-button">移除</span></li>
                 </ul>
             </div>
         </div>
         <div class="footer">
-            <Button v-if="data.readonly === 1" type="ghost" size="small">可写(设置只读)</Button>
-            <span v-else>只读</span>
+            <span v-if="data.readonly === 1">只读</span>
+            <Button v-else type="ghost" size="small">设置为只读</Button>
             <Button type="ghost" size="small">详细信息</Button>
         </div>
     </div>
