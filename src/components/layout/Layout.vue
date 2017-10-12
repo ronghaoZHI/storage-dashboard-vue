@@ -98,6 +98,8 @@ export default {
         align-items: flex-start;
         .separator-icon {
             display: inline-block;
+            position: relative;
+            top: 1px;
             .wh(3px,16px);
             background: #20a0ff;
             margin-top: 3px;
