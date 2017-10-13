@@ -1,8 +1,9 @@
 <template>
     <div class="bsc-group-card">
         <div class="header">
-            <Icon type="android-star" size="16"></Icon>
+            <Icon  type="android-star" size="16"></Icon>
             <span>{{data.group_id}}</span>
+            <Button type="text" size="small" @click="showDetailModal=true">详细信息</Button>
         </div>
         <div class="content">
             <div class="files">
@@ -25,16 +26,15 @@
                     <li>{{Math.floor(pt.space * 100)}}%</li>
                     <li>{{Math.floor(pt.ioutil * 100)}}%</li>
                     <li>{{Math.round(pt.cpu * 100) / 100}}</li>
-                    <li><span class="ip-button">移除</span></li>
+                    <li><span class="ip-button">迁移</span></li>
                 </ul>
             </div>
         </div>
         <div class="footer">
-            <span v-if="data.readonly === 1">只读</span>
-            <Button v-else type="ghost" size="small">设置为只读</Button>
-            <Button type="ghost" size="small" @click="showDetailModal=true">详细信息</Button>
+            <span>{{status}}</span>
+            <Button type="ghost" size="small">设置为只读</Button>
         </div>
-        <Modal v-model="showDetailModal" title='详细信息'  width="900">
+        <Modal v-model="showDetailModal" title='详细信息' width="900">
             <div class="section-separator">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
@@ -118,6 +118,23 @@ export default {
         padding: 0 10px;
         background: #f9fafc;
         border-bottom: @group-common-border;
+    }
+
+    .header {
+        i  {
+            color: #00a854;
+        }
+
+        .i-not-ok {
+            color: #f85959;
+        }
+
+        button {
+            position: relative;
+            float: right;
+            top: 5px;
+            color: @primary-color;
+        }
     }
 
     .content {
