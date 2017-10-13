@@ -28,6 +28,8 @@ export const BIND_USER = group('administrator/bind/user')
 export const UNBIND_USER = group('administrator/unbind/user')
 
 export const GROUP_LIST = group('group/list')
+export const GROUP_MOVE = group('group/move')
+export const GROUP_READ_ONLY = group('group/read_only')
 
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 

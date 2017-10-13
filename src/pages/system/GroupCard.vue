@@ -21,18 +21,18 @@
                     <li>CPU</li>
                     <li>操作</li>
                 </ul>
-                <ul class="ip-list" v-for="pt in data.partition" :key="pt.partition_idx">
+                <ul class="ip-list" v-for="(pt,index) in data.partition" :key="pt.partition_idx">
                     <li>{{pt.inn_ips[0]}}/{{pt.partition_idx}}</li>
                     <li>{{Math.floor(pt.space * 100)}}%</li>
                     <li>{{Math.floor(pt.ioutil * 100)}}%</li>
                     <li>{{Math.round(pt.cpu * 100) / 100}}</li>
-                    <li><span class="ip-button">迁移</span></li>
+                    <li><span class="ip-button" @click="migrate(pt,index)">迁移</span></li>
                 </ul>
             </div>
         </div>
         <div class="footer">
             <span>{{status}}</span>
-            <Button type="ghost" size="small">设置为只读</Button>
+            <Button v-show="this.data.readonly === 0" type="ghost" size="small" @click="setReadOnly">设置为只读</Button>
         </div>
         <Modal v-model="showDetailModal" title='详细信息' width="900">
             <div class="section-separator">
@@ -92,6 +92,7 @@
     </div>
 </template>
 <script>
+import { GROUP_MOVE, GROUP_READ_ONLY } from '@/service/API'
 export default {
     data () {
         return {
@@ -100,7 +101,34 @@ export default {
             isUse: this.data.is_del === 0 ? '正常' : '删除'
         }
     },
-    props: ['data']
+    props: ['data'],
+    methods: {
+        async migrate (partition, index) {
+            try {
+                this.$Loading.start()
+                await this.$http.post(GROUP_MOVE, {
+                    group_id: this.data.group_id,
+                    src_partition_id: partition.partition_id
+                })
+                this.data.partition[0].readonly = 1
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+            }
+        },
+        async setReadOnly () {
+            try {
+                this.$Loading.start()
+                await this.$http.post(GROUP_READ_ONLY, {
+                    group_id: this.data.group_id
+                })
+                this.data.readonly = 1
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Loading.error()
+            }
+        }
+    }
 }
 </script>
 <style lang="less" scoped>

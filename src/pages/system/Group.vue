@@ -13,7 +13,7 @@
             </div>
             <div class="status">
                 <span class="group-status-prefix">group 状态:</span>
-                <button v-bind:class="{statusButtonFocus: read_only === 'None'}" @click="read_only = 'None'">全部(先不要点我哦)</button>
+                <button v-bind:class="{statusButtonFocus: read_only === 'None'}" @click="read_only = 'None'">全部</button>
                 <button v-bind:class="{statusButtonFocus: read_only === 1}" @click="read_only = 1">只读</button>
                 <button v-bind:class="{statusButtonFocus: read_only === 0}" @click="read_only = 0">可写</button>
             </div>
@@ -116,9 +116,11 @@ export default {
     },
     watch: {
         'read_only' (to, from) {
+            this.cleanParams()
             this.getGroupList(false, true)
         },
         'showChart' (to, from) {
+            this.cleanParams()
             this.getSortedGroupList(this.groupList, to)
         }
     }
