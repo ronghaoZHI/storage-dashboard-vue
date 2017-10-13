@@ -123,6 +123,7 @@ export default {
                     group_id: this.data.group_id
                 })
                 this.data.readonly = 1
+                this.status = '只读'
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
