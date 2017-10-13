@@ -1,5 +1,5 @@
 <template>
-    <div class="bsc-group-card">
+    <div class="bsc-system-card bsc-group-card">
         <div class="header">
             <Icon  type="android-star" size="16"></Icon>
             <span>{{data.group_id}}</span>
@@ -105,64 +105,14 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
-@group-common-border: 1px solid #d3dce6;
+
 
 .@{css-prefix}group-card {
-    width: 350px;
-    border: @group-common-border;
-    margin: 10px;
-
-    .header, .footer {
-        height: 36px;
-        line-height: 36px;
-        padding: 0 10px;
-        background: #f9fafc;
-        border-bottom: @group-common-border;
-    }
-
-    .header {
-        i  {
-            color: #00a854;
-        }
-
-        .i-not-ok {
-            color: #f85959;
-        }
-
-        button {
-            position: relative;
-            float: right;
-            top: 5px;
-            color: @primary-color;
-        }
-    }
-
     .content {
-
         .files {
-            padding: 0 10px;
-            padding-bottom: 10px;
-            border-bottom: @group-common-border;
-
-            & > span {
-                display: block;
-                position: relative;
-                padding: 10px 0 6px;
-            }
-
             .progress {
-                height: 24px;
-                background-color: #eff3f7;
-
                 .file-count {
                     width: 50%;
-                    display: inline-block;
-                    height: 24px;
-                    line-height: 24px;
-                    color: #fff;
-                    font-weight: bold;
-                    background: #6bbefc;
-                    padding: 0 4px;
                 }
             }
         }
@@ -207,101 +157,8 @@ export default {
             }
         }
     }
-
-    .footer {
-        width: 100%;
-        .fb(space-between,center);
-        border-top: @group-common-border;
-        border-bottom: 0;
-
-        button:nth-child(1) {
-            background: #fff;
-        }
-    }
 }
 
-.group {
-    border: @group-common-border;
-    padding: 0 10px 10px 10px;
-
-    .info-title {
-        height: 40px;
-        line-height: 40px;
-        font-size: 16px;
-        color: #475669;
-        border-bottom: 1px solid #e5e9f2;
-    }
-
-    .content {
-        margin-top: 12px;
-
-        .group-item {
-            display: inline-block;
-            width: 49%;
-            margin-bottom: 16px;
-            height: 14px;
-            line-height: 14px;
-            font-size: 14px;
-
-            .separator-icon {
-                display: inline-block;
-                position: relative;
-                top: 2px;
-                width: 3px;
-                height: 14px;
-                background: #20a0ff;
-                margin-right: 4px;
-            }
-        }
-
-        .partition-title,
-        .partition-list {
-            height: 30px;
-            line-height: 30px;
-            padding: 0 10px;
-            border: @group-common-border;
-
-            li {
-                display: inline-block;
-
-                .ip-button {
-                    color: @primary-color;
-                    cursor: pointer;
-
-                    &:hover {
-                        color: #7ec2f3;
-                    }
-                }
-            }
-
-            li:nth-child(1) {
-                width: 240px;
-            }
-
-            li:nth-child(3),
-            li:nth-child(4){
-                width: 115px;
-            }
-
-            li:nth-child(2),
-            li:nth-child(5),
-            li:nth-child(6),
-            li:nth-child(7),
-            li:nth-child(8),
-            li:nth-child(9) {
-                width: 53px;
-            }
-        }
-
-        .partition-title {
-            background: #f9fafc;
-        }
-
-        .partition-list {
-            border-top: 0;
-        }
-    }
-}
 
 
 </style>

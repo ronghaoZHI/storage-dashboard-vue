@@ -14,6 +14,9 @@ const systemChildren = [{
 }, {
     index: 2,
     name: 'group'
+}, {
+    index: 3,
+    name: 'partition'
 }]
 
 const videoChildren = [{

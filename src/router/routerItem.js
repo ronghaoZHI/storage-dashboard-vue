@@ -4,6 +4,7 @@ import File from '@/pages/bucket/File'
 import Dashboard from '@/pages/dashboard/Dashboard'
 import Machine from '@/pages/system/Machine'
 import Group from '@/pages/system/Group'
+import Partition from '@/pages/system/Partition'
 import Keychain from '@/pages/keychain/Keychain'
 import UserManage from '@/pages/user/UserManage'
 import Login from '@/pages/login/Login'
@@ -123,6 +124,11 @@ const layoutChild = [{
     name: 'group',
     meta: { title: 'Group', ali: 'group' },
     component: Group
+}, {
+    path: '/system/partition',
+    name: 'partition',
+    meta: { title: 'Partition', ali: 'partition' },
+    component: Partition
 }, {
     path: '/user',
     name: 'user',

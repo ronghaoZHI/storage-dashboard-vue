@@ -691,7 +691,7 @@ export const messages = {
             SYSTEM: '系统信息',
             MACHINE: '机器信息',
             GROUP: 'Group',
-            PARTITION: '磁盘分区',
+            PARTITION: '磁盘',
             USER: '用户管理',
             TEMPLATE: '转码模版',
             OUTPUT: '自动转码配置',
