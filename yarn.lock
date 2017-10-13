@@ -3282,9 +3282,9 @@ istanbul@^0.4.0:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
-iview-bsc@^2.2.5:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/iview-bsc/-/iview-bsc-2.2.5.tgz#2e21af93e8e3de41116d87794de84c76a7ca630b"
+iview-bsc@^2.2.6:
+  version "2.2.6"
+  resolved "http://registry.npm.taobao.org/iview-bsc/download/iview-bsc-2.2.6.tgz#5cd42160dbe494c89f297acd05dadbc674f0eb79"
   dependencies:
     async-validator "^1.8.1"
     core-js "^2.5.0"

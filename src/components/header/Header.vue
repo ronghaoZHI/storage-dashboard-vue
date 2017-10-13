@@ -37,7 +37,7 @@
             <Form ref="rePasswordForm"
                   :model="rePasswordForm"
                   :rules="ruleValidate"
-                  :label-width="80">
+                  :label-width="90">
                 <Form-item :label='$t("LOGIN.KEY")'
                            prop="password">
                     <Input v-model="rePasswordForm.password"
