@@ -570,27 +570,45 @@ export default {
             this.transcode.snapshots.splice(index, 1)
         },
         beforeSubmit () {
-            this.$refs['auxiliaryForm'].validate((valid) => {
-                if (!valid) {
-                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
-                } else {
-                    if (this.auxiliary.MP) {
-                        this.$refs['nameForm'].validate((valid) => {
-                            if (!valid) {
-                                this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
-                            } else {
-                                if (this.otherRule()) {
-                                    this.addTranscode()
-                                }
-                            }
-                        })
+            if (this.auxiliary.reg === 'regular') {
+                this.$refs['auxiliaryForm'].validate((valid) => {
+                    if (!valid) {
+                        this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                     } else {
-                        if (this.otherRule()) {
-                            this.addTranscode()
+                        if (this.auxiliary.MP) {
+                            this.$refs['nameForm'].validate((valid) => {
+                                if (!valid) {
+                                    this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                                } else {
+                                    if (this.otherRule()) {
+                                        this.addTranscode()
+                                    }
+                                }
+                            })
+                        } else {
+                            if (this.otherRule()) {
+                                this.addTranscode()
+                            }
                         }
                     }
+                })
+            } else {
+                if (this.auxiliary.MP) {
+                    this.$refs['nameForm'].validate((valid) => {
+                        if (!valid) {
+                            this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+                        } else {
+                            if (this.otherRule()) {
+                                this.addTranscode()
+                            }
+                        }
+                    })
+                } else {
+                    if (this.otherRule()) {
+                        this.addTranscode()
+                    }
                 }
-            })
+            }
         },
         otherRule () {
             let segments = []
