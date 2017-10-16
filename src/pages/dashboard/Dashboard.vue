@@ -4,7 +4,7 @@
         <div class="toolbar">
             <div class="button-datepicker">
                 <Select :prepend="true" v-model="selectedBucket" style="width:30%;float:left;margin-right:16px;" @on-change="getInitData">
-                    <p slot="prepend" style="font-size:12px">数据</p>
+                    <Icon slot="prepend" type="ios-folder"></Icon>
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
                 <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 40%;float:left;"></Date-picker>
