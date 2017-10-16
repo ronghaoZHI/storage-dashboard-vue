@@ -5,6 +5,7 @@ import Dashboard from '@/pages/dashboard/Dashboard'
 import Machine from '@/pages/system/Machine'
 import Group from '@/pages/system/Group'
 import Partition from '@/pages/system/Partition'
+import Traffic from '@/pages/system/Traffic'
 import Keychain from '@/pages/keychain/Keychain'
 import UserManage from '@/pages/user/UserManage'
 import Login from '@/pages/login/Login'
@@ -129,6 +130,11 @@ const layoutChild = [{
     name: 'partition',
     meta: { title: 'Partition', ali: 'partition' },
     component: Partition
+}, {
+    path: '/system/traffic',
+    name: 'traffic',
+    meta: { title: 'Traffic', ali: 'Traffic' },
+    component: Traffic
 }, {
     path: '/user',
     name: 'user',
