@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="footer">
-            <span>{{status}}</span>
+            <span>{{data.readonly === 0 ? '可写' : '只读'}}</span>
             <Button v-show="this.data.readonly === 0" type="ghost" size="small" @click="setReadOnly">设置为只读</Button>
         </div>
         <Modal v-model="showDetailModal" title='详细信息' width="900">
@@ -49,7 +49,7 @@
                         <span class="separator-icon"></span>Group ID: {{data.group_id}}
                     </div>
                     <div class="group-item">
-                        <span class="separator-icon"></span>状态： {{status}}
+                        <span class="separator-icon"></span>状态： {{data.readonly === 0 ? '可写' : '只读'}}
                     </div>
                     <div class="group-item">
                         <span class="separator-icon"></span>文件数: {{data.num_used}}
@@ -84,7 +84,7 @@
                         <li>{{Math.floor(pt.ioutil * 100)}}%</li>
                         <li>{{Math.floor(pt.space * 100)}}%</li>
                         <li>{{Math.round(pt.cpu * 100) / 100}}</li>
-                        <li>{{status}}</li>
+                        <li>{{data.readonly === 0 ? '可写' : '只读'}}</li>
                         <li>{{isUse}}</li>
                     </ul>
                 </div>
