@@ -35,61 +35,9 @@
             <span>{{data.readonly === 0 ? $t('SYSTEM.WRITEABLE') : $t('SYSTEM.READ_ONLY')}}</span>
             <Button v-show="this.data.readonly === 0" type="ghost" size="small" @click="setReadOnly">{{$t('SYSTEM.SET_READ_ONLY')}}</Button>
         </div>
-        <Modal v-model="showDetailModal" :title='$t("SYSTEM.DETAILS")' width="900">
-            <div class="section-separator">
-                <div class="separator-body">
-                    <span class="separator-icon"></span>
-                    <span class="separator-info" style="font-size: 18px">{{$t('SYSTEM.BASIC_INFO')}}</span>
-                </div>
-            </div>
-            <div class="group">
-                <div class="info-title">Group</div>
-                <div class="content">
-                    <div class="group-item">
-                        <span class="separator-icon"></span>Group ID: {{data.group_id}}
-                    </div>
-                    <div class="group-item">
-                        <span class="separator-icon"></span>{{$t('SYSTEM.GROUP_STATUS')}} {{data.readonly === 0 ? $t('SYSTEM.WRITEABLE') : $t('SYSTEM.READ_ONLY')}}
-                    </div>
-                    <div class="group-item">
-                        <span class="separator-icon"></span>{{$t('SYSTEM.FILE_NUMBERS')}}: {{data.num_used}}
-                    </div>
-                    <div class="group-item">
-                        <span class="separator-icon"></span>{{$t('SYSTEM.CAPACITY')}}: 150G
-                    </div>
-                    <div class="group-item">
-                        <span class="separator-icon"></span>{{$t('SYSTEM.CREATE_TIME')}}: {{data.ts}}
-                    </div>
-                </div>
-            </div>
-            <div class="group" style="border-top:0">
-                <div class="info-title">{{$t('SYSTEM.PARTITION_INFO')}}</div>
-                <div class="content">
-                    <ul class="partition-title">
-                        <li>ID</li>
-                        <li>Type</li>
-                        <li>IDC</li>
-                        <li>IP</li>
-                        <li>IO</li>
-                        <li>{{$t('SYSTEM.USED_CAPACITY')}}</li>
-                        <li>CPU</li>
-                        <li>{{$t('SYSTEM.RW_STATUS')}}</li>
-                        <li>{{$t('SYSTEM.IS_DEL')}}</li>
-                    </ul>
-                    <ul class="partition-list" v-for="pt in data.partition" :key="pt.partition_idx">
-                        <li>{{pt.partition_id}}</li>
-                        <li>{{pt.media_type}}</li>
-                        <li>{{pt.idc}}</li>
-                        <li>{{pt.inn_ips[0]}}</li>
-                        <li>{{pt.ioutil || '-'}}%</li>
-                        <li>{{pt.used_rate || '-'}}%</li>
-                        <li>{{pt.cpu || '-'}}%</li>
-                        <li>{{pt.readonly === 0 ? $t('SYSTEM.WRITEABLE') : $t('SYSTEM.READ_ONLY')}}</li>
-                        <li>{{pt.is_del === 0 ? $t('SYSTEM.NORMAL') : $t('SYSTEM.DELETED')}}</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="section-separator" style="margin-top:24px;" v-if="data.traffic">
+        <Modal v-model="showDetailModal" title='详细信息' width="900">
+            <detail-modal :titles='modalTitles' :data='modalData'></detail-modal>
+            <div class="section-separator" style="margin-top:24px;" v-if="data.traffic && data.traffic.length >= 0">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
                     <span class="separator-info" style="font-size: 18px">{{$t('SYSTEM.MIGRATION')}}</span>
@@ -118,7 +66,6 @@
                 </div>
             </div>
         </Modal>
-        <detail-modal :isShow= 'showDetailModal' :titles='modalTitles' :data='modalData'></detail-modal>
     </div>
 </template>
 <script>
@@ -134,9 +81,6 @@ export default {
             modalTitles: {title: '详细信息', subTitle1: 'group 信息', subTitle2: '对应磁盘信息'}
         }
     },
-    created () {
-        // console.log('modalData', this.modalData, this.showDetailModal)
-    },
     components: {detailModal},
     props: ['data'],
     computed: {
@@ -147,21 +91,16 @@ export default {
                 newItem.ioutil = `${Math.floor(item.ioutil * 100)}%`
                 newItem.space = `${Math.floor(item.space * 100)}%`
                 newItem.cpu = Math.round(item.cpu * 100) / 100
-                newItem.status = this.status
+                newItem.status = this.data.readonly === 0 ? '可写' : '只读'
                 newItem.isUse = this.isUse
                 return newItem
             })
             let basicInfo = [{name: 'Group ID', value: this.data.group_id},
-                {name: '状态', value: this.status},
+                {name: '状态', value: this.data.readonly === 0 ? '可写' : '只读'},
                 {name: '文件数', value: this.data.num_used},
                 {name: '容量', value: '150G'},
                 {name: '创建时间', value: this.data.ts}]
-            return {
-                tableData,
-                basicInfo,
-                modalShow: false,
-                detailHead
-            }
+            return {tableData, basicInfo, detailHead}
         }
     },
     methods: {
