@@ -5,11 +5,11 @@
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
                     <Icon slot="prepend" size="18" type="ios-grid-view"></Icon>
                     <Option value="group_id">Group ID</Option>
-                    <Option value="node_id">Node ID</Option>
+                    <Option value="node_ip">Node IP</Option>
                     <Option value="partition_id">Partition ID</Option>
                 </Select>
                 <Input v-model="searchValue" :placeholder="'请输入'+ searchType" style="width:260px"></Input>
-                <Button type="primary" @click="getGroupList">搜索</Button>
+                <Button type="primary" @click="getGroupList(false)">搜索</Button>
             </div>
             <div class="status">
                 <span class="group-status-prefix">group 状态:</span>
@@ -19,6 +19,7 @@
             </div>
         </div>
         <div class="content">
+            <Spin size="bigger" fix v-if="spinShow"></Spin>
             <div class="section-chart-tab">
                 <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">创建时间升序</button>
                 <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU</button>
@@ -29,7 +30,6 @@
                 </div>
             </div>
             <div class="section-chart">
-                <Spin size="bigger" fix v-if="spinShow"></Spin>
                 <div class="card-chart">
                     <group-card v-for="group in groupList" :key="group.group_id" :data="group" :sortBy="showChart"></group-card>
                     <div class="show-more" v-show="nextGroupId !== null" @click="getGroupList(true)">
@@ -49,7 +49,7 @@ export default {
         return {
             searchType: 'group_id',
             searchValue: '',
-            read_only: 0,
+            read_only: 'none',
             showChart: 'group_id',
             groupList: [],
             nextGroupId: 0,

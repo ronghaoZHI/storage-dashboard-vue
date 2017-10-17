@@ -26,7 +26,8 @@
                     <li>{{Math.floor(pt.space * 100)}}%</li>
                     <li>{{Math.floor(pt.ioutil * 100)}}%</li>
                     <li>{{Math.round(pt.cpu * 100) / 100}}</li>
-                    <li><span class="ip-button" @click="migrate(pt,index)">迁移</span></li>
+                    <li v-if="data.traffic && pt.partition_id === data.traffic[0].src_partition_ids[0]">迁移中</li>
+                    <li v-else><span class="ip-button" @click="migrate(pt,index)">迁移</span></li>
                 </ul>
             </div>
         </div>
@@ -86,6 +87,34 @@
                         <li>{{status}}</li>
                         <li>{{isUse}}</li>
                     </ul>
+                </div>
+            </div>
+            <div class="section-separator" style="margin-top:24px;" v-if="data.traffic && data.traffic.length >= 0">
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info" style="font-size: 18px">迁移信息</span>
+                </div>
+            </div>
+            <div class="group" v-if="data.traffic && data.traffic.length >= 0">
+                <div class="content">
+                    <div class="group-item">
+                        <span class="separator-icon"></span>Partition: {{data.traffic[0].src_partition_ids[0]}}
+                    </div>
+                    <div class="group-item">
+                        <span class="separator-icon"></span>目标 Partition: {{data.traffic[0].target_partition_id}}
+                    </div>
+                    <div class="group-item">
+                        <span class="separator-icon"></span>迁移进度: {{data.traffic[0].process}}%
+                    </div>
+                    <div class="group-item">
+                        <span class="separator-icon"></span>已进行时间: {{data.traffic[0].spent_time}}
+                    </div>
+                    <div class="group-item">
+                        <span class="separator-icon"></span>移动速度: {{data.traffic[0].speed}}/S
+                    </div>
+                    <div class="group-item">
+                        <span class="separator-icon"></span>剩余完成时间: {{data.traffic[0].left_time}}
+                    </div>
                 </div>
             </div>
         </Modal>
@@ -157,6 +186,7 @@ export default {
 
                 li {
                     display: inline-block;
+                    float: left;
 
                     .ip-button {
                         color: @primary-color;
@@ -172,7 +202,7 @@ export default {
                     width: 110px;
                 }
 
-                li:nth-child(2),li:nth-child(3), li:nth-child(4) {
+                li:nth-child(2),li:nth-child(3),li:nth-child(4) {
                     width: 50px;
                 }
             }
