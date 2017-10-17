@@ -118,19 +118,52 @@
                 </div>
             </div>
         </Modal>
+        <detail-modal :isShow= 'showDetailModal' :titles='modalTitles' :data='modalData'></detail-modal>
     </div>
 </template>
 <script>
 import { GROUP_MOVE, GROUP_READ_ONLY } from '@/service/API'
 import { bytes } from '@/service/bucketService'
+import detailModal from './detailModal'
 export default {
     data () {
         return {
             showDetailModal: false,
-            status: this.data.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY')
+            status: this.data.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY'),
+            isUse: this.data.is_del === 0 ? '正常' : '删除',
+            modalTitles: {title: '详细信息', subTitle1: 'group 信息', subTitle2: '对应磁盘信息'}
         }
     },
+    created () {
+        // console.log('modalData', this.modalData, this.showDetailModal)
+    },
+    components: {detailModal},
     props: ['data'],
+    computed: {
+        modalData () {
+            let tableData = _.map(this.data.partition, (item) => {
+                let newItem = _.cloneDeep(item)
+                newItem.inn_ips = item.inn_ips[0]
+                newItem.ioutil = `${Math.floor(item.ioutil * 100)}%`
+                newItem.space = `${Math.floor(item.space * 100)}%`
+                newItem.cpu = Math.round(item.cpu * 100) / 100
+                newItem.status = this.status
+                newItem.isUse = this.isUse
+                return newItem
+            })
+            let basicInfo = [{name: 'Group ID', value: this.data.group_id},
+                {name: '状态', value: this.status},
+                {name: '文件数', value: this.data.num_used},
+                {name: '容量', value: '150G'},
+                {name: '创建时间', value: this.data.ts}]
+            return {
+                tableData,
+                basicInfo,
+                modalShow: false,
+                detailHead
+            }
+        }
+    },
     methods: {
         async migrate (partition, index) {
             try {
@@ -161,6 +194,15 @@ export default {
         bytes: bytes
     }
 }
+const detailHead = [{name: 'ID', value: 'partition_id'},
+    {name: '类型', value: 'media_type'},
+    {name: 'IDC', value: 'idc'},
+    {name: 'IP', value: 'inn_ips'},
+    {name: 'IO', value: 'ioutil'},
+    {name: '容量', value: 'space'},
+    {name: 'CPU', value: 'cpu'},
+    {name: '读写状态', value: 'status'},
+    {name: '可用状态', value: 'isUse'}]
 </script>
 <style lang="less" scoped>
 .dark .@{css-prefix}group-card {

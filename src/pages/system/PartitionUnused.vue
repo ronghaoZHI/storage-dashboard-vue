@@ -3,8 +3,6 @@
     </div>
 </template>
 <script>
-// import idcCard from './idcCard'
-// import partitionCard from './PartitionCard'
 export default {
     data () {
         return {
@@ -12,7 +10,7 @@ export default {
     },
     created () {
     },
-    // comments: { idcCard, partitionCard },
+    // components: { idcCard, partitionCard },
     methods: {
     },
     watch: {

@@ -17,7 +17,7 @@
                     <Option v-for="idc in typeArray" :value="idc.value" :key="idc.value">{{idc.name}}</Option>
                 </Select>
                 <Select :prepend="true" style="width:180px;margin-right:8px;">
-                    <Icon slot="prepend" size="18" type="soup-can"></Icon>
+                    <Icon slot="prepend" size="18" type="compose"></Icon>
                     <Option v-for="idc in statusArray" :value="idc.value" :key="idc.value">{{idc.name}}</Option>
                 </Select>
                 <Select :prepend="true" style="width:180px;margin-right:8px;">
@@ -30,12 +30,14 @@
         </div>
         <partition-used></partition-used>
         <partition-unused></partition-unused>
+        <!-- <partition-card ></partition-card> -->
     </div>
 </template>
 <script>
 import partitionUsed from './PartitionUsed'
 import partitionUnused from './partitionUnused'
 import partitionDeleted from './partitionDeleted'
+import partitionCard from './PartitionCard'
 export default {
     data () {
         return {
@@ -50,14 +52,13 @@ export default {
     created () {
     },
     components: {
-        partitionUsed, partitionUnused, partitionDeleted
+        partitionUsed, partitionUnused, partitionDeleted, partitionCard
     },
     methods: {
         tabToggle (index, ref) {
             this.tabName = index
         },
         getPartitionList () {
-
         }
     },
     watch: {

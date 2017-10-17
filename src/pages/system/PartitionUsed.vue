@@ -5,10 +5,9 @@
         </div>
         <div class="content">
             <div class="section-chart-tab">
-                <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">创建时间升序</button>
-                <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU</button>
-                <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="tabToggle('ioutil')">IO</button>
-                <button v-bind:class="{buttonFocus: showChart === 'space'}" @click="tabToggle('space')">容量</button>
+                <button v-bind:class="{buttonFocus: showChart === 'io'}" @click="tabToggle('io')">IO使用率</button>
+                <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU Load</button>
+                <button v-bind:class="{buttonFocus: showChart === 'capacity'}" @click="tabToggle('capacity')">容量使用率</button>
                 <div class="refresh-section">
                     <span @click="getPartitionList(false, true)"><Icon type="refresh" size="20"></Icon></span>
                 </div>
@@ -16,8 +15,13 @@
             <div class="section-chart">
                 <Spin size="bigger" fix v-if="spinShow"></Spin>
                 <div class="card-chart">
-                    <!-- <partition-card></partition-card> -->
-                    页码
+                    <partition-card ></partition-card>
+                    <partition-card ></partition-card>
+                    <partition-card ></partition-card>
+                    <partition-card ></partition-card>
+                    <partition-card ></partition-card>
+                    <br>
+                    <Page class="page" :total="100" show-elevator show-sizer></Page>
                 </div>
             </div>
         </div>
@@ -25,8 +29,9 @@
 </template>
 <script>
 // import idcCard from './idcCard'
-// import partitionCard from './PartitionCard'
+import partitionCard from './PartitionCard'
 export default {
+    name: 'partitionUsed',
     data () {
         return {
             showChart: 'group_id',
@@ -34,8 +39,11 @@ export default {
         }
     },
     created () {
+        console.log(partitionCard)
     },
-    // comments: { partitionCard },
+    components: {
+        partitionCard
+    },
     methods: {
         tabToggle (index, ref) {
             this.showChart = index
@@ -48,6 +56,4 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
-
 </style>
