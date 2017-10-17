@@ -33,6 +33,7 @@
         <div class="content">
             <Button class="button-refresh" type="ghost">刷新</Button>
             <Table border :context="self" :stripe="true" :columns="listHeader" :data="trafficList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+            <Page class="page" :total="dataCount" :page-size="pageSize" show-total show-elevator @on-change="changepage"></Page>
         </div>
     </div>
 </template>
@@ -45,10 +46,14 @@ export default {
             searchValue: '',
             spinShow: true,
             tabName: 'group_all',
-            trafficList: [{
+            dataCount: 0,
+            pageSize: 2,
+            trafficList: [],
+            ajaxTrafficList: [],
+            testData: [{
                 move_task_id: '21',
                 group_id: '1',
-                progress_percent: 75,
+                progress_percent: 10,
                 time_used: '08:50:08',
                 time_need: '08:50:08',
                 group_status: 'dispatch_task',
@@ -56,13 +61,22 @@ export default {
                 target_disk: '10.104.16.170/002'
             }, {
                 move_task_id: '03',
-                group_id: '1',
+                group_id: '2',
                 progress_percent: 100,
                 time_used: '08:50:06',
                 time_need: '08:50:06',
                 group_status: 'recovering',
                 source_disk: '10.104.16.170/001',
                 target_disk: '10.104.16.170/002'
+            }, {
+                group_id: '3',
+                progress_percent: 30
+            }, {
+                group_id: '4',
+                progress_percent: 40
+            }, {
+                group_id: '5',
+                progress_percent: 50
             }],
             listHeader: [{
                 title: 'move_task_id',
@@ -106,6 +120,25 @@ export default {
                 key: 'target_disk',
                 width: 120
             }]
+        }
+    },
+    created () {
+        this.getTrafficList()
+    },
+    methods: {
+        getTrafficList () {
+            this.ajaxTrafficList = this.testData
+            this.dataCount = this.testData.length
+            if (this.dataCount < this.pageSize) {
+                this.trafficList = this.ajaxTrafficList
+            } else {
+                this.trafficList = this.ajaxTrafficList.slice(0, this.pageSize)
+            }
+        },
+        changepage (index) {
+            let _start = (index - 1) * this.pageSize
+            let _end = index * this.pageSize
+            this.trafficList = this.ajaxTrafficList.slice(_start, _end)
         }
     }
 }
@@ -158,6 +191,10 @@ export default {
         .bsc-table-wrapper {
             top: 8px;
             clear: both;
+        }
+        .page {
+            margin: 20px;
+            text-align: center;
         }
     }
 }
