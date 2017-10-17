@@ -185,7 +185,7 @@ export default {
                 border: @group-common-border;
 
                 li {
-                    display: inline-block;
+                    display: block;
                     float: left;
 
                     .ip-button {
