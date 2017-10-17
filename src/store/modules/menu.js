@@ -86,7 +86,7 @@ const ONLINE_ADMIN_NO_SUBSUER = [userManage]
 const ONLINE_NORMAL = [bucket, dashboard, keychain, video]
 const ONLINE_SUPRER = [bucket, dashboard, keychain, video, userManage]
 const ONLINE_ADMIN = [bucket, dashboard, keychain, video, userManage]
-const SUPER_ADMIN = [bucket, dashboard, keychain, video, system, userManage]
+const SUPER_ADMIN = [bucket, dashboard, keychain, video, system]
 
 const state = {
     menuList: user.state.type === 'superadmin' ? SUPER_ADMIN : user.state.type === 'admin' ? (user.state.subUser ? ONLINE_ADMIN : ONLINE_ADMIN_NO_SUBSUER) : (user.state.type === 'super' ? ONLINE_SUPRER : (user.state.type === 'sub' ? ONLINE_SUB : ONLINE_NORMAL))

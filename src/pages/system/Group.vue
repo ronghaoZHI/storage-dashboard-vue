@@ -72,7 +72,7 @@ export default {
             this.$Loading.start()
             try {
                 let groupData = await this.$http.get(GROUP_LIST, { params: {
-                    start_group_id: this.searchValue.replace(/\s+/g, '') || this.nextGroupId || 0,
+                    start_group_id: this.searchType === 'group_id' ? this.searchValue.replace(/\s+/g, '') || this.nextGroupId || 0 : 0,
                     [this.searchType]: this.searchValue.replace(/\s+/g, ''),
                     count: this.pageCount,
                     read_only: this.read_only

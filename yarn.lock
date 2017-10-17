@@ -3295,9 +3295,9 @@ istanbul@^0.4.0:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
-iview-bsc@^2.3.2:
-  version "2.3.2"
-  resolved "http://registry.npm.taobao.org/iview-bsc/download/iview-bsc-2.3.2.tgz#0f42d184bb1e1e135154c822e28f995f1248d959"
+iview-bsc@^2.3.3:
+  version "2.3.3"
+  resolved "http://registry.npm.taobao.org/iview-bsc/download/iview-bsc-2.3.3.tgz#dbedfa50e9f771ce8ebabbd303611e309dfcb176"
   dependencies:
     async-validator "^1.8.1"
     compression-webpack-plugin "^1.0.1"
