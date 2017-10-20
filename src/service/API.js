@@ -31,6 +31,8 @@ export const GROUP_LIST = group('group/list')
 export const GROUP_MOVE = group('group/move')
 export const GROUP_READ_ONLY = group('group/read_only')
 
+export const TRAFFIC_LIST = group('traffic/list')
+
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 
 export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)
