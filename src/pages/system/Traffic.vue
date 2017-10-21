@@ -137,10 +137,8 @@ export default {
             this.trafficList = this.tabName === 'group_all' ? _trafficList : _trafficList.filter(value => value.group_status === this.tabName)
         },
         async refresh () {
-            this.spinShow = true
             await this.getTrafficList(true)
             this.getFilterTrafficList()
-            this.spinShow = false
         }
     }
 }
