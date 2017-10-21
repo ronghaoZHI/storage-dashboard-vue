@@ -5,25 +5,25 @@
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
                     <Icon slot="prepend" size="18" type="ios-grid-view"></Icon>
                     <Option value="group_id">Group ID</Option>
-                    <Option value="服务器 IP">服务器 IP</Option>
+                    <Option value="server_ip">服务器 IP</Option>
                     <Option value="partition_id">Partition ID</Option>
                 </Select>
                 <Input v-model="searchValue" :placeholder="'请输入'+ searchType" style="width:260px"></Input>
-                <Button type="primary" @click="getSomeTrafficList(searchType, searchValue)">搜索</Button>
+                <Button type="primary" @click="getFilterTrafficList(true)">搜索</Button>
             </div>
             <div class="status">
                 <span class="group_status_prefix">group 状态:</span>
                 <div class="group_status">
-                    <button :class="{statusButtonFocus: tabName === 'group_all'}" @click="tabName = 'group_all'; getGroupStatusTrafficList('group_all')">全部</button>
-                    <button :class="{statusButtonFocus: tabName === 'preparing to move'}" @click="tabName = 'preparing to move'; getGroupStatusTrafficList('preparing to move')">preparing to move</button>
-                    <button :class="{statusButtonFocus: tabName === 'moving'}" @click="tabName = 'moving'; getGroupStatusTrafficList('moving')">moving</button>
-                    <button :class="{statusButtonFocus: tabName === 'remove_task'}" @click="tabName = 'remove_task'; getGroupStatusTrafficList('remove_task')">remove_task</button>
+                    <button :class="{statusButtonFocus: tabName === 'group_all'}" @click="tabName = 'group_all'; getFilterTrafficList()">全部</button>
+                    <button :class="{statusButtonFocus: tabName === 'preparing to move'}" @click="tabName = 'preparing to move'; getFilterTrafficList()">preparing to move</button>
+                    <button :class="{statusButtonFocus: tabName === 'moving'}" @click="tabName = 'moving'; getFilterTrafficList()">moving</button>
+                    <button :class="{statusButtonFocus: tabName === 'remove_task'}" @click="tabName = 'remove_task'; getFilterTrafficList()">remove_task</button>
                 </div>
             </div>
         </div>
         <div class="content">
             <Spin size="bigger" fix v-if="spinShow"></Spin>
-            <Button class="button-refresh" type="ghost" @click="refresh(searchType, searchValue, tabName)">刷新</Button>
+            <Button class="button-refresh" type="ghost" @click="refresh()">刷新</Button>
             <Table border :context="self" :stripe="true" :columns="listHeader" :data="trafficList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         </div>
     </div>
@@ -39,7 +39,6 @@ export default {
             spinShow: true,
             tabName: 'group_all',
             trafficListAll: [],
-            trafficListGroupAll: [],
             trafficList: [],
             listHeader: [{
                 title: 'group_id',
@@ -66,21 +65,7 @@ export default {
                 key: 'left_time',
                 width: 100,
                 sortable: true,
-                sortMethod: function (a, b, type) {
-                    if (a.length !== b.length) {
-                        if (type === 'asc') {
-                            return a.length > b.length ? 1 : -1
-                        } else if (type === 'desc') {
-                            return a.length < b.length ? 1 : -1
-                        }
-                    } else {
-                        if (type === 'asc') {
-                            return a > b ? 1 : -1
-                        } else if (type === 'desc') {
-                            return a < b ? 1 : -1
-                        }
-                    }
-                }
+                sortMethod: (a, b, type) => a.length !== b.length ? (type === 'asc' ? a.length - b.length : b.length - a.length) : (type === 'asc' ? (a > b ? 1 : -1) : (a < b ? 1 : -1))
             }, {
                 title: 'group状态',
                 key: 'group_status',
@@ -116,14 +101,13 @@ export default {
         this.getTrafficList()
     },
     methods: {
-        async getTrafficList () {
+        async getTrafficList (isRefresh = false) {
             this.spinShow = true
             this.$Loading.start()
             try {
                 let trafficData = await this.$http.get(TRAFFIC_LIST)
                 this.trafficListAll = this.convert2Front(trafficData)
-                this.trafficListGroupAll = this.trafficListAll
-                this.trafficList = this.trafficListAll
+                if (!isRefresh) this.trafficList = this.trafficListAll
                 this.spinShow = false
                 this.$Loading.finish()
             } catch (error) {
@@ -147,33 +131,15 @@ export default {
             })
             return frontList
         },
-        getSomeTrafficList (searchType, searchValue) {
-            this.tabName = 'group_all'
-            if (searchType === 'group_id') {
-                this.trafficListGroupAll = this.trafficListAll.filter(value => value.group_id >= searchValue)
-                this.trafficList = this.trafficListGroupAll
-            } else if (searchType === '服务器 IP') {
-                this.trafficListGroupAll = searchValue ? this.trafficListAll.filter(value => value.source_disk[0] === searchValue) : this.trafficListAll
-                this.trafficList = this.trafficListGroupAll
-            } else {
-                this.trafficListGroupAll = searchValue ? this.trafficListAll.filter(value => value.source_disk[2] === searchValue) : this.trafficListAll
-                this.trafficList = this.trafficListGroupAll
-            }
+        getFilterTrafficList (isSearch = false) {
+            if (isSearch) this.tabName = 'group_all'
+            let _trafficList = this.searchType === 'group_id' ? this.trafficListAll.filter(value => value.group_id >= this.searchValue) : this.searchValue ? this.trafficListAll.filter(value => this.searchType === 'server_ip' ? value.source_disk[0] === this.searchValue : value.source_disk[2] === this.searchValue) : this.trafficListAll
+            this.trafficList = this.tabName === 'group_all' ? _trafficList : _trafficList.filter(value => value.group_status === this.tabName)
         },
-        getGroupStatusTrafficList (groupStatus) {
-            if (groupStatus === 'group_all') {
-                this.trafficList = this.trafficListGroupAll
-            } else {
-                this.trafficList = this.trafficListGroupAll.filter(value => value.group_status === groupStatus)
-            }
-        },
-        async refresh (searchType, searchValue, groupStatus) {
+        async refresh () {
             this.spinShow = true
-            await this.getTrafficList()
-            let status = groupStatus
-            this.getSomeTrafficList(searchType, searchValue)
-            this.tabName = status
-            this.getGroupStatusTrafficList(status)
+            await this.getTrafficList(true)
+            this.getFilterTrafficList()
             this.spinShow = false
         }
     }
@@ -227,10 +193,6 @@ export default {
         .bsc-table-wrapper {
             top: 8px;
             clear: both;
-        }
-        .page {
-            margin: 20px;
-            text-align: center;
         }
     }
 }
