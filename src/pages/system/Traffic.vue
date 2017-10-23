@@ -5,16 +5,16 @@
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
                     <Icon slot="prepend" size="18" type="ios-grid-view"></Icon>
                     <Option value="group_id">Group ID</Option>
-                    <Option value="server_ip">服务器 IP</Option>
+                    <Option value="server_ip">Server IP</Option>
                     <Option value="partition_id">Partition ID</Option>
                 </Select>
-                <Input v-model="searchValue" :placeholder="'请输入'+ searchType" style="width:260px"></Input>
-                <Button type="primary" @click="getFilterTrafficList(true)">搜索</Button>
+                <Input v-model="searchValue" :placeholder="$t('SYSTEM.PLEASE_ENTER') + searchType" style="width:260px"></Input>
+                <Button type="primary" @click="getFilterTrafficList(true)">{{$t('SYSTEM.SEARCH')}}</Button>
             </div>
             <div class="status">
-                <span class="group_status_prefix">group 状态:</span>
+                <span class="group_status_prefix">{{$t('SYSTEM.GROUP_STATUS')}} :</span>
                 <div class="group_status">
-                    <button :class="{statusButtonFocus: tabName === 'group_all'}" @click="tabName = 'group_all'; getFilterTrafficList()">全部</button>
+                    <button :class="{statusButtonFocus: tabName === 'group_all'}" @click="tabName = 'group_all'; getFilterTrafficList()">{{$t('SYSTEM.ALL')}}</button>
                     <button :class="{statusButtonFocus: tabName === 'preparing to move'}" @click="tabName = 'preparing to move'; getFilterTrafficList()">preparing to move</button>
                     <button :class="{statusButtonFocus: tabName === 'moving'}" @click="tabName = 'moving'; getFilterTrafficList()">moving</button>
                     <button :class="{statusButtonFocus: tabName === 'remove_task'}" @click="tabName = 'remove_task'; getFilterTrafficList()">remove_task</button>
@@ -23,7 +23,7 @@
         </div>
         <div class="content">
             <Spin size="bigger" fix v-if="spinShow"></Spin>
-            <Button class="button-refresh" type="ghost" @click="refresh()">刷新</Button>
+            <Button class="button-refresh" type="ghost" @click="refresh()">{{$t('SYSTEM.REFRESH')}}</Button>
             <Table border :context="self" :stripe="true" :columns="listHeader" :data="trafficList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         </div>
     </div>
@@ -41,13 +41,13 @@ export default {
             trafficListAll: [],
             trafficList: [],
             listHeader: [{
-                title: 'group_id',
+                title: 'Group ID',
                 key: 'group_id',
-                width: 70
+                width: 100
             }, {
-                title: '进度百分比',
+                title: this.$t('SYSTEM.PROGRESS'),
                 key: 'process_percent',
-                width: 120,
+                width: 150,
                 sortable: true,
                 render: (h, params) => {
                     return h('Progress', {
@@ -57,23 +57,23 @@ export default {
                     })
                 }
             }, {
-                title: '已用时间',
+                title: this.$t('SYSTEM.TIME_SPENT'),
                 key: 'spent_time',
-                width: 100
+                width: 150
             }, {
-                title: '预计还需时间',
+                title: this.$t('SYSTEM.REMAINING_TIME'),
                 key: 'left_time',
-                width: 100,
+                width: 150,
                 sortable: true,
                 sortMethod: (a, b, type) => a.length !== b.length ? (type === 'asc' ? a.length - b.length : b.length - a.length) : (type === 'asc' ? (a > b ? 1 : -1) : (a < b ? 1 : -1))
             }, {
-                title: 'group状态',
+                title: this.$t('SYSTEM.GROUP_STATUS'),
                 key: 'group_status',
-                width: 100
+                width: 140
             }, {
-                title: '源磁盘',
+                title: this.$t('SYSTEM.SOURCE_DISK'),
                 key: 'source_disk',
-                width: 190,
+                width: 260,
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {
@@ -83,9 +83,9 @@ export default {
                     }, params.row.source_disk[2])
                 }
             }, {
-                title: '目标磁盘',
+                title: this.$t('SYSTEM.TARGET_DISK'),
                 key: 'target_disk',
-                width: 190,
+                width: 260,
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {

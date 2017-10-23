@@ -540,6 +540,18 @@ export const messages = {
             BASE_INFO: 'Basic information',
             HLS_REQUIRED: 'HLS file name is required'
         },
+        SYSTEM: {
+            PLEASE_ENTER: 'Please enter ',
+            SEARCH: 'Search',
+            GROUP_STATUS: 'Group Status',
+            ALL: 'All',
+            REFRESH: 'Refresh',
+            PROGRESS: 'Progress',
+            TIME_SPENT: 'Time Spent',
+            REMAINING_TIME: 'Remaining Time',
+            SOURCE_DISK: 'Source Disk',
+            TARGET_DISK: 'Target Disk'
+        },
         i: {
             select: {
                 placeholder: 'Select',
@@ -1174,6 +1186,18 @@ export const messages = {
             PIPELINE_DELETE_ERROR: '删除失败：该管道正被占用',
             BASE_INFO: '基本信息',
             HLS_REQUIRED: '请填写自适应HLS文件名'
+        },
+        SYSTEM: {
+            PLEASE_ENTER: '请输入',
+            SEARCH: '搜索',
+            GROUP_STATUS: 'Group 状态',
+            ALL: '全部',
+            REFRESH: '刷新',
+            PROGRESS: '进度百分比',
+            TIME_SPENT: '已用时间',
+            REMAINING_TIME: '预计还需时间',
+            SOURCE_DISK: '源磁盘',
+            TARGET_DISK: '目标磁盘'
         },
         i: {
             select: {
