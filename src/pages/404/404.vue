@@ -20,7 +20,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '../../styles/index.less';
+
 
 .@{css-prefix}not-found {
     .wh(100%,90%);

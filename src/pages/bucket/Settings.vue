@@ -638,8 +638,6 @@ const convertNewUserItem = item => {
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/index.less';
-
 .@{css-prefix}settings {
     .@{css-prefix}layout-toolbar {
         padding-bottom: 8px;

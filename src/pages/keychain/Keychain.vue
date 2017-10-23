@@ -74,8 +74,6 @@ export default {
 
 </script>
 <style lang="less" scoped>
-@import '../../styles/index.less';
-
 .@{css-prefix}keychain {
     min-height: 100%;
     width: 100%;

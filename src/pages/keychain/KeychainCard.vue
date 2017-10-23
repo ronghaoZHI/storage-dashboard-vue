@@ -56,8 +56,6 @@ export default {
 
 </script>
 <style lang="less" scoped>
-
-@import '../../styles/index.less';
 @keychain-card-width: 390px;
 @keychain-card-height: 110px;
 @keychain-card-header-height: 30px;

@@ -421,8 +421,6 @@ const chartReload = (data, chart) => {
 }
 </script>
 <style lang='less' scoped>
-@import '../../styles/index.less';
-
 @overview-height: 180px;
 
 .@{css-prefix}dashboard {

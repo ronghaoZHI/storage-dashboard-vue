@@ -531,9 +531,6 @@ const convertArray2Object = (array) => {
 }
 </script>
 <style lang="less" scoped>
-
-@import '../../styles/index.less';
-
 @user-card-width: 200px;
 @user-card-height: 25px;
 @user-card-text-color: #657180;

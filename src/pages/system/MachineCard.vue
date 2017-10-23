@@ -104,8 +104,6 @@ export default {
 
 </script>
 <style lang="less" scoped>
-@import '../../styles/index.less';
-
 .@{css-prefix}machine-card {
     .wh(300px, 100%);
     margin: 0 15px 15px 0;

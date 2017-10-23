@@ -187,7 +187,7 @@
     }
 </script>
 <style lang="less" scoped>
-@import '../../styles/index.less';
+
 
 .@{css-prefix}upload {
     .section-file-upload {

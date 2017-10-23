@@ -122,8 +122,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '../../styles/index.less';
-
 @login-card-height: 600px;
 @login-card-width: 900px;
 @login-card-padding: 48px;

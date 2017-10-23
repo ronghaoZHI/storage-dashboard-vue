@@ -355,6 +355,6 @@ const container2codec = { mp3: 'mp3', wma: 'wmav2', mp2: 'mp2' }
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/index.less';
+
 @edit-output-item-span: 175px;
 </style>

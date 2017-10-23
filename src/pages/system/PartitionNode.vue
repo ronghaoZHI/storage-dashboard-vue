@@ -37,8 +37,6 @@ export default {
 
 </script>
 <style lang="less" scoped>
-@import '../../styles/index.less';
-
 .@{css-prefix}partition-node {
     .wh(44px,20px);
     border: @common-border;

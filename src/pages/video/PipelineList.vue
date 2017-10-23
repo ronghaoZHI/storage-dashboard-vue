@@ -242,7 +242,7 @@ export default {
 </script>
 
 <style lang="less" scope>
-@import '../../styles/index.less';
+
 
 @switch-off-color: #aca9a9;
 

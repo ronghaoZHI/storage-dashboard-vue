@@ -960,7 +960,7 @@ const isEmpty = obj => {
 
 </style>
 <style lang="less" scope>
-@import '../../styles/index.less';
+
 @edit-output-item-span: 205px;
 @edit-modal-item-span: 155px;
 

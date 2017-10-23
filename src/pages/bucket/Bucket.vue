@@ -175,8 +175,6 @@ const batchDeletion = (list, bucket) => {
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/index.less';
-
 @layout-bsc-toolbar-border-bottom-color: #f2f1f6;
 @bucket-hover-background-color: #f5f5f5;
 @bucket-selected-background-color: #f5f5f5;

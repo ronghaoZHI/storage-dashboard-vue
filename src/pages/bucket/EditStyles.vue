@@ -1014,8 +1014,6 @@ const mark2Front = data => {
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/index.less';
-
 @edit-styles-border-color: #d7dde4;
 @edit-styles-border-blue: #20a0ff;
 

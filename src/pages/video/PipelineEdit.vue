@@ -280,7 +280,7 @@ const aclConvert2Save = data => {
 </script>
 
 <style lang="less" scope>
-@import '../../styles/index.less';
+
 
 @edit-output-line-width: 600px !important;
 
