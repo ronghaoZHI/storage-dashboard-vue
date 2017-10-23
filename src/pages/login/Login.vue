@@ -478,7 +478,7 @@ export default {
                         background-color: @login-card-register-input-backgrand;
                         border-radius: @common-radius;
                         .sc(16px,#fff);
-                        margin: 8px 8px;
+                        margin: 8px 6px;
                         cursor: pointer;
 
                         &:hover {
