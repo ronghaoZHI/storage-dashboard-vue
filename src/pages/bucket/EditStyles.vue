@@ -1019,6 +1019,10 @@ const mark2Front = data => {
 @edit-styles-border-color: #d7dde4;
 @edit-styles-border-blue: #20a0ff;
 
+.bgi(@name, @x: 0, @y: 0){
+    background: @x @y no-repeat url('../../assets/editStyle/@{name}');
+}
+
 .@{css-prefix}edit-styles {
     .page-left,
     .page-right {
