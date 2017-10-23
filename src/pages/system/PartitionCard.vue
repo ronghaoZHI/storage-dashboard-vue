@@ -46,7 +46,6 @@ export default {
             showDetailModal: false,
             basicInfomodel: basicInfomodel,
             modalTitles: {subTitle1: '磁盘基础信息', subTitle2: '对应group信息'}
-
         }
     },
     components: {detailModal},
@@ -118,49 +117,11 @@ const basicInfomodel = {ips: ['172.17.199.191'],
     group: groupsInfo}
 </script>
 <style lang="less" scoped>
-
-
 .@{css-prefix}partition-card{
-    .content{
-        // margin-bottom:6px;
-        .files{
-            .progress{
-                .io-count{
-                    width:33%;
-                }
-                .capacity-count{
-                    width:33%;
-                    background: #e5e9f2;
-                    color: @text-color;
-                }
-            }
-        }
-        .details{
-            padding: 10px;
-            p{
-                font-size: 14px;
-                line-height:35px;
-                span{
-                    color: #8492a6;
-                }
-            }
-            p.half{
-                display:inline-block;
-            }
-            p.half:nth-child(2n+1){
-                width:45%;
-            }
-        }
-        
-    }
-    .footer{
-        .delete{
-            color: #fff;
-            background-color:#f85959;
-            border-color: #f85959;
+    .content {
+        .files {
+            padding-top:10px;
         }
     }
 }
-
-
 </style>

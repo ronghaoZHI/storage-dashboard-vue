@@ -34,7 +34,7 @@ export default {
     name: 'partitionUsed',
     data () {
         return {
-            showChart: 'group_id',
+            showChart: 'io',
             spinShow: false
         }
     },

@@ -53,7 +53,7 @@ export default {
     display: inline-block;
     width: 320px;
     border: 1px solid @border-color;
-    margin: 10px;
+    margin: 0 20px 16px 0;
     .header {
         height: 36px;
         line-height: 36px;
