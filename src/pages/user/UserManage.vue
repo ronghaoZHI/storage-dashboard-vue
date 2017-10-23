@@ -540,7 +540,7 @@ const convertArray2Object = (array) => {
     .@{css-prefix}user-box {
         min-height: 100%;
         max-height: 600px;
-        overflow: scroll;
+        overflow-y: auto;
         width: 100%;
         display: inline-flex;
         flex-direction: row;
@@ -560,8 +560,8 @@ const convertArray2Object = (array) => {
             margin: 3px 3px 0 0;
             padding: 0 3px;
             text-overflow: ellipsis;
-            overflow:hidden;
-            white-space:nowrap;
+            overflow: hidden;
+            white-space: nowrap;
             cursor: pointer;
 
             &:hover {
