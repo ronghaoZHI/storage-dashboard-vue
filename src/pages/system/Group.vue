@@ -147,11 +147,6 @@ export default {
 }
 
 .@{css-prefix}group {
-    .header {
-        .search {
-            border-bottom: 1px dashed #d3dce6;
-        }
-    }
     .content {
         .section-chart {
             .card-chart {

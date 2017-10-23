@@ -36,7 +36,7 @@
             <Button v-show="this.data.readonly === 0" type="ghost" size="small" @click="setReadOnly">{{$t('SYSTEM.SET_READ_ONLY')}}</Button>
         </div>
         <Modal v-model="showDetailModal" title='详细信息' width="900">
-            <detail-modal :titles='modalTitles' :data='modalData'></detail-modal>
+            <detail-modal :titles='modalTitles' :data='modalData' class="group-modal"></detail-modal>
             <div class="section-separator" style="margin-top:24px;" v-if="data.traffic && data.traffic.length >= 0">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
@@ -78,7 +78,7 @@ export default {
             showDetailModal: false,
             status: this.data.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY'),
             isUse: this.data.is_del === 0 ? '正常' : '删除',
-            modalTitles: {title: '详细信息', subTitle1: 'group 信息', subTitle2: '对应磁盘信息'}
+            modalTitles: {subTitle1: 'group 信息', subTitle2: '对应磁盘信息'}
         }
     },
     components: {detailModal},
@@ -222,4 +222,5 @@ const detailHead = [{name: 'ID', value: 'partition_id'},
         }
     }
 }
+
 </style>

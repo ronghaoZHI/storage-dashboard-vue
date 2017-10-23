@@ -16,20 +16,23 @@
                     <Icon slot="prepend" size="18" type="soup-can"></Icon>
                     <Option v-for="idc in typeArray" :value="idc.value" :key="idc.value">{{idc.name}}</Option>
                 </Select>
-                <Select :prepend="true" style="width:180px;margin-right:8px;">
+                <Select :prepend="true" style="width:180px;margin-right:8px;" v-if="tabName === 'used'">
                     <Icon slot="prepend" size="18" type="compose"></Icon>
                     <Option v-for="idc in statusArray" :value="idc.value" :key="idc.value">{{idc.name}}</Option>
                 </Select>
-                <Select :prepend="true" style="width:180px;margin-right:8px;">
+                <Select :prepend="true" style="width:180px;margin-right:8px;" v-if="tabName === 'used'">
                     <Icon slot="prepend" size="18" type="android-radio-button-on"></Icon>
                     <Option v-for="idc in faultArray" :value="idc.value" :key="idc.value">{{idc.name}}</Option>
                 </Select>
                 <Input v-model="searchValue" placeholder="请输入服务器IP" style="width:260px"></Input>
                 <Button type="primary" @click="getPartitionList">搜索</Button>
             </div>
+            <div class="search search-unused">
+                
+            </div>
         </div>
-        <partition-used></partition-used>
-        <partition-unused></partition-unused>
+        <partition-used v-if="tabName === 'used'"></partition-used>
+        <partition-unused v-if="tabName === 'unused'"></partition-unused>
         <!-- <partition-card ></partition-card> -->
     </div>
 </template>
