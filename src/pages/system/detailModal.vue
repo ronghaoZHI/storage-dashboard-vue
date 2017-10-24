@@ -10,7 +10,12 @@
         <div class="info-title">{{titles.subTitle1}}</div>
         <div class="content">
             <div class="group-item" v-for="bi in data.basicInfo" :key="bi.name">
-                <span class="separator-icon"></span>{{bi.name}}: {{bi.value}}
+                <span class="separator-icon"></span>
+                <Tooltip v-if="bi.tooltip" :content="bi.tooltip" placement="top">
+                    <span >{{bi.name}}: </span>
+                </Tooltip>
+                <span v-else>{{bi.name}}: </span>
+                <span :class="{redFont: bi.isRed}">{{bi.value}}</span>
             </div>
         </div>
     </div>

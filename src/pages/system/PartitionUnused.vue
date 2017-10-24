@@ -1,15 +1,15 @@
 <template>
-<div>
-    <div class="bsc-system-card bsc-partition-card">
+<div class="unused-box">
+    <div class="bsc-system-card bsc-partition-card" v-for="partition in list" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
-            <span>10.102.0.223:/s2/drive/001</span>
+            <span>{{partition.inn_ips[0]}}:{{partition.path}}</span>
         </div>
         <div class="content">
             <div class="details">
-                <p><span>IDC : </span>shijiazhuang-xunjie</p>
-                <p class="half"><span>类型 : </span>SSD</p>
-                <p class="half"><span>已用／总容量 : </span>0T/5T</p>
+                <p><span>IDC : </span>{{partition.idc}}</p>
+                <p><span>已用／总容量 : </span>{{partition.space_used}}</p>
+                <p><span>类型 : </span>{{partition.media_type}}</p>
             </div>
         </div>
         <div class="footer">
@@ -24,18 +24,28 @@
 </template>
 <script>
 export default {
+    props: ['data'],
     data () {
         return {
+            list: this.data
         }
-    },
-    created () {
-    },
-    // components: { idcCard, partitionCard },
-    methods: {
-    },
-    watch: {
     }
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
+.unused-box{
+    width: 100%;
+    .fb(flex-start, flex-start);
+    flex-wrap: wrap;
+    padding: 10px;
+    border: @group-common-border;
+    border-top: 0;
+    transition: all .2s ease-in-out;
+}
+.page{
+    width:100%;
+    text-align: center;
+    margin:30px 0 20px;
+}
 </style>

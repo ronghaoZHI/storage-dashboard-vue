@@ -221,6 +221,11 @@ const detailHead = [{name: 'ID', value: 'partition_id'},
             }
         }
     }
+    .footer {
+        button:nth-child(1) {
+            background: #fff;
+        }
+    }
 }
 
 </style>

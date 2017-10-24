@@ -1,14 +1,14 @@
 <template>
-<div>
-    <div class="bsc-system-card bsc-partition-card">
+<div class="deleted-box">
+    <div class="bsc-system-card bsc-partition-card" v-for="partition in list" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
-            <span>10.102.0.223:/s2/drive/001</span>
+            <span>{{partition.inn_ips[0]}}:{{partition.path}}</span>
         </div>
         <div class="content">
             <div class="details">
-                <p><span>IDC : </span>shijiazhuang-xunjie</p>
-                <p><span>类型 : </span>SSD</p>
+                <p><span>IDC : </span>{{partition.idc}}</p>
+                <p><span>类型 : </span>{{partition.media_type}}</p>
             </div>
         </div>
     </div>
@@ -18,8 +18,10 @@
 </template>
 <script>
 export default {
+    props: ['data'],
     data () {
         return {
+            list: this.data
         }
     },
     created () {
@@ -33,6 +35,15 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
+.deleted-box{
+    width: 100%;
+    .fb(flex-start, flex-start);
+    flex-wrap: wrap;
+    padding: 10px;
+    border: @group-common-border;
+    border-top: 0;
+    transition: all .2s ease-in-out;
+}
 .page{
     width:100%;
     text-align: center;

@@ -33,6 +33,14 @@ export const GROUP_READ_ONLY = group('group/read_only')
 
 export const TRAFFIC_LIST = group('traffic/list')
 
+export const PARTITION_USED_LIST = group('partition/used/list')
+export const PARTITION_USED_SET = group('partition/used/set')
+export const PARTITION_USED_MOVE = group('partition/used/move')
+export const PARTITION_USED_DELETED = group('partition/used/delete')
+export const PARTITION_UNUSED_LIST = group('partition/unused/list')
+export const PARTITION_UNUSED_ADD = group('partition/unused/add')
+export const PARTITION_DELETED_LIST = group('partition/deleted/list')
+
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 
 export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)

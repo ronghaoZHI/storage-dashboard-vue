@@ -1,18 +1,18 @@
 <template>
     <div class="bsc-idc-card">
         <div class="header">
-            <span>IDC : </span>
+            <span>IDC : {{data.idc}}</span>
         </div>
         <!--SATA & SSD-->
-        <div class="content two-type" v-if="type === 'two'">
+        <div class="content two-type" v-if="type === 'all'">
             <div class="idc-circel idc-content-left">
                 <i-circle :percent="80" :size="80">
                     <span class="circle-inner">SATA</span>
                 </i-circle>
                 <div class="idc-detail">
                     <p>SATA磁盘</p>
-                    <p>容量使用率 ：80%</p>
-                    <p>已用／总容量 ：80T/100T</p>
+                    <p>容量使用率 ：{{data.SATA.used_rate}}%</p>
+                    <p>已用／总容量 ：{{data.SATA.used}}/{{data.SATA.capacity}}</p>
                 </div>
             </div>
             <div class="idc-circel idc-content-right">
@@ -21,13 +21,13 @@
                 </i-circle>
                 <div class="idc-detail">
                     <p>SSD磁盘</p>
-                    <p>容量使用率 ：80%</p>
-                    <p>已用／总容量 ：80T/100T</p>
+                    <p>容量使用率 ：{{data.SSD.used_rate}}%</p>
+                    <p>已用／总容量 ：{{data.SSD.used}}/{{data.SSD.capacity}}</p>
                 </div>
             </div>
         </div>
-        <!--SATA or SSD-->
-        <div class="content one-type" v-else>
+        <!-- SATA -->
+        <div class="content one-type" v-else-if="type === 'SATA'">
             <div class="idc-circel idc-content-left">
                 <i-circle :percent="80" :size="80">
                     <span class="circle-inner">SATA</span>
@@ -35,15 +35,28 @@
             </div>
             <div class="idc-detail idc-content-right">
                 <p>SATA磁盘</p>
-                <p>容量使用率 ：80%</p>
-                <p>已用／总容量 ：80T/100T</p>
+                <p>容量使用率 ：{{data.SATA.used_rate}}%</p>
+                <p>已用／总容量 ：{{data.SATA.used}}/{{data.SATA.capacity}}</p>
+            </div>
+        </div>
+        <!-- SSD -->
+        <div class="content one-type" v-else-if="type === 'SSD'">
+            <div class="idc-circel idc-content-left">
+                <i-circle :percent="80" :size="80" stroke-color='#FFDE29'>
+                    <span class="circle-inner">SSD</span>
+                </i-circle>
+            </div>
+            <div class="idc-detail idc-content-right">
+                <p>SSD磁盘</p>
+                <p>容量使用率 ：{{data.SSD.used_rate}}%</p>
+                <p>已用／总容量 ：{{data.SSD.used}}/{{data.SSD.capacity}}</p>
             </div>
         </div>
     </div>
 </template>
 <script>
 export default {
-    props: ['type']
+    props: ['data', 'type']
 }
 </script>
 <style lang="less" scoped>
@@ -51,7 +64,7 @@ export default {
 @border-color: #d3dce6;
 .@{css-prefix}idc-card {
     display: inline-block;
-    width: 320px;
+    width: 350px;
     border: 1px solid @border-color;
     margin: 0 20px 16px 0;
     .header {
@@ -86,16 +99,18 @@ export default {
                 position: relative;
                 width: 50%;
                 .idc-detail{
-                    height: 92px;
+                    height: 0;
+                    padding-top: 0;
+                    padding-bottom: 0;
                     box-sizing: border-box;
                     background: rgba(255,255,255,0.95);
                     position: absolute;
                     white-space: nowrap;
                     top: 0;
-                    opacity: 0;
+                    opacity: 1;
                     z-index: 1;
                     overflow: hidden;
-                    transition: opacity 1s ease-out;
+                    transition: height 0.5s ease-out, padding 0.5s ease-out;
                 }
             }
             .idc-content-left{
@@ -113,7 +128,9 @@ export default {
                 }
             }
             .idc-circel:hover .idc-detail{
-                opacity: 0.95;
+                height: 92px;
+                padding-top: 16px;
+                padding-bottom: 16px;
             }
         }
         &.one-type {

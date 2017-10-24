@@ -1,37 +1,42 @@
 <template>
-    <div class="bsc-system-card bsc-partition-card">
+    <div class="bsc-system-card bsc-partition-card" :class="waitingCard">
         <div class="header">
             <Icon  type="android-star" size="16"></Icon>
-            <span>{{basicInfomodel.inn_ips[0]}}:{{basicInfomodel.path}}</span>
-            <Button type="text" size="small" @click="showDetailModal=true">详细信息</Button>
+            <span>{{myData.inn_ips[0]}}:{{myData.partition_path}}</span>
+            <Button type="text" size="small" @click="showDetailModal=true" v-if="myData.is_del !== 1">详细信息</Button>
         </div>
         <div class="content">
             <div class="files">
                 <div class="progress">
-                    <span class="file-count io-count">
-                        IO:{{basicInfomodel.ioutil}}
-                    </span><span class="file-count capacity-count">容量:{{basicInfomodel.space_rate}}</span>
-                    CPU: {{basicInfomodel.cpu}}
+                    <span class="file-count io-count" :class="{redBack: myData.ioutil > 0.9}">
+                        IO : {{myData.ioutilFont}}
+                    </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">容量 : {{myData.used_rate}}%</span>
+                    CPU : {{myData.cpu}}
                 </div>
             </div>
             <div class="details">
-                <p><span>ID : </span>{{basicInfomodel.partition_id}}</p>
-                <p><span>IDC : </span>{{basicInfomodel.idc}}</p>
-                <p class="half"><span>类型 : </span>{{basicInfomodel.media_type}}</p>
-                <p class="half"><span>已用／总容量 : </span>{{basicInfomodel.space_used}}</p>
-                <p class="half"><span>可用 : </span>{{basicInfomodel.fail === '1' ? '可用' : '故障'}}</p>
-                <p class="half"><span>group个数 : </span>{{basicInfomodel.group.length}}</p>
+                <p><span>ID : </span>{{myData.partition_id}}</p>
+                <p><span>IDC : </span>{{myData.idc}}</p>
+                <p><span>已用／总容量 : </span>{{myData.used}}/{{myData.capacity}}</p>
+                <p class="half"><span>类型 : </span>{{myData.media_type}}</p>
+                <p class="half"><span>可用 : </span><span :class="{redFont: myData.fail}">{{myData.failFont}}</span></p>
+                <p class="half"><span>group个数 : </span>{{myData.group.length}}</p>
             </div>
         </div>
         <div class="footer">
-            <i-switch size="large">
+            <i-switch size="large" v-model="readonly">
                 <span slot="open">可写</span>
                 <span slot="close">只读</span>
             </i-switch>
             <div>
-                <Button type="ghost" size="small">迁移</Button>
-                <Button type="ghost" class="delete" size="small">删除</Button>
+                <Button type="ghost" size="small" v-if="!readonly && myData.group.length !== 0">迁移</Button>
+                <Button type="ghost" class="delete" size="small" v-if="!readonly && myData.group.length === 0">删除</Button>
             </div>
+        </div>
+        <div class="deleting-content">
+            <Spin size="large"></Spin>
+            <span v-if="myData.is_del === 1">正在删除</span>
+            <span v-else>正在迁移</span>
         </div>
         <Modal v-model="showDetailModal" title='使用磁盘详细信息' width="900">
             <detail-modal :titles='modalTitles' :data='modalData' class="partition-modal"></detail-modal>
@@ -40,88 +45,93 @@
 </template>
 <script>
 import detailModal from './detailModal'
+import { bytes } from '@/service/bucketService'
 export default {
+    props: ['data'],
     data () {
         return {
             showDetailModal: false,
-            basicInfomodel: basicInfomodel,
+            readonly: this.data.readonly === 0, // true 为可写
             modalTitles: {subTitle1: '磁盘基础信息', subTitle2: '对应group信息'}
         }
     },
     components: {detailModal},
     computed: {
+        myData () {
+            let newData = _.cloneDeep(this.data)
+            newData.ioutilFont = `${this.data.ioutil * 100}%`
+            newData.used = bytes(this.data.used)
+            newData.capacity = bytes(this.data.capacity)
+            newData.failFont = this.data.fail === false ? '可用' : '故障'
+            newData.readonly = this.data.readonly === 1 ? '只读' : '可写'
+            return newData
+        },
         modalData () {
-            let tableData = _.map(basicInfomodel.group, (item) => {
+            let tableData = _.map(this.myData.group, (item) => {
                 let newItem = _.cloneDeep(item)
                 newItem.traffic_status = item.traffic_status || ''
                 newItem.readonly = item.readonly === '1' ? '可写' : '只读'
-                newItem.fail = newItem.fail === '1' ? '可用' : '故障'
                 return newItem
             })
-            let basicInfo = [{name: 'ID', value: basicInfomodel.partition_id},
-                {name: 'path', value: basicInfomodel.path},
-                {name: 'IDC', value: basicInfomodel.idc},
-                {name: 'IP', value: basicInfomodel.inn_ips[0]},
-                {name: '容量', value: basicInfomodel.space_rate},
-                {name: 'CPU', value: basicInfomodel.cpu},
-                {name: '类型', value: basicInfomodel.media_type},
-                {name: 'IO', value: basicInfomodel.ioutil},
-                {name: '读写', value: basicInfomodel.readonly},
-                {name: '可用', value: basicInfomodel.fail}]
+            let basicInfo = [{name: 'ID', value: this.myData.partition_id},
+                {name: 'path', value: this.myData.partition_path},
+                {name: 'IDC', value: this.myData.idc},
+                {name: 'IP', value: this.myData.inn_ips[0]},
+                {name: '容量', value: this.myData.used_rate},
+                {name: 'CPU', value: this.myData.cpu, tooltip: '磁盘所在服务器的CPU'},
+                {name: '类型', value: this.myData.media_type},
+                {name: 'IO', value: this.myData.ioutil},
+                {name: '读写', value: this.myData.readonly},
+                {name: '可用', value: this.myData.failFont, isRed: this.myData.fail}]
             return {tableData, basicInfo, detailHead}
-        }
-    },
-    created () {
-        this.test()
-    },
-    methods: {
-        test () {
-            console.log('fidfaofh')
+        },
+        isTraffic () {
+            return this.myData.group.length !== 0 && this.myData.group.every(item => {
+                return item.traffic_status
+            })
+        },
+        waitingCard () {
+            console.log(this.isTraffic)
+            return this.myData.is_del === 1 || this.isTraffic ? 'bsc-waiting-card' : ''
         }
     }
 }
 const detailHead = [{name: 'ID', value: 'group_id'},
     {name: '文件数', value: 'num_used'},
     {name: '容量', value: 'space_used'},
-    {name: '状态', value: 'fail'},
+    {name: '状态', value: 'readonly'},
     {name: '创建时间', value: 'ts'},
     {name: '迁移进度', value: 'traffic_status'}]
-const groupsInfo = [{
-    num_used: '9',
-    readonly: '1',
-    group_id: '19',
-    space_used: '194.6K',
-    ts: '2017-04-24 13:05:12',
-    traffic_status: 50}, {
-    num_used: '9',
-    readonly: '0',
-    group_id: '19',
-    space_used: '194.6K',
-    ts: '2017-04-24 13:05:12',
-    traffic_status: 50}]
-const basicInfomodel = {ips: ['172.17.199.191'],
-    fail: 1,
-    pub_ips: [],
-    partition_id: 'bc0fe57900014001915800163e30b328',
-    path: '/s2/drive/002',
-    inn_ips: ['172.17.199.191'],
-    readonly: 0,
-    node_id: '00163e30b328',
-    idc_type: 'center',
-    media_type: 'ATA',
-    idc: '.shijiazhuang.xunjie',
-    space_used: '50T／100T',
-    space_rate: '20',
-    ioutil: 0.68,
-    cpu: 0.68,
-    group: groupsInfo}
 </script>
 <style lang="less" scoped>
 .@{css-prefix}partition-card{
+    position: relative;
     .content {
         .files {
             padding-top:10px;
         }
     }
+    .deleting-content {
+        width:100%;
+        position: absolute;
+        top: 36px;
+        left: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.9);
+        color: #000;
+        display: none;
+        span {
+            padding-top:10px;
+            color: rgba(100,100,100,0.7);
+            font-size: 16px;
+        }
+    }
 }
+.@{css-prefix}waiting-card {
+    .deleting-content {
+        .fb(center,center,flex, column)
+    }
+
+}
+
 </style>

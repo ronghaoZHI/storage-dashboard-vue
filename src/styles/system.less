@@ -379,10 +379,6 @@
         .fb(space-between,center);
         border-top: @group-common-border;
         border-bottom: 0;
-
-        button:nth-child(1) {
-            background: #fff;
-        }
     }
 }
 /* partition card */
@@ -406,7 +402,7 @@
             p{
                 font-size: 14px;
                 line-height:35px;
-                span{
+                span:nth-child(1){
                     color: #8492a6;
                 }
             }
@@ -544,4 +540,12 @@
             }
         }
     }
+}
+
+.redFont {
+    color: #f85959;
+}
+.redBack {
+    background-color: #f85959 !important;
+    color: #fff !important;
 }
