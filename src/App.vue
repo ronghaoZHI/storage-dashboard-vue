@@ -31,8 +31,6 @@ export default {
 </script>
 
 <style lang="less">
-@import './styles/index.less';
-
 html,
 body {
     .wh(100%,100%);
