@@ -41,9 +41,9 @@ export default {
         flex: 1;
         margin-left: @layout-margin-left;
         position: relative;
+        background: @body-background;
     }
 }
-
 .flex-box {
     .ff(flex);
     text-align: left;
@@ -57,9 +57,14 @@ export default {
 .layout-content {
     flex: 1;
     padding: 16px;
-    background: #fff;
+    background: @body-background;
     border-radius: 4px;
     margin-top: 60px;
+}
+
+.dark .layout-container,
+.dark .layout-content {
+    background: @body-background-black;
 }
 
 .layout-content-main {

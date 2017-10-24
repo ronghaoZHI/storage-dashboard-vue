@@ -12,7 +12,8 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        token: sessionStorage.getItem('token')
+        token: sessionStorage.getItem('token'),
+        is_dark: false
     },
     actions,
     getters,
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
         [types.SET_TOKEN] (state, token) {
             sessionStorage.setItem('token', token)
             state.token = token
+        },
+        [types.TOGGLE_THEME] (state) {
+            state.is_dark = !state.is_dark
         },
         [types.LOGOUT] (state) {
             sessionStorage.removeItem('user')

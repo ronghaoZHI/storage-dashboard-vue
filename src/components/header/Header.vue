@@ -10,6 +10,12 @@
                     </Tooltip>
                 </div>
                 <div class="button-document">
+                    <i-switch v-model="isDark" @on-change="toggleTheme">
+                        <span slot="open">白</span>
+                        <span slot="close">黑</span>
+                    </i-switch>
+                </div>
+                <div class="button-document">
                     <i-switch :only-text="true" v-model="lang" @on-change="toggleLanguage">
                         <span slot="open">中</span>
                         <span slot="close">EN</span>
@@ -59,6 +65,7 @@ export default {
             rePasswordModal: false,
             lang: getCookie('uc_lang') !== 'en',
             isAdminMode: user.state.type === 'admin',
+            isDark: this.$store.state.is_dark,
             rePasswordForm: {
                 password: ''
             },
@@ -108,6 +115,9 @@ export default {
             let lang = bol ? 'cn' : 'en'
             Vue.config.lang = lang
             createCookie('uc_lang', lang)
+        },
+        toggleTheme () {
+            this.$store.dispatch('toggleTheme')
         }
     }
 }

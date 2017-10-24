@@ -175,17 +175,40 @@ const batchDeletion = (list, bucket) => {
 </script>
 
 <style lang="less" scoped>
-@layout-bsc-toolbar-border-bottom-color: #f2f1f6;
 @bucket-hover-background-color: #f5f5f5;
-@bucket-selected-background-color: #f5f5f5;
+@bucket-hover-background-color-black: #2e373e;
 @bucket-span-filename-color: #657180;
+@bucket-span-filename-color-black: #c0ccda;
 @bucket-card-width: 120px;
 @bucket-card-height: 120px;
+
+.dark .@{css-prefix}bucket{
+
+    .layout-bsc-toolbar {
+        border-bottom: 1px solid #52626d; 
+    }
+
+    .bsc-flex-section {
+        .bucket {
+            &:hover{
+                background-color: @bucket-hover-background-color-black;
+            }
+
+            .span-filename {
+                color: @bucket-span-filename-color-black;
+            }
+        }
+
+        .bucket-selected {
+            background-color: @bucket-hover-background-color-black;
+        }
+    }
+}
 
 .@{css-prefix}bucket{
     .layout-bsc-toolbar {
         padding-bottom: 20px;
-        border-bottom: 1px solid @layout-bsc-toolbar-border-bottom-color;
+        border-bottom: @common-border;
         margin-bottom: 0;
 
         button {
@@ -227,7 +250,7 @@ const batchDeletion = (list, bucket) => {
         }
 
         .bucket-selected {
-            background-color: @bucket-selected-background-color;
+            background-color: @bucket-hover-background-color;
         }
     }
 

@@ -1,5 +1,5 @@
 <template>
-    <div id="app"
+    <div id="app" v-bind:class="{dark: isDark}"
          v-drop>
         <router-view></router-view>
         <loading></loading>
@@ -10,6 +10,11 @@ import loading from '@/components/Loading'
 export default {
     name: 'app',
     components: {loading},
+    computed: {
+        isDark () {
+            return !this.$store.state.is_dark
+        }
+    },
     directives: {
         // remove the default drop and drag actions
         drop: {
@@ -42,4 +47,6 @@ body {
     height: 100%;
     overflow-y: auto;
 }
+
+.dark {}
 </style>
