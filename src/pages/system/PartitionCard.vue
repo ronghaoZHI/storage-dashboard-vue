@@ -91,7 +91,6 @@ export default {
             })
         },
         waitingCard () {
-            console.log(this.isTraffic)
             return this.myData.is_del === 1 || this.isTraffic ? 'bsc-waiting-card' : ''
         }
     }

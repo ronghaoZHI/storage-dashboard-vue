@@ -19,7 +19,6 @@
         </div>
     </div>
     <br>
-    <Page class="page" :total="100" show-elevator show-sizer></Page>
 </div>
 </template>
 <script>
@@ -39,8 +38,6 @@ export default {
     .fb(flex-start, flex-start);
     flex-wrap: wrap;
     padding: 10px;
-    border: @group-common-border;
-    border-top: 0;
     transition: all .2s ease-in-out;
 }
 .page{

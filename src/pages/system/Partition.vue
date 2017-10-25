@@ -26,7 +26,7 @@
                     <Option v-for="fail in failArray" :value="fail.value" :key="fail.value">{{fail.name}}</Option>
                 </Select>
                 <Input v-model="search.ip" placeholder="请输入服务器IP" style="width:260px"></Input>
-                <Button type="primary" @click="getUsedList" v-if="tabName === 'used'">搜索</Button>
+                <Button type="primary" @click="searchList" v-if="tabName === 'used'">搜索</Button>
             </div>
             <div class="search search-unused" v-if="tabName === 'unused'">
                 整体容量：100T
@@ -40,7 +40,7 @@
                 <span>T</span><span class="separate">—</span> 
                 <InputNumber :max="10" :min="0" v-model="search.upper_free"></InputNumber>
                 <span>T</span>
-                <Button type="primary" @click="getUnusedList" class="search-button">搜索</Button>
+                <Button type="primary" @click="searchList" class="search-button">搜索</Button>
             </div>
         </div>
         <div class="content" v-if="tabName === 'used'">
@@ -60,11 +60,12 @@
                 <div class="card-chart">
                     <partition-card v-for="partition in partitionList" :data="partition" :key="partition.id"></partition-card>
                     <br>
-                    <Page class="page" :total="pageTotal" show-elevator show-sizer></Page>
+                    <Page v-if="pageTotal > 20" class="page" :total="pageTotal" @on-change="pageChange" show-elevator></Page>
                 </div>
             </div>
         </div>
         <partition-unused v-if="tabName === 'unused'" :data="unusedList"></partition-unused>
+        <Page v-if="tabName === 'unused' && pageTotal > 20" class="page" :total="pageTotal" @on-change="pageChange" show-elevator></Page>
         <partition-deleted v-if="tabName === 'deleted'" :data="deletedList"></partition-deleted>
     </div>
 </template>
@@ -94,7 +95,7 @@ export default {
             },
             showChart: 'ioutil',
             spinShow: false,
-            pageCount: '1',
+            pageCount: 1,
             partitionList: [],
             pageTotal: 1,
             unusedList: [],
@@ -115,11 +116,12 @@ export default {
     methods: {
         chartToggle (index) {
             this.showChart = index
+            this.pageCount = 1
             this.getUsedList()
         },
         tabToggle (index) {
             this.tabName = index
-            console.log(this.tabName === 'used')
+            this.pageCount = 1
             if (index === 'used') {
                 this.getUsedList()
             } else if (index === 'unused') {
@@ -128,8 +130,24 @@ export default {
                 this.getDeletedList()
             }
         },
+        searchList () {
+            this.pageCount = 1
+            if (this.tabName === 'used') {
+                this.getUsedList()
+            } else {
+                this.getUnusedList()
+            }
+        },
+        pageChange (pageCount) {
+            this.pageCount = pageCount
+            console.log(pageCount)
+            if (this.tabName === 'used') {
+                this.getUsedList()
+            } else {
+                this.getUnusedList()
+            }
+        },
         getUsedList () {
-            console.log('used')
             this.spinShow = true
             this.$Loading.start()
             try {
@@ -158,7 +176,6 @@ export default {
         getUnusedList () {
             this.spinShow = true
             this.$Loading.start()
-            console.log('unused')
             try {
                 const listURL = PARTITION_UNUSED_LIST
                 const params = {
@@ -174,6 +191,7 @@ export default {
                 }
                 console.log(listURL, params)
                 this.unusedList = unusedData.partition
+                this.pageTotal = Math.ceil(unusedData.number / 20)
                 this.spinShow = false
                 this.$Loading.finish()
             } catch (error) {
@@ -239,7 +257,7 @@ const unusedData = {
         }
     ]}
 const listData = {
-    number: 10000,
+    number: 2,
     partition: [
         {
             ips: ['172.17.199.191'],
@@ -353,6 +371,12 @@ const listData = {
         width:100%;
         text-align: center;
         margin:30px 0 20px;
+        opacity: 0.3;
+        position: fixed;
+        bottom: 50px;
+    }
+    .page:hover{
+        opacity: 1;
     }
 }
 </style>
