@@ -54,9 +54,13 @@ export default {
 }
 
 .layout-logo-left {
-    .wh(90%,30px);
+    .wh(100%,60px);
     border-radius: @common-radius;
-    margin: 15px auto;
+    padding: 15px 15px 0 15px;
+}
+
+.dark .layout-logo-left {
+    background: @primary-color-dark;
 }
 
 </style>

@@ -631,10 +631,16 @@ const getURL = async (bucket, file, prefix) => {
 @input-append-before-background-color: #f5f7f9;
 @input-color: #657180;
 
+.dark .@{css-prefix}file {
+    .layout-bsc-toolbar {
+         border-bottom: @common-border-black;
+    }
+}
+
 .@{css-prefix}file {
     .layout-bsc-toolbar {
         padding-bottom: 8px;
-        border-bottom: 1px solid @layout-bsc-toolbar-border-bottom-color;
+        border-bottom: @common-border;
         button {
             margin-right: 1px;
         }

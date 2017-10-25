@@ -159,7 +159,7 @@ export default {
     },
     watch: {
         'createBucketValue' (to, from) {
-            this.inputCheck = !(to.length > 3)
+            this.inputCheck = !(to.length >= 3)
         }
     }
 }

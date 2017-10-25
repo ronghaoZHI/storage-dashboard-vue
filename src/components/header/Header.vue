@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bsc-header">
         <div class="layout-header">
             <div class="layout-header-left">
             </div>
@@ -10,9 +10,9 @@
                     </Tooltip>
                 </div>
                 <div class="button-document">
-                    <i-switch v-model="isDark" @on-change="toggleTheme">
-                        <span slot="open">白</span>
-                        <span slot="close">黑</span>
+                    <i-switch :only-text="true" v-model="isDark" @on-change="toggleTheme">
+                        <span slot="open">黑</span>
+                        <span slot="close">白</span>
                     </i-switch>
                 </div>
                 <div class="button-document">
@@ -65,7 +65,7 @@ export default {
             rePasswordModal: false,
             lang: getCookie('uc_lang') !== 'en',
             isAdminMode: user.state.type === 'admin',
-            isDark: this.$store.state.is_dark,
+            isDark: !this.$store.state.is_dark,
             rePasswordForm: {
                 password: ''
             },
@@ -116,58 +116,80 @@ export default {
             Vue.config.lang = lang
             createCookie('uc_lang', lang)
         },
-        toggleTheme () {
-            this.$store.dispatch('toggleTheme')
+        async toggleTheme () {
+            await this.$store.dispatch('toggleTheme')
+            let versions = !this.$store.state.is_dark ? '-dark' : ''
+            let themeLink = document.querySelector('link[name="theme"]')
+            themeLink.href = `./static/styles/iview${versions}.css`
         }
     }
 }
 </script>
 <style lang="less" scoped>
-
-
-.layout-header {
-    .fb(space-between,center);
-    .wh(100%,60px);
-    background: @primary-color;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-    position: fixed;
-    z-index: 1000;
-    padding-right: @layout-margin-left;
-    .layout-header-right {
-        margin-right: 16px;
-        .fb(center,center);
-    }
-    .dropdown-link {
-        .sc(22px,@menu-text-color);
+.dark .@{css-prefix}header{
+    .layout-header {
+        background: @primary-color-dark;
+        .layout-header-left {
+            .active{
+                background-color: @primary-color-dark;
+            }
+        }
+        
+        .layout-header-right {
+            .button-document {
+                border-right: 1px solid @border-color-dark;
+            }
+        }
     }
 }
 
-.button-document {
-    .sc(22px,@menu-text-color);
-    font-weight: bolder;
-    padding: 0 10px;
-    border-right: 1px solid #1b8de2;
-    cursor: pointer;
-    i {
-        position: relative;
-        top: 2px;
-        left: -4px;
-    }
-}
+.@{css-prefix}header{
+    .layout-header {
+        .fb(space-between,center);
+        .wh(100%,60px);
+        background: @primary-color;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+        position: fixed;
+        z-index: 1000;
+        padding-right: @layout-margin-left;
 
-.layout-header-left {
-    a {
-        .fb(center,center);
-        .sc(22px,@menu-text-color);
-        font-weight: bolder;
-        .wh(140px,60px);
+        .layout-header-left {
+            a {
+                .fb(center,center);
+                .sc(22px,@menu-text-color);
+                font-weight: bolder;
+                .wh(140px,60px);
+            }
+            .active{
+                background-color: #1b8de2;
+            }
+        }
+
+        .layout-header-right {
+            margin-right: 16px;
+            .fb(center,center);
+
+            .button-document {
+                .sc(22px,@menu-text-color);
+                font-weight: bolder;
+                padding: 0 10px;
+                border-right: 1px solid #1b8de2;
+                cursor: pointer;
+                i {
+                    position: relative;
+                    top: 2px;
+                    left: -4px;
+                }
+            }
+
+            .icon-top-down {
+                .sc(16px,@menu-text-color);
+                padding-left: 8px;
+            }
+        }
+        .dropdown-link {
+            .sc(22px,@menu-text-color);
+        }
     }
-    .active{
-        background-color: #1d8ce0;
-    }
-}
-.icon-top-down {
-    .sc(16px,@menu-text-color);
-    padding-left: 8px;
 }
 </style>

@@ -15,6 +15,11 @@ export default {
             return !this.$store.state.is_dark
         }
     },
+    created () {
+        let versions = !this.$store.state.is_dark ? '-dark' : ''
+        let themeLink = document.querySelector('link[name="theme"]')
+        themeLink.href = `./static/styles/iview${versions}.css`
+    },
     directives: {
         // remove the default drop and drag actions
         drop: {
@@ -29,7 +34,6 @@ export default {
     }
 }
 </script>
-
 <style lang="less">
 html,
 body {
@@ -45,6 +49,4 @@ body {
     height: 100%;
     overflow-y: auto;
 }
-
-.dark {}
 </style>
