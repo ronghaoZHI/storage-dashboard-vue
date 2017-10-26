@@ -64,7 +64,7 @@ export default {
 
 .dark .layout-container,
 .dark .layout-content {
-    background: @body-background-black;
+    background: @body-background-dark;
 }
 
 .layout-content-main {

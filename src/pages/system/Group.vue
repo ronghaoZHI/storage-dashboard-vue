@@ -127,6 +127,25 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.dark .@{css-prefix}group {
+    .header {
+        .search {
+            border-bottom: @common-border-dark;
+        }
+    }
+    .content {
+        .section-chart {
+            .card-chart {
+                .show-more {
+                    &:hover {
+                        border: @common-border-dark;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .@{css-prefix}group {
     .header {
         .search {

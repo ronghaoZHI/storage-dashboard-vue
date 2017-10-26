@@ -1,6 +1,69 @@
 
 /* group&partition */
 @group-common-border: 1px solid #d3dce6;
+
+.dark .@{css-prefix}system {
+    & > .header {
+        border: @common-border-dark;
+
+        .status {
+            .group-status-prefix {
+                color: @text-color-dark;
+            }
+
+            & > button {
+                background: #fff;
+                color: #475669;
+            }
+
+            & > button:focus,
+            .statusButtonFocus {
+                background: @primary-color;
+                color: #fff;
+            }
+        }
+    }
+
+    .content {
+        .section-chart-tab {
+            border: @common-border-dark;
+            border-bottom: 0;
+
+            button {
+                border-right: @common-border-dark;
+                border-bottom: @common-border-dark;
+                color: @text-color-dark;
+                background-color: @secondary-color-dark;
+            }
+
+            .refresh-section {
+                border-bottom: @common-border-dark;
+                background-color: @secondary-color-dark;
+
+                span {
+                    color: @primary-color;
+                }
+            }
+
+            button:focus,
+            .buttonFocus {
+                background: @body-background-dark;
+                color: @text-color-dark;
+                border-bottom: 0;
+            }
+        }
+
+        .section-chart {
+            position: relative;
+
+            .card-chart {
+                border: @common-border-dark;
+                border-top: 0;
+            }
+        }
+    }
+}
+
 .@{css-prefix}system {
     
         & > .header {
@@ -128,7 +191,129 @@
     }
 
 /* card */
-@group-common-border: 1px solid #d3dce6;
+.dark .@{css-prefix}system-card {
+    border: @common-border-dark;
+
+    .header, .footer {
+        background: @secondary-color-dark;
+        border-bottom: @common-border-dark;
+    }
+
+    .header {
+        button {
+            color: @primary-color;
+        }
+    }
+
+    .content {
+
+        .files {
+            border-bottom: @common-border-dark;
+            .progress {
+                background-color: @secondary-color-dark;
+                color: @text-color-dark;
+
+                .file-count {
+                    color: #fff;
+                    background: #6bbefc;
+                }
+            }
+        }
+    }
+
+    .footer {
+        border-top: @common-border-dark;
+        border-bottom: 0;
+
+        button:nth-child(1) {
+            background: @secondary-color-dark;
+        }
+    }
+}
+/* details model */
+.dark .group {
+    border: @group-common-border;
+    padding: 0 10px;
+
+    .info-title {
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        color: #475669;
+        border-bottom: 1px solid #e5e9f2;
+    }
+
+    .content {
+        margin-top: 12px;
+
+        .group-item {
+            display: inline-block;
+            width: 49%;
+            margin-bottom: 16px;
+            height: 14px;
+            line-height: 14px;
+            font-size: 14px;
+
+            .separator-icon {
+                display: inline-block;
+                position: relative;
+                top: 2px;
+                width: 3px;
+                height: 14px;
+                background: #20a0ff;
+                margin-right: 4px;
+            }
+        }
+
+        .partition-title,
+        .partition-list {
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            border: @group-common-border;
+
+            li {
+                display: inline-block;
+
+                .ip-button {
+                    color: @primary-color;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: #7ec2f3;
+                    }
+                }
+            }
+
+            li:nth-child(1) {
+                width: 240px;
+            }
+
+            li:nth-child(3),
+            li:nth-child(4){
+                width: 115px;
+            }
+
+            li:nth-child(2),
+            li:nth-child(5),
+            li:nth-child(6),
+            li:nth-child(7),
+            li:nth-child(8),
+            li:nth-child(9) {
+                width: 53px;
+            }
+        }
+
+        .partition-title {
+            background: #f9fafc;
+        }
+
+        .partition-list {
+            border-top: 0;
+        }
+    }
+}
+
 .@{css-prefix}system-card {
     width: 350px;
     border: @group-common-border;

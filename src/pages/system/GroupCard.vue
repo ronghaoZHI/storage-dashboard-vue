@@ -163,6 +163,29 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.dark .@{css-prefix}group-card {
+    .content {
+        .ip {
+            .ip-title,.ip-list {
+                border: @common-border-dark;
+                li {
+                    .ip-button {
+                        color: @primary-color;
+
+                        &:hover {
+                            color: #7ec2f3;
+                        }
+                    }
+                }
+            }
+
+            .ip-title {
+                background: @secondary-color-dark;
+            }
+        }
+    }
+}
+
 .@{css-prefix}group-card {
     .content {
         .files {
@@ -218,7 +241,4 @@ export default {
         }
     }
 }
-
-
-
 </style>

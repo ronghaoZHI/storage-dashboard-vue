@@ -633,7 +633,7 @@ const getURL = async (bucket, file, prefix) => {
 
 .dark .@{css-prefix}file {
     .layout-bsc-toolbar {
-         border-bottom: @common-border-black;
+         border-bottom: @common-border-dark;
     }
 }
 
