@@ -64,6 +64,26 @@ export default {
 @keychain-card-header-backgrand: #eff3f7;
 @keychain-card-backgrand-hover: #d9d9d9;
 
+.dark .@{css-prefix}keychain-card {
+    background-color: @body-background-dark;
+    .sc(14px, @keychain-card-text-color);
+    box-shadow: 0 0 0 0;
+    color: @text-color-dark;
+    border: @common-border-dark;
+    margin: 6px 3px;
+
+    .header {
+        background-color: @secondary-color-dark;
+        border-bottom: @common-border-dark;
+    }
+
+    .content {
+        &:hover {
+            color: #fff;
+        }
+    }
+}
+
 .@{css-prefix}keychain-card {
     .wh(@keychain-card-width, @keychain-card-height);
     background-color: @keychain-card-backgrand;
@@ -112,6 +132,4 @@ export default {
         color: #22d067;
     }
 }
-
-
 </style>

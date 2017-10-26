@@ -423,6 +423,90 @@ const chartReload = (data, chart) => {
 <style lang='less' scoped>
 @overview-height: 180px;
 
+.dark .@{css-prefix}dashboard {
+    .toolbar {
+        .button-daterange {
+            button {
+                border: 1px solid @body-background-dark;
+                border-left: none;
+            }
+            button:first-child {
+                border-left: 1px solid @body-background-dark;
+            }
+        }
+    }
+
+    .overview {
+        border-top: @common-border-dark;
+
+        .capacity-traffic {
+            border: @common-border-dark;
+
+            .capacity {
+                border: 0;
+                color: #fff;
+                text-align: center;
+            }
+
+            .traffic {
+                color: @text-color-dark;
+
+                .upload-traffic,
+                .download-traffic {
+                    color: #ffba42;
+                }
+
+                .upload-traffic {
+                    border-right: @common-border-dark;
+                }
+            }
+        }
+
+        .view-card {
+            border: @common-border-dark;
+            color: @text-color-dark;
+
+            &>div {
+                border-right: @common-border-dark;
+
+                .content {
+                    color: #ffba42;
+                }
+            }
+
+            &>div:last-child {
+                border: 0;
+            }
+        }
+    }
+
+    .section-chart-tab {
+        border: @common-border-dark;
+        border-bottom: 0;
+        button {
+            border: none;
+            border-right: @common-border-dark;
+            border-bottom: @common-border-dark;
+            color: @text-color-dark;
+            background-color: @body-background-dark;
+        }
+        &>button:nth-last-child(1) {
+            border-right: 0;
+        }
+        button:focus,
+        .buttonFocus {
+            background-color: @secondary-color-dark;
+            border-bottom: 0;
+            color: @text-color-dark;
+        }
+    }
+
+    .card-chart {
+        border: @common-border-dark;
+        border-top: 0;
+    }
+}
+
 .@{css-prefix}dashboard {
     .toolbar {
         margin-bottom: 16px;
