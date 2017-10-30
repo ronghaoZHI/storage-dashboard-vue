@@ -15,9 +15,9 @@
                 <span class="group_status_prefix">{{$t('SYSTEM.GROUP_STATUS')}} :</span>
                 <div class="group_status">
                     <button :class="{statusButtonFocus: tabName === 'group_all'}" @click="tabName = 'group_all'; getFilterTrafficList()">{{$t('SYSTEM.ALL')}}</button>
-                    <button :class="{statusButtonFocus: tabName === 'preparing to move'}" @click="tabName = 'preparing to move'; getFilterTrafficList()">preparing to move</button>
+                    <button :class="{statusButtonFocus: tabName === 'preparing'}" @click="tabName = 'preparing'; getFilterTrafficList()">preparing</button>
                     <button :class="{statusButtonFocus: tabName === 'moving'}" @click="tabName = 'moving'; getFilterTrafficList()">moving</button>
-                    <button :class="{statusButtonFocus: tabName === 'remove_task'}" @click="tabName = 'remove_task'; getFilterTrafficList()">remove_task</button>
+                    <button :class="{statusButtonFocus: tabName === 'finished'}" @click="tabName = 'finished'; getFilterTrafficList()">finished</button>
                 </div>
             </div>
         </div>
@@ -69,28 +69,28 @@ export default {
             }, {
                 title: this.$t('SYSTEM.GROUP_STATUS'),
                 key: 'group_status',
-                width: 140
+                width: 120
             }, {
                 title: this.$t('SYSTEM.SOURCE_DISK'),
                 key: 'source_disk',
-                width: 260,
+                width: 270,
                 render: (h, params) => {
-                    return h('Tooltip', {
+                    return h('div', {style: {padding: '8px 0'}}, params.row.source_disk.map(item => h('Tooltip', {
                         props: {
-                            content: `${params.row.source_disk[0]}/${params.row.source_disk[1]}`,
-                            placement: 'top-end'
+                            content: `${item[0]}/${item[1]}`,
+                            placement: 'top-start'
                         }
-                    }, params.row.source_disk[2])
+                    }, [h('div', {style: {margin: '2px 0'}}, item[2])])))
                 }
             }, {
                 title: this.$t('SYSTEM.TARGET_DISK'),
                 key: 'target_disk',
-                width: 260,
+                width: 270,
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {
                             content: `${params.row.target_disk[0]}/${params.row.target_disk[1]}`,
-                            placement: 'top-end'
+                            placement: 'top-start'
                         }
                     }, params.row.target_disk[2])
                 }
@@ -120,12 +120,14 @@ export default {
             _.forEach(data, (value, key) => {
                 const frontItem = {
                     group_id: key,
-                    process_percent: value.process,
-                    spent_time: value.spent_time,
-                    left_time: value.left_time,
+                    process_percent: value.process ? value.process : 0,
+                    spent_time: value.spent_time ? value.spent_time : '-',
+                    left_time: value.left_time ? value.left_time : '-',
                     group_status: value.step,
-                    source_disk: [value.src_node_ip[0], value.src_partition_idx, value.src_partition_id],
-                    target_disk: [value.target_node_ip[0], value.target_partition_idx, value.target_partition_id]
+                    src_server_ip: value.src_node_ip,
+                    src_partition_id: value.src_partition_id,
+                    source_disk: value.src_node_ip.map((val, index) => [val, value.src_partition_paths[index].slice(-3), value.src_partition_id[index]]),
+                    target_disk: [value.target_node_ip ? value.target_node_ip[0] : '-', value.target_partition_path ? value.target_partition_path.slice(-3) : '-', value.target_partition_id ? value.target_partition_id : '-']
                 }
                 frontList.push(frontItem)
             })
@@ -133,7 +135,7 @@ export default {
         },
         getFilterTrafficList (isSearch = false) {
             if (isSearch) this.tabName = 'group_all'
-            let _trafficList = this.searchType === 'group_id' ? this.trafficListAll.filter(value => value.group_id >= this.searchValue) : this.searchValue ? this.trafficListAll.filter(value => this.searchType === 'server_ip' ? value.source_disk[0] === this.searchValue : value.source_disk[2] === this.searchValue) : this.trafficListAll
+            let _trafficList = this.searchType === 'group_id' ? this.trafficListAll.filter(value => value.group_id >= this.searchValue) : this.searchValue ? this.trafficListAll.filter(value => this.searchType === 'server_ip' ? value.src_server_ip[0].indexOf(this.searchValue) >= 0 : value.src_partition_id.indexOf(this.searchValue) >= 0) : this.trafficListAll
             this.trafficList = this.tabName === 'group_all' ? _trafficList : _trafficList.filter(value => value.group_status === this.tabName)
         },
         async refresh () {
@@ -183,6 +185,7 @@ export default {
         }
     }
     .content {
+        position: relative;
         border-top: 1px solid #d3dce6;
         padding-top: 8px;
         .button-refresh {
@@ -193,7 +196,7 @@ export default {
             clear: both;
         }
         .bsc-spin-fix {
-            top: 295px;
+            top: 89px;
         }
     }
 }
