@@ -586,9 +586,22 @@ const convertArray2Object = (array) => {
     }
 }
 
+.dark .table-bucket-acl {
+    border: @common-border-dark;
+    border-collapse:collapse;
+
+    th {
+        background: @secondary-color-dark;
+    }
+
+    th,td {
+        border-bottom: @common-border-dark;
+    }
+}
+
 .table-bucket-acl {
     width: 100%;    
-    border: 1px solid #d7dde4;
+    border: @common-border-dark;
     border-collapse:collapse;
 
     th {

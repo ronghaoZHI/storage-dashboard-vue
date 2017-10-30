@@ -1,5 +1,5 @@
 <template>
-    <div id="app" v-bind:class="{dark: isDark}"
+    <div id="app"
          v-drop>
         <router-view></router-view>
         <loading></loading>
@@ -10,13 +10,9 @@ import loading from '@/components/Loading'
 export default {
     name: 'app',
     components: {loading},
-    computed: {
-        isDark () {
-            return !this.$store.state.is_dark
-        }
-    },
     created () {
-        let versions = !this.$store.state.is_dark ? '-dark' : ''
+        this.$store.state.is_dark && $('body').addClass('dark')
+        let versions = this.$store.state.is_dark ? '-dark' : ''
         let themeLink = document.querySelector('link[name="theme"]')
         themeLink.href = `./static/styles/iview${versions}.css`
     },

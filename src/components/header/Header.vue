@@ -65,7 +65,7 @@ export default {
             rePasswordModal: false,
             lang: getCookie('uc_lang') !== 'en',
             isAdminMode: user.state.type === 'admin',
-            isDark: !this.$store.state.is_dark,
+            isDark: this.$store.state.is_dark,
             rePasswordForm: {
                 password: ''
             },
@@ -118,7 +118,9 @@ export default {
         },
         async toggleTheme () {
             await this.$store.dispatch('toggleTheme')
-            let versions = !this.$store.state.is_dark ? '-dark' : ''
+            this.$store.state.is_dark && $('body').addClass('dark')
+            !this.$store.state.is_dark && $('body').removeClass('dark')
+            let versions = this.$store.state.is_dark ? '-dark' : ''
             let themeLink = document.querySelector('link[name="theme"]')
             themeLink.href = `./static/styles/iview${versions}.css`
         }
