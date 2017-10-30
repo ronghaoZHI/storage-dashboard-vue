@@ -192,6 +192,9 @@ export default {
             top: 8px;
             clear: both;
         }
+        .bsc-spin-fix {
+            top: 295px;
+        }
     }
 }
 </style>
