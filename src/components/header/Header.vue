@@ -49,7 +49,7 @@
 </template>
 <script>
 import Vue from 'vue'
-import { REPASSWORD } from '@/service/API'
+import { REPASSWORD, BOUND_USER } from '@/service/API'
 import { clear } from '@/service/Aws'
 import { logout, getCookie, createCookie } from '@/service/Helper'
 import user from '@/store/modules/user'
@@ -82,6 +82,8 @@ export default {
             } else if (name === 'rePasssword') {
                 this.rePasswordModal = true
             } else if (name === 'selectSubUser') {
+                let res = await this.$http.get(BOUND_USER)
+                await this.$store.dispatch('setUserInfo', _.extend(user.state, {subUserList: res}))
                 await clear()
                 this.$router.push('/login')
             }
