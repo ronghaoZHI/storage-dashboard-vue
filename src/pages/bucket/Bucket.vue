@@ -63,11 +63,25 @@ export default {
                 this.$Loading.start()
                 this.spinShow = true
                 let res = await getBucketList()
-                this.bucketList = _.forEach(res.Buckets, (item) => {
-                    item.selected = false
-                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-                    return item
-                })
+
+                if (this.isSubUser) {
+                    res.Buckets.forEach((item) => {
+                        this.getBucketAcl(item.Name).then(acl => {
+                            acl.Grants.forEach(grant => {
+                                if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
+                                    item.selected = false
+                                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                                    this.bucketList.push(item)
+                                }
+                            })
+                        })
+                    })
+                } else {
+                    this.bucketList = _.forEach(res.Buckets, (item) => {
+                        item.selected = false
+                        item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                    })
+                }
                 this.$Loading.finish()
                 this.spinShow = false
             } catch (error) {
@@ -133,16 +147,14 @@ export default {
         dbClick (item) {
             this.$router.push({ name: 'file', params: { bucket: item.Name, prefix: 'noprefix' } })
         },
-        async getBucketPolify () {
+        async getBucketAcl (name) {
             try {
-                let res = await handler('getBucketPolicy', {
-                    Bucket: this.selectedBucket.Name
+                return await handler('getBucketAcl', {
+                    Bucket: name
                 })
-                var polify = JSON.parse(res.Policy)
             } catch (error) {
-                this.$Message.error(this.$t('STORAGE.GET_ADULT_FAILED'))
+                console.log(error)
             }
-            return polify
         }
     },
     watch: {
