@@ -569,7 +569,7 @@ export default {
             if (user.state.type === 'sub') {
                 let acl = await handler('getBucketAcl', { Bucket: this.bucket })
                 _.each(acl.Grants, grant => {
-                    if ((grant.Grantee.ID === user.state.username) && (grant.Permission === 'FULL_CONTROL' || _.keys(grant.Permission).indexOf('READ_ACP') !== -1)) {
+                    if ((grant.Grantee.ID === user.state.username) && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'WRITE')) {
                         this.canUpload = true
                     }
                 })
