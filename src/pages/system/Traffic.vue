@@ -135,7 +135,7 @@ export default {
         },
         getFilterTrafficList (isSearch = false) {
             if (isSearch) this.tabName = 'group_all'
-            let _trafficList = this.searchType === 'group_id' ? this.trafficListAll.filter(value => value.group_id >= this.searchValue) : this.searchValue ? this.trafficListAll.filter(value => this.searchType === 'server_ip' ? value.src_server_ip[0].indexOf(this.searchValue) >= 0 : value.src_partition_id.indexOf(this.searchValue) >= 0) : this.trafficListAll
+            let _trafficList = this.searchType === 'group_id' ? this.trafficListAll.filter(value => value.group_id >= this.searchValue) : this.searchValue ? this.trafficListAll.filter(value => this.searchType === 'server_ip' ? value.src_server_ip.indexOf(this.searchValue) >= 0 : value.src_partition_id.indexOf(this.searchValue) >= 0) : this.trafficListAll
             this.trafficList = this.tabName === 'group_all' ? _trafficList : _trafficList.filter(value => value.group_status === this.tabName)
         },
         async refresh () {
