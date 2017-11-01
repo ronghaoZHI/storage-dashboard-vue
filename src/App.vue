@@ -11,7 +11,7 @@ export default {
     name: 'app',
     components: {loading},
     created () {
-        this.$store.state.is_dark && $('body').addClass('dark')
+        $('body').addClass(`${this.$store.state.theme}`)
     },
     directives: {
         // remove the default drop and drag actions

@@ -10,10 +10,14 @@
                     </Tooltip>
                 </div>
                 <div class="button-document">
-                    <i-switch :only-text="true" v-model="isDark" @on-change="toggleTheme">
-                        <span slot="open">黑</span>
-                        <span slot="close">白</span>
-                    </i-switch>
+                    <Dropdown @on-click="toggleTheme" placement="bottom-end">
+                        <a class="dropdown-link"
+                        href="javascript:void(0)"><Icon type="android-color-palette" size="28"></Icon></a>
+                        <Dropdown-menu slot="list">
+                            <Dropdown-item v-show="theme !== 'dark'" name="dark">切换为黑色版</Dropdown-item>
+                            <Dropdown-item v-show="theme !== 'white'" name="white">切换为白色版</Dropdown-item>
+                        </Dropdown-menu>
+                    </Dropdown>
                 </div>
                 <div class="button-document">
                     <i-switch :only-text="true" v-model="lang" @on-change="toggleLanguage">
@@ -65,7 +69,6 @@ export default {
             rePasswordModal: false,
             lang: getCookie('uc_lang') !== 'en',
             isAdminMode: user.state.type === 'admin',
-            isDark: this.$store.state.is_dark,
             rePasswordForm: {
                 password: ''
             },
@@ -79,6 +82,9 @@ export default {
     computed: {
         uname: function () {
             return user.state.type === 'admin' && user.state.subUser ? `${this.username} -- ${user.state.subUser.username}` : this.username
+        },
+        theme: function () {
+            return this.$store.state.theme
         }
     },
     props: ['username'],
@@ -116,10 +122,13 @@ export default {
             Vue.config.lang = lang
             createCookie('uc_lang', lang)
         },
-        async toggleTheme () {
-            await this.$store.dispatch('toggleTheme')
-            this.$store.state.is_dark && $('body').addClass('dark')
-            !this.$store.state.is_dark && $('body').removeClass('dark')
+        async toggleTheme (value) {
+            await this.$store.dispatch('toggleTheme', value)
+            if (this.$store.state.theme === 'dark') {
+                $('body').addClass('dark')
+            } else {
+                $('body').removeClass('dark')
+            }
         }
     }
 }
@@ -171,13 +180,12 @@ export default {
             .button-document {
                 .sc(22px,@menu-text-color);
                 font-weight: bolder;
-                padding: 0 10px;
+                padding: 0 15px;
                 border-right: 1px solid #1b8de2;
                 cursor: pointer;
                 i {
                     position: relative;
                     top: 2px;
-                    left: -4px;
                 }
             }
 
