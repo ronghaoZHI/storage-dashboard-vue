@@ -12,9 +12,6 @@ export default {
     components: {loading},
     created () {
         this.$store.state.is_dark && $('body').addClass('dark')
-        let versions = this.$store.state.is_dark ? '-dark' : ''
-        let themeLink = document.querySelector('link[name="theme"]')
-        themeLink.href = `./static/styles/iview${versions}.css`
     },
     directives: {
         // remove the default drop and drag actions

@@ -120,9 +120,6 @@ export default {
             await this.$store.dispatch('toggleTheme')
             this.$store.state.is_dark && $('body').addClass('dark')
             !this.$store.state.is_dark && $('body').removeClass('dark')
-            let versions = this.$store.state.is_dark ? '-dark' : ''
-            let themeLink = document.querySelector('link[name="theme"]')
-            themeLink.href = `./static/styles/iview${versions}.css`
         }
     }
 }

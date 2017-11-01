@@ -14,6 +14,7 @@ import axios from '@/service/axios-bsc'
 import { messages } from '@/service/translate'
 import $ from 'jquery'
 import { getCookie } from '@/service/Helper'
+import 'iview-bsc/dist/styles/iview.css'
 
 window._ = _
 window.$ = $
