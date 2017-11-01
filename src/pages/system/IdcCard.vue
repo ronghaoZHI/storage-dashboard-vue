@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-idc-card">
         <div class="header">
-            <span>IDC : {{data.idc}}</span>
+            <span>IDC : {{info.idc}}</span>
         </div>
         <!--SATA & SSD-->
         <div class="content two-type" v-if="type === 'all'">
@@ -11,8 +11,8 @@
                 </i-circle>
                 <div class="idc-detail">
                     <p>SATA磁盘</p>
-                    <p>容量使用率 ：{{data.SATA.used_rate}}%</p>
-                    <p>已用／总容量 ：{{data.SATA.used}}/{{data.SATA.capacity}}</p>
+                    <p>容量使用率 ：{{info.SATA.used_rate || '-'}}%</p>
+                    <p>已用／总容量 ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
                 </div>
             </div>
             <div class="idc-circel idc-content-right">
@@ -21,8 +21,8 @@
                 </i-circle>
                 <div class="idc-detail">
                     <p>SSD磁盘</p>
-                    <p>容量使用率 ：{{data.SSD.used_rate}}%</p>
-                    <p>已用／总容量 ：{{data.SSD.used}}/{{data.SSD.capacity}}</p>
+                    <p>容量使用率 ：{{info.SSD.used_rate || '-'}}%</p>
+                    <p>已用／总容量 ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
                 </div>
             </div>
         </div>
@@ -35,8 +35,8 @@
             </div>
             <div class="idc-detail idc-content-right">
                 <p>SATA磁盘</p>
-                <p>容量使用率 ：{{data.SATA.used_rate}}%</p>
-                <p>已用／总容量 ：{{data.SATA.used}}/{{data.SATA.capacity}}</p>
+                <p>容量使用率 ：{{info.SATA.used_rate || '-'}}%</p>
+                <p>已用／总容量 ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
             </div>
         </div>
         <!-- SSD -->
@@ -48,15 +48,26 @@
             </div>
             <div class="idc-detail idc-content-right">
                 <p>SSD磁盘</p>
-                <p>容量使用率 ：{{data.SSD.used_rate}}%</p>
-                <p>已用／总容量 ：{{data.SSD.used}}/{{data.SSD.capacity}}</p>
+                <p>容量使用率 ：{{info.SSD.used_rate || '-'}}%</p>
+                <p>已用／总容量 ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
             </div>
         </div>
     </div>
 </template>
 <script>
+import { bytes } from '@/service/bucketService'
 export default {
-    props: ['data', 'type']
+    props: ['data', 'type'],
+    computed: {
+        info () {
+            let newData = _.cloneDeep(this.data)
+            newData.SSD.used = bytes(this.data.SSD.used)
+            newData.SSD.capacity = bytes(this.data.SSD.capacity)
+            newData.SATA.used = bytes(this.data.SATA.used)
+            newData.SATA.capacity = bytes(this.data.SATA.capacity)
+            return newData
+        }
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -64,7 +75,7 @@ export default {
 @border-color: #d3dce6;
 .@{css-prefix}idc-card {
     display: inline-block;
-    width: 350px;
+    width: 400px;
     border: 1px solid @border-color;
     margin: 0 20px 16px 0;
     .header {

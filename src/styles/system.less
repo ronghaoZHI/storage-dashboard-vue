@@ -408,9 +408,7 @@
             }
             p.half{
                 display:inline-block;
-            }
-            p.half:nth-child(2n+1){
-                width:45%;
+                width:50%;
             }
         }
         
@@ -435,10 +433,12 @@
         color: #475669;
         border-bottom: 1px solid #e5e9f2;
     }
-
+    .content-scroll{
+        margin: 12px 0;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
     .content {
-        margin-top: 12px;
-
         .group-item {
             display: inline-block;
             width: 49%;
@@ -517,6 +517,7 @@
 .group-modal{
     .group {
         .content {
+
             .partition-title,
             .partition-list {
     
@@ -548,4 +549,11 @@
 .redBack {
     background-color: #f85959 !important;
     color: #fff !important;
+}
+.no-data{
+    font-size: 28px;
+    color: #d3dce6;
+    text-align: center;
+    width:100%;
+    padding-top:60px;
 }

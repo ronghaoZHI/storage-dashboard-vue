@@ -1,5 +1,6 @@
 <template>
 <div class="unused-box">
+    <h1 class="no-data" v-if="list.length === 0">No Data</h1>
     <div class="bsc-system-card bsc-partition-card" v-for="partition in list" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
@@ -28,6 +29,9 @@ export default {
         return {
             list: this.data
         }
+    },
+    created () {
+        console.log(this.list, 'data', this.data)
     }
 }
 </script>

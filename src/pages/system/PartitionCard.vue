@@ -8,7 +8,7 @@
         <div class="content">
             <div class="files">
                 <div class="progress">
-                    <span class="file-count io-count" :class="{redBack: myData.ioutil > 0.9}">
+                    <span class="file-count io-count" :class="{redBack: myData.ioutil > 90}">
                         IO : {{myData.ioutilFont}}
                     </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">容量 : {{myData.used_rate}}%</span>
                     CPU : {{myData.cpu}}
@@ -19,17 +19,17 @@
                 <p><span>IDC : </span>{{myData.idc}}</p>
                 <p><span>已用／总容量 : </span>{{myData.used}}/{{myData.capacity}}</p>
                 <p class="half"><span>类型 : </span>{{myData.media_type}}</p>
-                <p class="half"><span>可用 : </span><span :class="{redFont: myData.fail}">{{myData.failFont}}</span></p>
-                <p class="half"><span>group个数 : </span>{{myData.group.length}}</p>
+                <p class="half"><span>可用 : </span><span :class="{redFont: !!myData.fail}">{{myData.failFont}}</span></p>
+                <!-- <p class="half"><span>group个数 : </span>{{myData.group.length}}</p> -->
             </div>
         </div>
         <div class="footer">
-            <i-switch size="large" v-model="readonly">
+            <i-switch size="large" v-model="readonly" @on-change="usedSet">
                 <span slot="open">可写</span>
                 <span slot="close">只读</span>
             </i-switch>
             <div>
-                <Button type="ghost" size="small" v-if="!readonly && myData.group.length !== 0">迁移</Button>
+                <Button type="ghost" size="small" v-if="!readonly && myData.group.length !== 0 && !isTraffic" @click="usedMove">迁移</Button>
                 <Button type="ghost" class="delete" size="small" v-if="!readonly && myData.group.length === 0">删除</Button>
             </div>
         </div>
@@ -46,23 +46,27 @@
 <script>
 import detailModal from './detailModal'
 import { bytes } from '@/service/bucketService'
+import {PARTITION_USED_SET, PARTITION_USED_MOVE, PARTITION_USED_DELETED} from '@/service/API'
+
 export default {
     props: ['data'],
     data () {
         return {
             showDetailModal: false,
             readonly: this.data.readonly === 0, // true 为可写
-            modalTitles: {subTitle1: '磁盘基础信息', subTitle2: '对应group信息'}
+            modalTitles: {subTitle1: '磁盘基础信息', subTitle2: '对应group信息'},
+            isTraffic: this.trafficComputed(),
+            waitingCard: this.waitingComputed()
         }
     },
     components: {detailModal},
     computed: {
         myData () {
             let newData = _.cloneDeep(this.data)
-            newData.ioutilFont = `${this.data.ioutil * 100}%`
+            newData.ioutilFont = `${this.data.ioutil}%`
             newData.used = bytes(this.data.used)
             newData.capacity = bytes(this.data.capacity)
-            newData.failFont = this.data.fail === false ? '可用' : '故障'
+            newData.failFont = !!this.data.fail ? '故障' : '可用'
             newData.readonly = this.data.readonly === 1 ? '只读' : '可写'
             return newData
         },
@@ -84,15 +88,84 @@ export default {
                 {name: '读写', value: this.myData.readonly},
                 {name: '可用', value: this.myData.failFont, isRed: this.myData.fail}]
             return {tableData, basicInfo, detailHead}
+        }
+    },
+    methods: {
+        waitingComputed () {
+            let flg = false
+            if (this.data.is_del === 1) {
+                return 'bsc-waiting-card'
+            }
+            if (this.data.group.length !== 0) {
+                flg = this.data.group.every(item => {
+                    return item.traffic_status
+                })
+            }
+            return flg ? 'bsc-waiting-card' : ''
         },
-        isTraffic () {
-            return this.myData.group.length !== 0 && this.myData.group.every(item => {
+        trafficComputed () {
+            return this.data.group.length !== 0 && this.data.group.every(item => {
                 return item.traffic_status
             })
         },
-        waitingCard () {
-            return this.myData.is_del === 1 || this.isTraffic ? 'bsc-waiting-card' : ''
+        async usedSet () {
+            this.spinShow = true
+            this.$Loading.start()
+            try {
+                let params = {
+                    read_only: this.readonly ? 0 : 1,
+                    partition_id: this.myData.partition_id
+                }
+                await this.$http.post(PARTITION_USED_SET, params)
+                this.spinShow = false
+                this.$Loading.finish()
+                this.$Message.success('设置成功')
+            } catch (error) {
+                this.readonly = !this.readonly
+                this.spinShow = false
+                this.$Loading.error()
+                this.$Message.error('设置失败')
+            }
+        },
+        async usedMove () {
+            this.spinShow = true
+            this.$Loading.start()
+            try {
+                let params = {
+                    partition_id: this.myData.partition_id
+                }
+                await this.$http.post(PARTITION_USED_MOVE, params)
+                this.isTraffic = true
+                this.waitingCard = 'bsc-waiting-card'
+                this.spinShow = false
+                this.$Loading.finish()
+                this.$Message.success('设置成功')
+            } catch (error) {
+                this.spinShow = false
+                this.$Loading.error()
+                this.$Message.error('设置失败')
+            }
+        },
+        async usedDeleted () {
+            this.spinShow = true
+            this.$Loading.start()
+            try {
+                let params = {
+                    partition_id: this.myData.partition_id
+                }
+                await this.$http.post(PARTITION_USED_DELETED, params)
+                this.myData.is_del = 1
+                this.waitingCard = 'bsc-waiting-card'
+                this.spinShow = false
+                this.$Loading.finish()
+                this.$Message.success('设置成功')
+            } catch (error) {
+                this.spinShow = false
+                this.$Loading.error()
+                this.$Message.error('设置失败')
+            }
         }
+
     }
 }
 const detailHead = [{name: 'ID', value: 'group_id'},

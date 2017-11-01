@@ -21,7 +21,7 @@
     </div>
     <div class="group" style="border-top:0">
         <div class="info-title">{{titles.subTitle2}}</div>
-        <div class="content">
+        <div class="content content-scroll">
             <ul class="partition-title">
                 <li v-for="dh in data.detailHead" :key="dh.name" >{{dh.name}}</li>
             </ul>
