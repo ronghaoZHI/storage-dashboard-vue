@@ -16,16 +16,16 @@
             <div class="ip">
                 <ul class="ip-title">
                     <li>IP/编号</li>
-                    <li>容量</li>
+                    <li>已用容量</li>
                     <li>IO</li>
                     <li>CPU</li>
                     <li>操作</li>
                 </ul>
                 <ul class="ip-list" v-for="(pt,index) in data.partition" :key="pt.partition_idx">
-                    <li>{{pt.inn_ips[0]}}/{{pt.partition_idx}}</li>
-                    <li>{{Math.floor(pt.space * 100)}}%</li>
-                    <li>{{Math.floor(pt.ioutil * 100)}}%</li>
-                    <li>{{Math.round(pt.cpu * 100) / 100}}</li>
+                    <li>{{pt.inn_ips[0]}}</li>
+                    <li>{{pt.used_rate || '-'}}%</li>
+                    <li>{{pt.ioutil || '-'}}%</li>
+                    <li>{{pt.cpu || '-'}}%</li>
                     <li v-if="data.traffic && pt.partition_id === data.traffic[0].src_partition_ids[0]">迁移中</li>
                     <li v-else><span class="ip-button" @click="migrate(pt,index)">迁移</span></li>
                 </ul>
@@ -71,7 +71,7 @@
                         <li>IDC</li>
                         <li>IP</li>
                         <li>IO</li>
-                        <li>容量</li>
+                        <li>已用容量</li>
                         <li>CPU</li>
                         <li>读写状态</li>
                         <li>可用状态</li>
@@ -81,11 +81,11 @@
                         <li>{{pt.media_type}}</li>
                         <li>{{pt.idc}}</li>
                         <li>{{pt.inn_ips[0]}}</li>
-                        <li>{{Math.floor(pt.ioutil * 100)}}%</li>
-                        <li>{{Math.floor(pt.space * 100)}}%</li>
-                        <li>{{Math.round(pt.cpu * 100) / 100}}</li>
-                        <li>{{data.readonly === 0 ? '可写' : '只读'}}</li>
-                        <li>{{isUse}}</li>
+                        <li>{{pt.ioutil || '-'}}%</li>
+                        <li>{{pt.used_rate || '-'}}%</li>
+                        <li>{{pt.cpu || '-'}}%</li>
+                        <li>{{pt.readonly === 0 ? '可写' : '只读'}}</li>
+                        <li>{{pt.is_del === 0 ? '正常' : '删除'}}</li>
                     </ul>
                 </div>
             </div>
@@ -126,8 +126,7 @@ export default {
     data () {
         return {
             showDetailModal: false,
-            status: this.data.readonly === 0 ? '可写' : '只读',
-            isUse: this.data.is_del === 0 ? '正常' : '删除'
+            status: this.data.readonly === 0 ? '可写' : '只读'
         }
     },
     props: ['data'],

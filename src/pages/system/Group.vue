@@ -13,9 +13,9 @@
             </div>
             <div class="status">
                 <span class="group-status-prefix">group 状态:</span>
-                <button v-bind:class="{statusButtonFocus: read_only === 'none'}" @click="read_only = 'none'">全部</button>
-                <button v-bind:class="{statusButtonFocus: read_only === 1}" @click="read_only = 1">只读</button>
                 <button v-bind:class="{statusButtonFocus: read_only === 0}" @click="read_only = 0">可写</button>
+                <button v-bind:class="{statusButtonFocus: read_only === 1}" @click="read_only = 1">只读</button>
+                <button v-bind:class="{statusButtonFocus: read_only === 'ignore'}" @click="read_only = 'ignore'">全部</button>
             </div>
         </div>
         <div class="content">
@@ -49,7 +49,7 @@ export default {
         return {
             searchType: 'group_id',
             searchValue: '',
-            read_only: 'none',
+            read_only: 'ignore',
             showChart: 'group_id',
             groupList: [],
             nextGroupId: 0,
