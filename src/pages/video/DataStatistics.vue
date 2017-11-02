@@ -101,6 +101,7 @@ export default {
                             '音频转码任务数(个)': this.overviewData.audio_transcoding[index][1],
                             '视频截图张数(个)': this.overviewData.snapshot[index][1],
                             '转封装任务数(个)': this.overviewData.container_only[index][1],
+                            '音视频元信息接口调用次数(个)': this.overviewData.get_metadata[index][1],
                             'SD240(s)': this.distributionData.SD240[index][1],
                             'SD480(s)': this.distributionData.SD480[index][1],
                             'SD(s)': this.distributionData.SD[index][1],
@@ -227,9 +228,9 @@ const InitOverviewOptions = data => {
         yAxis: {
             name: '个'
         },
-        color: ['#9f61fc', '#1e9fff', '#0cce66', '#ffac2a'],
+        color: ['#9f61fc', '#1e9fff', '#0cce66', '#ffac2a', '#8492a6'],
         legend: {
-            data: ['视频转码任务数', '音频转码任务数', '视频截图张数', '转封装任务数'],
+            data: ['视频转码任务数', '音频转码任务数', '视频截图张数', '转封装任务数', '音视频元信息接口调用次数'],
             top: '20px',
             itemGap: 40
         },
@@ -273,6 +274,16 @@ const InitOverviewOptions = data => {
                 }
             },
             data: data.container_only
+        }, {
+            name: '音视频元信息接口调用次数',
+            type: 'line',
+            areaStyle: {
+                normal: {
+                    color: '#83C6F9',
+                    opacity: 0.8
+                }
+            },
+            data: data.get_metadata
         }]
     })
     return newOptions
