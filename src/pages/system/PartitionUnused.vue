@@ -1,7 +1,7 @@
 <template>
 <div class="unused-box">
-    <h1 class="no-data" v-if="list.length === 0">No Data</h1>
-    <div class="bsc-system-card bsc-partition-card" v-for="(partition,index) in list" :key="partition.idc">
+    <h1 class="no-data" v-if="data.length === 0">No Data</h1>
+    <div class="bsc-system-card bsc-partition-card" v-for="(partition,index) in data" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
             <span>{{partition.ips[0]}}:{{partition.path}}</span>
@@ -9,7 +9,7 @@
         <div class="content">
             <div class="details">
                 <p><span>IDC : </span>{{partition.idc}}</p>
-                <p><span>已用／总容量 : </span>{{partition.freeAndCapacity}}</p>
+                <p><span>已用／总容量 : </span>{{`${bytes(item.free)}/${bytes(item.capacity)}`}}</p>
                 <p><span>类型 : </span>{{partition.media_type}}</p>
             </div>
         </div>
@@ -32,27 +32,15 @@ export default {
         }
     },
     computed: {
-        list: {
-            get () {
-                let newData = [...this.data]
-                newData.forEach(item => {
-                    item.freeAndCapacity = `${bytes(item.free)}/${bytes(item.capacity)}`
-                })
-                return newData
-            },
-            set (value) {
-                console.log('set', value)
-            }
-        }
     },
     created () {
-        console.log(this.list, 'data', this.data)
+        console.log('data', this.data)
     },
     methods: {
         async unusedAdd (index) {
             this.$Loading.start()
             try {
-                await this.$http.post(PARTITION_UNUSED_ADD, {ip: this.list[index].ips[0], path: this.list[index].path})
+                await this.$http.post(PARTITION_UNUSED_ADD, {ip: this.data[index].ips[0], path: this.data[index].path})
                 this.data.splice(index, 1)
                 this.$Loading.finish()
                 this.$Message.success('设置成功')
@@ -62,7 +50,8 @@ export default {
                 this.$Message.error('设置失败')
             }
         }
-    }
+    },
+    bytes: bytes
 }
 </script>
 <style lang="less" scoped>
