@@ -25,7 +25,7 @@
 </template>
 <script>
 import {PARTITION_UNUSED_ADD} from '@/service/API'
-import {bytes} from '@/service/BucketService'
+import {bytes} from '@/service/bucketService'
 export default {
     props: ['data'],
     data () {
