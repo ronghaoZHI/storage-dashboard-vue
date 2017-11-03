@@ -1,6 +1,7 @@
 <template>
 <div class="unused-box">
     <h1 class="no-data" v-if="data.length === 0">No Data</h1>
+    <p class="page-info" v-if="data.length !== 0">未使用磁盘上线后生效时间为一分钟</p>
     <div class="bsc-system-card bsc-partition-card" v-for="(partition,index) in data" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
@@ -30,11 +31,6 @@ export default {
     data () {
         return {
         }
-    },
-    computed: {
-    },
-    created () {
-        console.log('data', this.data)
     },
     methods: {
         async unusedAdd (index) {

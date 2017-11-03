@@ -173,7 +173,6 @@ export default {
     watch: {
         data: {
             handler (to, from) {
-                console.log('to', to)
                 this.waitingCard = waitingComputed(to)
                 this.isWrite = to.readonly === 0
             },
@@ -190,9 +189,7 @@ const waitingComputed = (data) => {
         flg = data.group.every(item => {
             return !!item.traffic_status
         })
-        console.log('flg', flg)
     }
-    console.log(data.partition_id, 'this.data.group', data.group.length)
     return flg ? 'bsc-waiting-card' : ''
 }
 const detailHead = [{name: 'ID', value: 'group_id'},

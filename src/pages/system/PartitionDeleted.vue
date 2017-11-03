@@ -1,7 +1,7 @@
 <template>
 <div class="deleted-box">
     <h1 class="no-data" v-if="list.length === 0">No Data</h1>
-    如果已删除磁盘长时间（5分钟）未出现在未删除磁盘页面，需要去该磁盘路径下，删掉以partition id为文件名的文件夹
+    <p class="page-info" v-if="list.length !== 0">如果已删除磁盘长时间（5分钟）未出现在未删除磁盘页面，请到该磁盘路径下，删除以partition id为文件名的文件夹</p>
     <div class="bsc-system-card bsc-partition-card" v-for="partition in list" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
@@ -28,13 +28,6 @@ export default {
         list () {
             return this.data
         }
-    },
-    created () {
-        console.log(this.list)
-    },
-    methods: {
-    },
-    watch: {
     }
 }
 </script>
@@ -52,4 +45,5 @@ export default {
     text-align: center;
     margin:30px 0 20px;
 }
+
 </style>
