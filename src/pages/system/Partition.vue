@@ -60,9 +60,9 @@
                 <div class="section-chart">
                     <div class="card-chart">
                         <h1 class="no-data" v-if="partitionList.length === 0">No Data</h1>
-                        <partition-card v-for="partition in partitionList" :data="partition" :key="partition.partition_id"></partition-card>
+                        <partition-card v-else v-for="partition in partitionList" :data="partition" :key="partition.partition_id"></partition-card>
                         <br>
-                        <Page v-if="pageTotal > 1" class="page" :total="listNum" :page-size="2" @on-change="pageChange" show-elevator></Page>
+                        <Page v-if="pageTotal > 1" class="page" :total="listNum" :page-size="20" @on-change="pageChange" show-elevator></Page>
                     </div>
                 </div>
             </div>
@@ -166,13 +166,13 @@ export default {
                     read_only: this.search.read_only,
                     ip: this.IPparam,
                     page: this.pageCount,
-                    count: 2
+                    count: 20
                 }
                 let listData = await this.$http.get(listURL, {params})
                 this.idcList = Object.values(listData.idc_stats)
                 this.partitionList = listData.partition || []
                 this.listNum = listData.total_count || 0
-                this.pageTotal = listData.total_count ? Math.ceil(listData.total_count / 2) : 1
+                this.pageTotal = listData.total_count ? Math.ceil(listData.total_count / 20) : 1
                 console.log('this.pageTotal', this.pageTotal)
                 this.spinContent = false
                 this.$Loading.finish()
@@ -195,12 +195,12 @@ export default {
                     lower_free: this.search.lower_free || 'ignore',
                     upper_free: this.search.upper_free || 'ignore',
                     page: this.pageCount,
-                    count: 2
+                    count: 20
                 }
                 let unusedData = await this.$http.get(listURL, {params})
                 this.unusedList = unusedData.partition || []
                 this.listNum = unusedData.total_count || 0
-                this.pageTotal = unusedData.total_count ? Math.ceil(unusedData.total_count / 2) : 1
+                this.pageTotal = unusedData.total_count ? Math.ceil(unusedData.total_count / 20) : 1
                 this.capacity = unusedData.stats ? bytes(unusedData.stats.capacity) : 0
                 this.spinContent = false
                 this.$Loading.finish()
@@ -215,7 +215,7 @@ export default {
             try {
                 const listURL = PARTITION_DELETED_LIST
                 let deletedData = await this.$http.get(listURL)
-                this.deletedList = deletedData.partition || []
+                this.deletedList = typeof (deletedData) === 'string' ? [] : deletedData
                 this.spinContent = false
                 this.$Loading.finish()
             } catch (error) {

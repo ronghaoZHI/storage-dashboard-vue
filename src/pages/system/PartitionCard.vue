@@ -9,7 +9,7 @@
             <div class="files">
                 <div class="progress">
                     <span class="file-count io-count" :class="{redBack: myData.ioutil > 90}">
-                        IO : {{myData.ioutilFont}}
+                        IO : {{myData.ioutil}}
                     </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">容量 : {{myData.used_rate}}%</span>
                     CPU : {{myData.cpu}}
                 </div>
@@ -18,19 +18,19 @@
                 <p><span>ID : </span>{{myData.partition_id}}</p>
                 <p><span>IDC : </span>{{myData.idc}}</p>
                 <p><span>已用／总容量 : </span>{{myData.used}}/{{myData.capacity}}</p>
-                <p class="half"><span>类型 : </span>{{myData.media_type}}</p>
-                <p class="half"><span>可用 : </span><span :class="{redFont: !!myData.fail}">{{myData.failFont}}</span></p>
-                <!-- <p class="half"><span>group个数 : </span>{{myData.group.length}}</p> -->
+                <p><span>类型 : </span>{{myData.media_type}}</p>
+                <p><span>可用 : </span><span :class="{redFont: !!myData.fail}">{{myData.failFont}}</span></p>
+                <p><span>group个数 : </span>{{myData.group.length}}</p>
             </div>
         </div>
         <div class="footer">
-            <i-switch size="large" v-model="readonly" @on-change="usedSet">
+            <i-switch size="large" v-model="isWrite" @on-change="usedSet" id="isWrite">
                 <span slot="open">可写</span>
                 <span slot="close">只读</span>
-            </i-switch>
+            </i-switch>{{isWrite}}
             <div>
-                <Button type="ghost" size="small" v-if="!readonly && myData.group.length !== 0 && !isTraffic" @click="usedMove">迁移</Button>
-                <Button type="ghost" class="delete" size="small" v-if="!readonly && myData.group.length === 0">删除</Button>
+                <Button type="ghost" size="small" v-if="!isWrite && myData.group.length !== 0 && !isTraffic" @click="usedMove">迁移</Button>
+                <Button type="ghost" class="delete" size="small" v-if="!isWrite && myData.group.length === 0" @click="usedDeletedConfirm">删除</Button>
             </div>
         </div>
         <div class="deleting-content">
@@ -46,29 +46,36 @@
 <script>
 import detailModal from './detailModal'
 import { bytes } from '@/service/bucketService'
-import {PARTITION_USED_SET, PARTITION_USED_MOVE, PARTITION_USED_DELETED} from '@/service/API'
+import {PARTITION_USED_MOVE, PARTITION_USED_SET, PARTITION_USED_DELETED} from '@/service/API'
 
 export default {
     props: ['data'],
     data () {
         return {
+            isWrite: this.data.readonly === 0,
             showDetailModal: false,
-            readonly: this.data.readonly === 0, // true 为可写
             modalTitles: {subTitle1: '磁盘基础信息', subTitle2: '对应group信息'},
             isTraffic: this.trafficComputed(),
-            waitingCard: this.waitingComputed()
+            waitingCard: ''
         }
     },
     components: {detailModal},
+    created () {
+    },
     computed: {
-        myData () {
-            let newData = _.cloneDeep(this.data)
-            newData.ioutilFont = `${this.data.ioutil}%`
-            newData.used = bytes(this.data.used)
-            newData.capacity = bytes(this.data.capacity)
-            newData.failFont = !!this.data.fail ? '故障' : '可用'
-            newData.readonly = this.data.readonly === 1 ? '只读' : '可写'
-            return newData
+        myData: {
+            get () {
+                let newData = _.cloneDeep(this.data)
+                newData.ioutilFont = `${this.data.ioutil}%`
+                newData.used = bytes(this.data.used)
+                newData.capacity = bytes(this.data.capacity)
+                newData.failFont = !!this.data.fail ? '故障' : '可用'
+                newData.readonlyFont = this.data.readonly === 1 ? '只读' : '可写'
+                return newData
+            },
+            set (value) {
+                this.update(value)
+            }
         },
         modalData () {
             let tableData = _.map(this.myData.group, (item) => {
@@ -85,35 +92,23 @@ export default {
                 {name: 'CPU', value: this.myData.cpu, tooltip: '磁盘所在服务器的CPU'},
                 {name: '类型', value: this.myData.media_type},
                 {name: 'IO', value: this.myData.ioutil},
-                {name: '读写', value: this.myData.readonly},
+                {name: '读写', value: this.myData.readonlyFont},
                 {name: '可用', value: this.myData.failFont, isRed: this.myData.fail}]
             return {tableData, basicInfo, detailHead}
         }
     },
     methods: {
-        waitingComputed () {
-            let flg = false
-            if (this.data.is_del === 1) {
-                return 'bsc-waiting-card'
-            }
-            if (this.data.group.length !== 0) {
-                flg = this.data.group.every(item => {
-                    return item.traffic_status
-                })
-            }
-            return flg ? 'bsc-waiting-card' : ''
-        },
         trafficComputed () {
             return this.data.group.length !== 0 && this.data.group.every(item => {
                 return item.traffic_status
             })
         },
-        async usedSet () {
+        async usedSet (newWrite) {
             this.spinShow = true
             this.$Loading.start()
             try {
                 let params = {
-                    read_only: this.readonly ? 0 : 1,
+                    read_only: newWrite ? 0 : 1,
                     partition_id: this.myData.partition_id
                 }
                 await this.$http.post(PARTITION_USED_SET, params)
@@ -121,7 +116,7 @@ export default {
                 this.$Loading.finish()
                 this.$Message.success('设置成功')
             } catch (error) {
-                this.readonly = !this.readonly
+                this.$parent.getUsedList()
                 this.spinShow = false
                 this.$Loading.error()
                 this.$Message.error('设置失败')
@@ -146,6 +141,14 @@ export default {
                 this.$Message.error('设置失败')
             }
         },
+        usedDeletedConfirm () {
+            this.$Modal.confirm({
+                content: '确定要删除磁盘么',
+                okText: this.$t('PUBLIC.CONFIRMED'),
+                cancelText: this.$t('PUBLIC.CANCLE'),
+                onOk: () => this.usedDeleted()
+            })
+        },
         async usedDeleted () {
             this.spinShow = true
             this.$Loading.start()
@@ -166,7 +169,30 @@ export default {
             }
         }
 
+    },
+    watch: {
+        data: {
+            handler (to, from) {
+                this.waitingCard = waitingComputed(to)
+                this.isWrite = to === 0
+            },
+            deep: true
+        }
     }
+}
+const waitingComputed = (data) => {
+    let flg = false
+    if (data.is_del === 1) {
+        return 'bsc-waiting-card'
+    }
+    if (data.group.length !== 0) {
+        flg = data.group.every(item => {
+            return !!item.traffic_status
+        })
+        console.log('flg', flg)
+    }
+    console.log(data.partition_id, 'this.data.group', data.group.length)
+    return flg ? 'bsc-waiting-card' : ''
 }
 const detailHead = [{name: 'ID', value: 'group_id'},
     {name: '文件数', value: 'num_used'},

@@ -21,13 +21,16 @@ export default {
     props: ['data'],
     data () {
         return {
-            list: this.data
+        }
+    },
+    computed: {
+        list () {
+            return this.data
         }
     },
     created () {
-        console.log(this.list, 'data', this.data)
+        console.log(this.list)
     },
-    // components: { idcCard, partitionCard },
     methods: {
     },
     watch: {
