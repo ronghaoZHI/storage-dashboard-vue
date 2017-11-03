@@ -8,17 +8,14 @@ import iconSystem from '../../assets/icon-system.png'
 import iconUser from '../../assets/icon-user.png'
 import iconVideo from '../../assets/icon-video.png'
 
-const systemChildren = [{
+const systemChildren = [ {
     index: 1,
-    name: 'machine'
-}, {
-    index: 2,
     name: 'group'
 }, {
-    index: 3,
+    index: 2,
     name: 'partition'
 }, {
-    index: 4,
+    index: 3,
     name: 'traffic'
 }]
 
