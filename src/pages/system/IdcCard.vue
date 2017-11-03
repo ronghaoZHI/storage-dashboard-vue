@@ -5,8 +5,8 @@
         </div>
         <!--SATA & SSD-->
         <div class="content two-type" v-if="type === 'all'">
-            <div class="idc-circel idc-content-left" :stroke-width="10" :trail-width="8">
-                <i-circle :percent="info.SATA.used_rate || 0" :size="80">
+            <div class="idc-circel idc-content-left">
+                <i-circle :percent="info.SATA.used_rate || 0" :size="80" :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SATA</span>
                 </i-circle>
                 <div class="idc-detail">
@@ -15,8 +15,8 @@
                     <p>已用／总容量 ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
                 </div>
             </div>
-            <div class="idc-circel idc-content-right" :stroke-width="10" :trail-width="8">
-                <i-circle :percent="info.SSD.used_rate || 0" :size="80" stroke-color='#FFDE29'>
+            <div class="idc-circel idc-content-right">
+                <i-circle :percent="info.SSD.used_rate || 0" :size="80" stroke-color='#FFDE29' :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SSD</span>
                 </i-circle>
                 <div class="idc-detail">
@@ -29,7 +29,7 @@
         <!-- SATA -->
         <div class="content one-type" v-else-if="type === 'SATA'">
             <div class="idc-circel idc-content-left">
-                <i-circle :percent="info.SATA.used_rate || 0" :size="80" :stroke-width="10" :trail-width="8">
+                <i-circle :percent="info.SATA.used_rate || 0" :size="80" :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SATA</span>
                 </i-circle>
             </div>
@@ -42,7 +42,7 @@
         <!-- SSD -->
         <div class="content one-type" v-else-if="type === 'SSD'">
             <div class="idc-circel idc-content-left">
-                <i-circle :percent="info.SSD.used_rate || 0" :size="80" stroke-color='#FFDE29'  :stroke-width="10" :trail-width="8">
+                <i-circle :percent="info.SSD.used_rate || 0" :size="80" stroke-color='#FFDE29'  :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SSD</span>
                 </i-circle>
             </div>
