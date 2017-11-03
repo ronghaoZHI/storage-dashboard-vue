@@ -173,8 +173,9 @@ export default {
     watch: {
         data: {
             handler (to, from) {
+                console.log('to', to)
                 this.waitingCard = waitingComputed(to)
-                this.isWrite = to === 0
+                this.isWrite = to.readonly === 0
             },
             deep: true
         }

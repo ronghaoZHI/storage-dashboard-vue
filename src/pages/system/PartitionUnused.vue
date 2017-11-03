@@ -9,7 +9,7 @@
         <div class="content">
             <div class="details">
                 <p><span>IDC : </span>{{partition.idc}}</p>
-                <p><span>已用／总容量 : </span>{{`${bytes(item.free)}/${bytes(item.capacity)}`}}</p>
+                <p><span>已用／总容量 : </span>{{`${bytes(partition.free)}/${bytes(partition.capacity)}`}}</p>
                 <p><span>类型 : </span>{{partition.media_type}}</p>
             </div>
         </div>
@@ -49,9 +49,9 @@ export default {
                 this.$Loading.error()
                 this.$Message.error('设置失败')
             }
-        }
-    },
-    bytes: bytes
+        },
+        bytes: bytes
+    }
 }
 </script>
 <style lang="less" scoped>

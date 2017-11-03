@@ -173,7 +173,6 @@ export default {
                 this.partitionList = listData.partition || []
                 this.listNum = listData.total_count || 0
                 this.pageTotal = listData.total_count ? Math.ceil(listData.total_count / 20) : 1
-                console.log('this.pageTotal', this.pageTotal)
                 this.spinContent = false
                 this.$Loading.finish()
             } catch (error) {

@@ -1,6 +1,7 @@
 <template>
 <div class="deleted-box">
     <h1 class="no-data" v-if="list.length === 0">No Data</h1>
+    如果已删除磁盘长时间（5分钟）未出现在未删除磁盘页面，需要去该磁盘路径下，删掉以partition id为文件名的文件夹
     <div class="bsc-system-card bsc-partition-card" v-for="partition in list" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
