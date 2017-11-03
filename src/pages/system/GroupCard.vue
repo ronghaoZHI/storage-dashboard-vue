@@ -26,7 +26,7 @@
                     <li>{{pt.used_rate || '-'}}%</li>
                     <li>{{pt.ioutil || '-'}}%</li>
                     <li>{{pt.cpu || '-'}}%</li>
-                    <li v-if="data.traffic && pt.partition_id === data.traffic[0].src_partition_ids[0]">{{$t('SYSTEM.MIGRATION')}}</li>
+                    <li v-if="data.traffic && pt.partition_id === data.traffic.src_partition_id[0]">{{$t('SYSTEM.MIGRATION')}}</li>
                     <li v-else><span class="ip-button" @click="migrate(pt,index)">{{$t('SYSTEM.MIGRATE')}}</span></li>
                 </ul>
             </div>
@@ -89,31 +89,31 @@
                     </ul>
                 </div>
             </div>
-            <div class="section-separator" style="margin-top:24px;" v-if="data.traffic && data.traffic.length >= 0">
+            <div class="section-separator" style="margin-top:24px;" v-if="data.traffic">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
-                    <span class="separator-info" style="font-size: 18px">{{$t('SYSTEM.IS_DEL')}}</span>
+                    <span class="separator-info" style="font-size: 18px">{{$t('SYSTEM.MIGRATION')}}</span>
                 </div>
             </div>
-            <div class="group" v-if="data.traffic && data.traffic.length >= 0">
+            <div class="group" v-if="data.traffic">
                 <div class="content">
                     <div class="group-item">
-                        <span class="separator-icon"></span>Partition: {{data.traffic[0].src_partition_ids[0]}}
+                        <span class="separator-icon"></span>Partition: {{data.traffic.src_partition_id[0]}}
                     </div>
                     <div class="group-item">
-                        <span class="separator-icon"></span>Target partition: {{data.traffic[0].target_partition_id}}
+                        <span class="separator-icon"></span>Target partition: {{data.traffic.target_partition_id}}
                     </div>
                     <div class="group-item">
-                        <span class="separator-icon"></span>{{$t('SYSTEM.MIGRATION')}}: {{data.traffic[0].process}}%
+                        <span class="separator-icon"></span>{{$t('SYSTEM.MIGRATION')}}: {{data.traffic.process}}%
                     </div>
                     <div class="group-item">
-                        <span class="separator-icon"></span>{{$t('SYSTEM.TIME_SPENT')}}: {{data.traffic[0].spent_time}}
+                        <span class="separator-icon"></span>{{$t('SYSTEM.TIME_SPENT')}}: {{data.traffic.spent_time}}
                     </div>
                     <div class="group-item">
-                        <span class="separator-icon"></span>Speed: {{data.traffic[0].speed}}/S
+                        <span class="separator-icon"></span>Speed: {{bytes(data.traffic.speed)}}/S
                     </div>
                     <div class="group-item">
-                        <span class="separator-icon"></span>{{$t('SYSTEM.REMAINING_TIME')}}: {{data.traffic[0].left_time}}
+                        <span class="separator-icon"></span>{{$t('SYSTEM.REMAINING_TIME')}}: {{data.traffic.left_time}}
                     </div>
                 </div>
             </div>
@@ -122,6 +122,7 @@
 </template>
 <script>
 import { GROUP_MOVE, GROUP_READ_ONLY } from '@/service/API'
+import { bytes } from '@/service/bucketService'
 export default {
     data () {
         return {
@@ -156,7 +157,8 @@ export default {
             } catch (error) {
                 this.$Loading.error()
             }
-        }
+        },
+        bytes: bytes
     }
 }
 </script>
@@ -198,11 +200,14 @@ export default {
                 }
 
                 li:nth-child(1) {
-                    width: 110px;
+                    width: 95px;
                 }
 
                 li:nth-child(2),li:nth-child(3),li:nth-child(4) {
                     width: 50px;
+                }
+                li:nth-child(5) {
+                    width: 58px;
                 }
             }
 

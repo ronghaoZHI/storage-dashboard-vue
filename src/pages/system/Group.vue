@@ -100,6 +100,7 @@ export default {
             })
         },
         getSortedGroupList (list, sortBy) {
+            console.log(list)
             return list.length > 0 && list.sort((a, b) => {
                 if (sortBy === 'group_id') {
                     return a.group_id - b.group_id

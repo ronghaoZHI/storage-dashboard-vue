@@ -557,7 +557,7 @@ export const messages = {
             MIGRATION: 'Migration',
             BASIC_INFO: 'Basic info',
             PARTITION_INFO: 'Patition info',
-            RW_STATUS: 'R/W status',
+            RW_STATUS: 'R/W',
             IS_DEL: 'Is deleted',
             NORMAL: 'Normal',
             DELETED: 'Deleted',
