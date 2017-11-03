@@ -8,23 +8,23 @@
                     <Option value="node_ip">Node IP</Option>
                     <Option value="partition_id">Partition ID</Option>
                 </Select>
-                <Input v-model="searchValue" :placeholder="'请输入'+ searchType" style="width:260px"></Input>
-                <Button type="primary" @click="getGroupList(false)">搜索</Button>
+                <Input v-model="searchValue" :placeholder="$t('SYSTEM.PLEASE_ENTER')+ searchType" style="width:260px"></Input>
+                <Button type="primary" @click="getGroupList(false)">{{$t('SYSTEM.SEARCH')}}</Button>
             </div>
             <div class="status">
-                <span class="group-status-prefix">group 状态:</span>
-                <button v-bind:class="{statusButtonFocus: read_only === 0}" @click="read_only = 0">可写</button>
-                <button v-bind:class="{statusButtonFocus: read_only === 1}" @click="read_only = 1">只读</button>
-                <button v-bind:class="{statusButtonFocus: read_only === 'ignore'}" @click="read_only = 'ignore'">全部</button>
+                <span class="group-status-prefix">{{$t('SYSTEM.GROUP_STATUS')}}:</span>
+                <button v-bind:class="{statusButtonFocus: read_only === 0}" @click="read_only = 0">{{$t('SYSTEM.WRITEABLE')}}</button>
+                <button v-bind:class="{statusButtonFocus: read_only === 1}" @click="read_only = 1">{{$t('SYSTEM.READ_ONLY')}}</button>
+                <button v-bind:class="{statusButtonFocus: read_only === 'ignore'}" @click="read_only = 'ignore'">{{$t('SYSTEM.ALL')}}</button>
             </div>
         </div>
         <div class="content">
             <Spin size="bigger" fix v-if="spinShow"></Spin>
             <div class="section-chart-tab">
-                <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">创建时间升序</button>
+                <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">{{$t('SYSTEM.CREATE_TIME')}}</button>
                 <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU</button>
                 <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="tabToggle('ioutil')">IO</button>
-                <button v-bind:class="{buttonFocus: showChart === 'space'}" @click="tabToggle('space')">容量</button>
+                <button v-bind:class="{buttonFocus: showChart === 'space'}" @click="tabToggle('space')">Capacity</button>
                 <div class="refresh-section">
                     <span @click="getGroupList(false, true)"><Icon type="refresh" size="20"></Icon></span>
                 </div>
