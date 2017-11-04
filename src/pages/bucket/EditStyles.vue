@@ -7,7 +7,7 @@
                 <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
         </div>
-        <Tabs size="small" v-model='tabValue'>
+        <Tabs size="small" v-model='tabValue' :animated="false">
             <Tab-pane :label='$t("STORAGE.BASIC_EDIT")' name='primary' :disabled='primaryDisable'>
                 <Row>
                     <Col span="8" class="page-left">
@@ -1040,6 +1040,7 @@ const mark2Front = data => {
 
     .page-left {
         .test-img {
+            position: fixed;
             width: 100%;
             max-width: 450px;
             margin: 15px 0;
