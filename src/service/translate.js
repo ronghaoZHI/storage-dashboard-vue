@@ -846,7 +846,7 @@ export const messages = {
             STYLE_WATERMARKER: '添加水印',
             WATERMARKER_TYPE: '水印类型',
             TEXT_WATERMARKER: '文字水印',
-            IMG_WATERMARKER: '图片水印',
+            IMG_WATERMARKER: '图片水印(不支持预览)',
             TEXT_CONTENT: '文字内容',
             TEXT_STYLE: '文字样式',
             STROKE: '描边',

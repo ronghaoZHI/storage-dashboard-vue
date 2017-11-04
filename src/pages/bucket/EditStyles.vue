@@ -209,20 +209,20 @@
                             <div class="separator-line"></div>
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.STYLE_WATERMARKER")}} : </span>
-                                <i-switch v-model="mark.open" size="large">
+                                <i-switch v-model="markOpen" size="large">
                                     <span slot="open">{{$t("STORAGE.ON")}}</span>
                                     <span slot="close">{{$t("STORAGE.OFF")}}</span>
                                 </i-switch>
                             </div><!--watermarkerOpen-->
-                            <div v-if="mark.open">
+                            <div v-if="markOpen">
                                 <div class="form-item">
                                     <span class="form-label">{{$t("STORAGE.WATERMARKER_TYPE")}} : </span>
-                                    <Radio-group v-model="mark.type">
+                                    <Radio-group v-model="markType">
                                         <Radio label="text">{{$t("STORAGE.TEXT_WATERMARKER")}}</Radio>
                                         <Radio label="img">{{$t("STORAGE.IMG_WATERMARKER")}}</Radio>
                                     </Radio-group>
                                 </div><!--watermarkerType-->
-                                <div v-if="mark.type == 'text'">
+                                <div v-if="markType == 'text'">
                                     <div class="form-item mar-b-0">
                                         <span class="form-label required-item">{{$t("STORAGE.TEXT_CONTENT")}} : </span>
                                         <FormItem prop="mark.text">
@@ -247,7 +247,7 @@
                                         <!--fontbackColor-->
                                     </div><!--fontBack-->
                                 </div>
-                                <div v-if="mark.type == 'img'">
+                                <div v-if="markType == 'img'">
                                     <div class="form-item">
                                         <span class="form-label required-item">{{$t("STORAGE.WATERMARKER_PIC")}} : </span>
                                         <div class="upload-box" :class="{'red-border': imgError}">
@@ -294,7 +294,7 @@
                             <div class="separator-line"></div>
                             <div class="form-item clearfix line-button">
                                 <div class="img-button">
-                                    <Button type="primary" @click="beforeBasicSubmit">{{$t("PUBLIC.CONFIRMED")}}</Button>
+                                    <Button type="primary" @click="beforeBasicSubmit(false)">{{$t("PUBLIC.CONFIRMED")}}</Button>
                                 </div>
                             </div>
                         </Form>
@@ -357,6 +357,8 @@ export default {
             formatList: ['original', 'png', 'webp', 'jpeg', 'jpg'],
             fontList: allFontList,
             mark: _.clone(markerDefult),
+            markOpen: false,
+            markType: 'text',
             general: _.clone(generalDefult),
             imgName: '',
             uploadPrefix: prefix.overlay,
@@ -404,7 +406,7 @@ export default {
             return this.$route.params.ruleName ? prefix.rules + this.$route.params.ruleName + '.json' : ''
         },
         imgError () {
-            return this.mark.open && this.mark.type === 'img' && !(this.imgName)
+            return this.markOpen && this.markType === 'img' && !(this.imgName)
         },
         styleListHref () {
             return `/bucket/${this.bucket}/pictureStyles`
@@ -416,7 +418,7 @@ export default {
             return (this.general.radius >= 0 && this.general.radius <= 1000) ? this.general.radius : 'max'
         },
         primaryPreviewError () {
-            return this.mark.open && this.mark.type === 'img' && !this.imgName
+            return this.markOpen && this.markType === 'img' && !this.imgName
         },
         gravityImg () {
             return this.general.gravity.split(':')[0]
@@ -472,7 +474,8 @@ export default {
                 this.seniorUrl = this.previewUrl = getImgxUrl(this.paramsIS)
             }
         },
-        async submitStyles () {
+        async submitStyles (autoSave = false) {
+            console.log(autoSave)
             if (this.styles2Save()) {
                 const file = new Blob([JSON.stringify(this.styles2Save())], {'type': 'application/json'})
                 try {
@@ -482,23 +485,38 @@ export default {
                         ContentType: 'application/json',
                         Body: file
                     })
-                    this.$router.push({ name: 'pictureStyles', params: { bucket: this.bucket } })
+                    !autoSave && this.$router.push({ name: 'pictureStyles', params: { bucket: this.bucket } })
                 } catch (error) {
                     this.$Message.success(this.$t('STERAGE.SAVE_FAILED'))
                 }
             }
         },
-        beforeBasicSubmit () {
+        beforeBasicSubmit (autoSave = false) {
             if (this.padColorError || this.borderColorError || this.fontColorError || this.fontbackColorError || this.imgError) {
                 this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
             } else {
+                console.log(autoSave)
                 this.$refs['basicForm'].validate((valid) => {
                     if (valid) {
-                        this.submitStyles()
+                        this.submitStyles(autoSave)
                     } else {
                         this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                     }
                 })
+            }
+        },
+        async autoSaveAndPreview () {
+            if (this.markType === 'img') {
+                return false
+            }
+            try {
+                this.$Loading.start()
+                await this.beforeBasicSubmit(true)
+                await this.primaryPreview()
+                this.$Loading.finish()
+            } catch (error) {
+                this.$Message.error(error)
+                this.$Loading.error()
             }
         },
         beforeSeniorSubmit () {
@@ -513,9 +531,9 @@ export default {
         async primaryPreview () {
             const general = general2Save(this.general)
             let IS = styleList.methods.json2instruction(general).instruction
-            if (this.mark.open) {
+            if (this.markOpen) {
                 let markValue, file
-                if (this.mark.type === 'text') {
+                if (this.markType === 'text') {
                     file = new Blob([JSON.stringify(this.font2Save(this.fontStyle))], {'type': 'application/json'})
                     markValue = mark2Save(this.mark, this.transformation)
                 } else {
@@ -552,12 +570,12 @@ export default {
             if (this.tabValue === 'primary') {
                 const general = general2Save(this.general)
                 data.push(general)
-                if (this.mark.open) {
+                if (this.markOpen) {
                     let markData = {}
-                    if (this.mark.type === 'text') {
+                    if (this.markType === 'text') {
                         this.saveFont(this.fontStyle)
                         markData = mark2Save(this.mark, this.transformation)
-                    } else if (this.mark.type === 'img') {
+                    } else if (this.markType === 'img') {
                         markData = mark2Save(this.mark, this.imgName)
                     }
                     data.push(markData)
@@ -670,7 +688,7 @@ export default {
             }
         },
         validateText (rule, value, callback) {
-            if (this.mark.open && this.mark.type === 'text' && !(/.+/).test(value)) {
+            if (this.markOpen && this.markType === 'text' && !(/.+/).test(value)) {
                 callback(new Error(this.$t('STORAGE.TEXT_CONTENT_INFO')))
             } else {
                 callback()
@@ -697,6 +715,18 @@ export default {
     watch: {
         '$route' (to, from) {
             to.path !== from.path && this.getData()
+        },
+        general: {
+            handler: function (val, oldVal) {
+                this.autoSaveAndPreview()
+            },
+            deep: true
+        },
+        mark: {
+            handler: function (val, oldVal) {
+                this.autoSaveAndPreview()
+            },
+            deep: true
         }
     }
 }
