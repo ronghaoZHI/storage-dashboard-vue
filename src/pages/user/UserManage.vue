@@ -5,7 +5,7 @@
         <Button type="primary" v-show="isAdmin" @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
         <Table class="table" :show-header="true" :stripe="true" :context="self" :columns="userHeader" :data="userList" :no-data-text='$t("USER.NO_USER")'></Table>
         <Modal v-model="createUserModal" :title='$t("USER.CREATE_USER")' @on-ok="createUser" @on-cancel="createBucketValue = ''">
-            <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="90">
+            <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="125">
                 <Form-item :label='$t("USER.USER_NAME")' prop="username">
                     <Input v-model="createUserForm.username" placeholder="User name"></Input>
                 </Form-item>
@@ -23,6 +23,12 @@
                     <Radio-group v-model="createUserForm.type">
                         <Radio label="normal">normal</Radio>
                         <Radio label="super">super</Radio>
+                    </Radio-group>
+                </Form-item>
+                <Form-item label='创建超级账户权限' v-if="createUserForm.type === 'super'">
+                    <Radio-group v-model="createUserForm.super_level">
+                        <Radio label="low">不支持</Radio>
+                        <Radio label="high">支持</Radio>
                     </Radio-group>
                 </Form-item>
             </Form>
@@ -116,7 +122,8 @@ export default {
                 email: '',
                 password: '',
                 company: '',
-                type: 'normal'
+                type: 'normal',
+                super_level: 'low'
             },
             userRuleValidate: {
                 username: [

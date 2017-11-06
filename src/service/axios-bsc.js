@@ -65,6 +65,8 @@ async function getS3ByHttpHeaders (config) {
 
 // storage-api convert error to success
 function errorHandle (data) {
+    console.log('data for jinkejoy', data)
+    console.log('error data for jinkejoy', data.error)
     if (data.error) {
         !data.error.retryable ? logout(STATUS_CODE[`${data.error.status_code}`] + ',' + data.error.show_msg) : iView.Message.error(data.error.show_msg)
         return Promise.reject(data.error)
