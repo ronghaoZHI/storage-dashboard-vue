@@ -160,7 +160,30 @@ export default {
     word-wrap: normal;
     border-bottom: none;
 }
-
+.dark {
+    .table-permission {
+        border-color: #52626d;
+    }
+    .table-permission th{
+        background-color: #303b40;
+        color: #8492a6;
+    }
+    .table-permission tr{
+        border-color: #52626d;
+        color: #c0ccda;
+    }
+    .table-permission tr:nth-child(2n) td{
+        background-color: #39434b;
+    }
+    .table-permission tr:nth-child(2n+1) td{
+        background-color: #52626d;
+    }
+    .new-user-input{
+        background-color: #39434b;
+        border: 1px solid #8492a6;
+        color: #c0ccda;
+    }
+}
 .clearfix{
     overflow: auto;
     zoom: 1;
