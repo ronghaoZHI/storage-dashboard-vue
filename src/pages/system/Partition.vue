@@ -31,14 +31,14 @@
             <div class="search search-unused" v-if="tabName === 'unused'">
                 整体容量：{{capacity}}
                 <span class="title">总量</span>
-                <InputNumber :max="10" :min="0" v-model="search.lower_capacity"></InputNumber>
-                <span>T</span><span class="separate">—</span> 
-                <InputNumber :max="10" :min="0" v-model="search.upper_capacity"></InputNumber>
+                <InputNumber :max="lowerCapacityMax" :min="0" v-model="search.lower_capacity"></InputNumber>
+                <span>T</span><span class="separate">—</span>
+                <InputNumber :min="upperCapacityMin" v-model="search.upper_capacity"></InputNumber>
                 <span>T</span>
                 <span class="title">可用</span>
-                <InputNumber :max="10" :min="0" v-model="search.lower_free"></InputNumber>
+                <InputNumber :max="lowerFreeMax" :min="0" v-model="search.lower_free"></InputNumber>
                 <span>T</span><span class="separate">—</span> 
-                <InputNumber :max="10" :min="0" v-model="search.upper_free"></InputNumber>
+                <InputNumber :min="upperFreeMin" v-model="search.upper_free"></InputNumber>
                 <span>T</span>
                 <Button type="primary" @click="searchList" class="search-button">搜索</Button>
             </div>
@@ -118,6 +118,30 @@ export default {
     computed: {
         IPparam () {
             return this.search.ip.length === 0 ? 'ignore' : this.search.ip
+        },
+        lowerCapacityMax () {
+            if (!!this.search.upper_capacity) {
+                return this.search.upper_capacity
+            }
+            return 10000
+        },
+        upperCapacityMin () {
+            if (!!this.search.lower_capacity) {
+                return this.search.lower_capacity
+            }
+            return 0
+        },
+        lowerFreeMax () {
+            if (!!this.search.upper_free) {
+                return this.search.upper_free
+            }
+            return 10000
+        },
+        upperFreeMin () {
+            if (!!this.search.lower_free) {
+                return this.search.lower_free
+            }
+            return 0
         }
     },
     methods: {
