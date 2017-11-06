@@ -2,6 +2,7 @@
     <div class="bsc-user">
         <Button type="primary" v-show="!isAdmin" @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
         <Button type="primary" v-show="isAdmin" @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
+        <Button type="primary" v-show="isSuperHigh" @click="createUserModal = true">{{$t("USER.CREATE_SUPER_USER")}}</Button>
         <Button type="primary" v-show="isAdmin" @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
         <Table class="table" :show-header="true" :stripe="true" :context="self" :columns="userHeader" :data="userList" :no-data-text='$t("USER.NO_USER")'></Table>
         <Modal v-model="createUserModal" :title='$t("USER.CREATE_USER")' @on-ok="createUser" @on-cancel="createBucketValue = ''">
@@ -17,18 +18,18 @@
                 </Form-item>
                 <Form-item :label='$t("USER.COMPANY")' prop="company">
                     <Input v-model="createUserForm.company" placeholder="Company"></Input>
-                    <span style="position: absolute;right: 10px;">*必须与工商执照一致</span>
+                    <span style="position: absolute;right: 10px;">*{{$t("USER.BUSNISS_LICENSE")}}</span>
                 </Form-item>
-                <Form-item :label='$t("USER.USER_TYPE")'>
+                <Form-item :label='$t("USER.USER_TYPE")' v-show="!isSuperHigh">
                     <Radio-group v-model="createUserForm.type">
-                        <Radio label="normal">normal</Radio>
-                        <Radio label="super">super</Radio>
+                        <Radio label="normal">Normal</Radio>
+                        <Radio label="super">Super</Radio>
                     </Radio-group>
                 </Form-item>
-                <Form-item label='创建超级账户权限' v-if="createUserForm.type === 'super'">
+                <Form-item :label='$t("USER.CREATE_SUPER_USER_PERMISSON")' v-if="createUserForm.type === 'super' && !isSuperHigh">
                     <Radio-group v-model="createUserForm.super_level">
-                        <Radio label="low">不支持</Radio>
-                        <Radio label="high">支持</Radio>
+                        <Radio label="low">{{$t("USER.CREATE_SUPER_USER_PERMISSON_NO")}}</Radio>
+                        <Radio label="high">{{$t("USER.CREATE_SUPER_USER_PERMISSON_YES")}}</Radio>
                     </Radio-group>
                 </Form-item>
             </Form>
@@ -86,7 +87,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="row in createSubUserForm.acl">
+                    <tr v-if="createSubUserForm.acl.length === 0">
+                        <td>No Buckets</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr v-else v-for="row in createSubUserForm.acl">
                         <td>{{row.bucket}}</td>
                         <td><Checkbox v-model="row.bucket_acl_obj.READ">{{$t("USER.READ")}}</Checkbox> <Checkbox v-model="row.bucket_acl_obj.WRITE">{{$t("USER.WRITE")}}</Checkbox></td>
                         <td><Checkbox v-model="row.file_acl_obj.READ">{{$t("USER.READ")}}</Checkbox></td>
@@ -117,12 +123,13 @@ export default {
             isEditSubUser: false,
             iconSize: 18,
             isAdmin: user.state && user.state.type === 'admin',
+            isSuperHigh: user.state.type === 'super' && user.state.super_level === 'high',
             createUserForm: {
                 username: '',
                 email: '',
                 password: '',
                 company: '',
-                type: 'normal',
+                type: user.state.type === 'super' && user.state.super_level === 'high' ? 'super' : 'normal',
                 super_level: 'low'
             },
             userRuleValidate: {
@@ -367,7 +374,7 @@ export default {
             this.$refs['createUserForm'].validate((valid) => {
                 if (valid) {
                     this.$Loading.start()
-                    self.$http.post(CREATE_USER, {...self.createUserForm}).then(res => {
+                    self.$http.post(this.isSuperHigh ? CREATE_SUB_USER : CREATE_USER, {...self.createUserForm}).then(res => {
                         self.createUserForm = { username: '', email: '', password: '', company: '', type: 'normal' }
                         this.getUserList()
                         this.$Message.success(this.$t('USER.CREATE_SUCCESS'))

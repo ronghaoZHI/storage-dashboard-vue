@@ -360,7 +360,12 @@ export const messages = {
             EXPORT_DATA: 'Export data'
         },
         USER: {
-            CREATE_SUB_USER: 'Create user',
+            CREATE_SUB_USER: 'Create sub user',
+            CREATE_SUPER_USER: 'Create super user',
+            CREATE_SUPER_USER_PERMISSON: 'Create super user permissions',
+            CREATE_SUPER_USER_PERMISSON_YES: 'Yes',
+            CREATE_SUPER_USER_PERMISSON_NO: 'No',
+            BUSNISS_LICENSE: 'Must be consistent with the business license',
             CREATE_USER: 'Create user',
             BIND_USER: 'Bind user',
             NO_USER: 'No user',
@@ -1022,8 +1027,13 @@ export const messages = {
             EXPORT_DATA: '导出数据'
         },
         USER: {
-            CREATE_SUB_USER: '新建账号',
+            CREATE_SUB_USER: '新建子账号',
             CREATE_USER: '新建帐号',
+            CREATE_SUPER_USER: '新建超级帐号',
+            CREATE_SUPER_USER_PERMISSON: '创建超级帐号权限',
+            CREATE_SUPER_USER_PERMISSON_YES: '支持',
+            CREATE_SUPER_USER_PERMISSON_NO: '不支持',
+            BUSNISS_LICENSE: '必须与工商执照一致',
             BIND_USER: '绑定账号',
             NO_USER: '没有用户',
             BASE_INFO: '基本信息',
