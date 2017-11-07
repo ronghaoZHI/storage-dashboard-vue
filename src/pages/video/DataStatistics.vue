@@ -395,6 +395,48 @@ const chartReload = (data, chart) => {
 <style lang='less' scoped>
 @overview-height: 180px;
 
+@overview-height: 180px;
+
+.dark .@{css-prefix}data-statistics {
+    .toolbar {
+        .button-daterange {
+            button {
+                border: 1px solid @body-background-dark;
+                border-left: none;
+            }
+            button:first-child {
+                border-left: 1px solid @body-background-dark;
+            }
+        }
+    }
+
+    .section-chart-tab {
+        border: @common-border-dark;
+        border-bottom: 0;
+        button {
+            border: none;
+            border-right: @common-border-dark;
+            border-bottom: @common-border-dark;
+            color: @text-color-dark;
+            background-color: @body-background-dark;
+        }
+        &>button:nth-last-child(1) {
+            border-right: 0;
+        }
+        button:focus,
+        .buttonFocus {
+            background-color: @secondary-color-dark;
+            border-bottom: 0;
+            color: @text-color-dark;
+        }
+    }
+
+    .card-chart {
+        border: @common-border-dark;
+        border-top: 0;
+    }
+}
+
 .@{css-prefix}data-statistics {
     .toolbar {
         margin-bottom: 16px;
