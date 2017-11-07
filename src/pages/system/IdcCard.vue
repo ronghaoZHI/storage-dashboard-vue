@@ -57,7 +57,7 @@
 <script>
 import { bytes } from '@/service/bucketService'
 export default {
-    props: ['data', 'type'],
+    props: ['data'],
     computed: {
         info () {
             let newData = _.cloneDeep(this.data)
@@ -66,6 +66,14 @@ export default {
             newData.SATA.used = bytes(this.data.SATA.used)
             newData.SATA.capacity = bytes(this.data.SATA.capacity)
             return newData
+        },
+        type () {
+            if (this.data.SATA.capacity === 0) {
+                return 'SSD'
+            } else if (this.data.SSD.capacity === 0) {
+                return 'SATA'
+            }
+            return 'all'
         }
     }
 }

@@ -21,10 +21,12 @@
     </div>
     <div class="group" style="border-top:0">
         <div class="info-title">{{titles.subTitle2}}</div>
+        <Spin size="bigger" fix v-if="spinGroup" class="search-spin"></Spin>
         <div class="content content-scroll">
             <ul class="partition-title">
                 <li v-for="dh in data.detailHead" :key="dh.name" >{{dh.name}}</li>
             </ul>
+            <h1 class="no-data" v-if="data.tableData.length === 0">No Group</h1>
             <ul class="partition-list" v-for="td in data.tableData" :key="td.partition_idx">
                 <li v-for='dh in data.detailHead' :key="dh.name">{{td[dh.value]}}</li>
             </ul>
@@ -38,11 +40,16 @@ export default {
         return {
         }
     },
-    props: ['titles', 'data']
+    props: ['titles', 'data', 'spinGroup']
 }
 </script>
 <style lang="less" scoped>
-
+    .group{
+        position: relative;
+    }
+    .no-data{
+        padding-bottom:60px;
+    }
 </style>
 
 

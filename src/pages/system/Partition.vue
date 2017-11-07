@@ -11,7 +11,7 @@
                 <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.idc">
                     <Icon slot="prepend" size="18" type="android-person"></Icon>
                     <Option value="ignore" key="ignore">所有IDC</Option>
-                    <Option v-for="idc in idcList" :value="idc.idc" :key="idc.idc">{{idc.idc}}</Option>
+                    <Option v-for="idc in idcAll" :value="idc" :key="idc">{{idc}}</Option>
                 </Select>
                 <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.media_type">
                     <Icon slot="prepend" size="18" type="soup-can"></Icon>
@@ -47,7 +47,7 @@
             <Spin size="bigger" fix v-if="spinContent" class="search-spin"></Spin>
             <div v-if="tabName === 'used'">
                 <div class="idc-list">
-                    <idc-card v-for="idc in idcList" :data="idc" :type="idc.SSD && idc.SATA ? 'all' : idc.SSD ? 'SSD' : 'SATA'" :key="idc.idc"></idc-card>
+                    <idc-card v-for="idc in idcList" :data="idc" :key="idc.idc"></idc-card>
                 </div>
                 <div class="section-chart-tab">
                     <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">IO使用率</button>
@@ -60,7 +60,7 @@
                 <div class="section-chart">
                     <div class="card-chart">
                         <h1 class="no-data" v-if="partitionList.length === 0">No Data</h1>
-                        <partition-card v-else v-for="partition in partitionList" :data="partition" :key="partition.partition_id"></partition-card>
+                        <partition-card v-else v-for="partition in partitionList" :data="partition" :detail="usedDetail" :spinGroup="spinGroup" :key="partition.partition_id"></partition-card>
                         <br>
                         <Page v-if="pageTotal > 1" class="page" :total="listNum" :page-size="20" @on-change="pageChange" show-elevator></Page>
                     </div>
@@ -78,7 +78,7 @@ import idcCard from './IdcCard'
 import partitionUnused from './partitionUnused'
 import partitionDeleted from './partitionDeleted'
 import { bytes } from '@/service/bucketService'
-import {PARTITION_USED_LIST, PARTITION_UNUSED_LIST, PARTITION_DELETED_LIST} from '@/service/API'
+import {PARTITION_IDC_LIST, PARTITION_USED_LIST, PARTITION_USED_DETAIL, PARTITION_UNUSED_LIST, PARTITION_DELETED_LIST} from '@/service/API'
 export default {
     data () {
         return {
@@ -106,10 +106,14 @@ export default {
             unusedList: [],
             deletedList: [],
             idcList: [],
-            capacity: 0
+            capacity: 0,
+            usedDetail: {},
+            idcAll: [],
+            spinGroup: false
         }
     },
     created () {
+        this.getIdcList()
         this.getUsedList()
     },
     components: {
@@ -164,6 +168,8 @@ export default {
         searchList () {
             this.pageCount = 1
             if (this.tabName === 'used') {
+                this.spinContent = true
+                this.searchIdc()
                 this.getUsedList()
             } else {
                 this.getUnusedList()
@@ -175,6 +181,55 @@ export default {
                 this.getUsedList()
             } else {
                 this.getUnusedList()
+            }
+        },
+        async searchIdc () {
+            await this.getIdcList()
+            if (this.search.idc !== 'all') {
+                this.idcList = this.idcList.filter(item => {
+                    return item.idc === this.search.idc
+                })
+            }
+            if (this.search.media_type !== 'ignore') {
+                const type = this.search.media_type
+                this.idcList = this.idcList.filter(item => {
+                    return item[type].capacity !== 0
+                })
+            }
+        },
+        async getIdcList () {
+            this.spinContent = true
+            this.$Loading.start()
+            try {
+                let listData = await this.$http.get(PARTITION_IDC_LIST)
+                this.idcList = Object.entries(listData).map(item => {
+                    let objItem = {}
+                    objItem.idc = item[0]
+                    objItem.SATA = item[1].SATA || {}
+                    objItem.SSD = item[1].SSD || {}
+                    return objItem
+                })
+                this.idcAll = Object.keys(listData)
+                this.spinContent = false
+                this.$Loading.finish()
+            } catch (error) {
+                this.spinContent = false
+                this.$Loading.error()
+            }
+        },
+        async getUsedDetail (id) {
+            this.spinGroup = true
+            this.$Loading.start()
+            try {
+                const params = {
+                    partition_id: id
+                }
+                this.usedDetail = await this.$http.get(PARTITION_USED_DETAIL, {params})
+                this.spinGroup = false
+                this.$Loading.finish()
+            } catch (error) {
+                this.spinGroup = false
+                this.$Loading.error()
             }
         },
         async getUsedList () {
@@ -193,7 +248,6 @@ export default {
                     count: 20
                 }
                 let listData = await this.$http.get(listURL, {params})
-                this.idcList = Object.values(listData.idc_stats)
                 this.partitionList = listData.partition || []
                 this.listNum = listData.total_count || 0
                 this.pageTotal = listData.total_count ? Math.ceil(listData.total_count / 20) : 1

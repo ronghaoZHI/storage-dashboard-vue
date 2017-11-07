@@ -3,15 +3,15 @@
         <div class="header">
             <Icon  type="android-star" size="16"></Icon>
             <span>{{myData.inn_ips[0]}}:{{myData.partition_path}}</span>
-            <Button type="text" size="small" @click="showDetailModal=true" v-if="myData.is_del !== 1">详细信息</Button>
+            <Button type="text" size="small" @click="openDetail" v-if="myData.is_del !== 1">详细信息</Button>
         </div>
         <div class="content">
             <div class="files">
                 <div class="progress">
                     <span class="file-count io-count" :class="{redBack: myData.ioutil > 90}">
-                        IO : {{myData.ioutil}}
+                        IO : {{myData.ioutil}}%
                     </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">容量 : {{myData.used_rate}}%</span>
-                    CPU : {{myData.cpu}}
+                    CPU : {{myData.cpu}}%
                 </div>
             </div>
             <div class="details">
@@ -20,17 +20,17 @@
                 <p><span>已用／总容量 : </span>{{myData.used}}/{{myData.capacity}}</p>
                 <p><span>类型 : </span>{{myData.media_type}}</p>
                 <p><span>可用 : </span><span :class="{redFont: !!myData.fail}">{{myData.failFont}}</span></p>
-                <p><span>group个数 : </span>{{myData.group.length}}</p>
+                <p><span>group个数 : </span>{{myData.group_num}}</p>
             </div>
         </div>
         <div class="footer">
             <i-switch size="large" v-model="isWrite" @on-change="usedSet" id="isWrite">
                 <span slot="open">可写</span>
                 <span slot="close">只读</span>
-            </i-switch>{{isWrite}}
+            </i-switch>
             <div>
-                <Button type="ghost" size="small" v-if="!isWrite && myData.group.length !== 0 && !isTraffic" @click="usedMove">迁移</Button>
-                <Button type="ghost" class="delete" size="small" v-if="!isWrite && myData.group.length === 0" @click="usedDeletedConfirm">删除</Button>
+                <Button type="ghost" size="small" v-if="!isWrite && myData.group_num !== 0" @click="usedMove">迁移</Button>
+                <Button type="ghost" class="delete" size="small" v-if="!isWrite && myData.group_num === 0" @click="usedDeletedConfirm">删除</Button>
             </div>
         </div>
         <div class="deleting-content">
@@ -39,7 +39,7 @@
             <span v-else>正在迁移</span>
         </div>
         <Modal v-model="showDetailModal" title='使用磁盘详细信息' width="900">
-            <detail-modal :titles='modalTitles' :data='modalData' class="partition-modal"></detail-modal>
+            <detail-modal :titles='modalTitles' :data='modalData' :spinGroup="spinGroup" class="partition-modal"></detail-modal>
         </Modal>
     </div>
 </template>
@@ -49,14 +49,13 @@ import { bytes } from '@/service/bucketService'
 import {PARTITION_USED_MOVE, PARTITION_USED_SET, PARTITION_USED_DELETED} from '@/service/API'
 
 export default {
-    props: ['data'],
+    props: ['data', 'detail', 'spinGroup'],
     data () {
         return {
             isWrite: this.data.readonly === 0,
             showDetailModal: false,
             modalTitles: {subTitle1: '磁盘基础信息', subTitle2: '对应group信息'},
-            isTraffic: this.trafficComputed(),
-            waitingCard: ''
+            waitingCard: this.data.is_del === 1 || !this.data.not_moving ? 'bsc-waiting-card' : ''
         }
     },
     components: {detailModal},
@@ -78,7 +77,7 @@ export default {
             }
         },
         modalData () {
-            let tableData = _.map(this.myData.group, (item) => {
+            let tableData = _.map(this.detail, (item) => {
                 let newItem = _.cloneDeep(item)
                 newItem.traffic_status = item.traffic_status || ''
                 newItem.readonly = item.readonly === '1' ? '可写' : '只读'
@@ -98,10 +97,9 @@ export default {
         }
     },
     methods: {
-        trafficComputed () {
-            return this.data.group.length !== 0 && this.data.group.every(item => {
-                return item.traffic_status
-            })
+        openDetail () {
+            this.$parent.getUsedDetail(this.myData.partition_id)
+            this.showDetailModal = true
         },
         async usedSet (newWrite) {
             this.spinShow = true
@@ -130,7 +128,6 @@ export default {
                     partition_id: this.myData.partition_id
                 }
                 await this.$http.post(PARTITION_USED_MOVE, params)
-                this.isTraffic = true
                 this.waitingCard = 'bsc-waiting-card'
                 this.spinShow = false
                 this.$Loading.finish()
@@ -173,24 +170,12 @@ export default {
     watch: {
         data: {
             handler (to, from) {
-                this.waitingCard = waitingComputed(to)
+                this.waitingCard = to.is_del === 1 || !to.not_moving ? 'bsc-waiting-card' : ''
                 this.isWrite = to.readonly === 0
             },
             deep: true
         }
     }
-}
-const waitingComputed = (data) => {
-    let flg = false
-    if (data.is_del === 1) {
-        return 'bsc-waiting-card'
-    }
-    if (data.group.length !== 0) {
-        flg = data.group.every(item => {
-            return !!item.traffic_status
-        })
-    }
-    return flg ? 'bsc-waiting-card' : ''
 }
 const detailHead = [{name: 'ID', value: 'group_id'},
     {name: '文件数', value: 'num_used'},

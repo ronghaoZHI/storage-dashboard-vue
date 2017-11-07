@@ -33,6 +33,8 @@ export const GROUP_READ_ONLY = group('group/read_only')
 
 export const TRAFFIC_LIST = group('traffic/list')
 
+export const PARTITION_IDC_LIST = group('partition/used/stats')
+export const PARTITION_USED_DETAIL = group('partition/used/detail')
 export const PARTITION_USED_LIST = group('partition/used/list')
 export const PARTITION_USED_SET = group('partition/used/set')
 export const PARTITION_USED_MOVE = group('partition/used/move')
