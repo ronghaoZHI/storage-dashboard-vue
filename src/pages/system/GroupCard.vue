@@ -145,10 +145,16 @@ const detailHead = [{name: 'ID', value: 'partition_id'},
 </script>
 <style lang="less" scoped>
 .dark .@{css-prefix}group-card {
+    .header {
+        color: @text-color-dark;
+    }
+
     .content {
+        color: @text-color-dark;
         .ip {
             .ip-title,.ip-list {
                 border: @common-border-dark;
+                color: @text-color-dark;
                 li {
                     .ip-button {
                         color: @primary-color;
@@ -164,6 +170,10 @@ const detailHead = [{name: 'ID', value: 'partition_id'},
                 background: @secondary-color-dark;
             }
         }
+    }
+
+    .footer {
+        color: @text-color-dark;
     }
 }
 

@@ -12,18 +12,18 @@
                 <Button type="primary" @click="getFilterTrafficList(true)">{{$t('SYSTEM.SEARCH')}}</Button>
             </div>
             <div class="status">
-                <span class="group_status_prefix">{{$t('SYSTEM.GROUP_STATUS')}} :</span>
-                <div class="group_status">
-                    <button :class="{statusButtonFocus: tabName === 'group_all'}" @click="tabName = 'group_all'; getFilterTrafficList()">{{$t('SYSTEM.ALL')}}</button>
-                    <button :class="{statusButtonFocus: tabName === 'preparing'}" @click="tabName = 'preparing'; getFilterTrafficList()">preparing</button>
-                    <button :class="{statusButtonFocus: tabName === 'moving'}" @click="tabName = 'moving'; getFilterTrafficList()">moving</button>
-                    <button :class="{statusButtonFocus: tabName === 'finished'}" @click="tabName = 'finished'; getFilterTrafficList()">finished</button>
+                <span class="group-status-prefix">{{$t('SYSTEM.GROUP_STATUS')}} :</span>
+                <button :class="{statusButtonFocus: tabName === 'group_all'}" @click="tabName = 'group_all'; getFilterTrafficList()">{{$t('SYSTEM.ALL')}}</button>
+                <button :class="{statusButtonFocus: tabName === 'preparing'}" @click="tabName = 'preparing'; getFilterTrafficList()">preparing</button>
+                <button :class="{statusButtonFocus: tabName === 'moving'}" @click="tabName = 'moving'; getFilterTrafficList()">moving</button>
+                <button :class="{statusButtonFocus: tabName === 'finished'}" @click="tabName = 'finished'; getFilterTrafficList()">finished</button>
+                <div class="refresh-section">
+                    <span @click="refresh()"><Icon type="refresh" size="20"></Icon></span>
                 </div>
             </div>
         </div>
         <div class="content">
             <Spin size="bigger" fix v-if="spinShow"></Spin>
-            <Button class="button-refresh" type="ghost" @click="refresh()">{{$t('SYSTEM.REFRESH')}}</Button>
             <Table border :context="self" :stripe="true" :columns="listHeader" :data="trafficList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         </div>
     </div>
@@ -146,58 +146,44 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '../../styles/index.less';
+.dark .@{css-prefix}traffic {
+    .header {
+        .search {
+            border-bottom: @common-border-dark;
+        }
 
+        .status {
+            .refresh-section {
+                color: @text-color-dark;
+
+                &:hover {
+                    color: @primary-color;
+                }
+            }
+        }
+    }
+}
 .@{css-prefix}traffic {
     .header {
         .search {
             border-bottom: 1px dashed #d3dce6;
         }
-        .group_status_prefix {
-            float: left;
-            height: 42px;
-            line-height: 42px;
-        }
-        .group_status {
-            display: flex;
-            flex-wrap: wrap;
-            button {
-                padding: 0px 15px;
-                margin: 5px 15px;
-                height: 32px;
-                border: 0;
-                background-color: white;
-                color: #475669;
-                border-radius: 4px;
+
+        .status {
+            .refresh-section {
+                display: inline-block;
+                float: right;
+                position: relative;
+                top: 6px;
+
                 &:hover {
-                    cursor: pointer;
-                    background-color: #eff2fc;
+                    color: @primary-color;
                 }
-                &:focus {
-                    outline: 0;
-                }
-            }
-            button.statusButtonFocus {
-                outline: 0;
-                background: @primary-color;
-                color: #fff;
             }
         }
     }
     .content {
         position: relative;
-        border-top: 1px solid #d3dce6;
-        padding-top: 8px;
-        .button-refresh {
-            float: right;
-        }
-        .bsc-table-wrapper {
-            top: 8px;
-            clear: both;
-        }
-        .bsc-spin-fix {
-            top: 89px;
-        }
     }
 }
 </style>

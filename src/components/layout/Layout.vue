@@ -86,6 +86,14 @@ export default {
     margin-bottom: 14px;
 }
 
+.dark .section-separator {
+    .separator-body {
+        .separator-info {
+            .sc(16px,@text-color-dark);
+        }
+    }
+}
+
 .section-separator {
     width: 100%;
     height: 16px;

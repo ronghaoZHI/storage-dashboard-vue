@@ -239,49 +239,19 @@
 }
 /* details model */
 .dark .group {
-    border: @group-common-border;
-    padding: 0 10px;
+    border: @common-border-dark;
 
     .info-title {
-        height: 40px;
-        line-height: 40px;
-        font-size: 16px;
-        color: #475669;
-        border-bottom: 1px solid #e5e9f2;
+        color: @text-color-dark;
+        border-bottom: @common-border-dark;
     }
 
     .content {
-        margin-top: 12px;
-
-        .group-item {
-            display: inline-block;
-            width: 49%;
-            margin-bottom: 16px;
-            height: 14px;
-            line-height: 14px;
-            font-size: 14px;
-
-            .separator-icon {
-                display: inline-block;
-                position: relative;
-                top: 2px;
-                width: 3px;
-                height: 14px;
-                background: #20a0ff;
-                margin-right: 4px;
-            }
-        }
-
         .partition-title,
         .partition-list {
-            height: 30px;
-            line-height: 30px;
-            padding: 0 10px;
-            border: @group-common-border;
+            border: @common-border-dark;
 
             li {
-                display: inline-block;
-
                 .ip-button {
                     color: @primary-color;
                     cursor: pointer;
@@ -312,7 +282,7 @@
         }
 
         .partition-title {
-            background: #f9fafc;
+            background: @secondary-color-dark;
         }
 
         .partition-list {
