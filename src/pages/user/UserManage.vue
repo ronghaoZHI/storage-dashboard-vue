@@ -601,7 +601,7 @@ const convertArray2Object = (array) => {
 
 .table-bucket-acl {
     width: 100%;    
-    border: @common-border-dark;
+    border: @common-border;
     border-collapse:collapse;
 
     th {

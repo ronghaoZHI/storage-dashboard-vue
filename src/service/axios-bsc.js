@@ -67,9 +67,11 @@ async function getS3ByHttpHeaders (config) {
 function errorHandle (data) {
     console.log('data for jinkejoy', data)
     console.log('error data for jinkejoy', data.error)
-    if (data.error) {
+    if (data.error && data.error.status_code >= 500) {
         !data.error.retryable ? logout(STATUS_CODE[`${data.error.status_code}`] + ',' + data.error.show_msg) : iView.Message.error(data.error.show_msg)
         return Promise.reject(data.error)
+    } else if (data.error && data.error.status_code >= 400) {
+        iView.Message.error(data.error.show_msg || data.error.msg, 1000)
     } else {
         return data.data || data
     }
