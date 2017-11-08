@@ -47,7 +47,7 @@ async function getTranscodeUrlConfig (config) {
     return config
 }
 
-// get aws sign for http request 
+// get aws sign for http request
 // transcode need some params that can't sent by aws sdk
 async function getS3ByHttpHeaders (config) {
     let key = await getKey()

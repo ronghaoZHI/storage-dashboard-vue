@@ -187,7 +187,22 @@
     }
 </script>
 <style lang="less" scoped>
+.dark .@{css-prefix}upload {
+    .section-file-upload {
+        border: 2px dashed @border-color-dark;
 
+        &:hover {
+            border: 2px dashed #39f;
+        }
+    }
+
+    .section-file-list {
+
+        .list-file {
+            background: @secondary-color-dark;
+        }
+    }
+}
 
 .@{css-prefix}upload {
     .section-file-upload {
