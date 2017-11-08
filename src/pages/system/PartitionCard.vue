@@ -15,9 +15,9 @@
                 </div>
             </div>
             <div class="details">
-                <p><span>ID : </span>{{myData.partition_id}}</p>
+                <p><span>ID : </span>{{myData.partition_id}}</p>  
                 <p><span>IDC : </span>{{myData.idc}}</p>
-                <p><span>已用／总容量 : </span>{{myData.used}}/{{myData.capacity}}</p>
+                <p><span>已用／总容量 : </span>{{myData.space}}/{{myData.capacity}}</p>
                 <p><span>类型 : </span>{{myData.media_type}}</p>
                 <p><span>可用 : </span><span :class="{redFont: !!myData.fail}">{{myData.failFont}}</span></p>
                 <p><span>group个数 : </span>{{myData.group_num}}</p>
@@ -66,7 +66,7 @@ export default {
             get () {
                 let newData = _.cloneDeep(this.data)
                 newData.ioutilFont = `${this.data.ioutil}%`
-                newData.used = bytes(this.data.used)
+                newData.space = bytes(this.data.space)
                 newData.capacity = bytes(this.data.capacity)
                 newData.failFont = !!this.data.fail ? '故障' : '可用'
                 newData.readonlyFont = this.data.readonly === 1 ? '只读' : '可写'
