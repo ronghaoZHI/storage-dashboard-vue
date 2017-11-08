@@ -170,6 +170,9 @@
             <Tab-pane :label='$t("STORAGE.BACK_SOURCE")' name="backSource">
                 <back-source v-if="tabName === 'backSource'"></back-source>
             </Tab-pane>
+            <Tab-pane label='防盗链' name="whiteList">
+                <white-list :bucket="bucket" v-if="tabName === 'whiteList'"></white-list>
+            </Tab-pane>
         </Tabs>
         <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">
             <div class="form-item">
@@ -230,6 +233,7 @@ import picDetection from './picDetection'
 import legendList from '@/components/legend/legend'
 import { FETCH_404 } from '@/service/API'
 import backSource from './backSource'
+import whiteList from './whiteList'
 export default {
     data () {
         return {
@@ -352,7 +356,7 @@ export default {
             tabName: 'permission'
         }
     },
-    components: {picDetection, legendList, backSource},
+    components: {picDetection, legendList, backSource, whiteList},
     computed: {
         bucket () {
             return this.$route.params.bucket
