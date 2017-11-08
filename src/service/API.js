@@ -43,6 +43,8 @@ export const PARTITION_UNUSED_LIST = group('partition/unused/list')
 export const PARTITION_UNUSED_ADD = group('partition/unused/add')
 export const PARTITION_DELETED_LIST = group('partition/deleted/list')
 
+export const FETCH_404 = group('retrieve')
+
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 
 export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)
