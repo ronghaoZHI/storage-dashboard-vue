@@ -228,24 +228,8 @@ export default {
                 this.blackList = []
                 let whiteIP = new Set(listData.download_file.white_list.concat(listData.delete_file.white_list).concat(listData.upload_file.white_list))
                 let blackIP = new Set(listData.download_file.black_list.concat(listData.delete_file.black_list).concat(listData.upload_file.black_list))
-                whiteIP.forEach(key => {
-                    let item = {
-                        ip: key,
-                        upload: listData.upload_file.white_list.includes(key),
-                        delete: listData.delete_file.white_list.includes(key),
-                        download: listData.download_file.white_list.includes(key)
-                    }
-                    this.whiteList.push(item)
-                })
-                blackIP.forEach(key => {
-                    let item = {
-                        ip: key,
-                        upload: listData.upload_file.black_list.includes(key),
-                        delete: listData.delete_file.black_list.includes(key),
-                        download: listData.download_file.black_list.includes(key)
-                    }
-                    this.blackList.push(item)
-                })
+                this.whiteList = list2Front(whiteIP, listData, 'white_list')
+                this.blackList = list2Front(blackIP, listData, 'black_list')
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
@@ -254,43 +238,9 @@ export default {
         },
         async accessSet () {
             this.$Loading.start()
-            console.log(this.whiteList, this.blackList)
-            let saved = {
-                download_file: {
-                    white_list: [],
-                    black_list: []
-                },
-                delete_file: {
-                    white_list: [],
-                    black_list: []
-                },
-                upload_file: {
-                    white_list: [],
-                    black_list: []
-                }
-            }
-            this.whiteList.map(item => {
-                if (item.download) {
-                    saved.download_file.white_list.push(item.ip)
-                }
-                if (item.delete) {
-                    saved.delete_file.white_list.push(item.ip)
-                }
-                if (item.upload) {
-                    saved.upload_file.white_list.push(item.ip)
-                }
-            })
-            this.blackList.map(item => {
-                if (item.download) {
-                    saved.download_file.black_list.push(item.ip)
-                }
-                if (item.delete) {
-                    saved.delete_file.black_list.push(item.ip)
-                }
-                if (item.upload) {
-                    saved.upload_file.black_list.push(item.ip)
-                }
-            })
+            let saved = _.cloneDeep(savedDefult)
+            saved = list2Saved(this.whiteList, saved, 'white_list')
+            saved = list2Saved(this.blackList, saved, 'black_list')
             let params = {
                 action: 'set',
                 ips: saved,
@@ -343,20 +293,47 @@ export default {
         }
     }
 }
-// const apiData = {
-//     download_file: {
-//         white_list: ['3.4.5.6', '127.0.0.1'],
-//         black_list: []
-//     },
-//     delete_file: {
-//         white_list: [],
-//         black_list: ['2.3.4.5']
-//     },
-//     upload_file: {
-//         white_list: ['127.0.0.1'],
-//         black_list: ['2.3.4.5']
-//     }
-// }
+const list2Front = (ipList, listData, api) => {
+    let front = []
+    ipList.forEach(key => {
+        let item = {
+            ip: key,
+            upload: listData.upload_file[api].includes(key),
+            delete: listData.delete_file[api].includes(key),
+            download: listData.download_file[api].includes(key)
+        }
+        front.push(item)
+    })
+    return front
+}
+const list2Saved = (list, saved, api) => {
+    list.map(item => {
+        if (item.download) {
+            saved.download_file[api].push(item.ip)
+        }
+        if (item.delete) {
+            saved.delete_file[api].push(item.ip)
+        }
+        if (item.upload) {
+            saved.upload_file[api].push(item.ip)
+        }
+    })
+    return saved
+}
+const savedDefult = {
+    download_file: {
+        white_list: [],
+        black_list: []
+    },
+    delete_file: {
+        white_list: [],
+        black_list: []
+    },
+    upload_file: {
+        white_list: [],
+        black_list: []
+    }
+}
 </script>
 <style lang="less" scoped>
 .mar-t-35{
