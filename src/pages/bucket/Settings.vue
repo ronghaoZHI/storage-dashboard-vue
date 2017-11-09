@@ -7,8 +7,7 @@
             </Breadcrumb>
             <div></div>
         </div>
-    
-        <Tabs size="small" v-model="tabName" @on-click="tabChange">
+        <Tabs size="small" v-model="tabName" @on-click="tabChange" :animated="false">
             <Tab-pane :label='$t("PUBLIC.ACL")' name="permission">
                 <div class="section-separator">
                     <div class="separator-body">
