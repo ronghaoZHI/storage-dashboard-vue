@@ -122,7 +122,7 @@ export default {
         goBucketSettings () {
             const bucket = this.selectedBucket
             this.$store.dispatch('selectBucket', bucket)
-            this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name } })
+            this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name, tabName: 'permission' } })
         },
         goPictureStyles () {
             const bucket = this.selectedBucket

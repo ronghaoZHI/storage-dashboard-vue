@@ -8,7 +8,7 @@
             <div></div>
         </div>
     
-        <Tabs size="small" v-model="tabName">
+        <Tabs size="small" v-model="tabName" @on-click="tabChange">
             <Tab-pane :label='$t("PUBLIC.ACL")' name="permission">
                 <div class="section-separator">
                     <div class="separator-body">
@@ -352,14 +352,20 @@ export default {
                 }
             }],
             iconSize: 16,
-            deleteList: [],
-            tabName: 'permission'
+            deleteList: []
         }
     },
     components: {picDetection, legendList, backSource, whiteList},
     computed: {
         bucket () {
             return this.$route.params.bucket
+        },
+        tabName: {
+            get () {
+                return this.$route.params.tabName || 'permission'
+            },
+            set () {
+            }
         },
         originsEmptyError () {
             return this.corsModal.AllowedOrigins.length === 0 && !this.AllowedOrigins
@@ -560,6 +566,9 @@ export default {
                 Permission: { ...permissionFalse },
                 name: ''
             }
+        },
+        tabChange (name) {
+            this.$router.push({ name: 'bucketSettings', params: { bucket: this.bucket, tabName: name } })
         }
     },
     watch: {

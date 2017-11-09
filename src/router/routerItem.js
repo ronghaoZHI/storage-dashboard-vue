@@ -51,7 +51,7 @@ const layoutChild = [{
     meta: { title: 'Keychain', ali: 'keychain' },
     component: Keychain
 }, {
-    path: '/bucket/:bucket/bucketSettings',
+    path: '/bucket/:bucket/bucketSettings/tabName/:tabName',
     name: 'bucketSettings',
     meta: { title: 'Bucket Settings', ali: 'bucket' },
     component: Settings
