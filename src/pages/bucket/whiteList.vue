@@ -3,6 +3,19 @@
         <div class="section-separator">
             <div class="separator-body">
                 <span class="separator-icon"></span>
+                <span class="separator-info">{{$t('SETTINGS.WHITE_BLACK')}}</span>
+            </div>
+        </div>
+        <div class="is-open">
+            <span class="setting-name">{{$t('STORAGE.ISOPEN')}}</span>
+            <i-switch size="large" v-model="enabled">
+                <span slot="open">{{$t('STORAGE.OPEN')}}</span>
+                <span slot="close">{{$t('STORAGE.CLOSE')}}</span>
+            </i-switch>
+        </div>
+        <div class="section-separator">
+            <div class="separator-body">
+                <span class="separator-icon"></span>
                 <span class="separator-info">{{$t('SETTINGS.IP_WHITE_LIST')}}</span>
             </div>
         </div>
@@ -38,7 +51,7 @@
     </div>
 </template>
 <script>
-import { ACCESS_LIST } from '@/service/API'
+import { ACCESS_LIST, ADD_SERVICE } from '@/service/API'
 import user from '@/store/modules/user'
 export default {
     data () {
@@ -46,6 +59,7 @@ export default {
             whiteList: [],
             blackList: [],
             iconSize: 18,
+            enabled: false,
             newBlack: {
                 ip: '',
                 upload: false,
@@ -223,6 +237,7 @@ export default {
             }
             try {
                 let listData = await this.$http.post(ACCESS_LIST, params)
+                this.enabled = listData.enabled
                 this.whiteList = []
                 this.blackList = []
                 let whiteIP = new Set(listData.download_file.white_list.concat(listData.delete_file.white_list).concat(listData.upload_file.white_list))
@@ -246,6 +261,7 @@ export default {
                 user: user.state.username
             }
             try {
+                this.listEnabled()
                 await this.$http.post(ACCESS_LIST, params)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('SETTINGS.SAVED'))
@@ -287,6 +303,18 @@ export default {
         },
         listDelete (list, index) {
             list.splice(index, 1)
+        },
+        async listEnabled () {
+            if (this.enabled) {
+                const params = {service: 'access_control'}
+                await this.$http.post(ADD_SERVICE, params)
+            }
+            const params = {
+                action: this.enabled ? 'enable' : 'disable',
+                bucket: this.bucket,
+                user: user.state.username
+            }
+            await this.$http.post(ACCESS_LIST, params)
         }
     }
 }
@@ -347,6 +375,14 @@ const savedDefult = {
         .ip-item {
             margin-bottom: 0
         }
+    }
+}
+.is-open{
+    margin-bottom: 10px;
+    span.setting-name{
+        font-size: 14px;
+        line-height: 40px;
+        margin-right: 8px;
     }
 }
 </style>

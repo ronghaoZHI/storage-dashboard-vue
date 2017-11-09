@@ -627,7 +627,7 @@ export const messages = {
         },
         SETTINGS: {
             IP_WHITE_LIST: 'IP white list',
-            IP_BLACK_LIST: 'IP blacklist',
+            IP_BLACK_LIST: 'IP black listing',
             UPLOAD: 'Upload',
             DELETE: 'Delete',
             DOWNLOAD: 'Download',
@@ -636,7 +636,8 @@ export const messages = {
             ACCESS: 'Access',
             IP_EXISTS: 'The IP already exists',
             SAVED: 'Saved!',
-            SECURITY_CHAIN: 'Hotlink Protection'
+            SECURITY_CHAIN: 'Hotlink Protection',
+            WHITE_BLACK: 'IP black-and-white list'
         },
         i: {
             select: {
@@ -1361,7 +1362,7 @@ export const messages = {
         },
         SETTINGS: {
             IP_WHITE_LIST: 'IP白名单',
-            IP_BLACK_LIST: '黑名单',
+            IP_BLACK_LIST: 'IP黑名单',
             UPLOAD: '上传',
             DELETE: '删除',
             DOWNLOAD: '下载',
@@ -1370,7 +1371,8 @@ export const messages = {
             ACCESS: '权限',
             IP_EXISTS: 'IP已存在!',
             SAVED: '保存成功',
-            SECURITY_CHAIN: '防盗链'
+            SECURITY_CHAIN: '防盗链',
+            WHITE_BLACK: 'IP黑白名单'
         },
         i: {
             select: {
