@@ -170,7 +170,7 @@
             <Tab-pane :label='$t("STORAGE.BACK_SOURCE")' name="backSource">
                 <back-source v-if="tabName === 'backSource'"></back-source>
             </Tab-pane>
-            <Tab-pane label='防盗链' name="whiteList">
+            <Tab-pane :label='$t("SETTINGS.SECURITY_CHAIN")' name="whiteList">
                 <white-list :bucket="bucket" v-if="tabName === 'whiteList'"></white-list>
             </Tab-pane>
         </Tabs>

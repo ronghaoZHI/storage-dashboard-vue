@@ -625,6 +625,19 @@ export const messages = {
             UNUSED_INFO: 'Unused partition will come into force after 1 minute',
             IMPLEMENTATION: 'implementation'
         },
+        SETTINGS: {
+            IP_WHITE_LIST: 'IP white list',
+            IP_BLACK_LIST: 'IP blacklist',
+            UPLOAD: 'Upload',
+            DELETE: 'Delete',
+            DOWNLOAD: 'Download',
+            SAVE: 'Save',
+            NEW_IP_PLACEHOLDER: 'Please enter the IP to add',
+            ACCESS: 'Access',
+            IP_EXISTS: 'The IP already exists',
+            SAVED: 'Saved!',
+            SECURITY_CHAIN: 'Security chain'
+        },
         i: {
             select: {
                 placeholder: 'Select',
@@ -1345,6 +1358,19 @@ export const messages = {
             DELETED_INFO: '如果已删除磁盘长时间（5分钟）未出现在未使用磁盘页面，请到该磁盘路径下，删除以partition id为文件名的文件夹',
             UNUSED_INFO: '未使用磁盘上线后生效时间为一分钟',
             IMPLEMENTATION: '上线'
+        },
+        SETTINGS: {
+            IP_WHITE_LIST: 'IP白名单',
+            IP_BLACK_LIST: '黑名单',
+            UPLOAD: '上传',
+            DELETE: '删除',
+            DOWNLOAD: '下载',
+            SAVE: '保存',
+            NEW_IP_PLACEHOLDER: '请输入要添加的IP',
+            ACCESS: '权限',
+            IP_EXISTS: 'IP已存在!',
+            SAVED: '保存成功',
+            SECURITY_CHAIN: '防盗链'
         },
         i: {
             select: {

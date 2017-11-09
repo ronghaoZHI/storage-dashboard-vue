@@ -81,7 +81,7 @@ export default {
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {
-                            content: this.$t('VIDEO.CANCEL'),
+                            content: this.$t('PUBLIC.DELETE'),
                             delay: 1000,
                             placement: 'top'
                         }
