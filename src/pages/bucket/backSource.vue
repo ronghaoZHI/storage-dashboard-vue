@@ -46,18 +46,18 @@ export default {
             list404Header: [{
                 title: this.$t('STORAGE.SOURCE_ADDRESS'),
                 key: 'domain',
-                width: 200
+                width: '50%'
             }, {
                 title: this.$t('STORAGE.SOURCE_MODE'),
                 key: 'fetch_mode',
-                width: 200,
+                width: '30%',
                 render: (h, params) => {
                     return h('div', params.row.fetch_mode === 'fetch_200' ? this.$t('STORAGE.MIRROR') : this.$t('STORAGE.REDIRECTION'))
                 }
             }, {
                 title: this.$t('STORAGE.TABLE_ACTION'),
                 key: 'actions',
-                width: 200,
+                width: '20%',
                 align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
@@ -257,7 +257,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scope>
 .button-add-rule {
     margin-bottom: 10px
 }
