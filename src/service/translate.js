@@ -636,7 +636,7 @@ export const messages = {
             ACCESS: 'Access',
             IP_EXISTS: 'The IP already exists',
             SAVED: 'Saved!',
-            SECURITY_CHAIN: 'Security chain'
+            SECURITY_CHAIN: 'Hotlink Protection'
         },
         i: {
             select: {
