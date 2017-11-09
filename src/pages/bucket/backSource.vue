@@ -2,16 +2,16 @@
     <div>
         <Button class="button-add-rule" type="primary" @click="show404ModalFunc()">{{$t('STORAGE.ADD_RULE')}}</Button>
         <Table border :context="self" :stripe="true" :columns="list404Header" :data="fetchRuleList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
-        <Modal v-model="show404Modal" title="404回源" width="600" class="edit-modal">
-            <Form ref="formValidate404" :model="formValidate404" :rules="ruleValidate404" :label-width="120">
-                <FormItem label="回源方式" prop="fetch_mode">
+        <Modal v-model="show404Modal" :title='$t("STORAGE.BACK_SOURCE")' width="600" class="edit-modal">
+            <Form ref="formValidate404" :model="formValidate404" :rules="ruleValidate404" :label-width="100">
+                <FormItem :label='$t("STORAGE.SOURCE_MODE")' prop="fetch_mode">
                     <RadioGroup v-model="formValidate404.fetch_mode">
-                        <Radio label="fetch_200">镜像回源</Radio>
-                        <Radio label="fetch_302">重定向回源</Radio>
+                        <Radio label="fetch_200">{{$t("STORAGE.MIRROR")}}</Radio>
+                        <Radio label="fetch_302">{{$t("STORAGE.REDIRECTION")}}</Radio>
                     </RadioGroup>
                 </FormItem>
-                <FormItem label="回源地址" prop="domain">
-                    <Input v-model="formValidate404.domain" placeholder="请填写回源域名"></Input>
+                <FormItem :label='$t("STORAGE.SOURCE_ADDRESS")' prop="domain">
+                    <Input v-model="formValidate404.domain" :placeholder='$t("STORAGE.ENTER_SOURCE_DOMAIN")'></Input>
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -36,26 +36,26 @@ export default {
             },
             ruleValidate404: {
                 fetch_mode: [
-                    { required: true, message: '回源方式不能为空！', trigger: 'change' }
+                    { required: true, message: this.$t('STORAGE.MODE_CANNOT_EMPTY'), trigger: 'change' }
                 ],
                 domain: [
-                    { required: true, message: '回源地址不能为空！', trigger: 'blur' }
+                    { required: true, message: this.$t('STORAGE.ADDRESS_CANNOT_EMPTY'), trigger: 'blur' }
                 ]
             },
             fetchRuleList: [],
             list404Header: [{
-                title: '回源地址',
+                title: this.$t('STORAGE.SOURCE_ADDRESS'),
                 key: 'domain',
                 width: 200
             }, {
-                title: '回源方式',
+                title: this.$t('STORAGE.SOURCE_MODE'),
                 key: 'fetch_mode',
                 width: 200,
                 render: (h, params) => {
-                    return h('div', params.row.fetch_mode === 'fetch_200' ? '镜像回源' : '重定向回源')
+                    return h('div', params.row.fetch_mode === 'fetch_200' ? this.$t('STORAGE.MIRROR') : this.$t('STORAGE.REDIRECTION'))
                 }
             }, {
-                title: '操作',
+                title: this.$t('STORAGE.TABLE_ACTION'),
                 key: 'actions',
                 width: 200,
                 align: 'right',
@@ -128,7 +128,8 @@ export default {
                         }
                     })])])])
                 }
-            }]
+            }],
+            iconSize: 16
         }
     },
     computed: {
@@ -175,7 +176,7 @@ export default {
         },
         validate404Rule (name, isEdit) {
             this.$refs[name].validate((valid) => {
-                valid ? this.add404Rule(isEdit) : this.$Message.error('表单验证失败！')
+                valid ? this.add404Rule(isEdit) : this.$Message.error(this.$t('STORAGE.FORM_FAIL'))
             })
         },
         async add404Rule (isEdit) {
@@ -190,13 +191,13 @@ export default {
             try {
                 this.$Loading.start()
                 await this.$http.post(FETCH_404, rule)
-                !isEdit ? this.$Message.success('创建成功！') : this.$Message.success('设置成功！')
+                !isEdit ? this.$Message.success(this.$t('STORAGE.CREATE_SUCCESS')) : this.$Message.success(this.$t('STORAGE.SET_SUCCESS'))
                 this.show404Modal = false
                 this.list404Rules()
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
-                !isEdit ? this.$Message.error('创建失败！') : this.$Message.error('设置失败！')
+                !isEdit ? this.$Message.error(this.$t('STORAGE.CREATE_FAIL')) : this.$Message.error(this.$t('STORAGE.SET_FAIL'))
             }
         },
         async changeStatus (row) {
@@ -214,10 +215,10 @@ export default {
                 }
                 this.fetchRuleList[row._index].is_active = active === 1 ? 0 : 1
                 this.$Loading.finish()
-                this.$Message.success('切换状态成功！')
+                this.$Message.success(this.$t('STORAGE.SWITCH_STATE_SUCCESS'))
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.error('切换状态失败！')
+                this.$Message.error(this.$t('STORAGE.SWITCH_STATE_FAIL'))
             }
         },
         async edit404Rule (row) {
@@ -229,7 +230,7 @@ export default {
         },
         delete404RuleConfirm (row) {
             this.$Modal.confirm({
-                content: '确定要删除这条404回源规则吗？',
+                content: this.$t('STORAGE.COMFIRM_DELETE_404_RULE'),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
                 onOk: () => this.delete404Rule(row)
@@ -246,10 +247,10 @@ export default {
                 await this.$http.post(FETCH_404, rule)
                 this.fetchRuleList.splice(row._index, 1)
                 this.$Loading.finish()
-                this.$Message.success('删除成功！')
+                this.$Message.success(this.$t('STORAGE.DELETE_SUCCESS'))
             } catch (error) {
                 this.$Loading.error()
-                this.$Message.error('删除失败！')
+                this.$Message.error(this.$t('STORAGE.DELETE_FAIL'))
             }
         }
     }

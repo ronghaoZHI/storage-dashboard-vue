@@ -167,7 +167,7 @@
                 <legend-list class="legend-list" :data="legendList"></legend-list>
                 <Table border :context="self" :stripe="true" :columns="listCorsHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
             </Tab-pane>
-            <Tab-pane label="404回源" name="backSource">
+            <Tab-pane :label='$t("STORAGE.BACK_SOURCE")' name="backSource">
                 <back-source v-if="tabName === 'backSource'"></back-source>
             </Tab-pane>
         </Tabs>
