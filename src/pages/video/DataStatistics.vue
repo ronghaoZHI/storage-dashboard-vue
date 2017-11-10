@@ -232,10 +232,6 @@ const InitOverviewOptions = data => {
         legend: {
             data: ['视频转码任务数', '音频转码任务数', '视频截图张数', '转封装任务数', '音视频元信息接口调用次数'],
             top: '20px',
-            textStyle: {
-                color: '#fff'
-            },
-            inactiveColor: '#666',
             itemGap: 40
         },
         series: [{
@@ -315,10 +311,6 @@ const InitDistributionOptions = data => {
         legend: {
             data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', 'audio'],
             top: '20px',
-            textStyle: {
-                color: '#fff'
-            },
-            inactiveColor: '#666',
             itemGap: 40
         },
         series: [{
