@@ -70,7 +70,6 @@ export default {
     box-shadow: 0 0 0 0;
     color: @text-color-dark;
     border: @common-border-dark;
-    margin: 6px 3px;
 
     .header {
         background-color: @secondary-color-dark;
@@ -88,8 +87,7 @@ export default {
     .wh(@keychain-card-width, @keychain-card-height);
     background-color: @keychain-card-backgrand;
     .sc(14px, @keychain-card-text-color);
-    box-shadow:2px 2px 2px #e2e2e3;
-    margin: 6px 3px;
+    margin: 6px 6px;
 
     .header {
         .wh(100%,@keychain-card-header-height);
