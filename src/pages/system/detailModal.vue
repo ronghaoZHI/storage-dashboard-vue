@@ -3,7 +3,7 @@
     <div class="section-separator">
         <div class="separator-body">
             <span class="separator-icon"></span>
-            <span class="separator-info" style="font-size: 18px">基础信息</span>
+            <span class="separator-info" style="font-size: 18px">{{$t('SYSTEM.BASIC_INFO')}}</span>
         </div>
     </div>
     <div class="group">

@@ -10,9 +10,9 @@
                     <span class="circle-inner">SATA</span>
                 </i-circle>
                 <div class="idc-detail">
-                    <p>SATA磁盘</p>
-                    <p>容量使用率 ：{{info.SATA.used_rate || '-'}}%</p>
-                    <p>已用／总容量 ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
+                    <p>SATA {{$t('SIDEBAR.PARTITION')}}</p>
+                    <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rate || '-'}}%</p>
+                    <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
                 </div>
             </div>
             <div class="idc-circel idc-content-right">
@@ -20,9 +20,9 @@
                     <span class="circle-inner">SSD</span>
                 </i-circle>
                 <div class="idc-detail">
-                    <p>SSD磁盘</p>
-                    <p>容量使用率 ：{{info.SSD.used_rate || '-'}}%</p>
-                    <p>已用／总容量 ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
+                    <p>SSD {{$t('SIDEBAR.PARTITION')}}</p>
+                    <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rate || '-'}}%</p>
+                    <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
                 </div>
             </div>
         </div>
@@ -34,9 +34,9 @@
                 </i-circle>
             </div>
             <div class="idc-detail idc-content-right">
-                <p>SATA磁盘</p>
-                <p>容量使用率 ：{{info.SATA.used_rate || '-'}}%</p>
-                <p>已用／总容量 ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
+                <p>SATA {{$t('SIDEBAR.PARTITION')}}</p>
+                <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rate || '-'}}%</p>
+                <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
             </div>
         </div>
         <!-- SSD -->
@@ -47,9 +47,9 @@
                 </i-circle>
             </div>
             <div class="idc-detail idc-content-right">
-                <p>SSD磁盘</p>
-                <p>容量使用率 ：{{info.SSD.used_rate || '-'}}%</p>
-                <p>已用／总容量 ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
+                <p>SSD {{$t('SIDEBAR.PARTITION')}}</p>
+                <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rate || '-'}}%</p>
+                <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
             </div>
         </div>
     </div>

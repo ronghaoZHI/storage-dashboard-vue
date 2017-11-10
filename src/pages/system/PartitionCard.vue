@@ -3,42 +3,42 @@
         <div class="header">
             <Icon  type="android-star" size="16"></Icon>
             <span>{{myData.inn_ips[0]}}:{{myData.partition_path}}</span>
-            <Button type="text" size="small" @click="openDetail" v-if="myData.is_del !== 1">详细信息</Button>
+            <Button type="text" size="small" @click="openDetail" v-if="myData.is_del !== 1">{{$t('SYSTEM.DETAILS')}}</Button>
         </div>
         <div class="content">
             <div class="files">
                 <div class="progress">
                     <span class="file-count io-count" :class="{redBack: myData.ioutil > 90}">
                         IO : {{myData.ioutil}}%
-                    </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">容量 : {{myData.used_rate}}%</span>
+                    </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">{{$t('SYSTEM.CAPACITY')}} : {{myData.used_rate}}%</span>
                     CPU : {{myData.cpu}}%
                 </div>
             </div>
             <div class="details">
                 <p><span>ID : </span>{{myData.partition_id}}</p>  
                 <p><span>IDC : </span>{{myData.idc}}</p>
-                <p><span>已用／总容量 : </span>{{myData.space}}/{{myData.capacity}}</p>
-                <p><span>类型 : </span>{{myData.media_type}}</p>
-                <p><span>可用 : </span><span :class="{redFont: !!myData.fail}">{{myData.failFont}}</span></p>
-                <p><span>group个数 : </span>{{myData.group_num}}</p>
+                <p><span>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} : </span>{{myData.space}}/{{myData.capacity}}</p>
+                <p><span>{{$t('SYSTEM.MEDIA_TYPE')}} : </span>{{myData.media_type}}</p>
+                <p><span>{{$t('SYSTEM.IS_NORMAL')}} : </span><span :class="{redFont: !!myData.fail}">{{myData.failFont}}</span></p>
+                <p><span>group{{$t('SYSTEM.NUM')}} : </span>{{myData.group_num}}</p>
             </div>
         </div>
         <div class="footer">
             <i-switch size="large" v-model="isWrite" @on-change="usedSet" id="isWrite">
-                <span slot="open">可写</span>
-                <span slot="close">只读</span>
+                <span slot="open">{{$t('SYSTEM.WRITABLE')}}</span>
+                <span slot="close">{{$t('SYSTEM.READONLY')}}</span>
             </i-switch>
             <div>
-                <Button type="ghost" size="small" v-if="!isWrite && myData.group_num !== 0" @click="usedMove">迁移</Button>
-                <Button type="ghost" class="delete" size="small" v-if="!isWrite && myData.group_num === 0" @click="usedDeletedConfirm">删除</Button>
+                <Button type="ghost" size="small" v-if="!isWrite && myData.group_num !== 0" @click="usedMove">{{$t('SYSTEM.MIGRATE')}}</Button>
+                <Button type="ghost" class="delete" size="small" v-if="!isWrite && myData.group_num === 0" @click="usedDeletedConfirm">{{$t('PUBLIC.DELETE')}}</Button>
             </div>
         </div>
         <div class="deleting-content">
             <Spin size="large"></Spin>
-            <span v-if="myData.is_del === 1">正在删除</span>
-            <span v-else>正在迁移</span>
+            <span v-if="myData.is_del === 1">{{$t('SYSTEM.DELETING')}}</span>
+            <span v-else>{{$t('SYSTEM.MIGRATION')}}</span>
         </div>
-        <Modal v-model="showDetailModal" title='使用磁盘详细信息' width="900">
+        <Modal v-model="showDetailModal" :title="$t('SYSTEM.PARTITION_DETAILS')" width="900">
             <detail-modal :titles='modalTitles' :data='modalData' :spinGroup="spinGroup" class="partition-modal"></detail-modal>
         </Modal>
     </div>
@@ -54,8 +54,14 @@ export default {
         return {
             isWrite: this.data.readonly === 0,
             showDetailModal: false,
-            modalTitles: {subTitle1: '磁盘基础信息', subTitle2: '对应group信息'},
-            waitingCard: this.data.is_del === 1 || !this.data.not_moving ? 'bsc-waiting-card' : ''
+            modalTitles: {subTitle1: this.$t('SYSTEM.BASE_INFO'), subTitle2: this.$t('SYSTEM.GROUP_INFO')},
+            waitingCard: this.data.is_del === 1 || !this.data.not_moving ? 'bsc-waiting-card' : '',
+            detailHead: [{name: 'ID', value: 'group_id'},
+                {name: this.$t('SYSTEM.FILE_NUM'), value: 'num_used'},
+                {name: this.$t('SYSTEM.CAPACITY'), value: 'space_used'},
+                {name: this.$t('SYSTEM.STATE'), value: 'readonly'},
+                {name: this.$t('SYSTEM.CREATION_TIME'), value: 'ts'},
+                {name: this.$t('SYSTEM.MIGRATION_PROGRESS'), value: 'traffic_status'}]
         }
     },
     components: {detailModal},
@@ -68,8 +74,8 @@ export default {
                 newData.ioutilFont = `${this.data.ioutil}%`
                 newData.space = bytes(this.data.space)
                 newData.capacity = bytes(this.data.capacity)
-                newData.failFont = !!this.data.fail ? '故障' : '可用'
-                newData.readonlyFont = this.data.readonly === 1 ? '只读' : '可写'
+                newData.failFont = !!this.data.fail ? this.$t('SYSTEM.FAULT') : this.$t('SYSTEM.NORMAL')
+                newData.readonlyFont = this.data.readonly === 1 ? this.$t('SYSTEM.READONLY') : this.$t('SYSTEM.WRITABLE')
                 return newData
             },
             set (value) {
@@ -80,19 +86,20 @@ export default {
             let tableData = _.map(this.detail, (item) => {
                 let newItem = _.cloneDeep(item)
                 newItem.traffic_status = item.traffic_status || ''
-                newItem.readonly = item.readonly === '1' ? '可写' : '只读'
+                newItem.readonly = item.readonly === '1' ? this.$t('SYSTEM.WRITABLE') : this.$t('SYSTEM.READONLY')
                 return newItem
             })
             let basicInfo = [{name: 'ID', value: this.myData.partition_id},
                 {name: 'path', value: this.myData.partition_path},
                 {name: 'IDC', value: this.myData.idc},
                 {name: 'IP', value: this.myData.inn_ips[0]},
-                {name: '容量', value: this.myData.used_rate},
-                {name: 'CPU', value: this.myData.cpu, tooltip: '磁盘所在服务器的CPU'},
-                {name: '类型', value: this.myData.media_type},
+                {name: this.$t('SYSTEM.CAPACITY'), value: this.myData.used_rate},
+                {name: 'CPU', value: this.myData.cpu, tooltip: this.$t('SYSTEM.PARTITION_CPU_INFO')},
+                {name: this.$t('SYSTEM.MEDIA_TYPE'), value: this.myData.media_type},
                 {name: 'IO', value: this.myData.ioutil},
-                {name: '读写', value: this.myData.readonlyFont},
-                {name: '可用', value: this.myData.failFont, isRed: this.myData.fail}]
+                {name: this.$t('SYSTEM.WRITABLE'), value: this.myData.readonlyFont},
+                {name: this.$t('SYSTEM.IS_NORMAL'), value: this.myData.failFont, isRed: this.myData.fail}]
+            let detailHead = this.detailHead
             return {tableData, basicInfo, detailHead}
         }
     },
@@ -112,12 +119,12 @@ export default {
                 await this.$http.post(PARTITION_USED_SET, params)
                 this.spinShow = false
                 this.$Loading.finish()
-                this.$Message.success('设置成功')
+                this.$Message.success(this.$t('SYSTEM.SUCCESS'))
             } catch (error) {
                 this.$parent.getUsedList()
                 this.spinShow = false
                 this.$Loading.error()
-                this.$Message.error('设置失败')
+                this.$Message.error(this.$t('SYSTEM.FAILURE'))
             }
         },
         async usedMove () {
@@ -131,16 +138,16 @@ export default {
                 this.waitingCard = 'bsc-waiting-card'
                 this.spinShow = false
                 this.$Loading.finish()
-                this.$Message.success('设置成功')
+                this.$Message.success(this.$t('SYSTEM.SUCCESS'))
             } catch (error) {
                 this.spinShow = false
                 this.$Loading.error()
-                this.$Message.error('设置失败')
+                this.$Message.error(this.$t('SYSTEM.FAILURE'))
             }
         },
         usedDeletedConfirm () {
             this.$Modal.confirm({
-                content: '确定要删除磁盘么',
+                content: this.$t('SYSTEM.PARTITION_DELETE_CONFIRM'),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
                 onOk: () => this.usedDeleted()
@@ -158,11 +165,11 @@ export default {
                 this.waitingCard = 'bsc-waiting-card'
                 this.spinShow = false
                 this.$Loading.finish()
-                this.$Message.success('设置成功')
+                this.$Message.success(this.$t('SYSTEM.SUCCESS'))
             } catch (error) {
                 this.spinShow = false
                 this.$Loading.error()
-                this.$Message.error('设置失败')
+                this.$Message.error(this.$t('SYSTEM.FAILURE'))
             }
         }
 
@@ -177,12 +184,6 @@ export default {
         }
     }
 }
-const detailHead = [{name: 'ID', value: 'group_id'},
-    {name: '文件数', value: 'num_used'},
-    {name: '容量', value: 'space_used'},
-    {name: '状态', value: 'readonly'},
-    {name: '创建时间', value: 'ts'},
-    {name: '迁移进度', value: 'traffic_status'}]
 </script>
 <style lang="less" scoped>
 .@{css-prefix}partition-card{

@@ -1,7 +1,7 @@
 <template>
 <div class="unused-box">
     <h1 class="no-data" v-if="data.length === 0">No Data</h1>
-    <p class="page-info" v-if="data.length !== 0">未使用磁盘上线后生效时间为一分钟</p>
+    <p class="page-info" v-if="data.length !== 0">{{$t('SYSTEM.UNUSED_INFO')}}</p>
     <div class="bsc-system-card bsc-partition-card" v-for="(partition,index) in data" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
@@ -10,13 +10,14 @@
         <div class="content">
             <div class="details">
                 <p><span>IDC : </span>{{partition.idc}}</p>
-                <p><span>已用／总容量 : </span>{{`${bytes(partition.free)}/${bytes(partition.capacity)}`}}</p>
-                <p><span>类型 : </span>{{partition.media_type}}</p>
+                <p><span>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} : </span>{{`${bytes(partition.free)}/${bytes(partition.capacity)}`}}</p>
+                <p><span>{{$t('SYSTEM.MEDIA_TYPE')}} : </span>{{partition.media_type}}</p>
             </div>
         </div>
         <div class="footer">
             <div>
-                <Button type="ghost" size="small" @click="unusedAdd(index)">上线</Button>
+                <Button type="ghost" size="small" @click="unusedAdd(index)">{{$t('SYSTEM.IMPLEMENTATION')}}
+</Button>
             </div>
         </div>
     </div>
@@ -39,11 +40,11 @@ export default {
                 await this.$http.post(PARTITION_UNUSED_ADD, {ip: this.data[index].ips[0], path: this.data[index].path})
                 this.data.splice(index, 1)
                 this.$Loading.finish()
-                this.$Message.success('设置成功')
+                this.$Message.success(this.$t('SYSTEM.SUCCESS'))
             } catch (error) {
                 console.log(error)
                 this.$Loading.error()
-                this.$Message.error('设置失败')
+                this.$Message.error(this.$t('SYSTEM.FAILURE'))
             }
         },
         bytes: bytes

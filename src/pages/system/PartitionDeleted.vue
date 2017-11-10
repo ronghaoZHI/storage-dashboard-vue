@@ -1,7 +1,7 @@
 <template>
 <div class="deleted-box">
     <h1 class="no-data" v-if="list.length === 0">No Data</h1>
-    <p class="page-info" v-if="list.length !== 0">如果已删除磁盘长时间（5分钟）未出现在未删除磁盘页面，请到该磁盘路径下，删除以partition id为文件名的文件夹</p>
+    <p class="page-info" v-if="list.length !== 0">{{$t('SYSTEM.DELETED_INFO')}}</p>
     <div class="bsc-system-card bsc-partition-card" v-for="partition in list" :key="partition.idc">
          <div class="header">
             <Icon  type="android-star" size="16"></Icon>
@@ -10,7 +10,7 @@
         <div class="content">
             <div class="details">
                 <p><span>IDC : </span>{{partition.idc}}</p>
-                <p><span>类型 : </span>{{partition.media_type}}</p>
+                <p><span>{{$t('SYSTEM.MEDIA_TYPE')}} : </span>{{partition.media_type}}</p>
             </div>
         </div>
     </div>

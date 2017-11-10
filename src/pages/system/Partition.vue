@@ -2,15 +2,15 @@
     <div class="bsc-system bsc-partition">
         <div class="header">
             <div class="status">
-                <span class="group-status-prefix">磁盘状态:</span>
-                <button v-bind:class="{statusButtonFocus: tabName === 'used'}" @click="tabToggle('used')">已使用磁盘</button>
-                <button v-bind:class="{statusButtonFocus: tabName === 'unused'}" @click="tabToggle('unused')">未使用磁盘</button>
-                <button v-bind:class="{statusButtonFocus: tabName === 'deleted'}" @click="tabToggle('deleted')">标删磁盘</button>
+                <span class="group-status-prefix">{{$t('SYSTEM.PARTITION_STATE')}}:</span>
+                <button v-bind:class="{statusButtonFocus: tabName === 'used'}" @click="tabToggle('used')">{{$t('SYSTEM.PARTITION_USED')}}</button>
+                <button v-bind:class="{statusButtonFocus: tabName === 'unused'}" @click="tabToggle('unused')">{{$t('SYSTEM.PARTITION_UNUSED')}}</button>
+                <button v-bind:class="{statusButtonFocus: tabName === 'deleted'}" @click="tabToggle('deleted')">{{$t('SYSTEM.PARTITION_DELETED')}}</button>
             </div>
             <div class="search" v-if="tabName !== 'deleted'">
                 <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.idc">
                     <Icon slot="prepend" size="18" type="android-person"></Icon>
-                    <Option value="ignore" key="ignore">所有IDC</Option>
+                    <Option value="ignore" key="ignore">{{$t('SYSTEM.IDC_ALL')}}</Option>
                     <Option v-for="idc in idcAll" :value="idc" :key="idc">{{idc}}</Option>
                 </Select>
                 <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.media_type">
@@ -25,22 +25,22 @@
                     <Icon slot="prepend" size="18" type="android-radio-button-on"></Icon>
                     <Option v-for="fail in failArray" :value="fail.value" :key="fail.value">{{fail.name}}</Option>
                 </Select>
-                <Input v-model="search.ip" placeholder="请输入服务器IP" style="width:260px"></Input>
-                <Button type="primary" @click="searchList" v-if="tabName === 'used'">搜索</Button>
+                <Input v-model="search.ip" :placeholder="$t('SYSTEM.SERVER_IP')" style="width:260px"></Input>
+                <Button type="primary" @click="searchList" v-if="tabName === 'used'">{{$t('SYSTEM.SEARCH')}}</Button>
             </div>
             <div class="search search-unused" v-if="tabName === 'unused'">
-                整体容量：{{capacity}}
-                <span class="title">总量</span>
+                {{$t('SYSTEM.OVERALL_CAPACITY')}}: {{capacity}}
+                <span class="title">{{$t('SYSTEM.TOTAL_CAPACITY')}}</span>
                 <InputNumber :max="lowerCapacityMax" :min="0" v-model="search.lower_capacity"></InputNumber>
                 <span>T</span><span class="separate">—</span>
                 <InputNumber :min="upperCapacityMin" v-model="search.upper_capacity"></InputNumber>
                 <span>T</span>
-                <span class="title">可用</span>
+                <span class="title">{{$t('SYSTEM.AVAILABLE')}}</span>
                 <InputNumber :max="lowerFreeMax" :min="0" v-model="search.lower_free"></InputNumber>
                 <span>T</span><span class="separate">—</span> 
                 <InputNumber :min="upperFreeMin" v-model="search.upper_free"></InputNumber>
                 <span>T</span>
-                <Button type="primary" @click="searchList" class="search-button">搜索</Button>
+                <Button type="primary" @click="searchList" class="search-button">{{$t('SYSTEM.SEARCH')}}</Button>
             </div>
         </div>
         <div class="content">
@@ -50,9 +50,9 @@
                     <idc-card v-for="idc in idcList" :data="idc" :key="idc.idc"></idc-card>
                 </div>
                 <div class="section-chart-tab">
-                    <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">IO使用率</button>
+                    <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">{{$t('SYSTEM.IO_UTILIZATION_RATE')}}</button>
                     <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="chartToggle('cpu')">CPU Load</button>
-                    <button v-bind:class="{buttonFocus: showChart === 'used_rate'}" @click="chartToggle('used_rate')">容量使用率</button>
+                    <button v-bind:class="{buttonFocus: showChart === 'used_rate'}" @click="chartToggle('used_rate')">{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}}</button>
                     <div class="refresh-section">
                         <span @click="getUsedList"><Icon type="refresh" size="20"></Icon></span>
                     </div>
@@ -83,9 +83,9 @@ export default {
     data () {
         return {
             tabName: 'used',
-            typeArray: [{name: '所有类型磁盘', value: 'ignore'}, {name: 'SATA', value: 'SATA'}, {name: 'SSD', value: 'SSD'}],
-            readArray: [{name: '所有读写状态', value: 'ignore'}, {name: '只读', value: 1}, {name: '可写', value: 0}],
-            failArray: [{name: '所有故障状态', value: 'ignore'}, {name: '正常', value: 0}, {name: '故障', value: 1}],
+            typeArray: [{name: this.$t('SYSTEM.ALL_PARTITION_TYPE'), value: 'ignore'}, {name: 'SATA', value: 'SATA'}, {name: 'SSD', value: 'SSD'}],
+            readArray: [{name: this.$t('SYSTEM.ALL_WRITE_STATE'), value: 'ignore'}, {name: this.$t('SYSTEM.READONLY'), value: 1}, {name: this.$t('SYSTEM.WRITABLE'), value: 0}],
+            failArray: [{name: this.$t('SYSTEM.ALL_FAIL_STATE'), value: 'ignore'}, {name: this.$t('SYSTEM.NORMAL'), value: 0}, {name: this.$t('SYSTEM.FAULT'), value: 1}],
             search: {
                 idc: 'ignore',
                 media_type: 'ignore',
