@@ -968,12 +968,20 @@ const isEmpty = obj => {
         .form-item {
             .form-label {
                 vertical-align: top;
+                width: @edit-output-item-span !important;
             }
 
             .sub-setting-input {
                 width: 200px;
             }
 
+            .button-add-item {
+                margin-left: @edit-output-item-span !important;
+            }
+
+            .style-name-info{
+                padding-left: @edit-output-item-span !important;
+            }
         }
     }
 
@@ -981,7 +989,7 @@ const isEmpty = obj => {
         width: 85%;
     }
     .button-save{
-        margin-left: 390px;
+        margin-left: 400px;
         transform: translateX(-50%);
     }
 }
