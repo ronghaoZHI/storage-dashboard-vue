@@ -64,7 +64,7 @@
                 </div>
                 <br>
                 <p class="style-name-info redFont" v-if="HLSError">{{$t('VIDEO.AUTO_OUTPUT_RULES_DESCRIPTION')}}</p>
-                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
+                <Button class="button-add-item" icon="plus" size="small" @click="addOutput">{{$t('VIDEO.ADD')}}</Button>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.VIDEO_SCREENSHOTS_RULES')}} : </span>
@@ -73,7 +73,7 @@
                 </div>
                 <br>
                 <p class="style-name-info redFont" v-if="osError">{{$t('VIDEO.AT_LEAST_ONE_RULE')}}</p>
-                <Button class="button-add-item" shape="circle" icon="plus" type="primary" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
+                <Button class="button-add-item" icon="plus" size="small" @click="addShot">{{$t('VIDEO.ADD')}}</Button>
             </div>
         </div>
         <div class="separator-line"></div>
