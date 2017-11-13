@@ -90,7 +90,7 @@
                 </div>
                 <div class="form-item">
                     <span class="form-label">{{$t('VIDEO.WHETHER_TO_OPEN')}} : </span>
-                    <i-switch v-model="MPOpen">
+                    <i-switch v-model="MPOpen" style="margin-top:3px;">
                         <span slot="open">{{$t('VIDEO.ON')}}</span>
                         <span slot="close">{{$t('VIDEO.OFF')}}</span>
                     </i-switch>
