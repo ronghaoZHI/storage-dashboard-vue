@@ -46,11 +46,29 @@ export default {
                 title: this.$t('VIDEO.OUTPUTS'),
                 width: 170,
                 render: (h, params) => {
-                    if (params.row.outputs && params.row.outputs.length > 0) {
-                        return params.row.outputs.map(item => {
+                    let outputs = params.row.outputs || []
+                    if (outputs.length > 1) {
+                        const popContent = outputs.map(item => {
                             const sd = item.segment_duration || '-'
                             return h('p', [`keySuffix:${item.key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${item.preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${sd},`, h('br')])
                         })
+                        return h('div', {
+                            'class': 'output-wrap'
+                        }, [h('p', [`keySuffix:${outputs[0].key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${outputs[0].preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${outputs[0].segment_duration || '-'},`, h('br')]), h(
+                            'Poptip', [h('i-button', {
+                                props: {
+                                    type: 'ghost',
+                                    size: 'small'
+                                },
+                                'class': 'button-more'
+                            }, ['更多']), h('div', {
+                                slot: 'content'
+                            }, [popContent])]
+                        )])
+                    } else if (outputs.length > 0) {
+                        return h('p', {
+                            'class': 'output-wrap'
+                        }, [`keySuffix:${outputs[0].key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${outputs[0].preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${outputs[0].segment_duration || '-'},`, h('br')])
                     }
                 }
             }, {
@@ -246,7 +264,11 @@ export default {
 
 </script>
 <style lang="less" scope>
-
-
+.output-wrap{
+    padding: 11px 0;
+}
+.button-more{
+    margin-top:5px;
+}
 </style>
 
