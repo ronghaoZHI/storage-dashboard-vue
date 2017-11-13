@@ -173,7 +173,6 @@
                     <Slider v-model="outputModal.segment_duration" :min='0' :max='50' class="my-slider" show-input></Slider>
                 </FormItem>
             </Form>
-            <div style="height:90px;"></div>
             <div slot="footer" class="copy-modal-footer">
                 <Button type="primary" @click="beforeUpdateOutputs">{{$t('VIDEO.OK')}}</Button>
             </div>
