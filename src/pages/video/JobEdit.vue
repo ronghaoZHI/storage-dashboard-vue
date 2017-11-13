@@ -115,7 +115,7 @@
             </div>
             <div class="separator-line"></div>
             <div class="editBlock">
-                <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit" >{{$t('VIDEO.SAVE')}}</Button>
+                <Button class="button-save" type="primary" @click="beforeSubmit" >{{$t('VIDEO.SAVE')}}</Button>
             </div>
         </Form>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="edit-modal">
@@ -694,6 +694,10 @@ const shotDefult = {
 .@{css-prefix}job-edit {
     .section-search .bsc-input {
         width: 475px;
+    }
+    .button-save{
+        margin-left: 390px;
+        transform: translateX(-50%);
     }
 }
 </style>

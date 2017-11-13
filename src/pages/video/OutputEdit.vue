@@ -157,7 +157,7 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
+            <Button class="button-save" type="primary" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
         </div>
         <Modal v-model="showOutputsModal" :title='$t("VIDEO.OUTPUT_RULES")' width="700" class="edit-modal">
             <Form ref="outputForm" :model="outputModal" :label-width="155" :rules="ruleValidate">
@@ -979,6 +979,10 @@ const isEmpty = obj => {
 
     .new-user-input {
         width: 85%;
+    }
+    .button-save{
+        margin-left: 390px;
+        transform: translateX(-50%);
     }
 }
 </style>

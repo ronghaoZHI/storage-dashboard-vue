@@ -152,7 +152,7 @@
         </div>
         <div class="separator-line"></div>
         <div class="editBlock">
-            <Button class="button-bsc-add-bucket" type="primary" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
+            <Button type="primary" class="button-save" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
         </div>
     </div>
 </template>
@@ -357,4 +357,8 @@ const container2codec = { mp3: 'mp3', wma: 'wmav2', mp2: 'mp2' }
 <style lang="less" scoped>
 
 @edit-output-item-span: 175px;
+.button-save{
+    margin-left: 388px;
+    transform: translateX(-50%);
+}
 </style>

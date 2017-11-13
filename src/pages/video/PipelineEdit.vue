@@ -67,7 +67,7 @@
             </div>
             <div class="separator-line"></div>
             <div class="editBlock">
-                <Button class="button-bsc-add-bucket" type="primary" @click="pipelineValidate('pipeline')">{{$t('VIDEO.SAVE')}}</Button>
+                <Button class="button-save" type="primary" @click="pipelineValidate('pipeline')">{{$t('VIDEO.SAVE')}}</Button>
             </div>
         </Form>
     </div>
@@ -295,6 +295,10 @@ const aclConvert2Save = data => {
                 width: 85%;
             }
         }
+    }
+    .button-save{
+        margin-left: 390px;
+        transform: translateX(-50%);
     }
 }
 </style>
