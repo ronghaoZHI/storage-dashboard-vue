@@ -56,6 +56,9 @@ export default {
                 width: 280,
                 render: (h, params) => {
                     return h('Poptip', {
+                        style: {
+                            padding: '6px 0'
+                        },
                         props: {
                             placement: 'right',
                             trigger: 'hover'
@@ -255,16 +258,11 @@ export default {
 
 </script>
 
-<style lang="less" scope>
-
+<style lang="less" scoped>
 
 @switch-off-color: #aca9a9;
 
 .@{css-prefix}pipeline-list {
-    .@{css-prefix}table-cell {
-        padding-top: 8px;
-        padding-bottom: 8px;
-    }
     .section-paging {
         .wh(100%,40px);
         .fb(flex-end,center);

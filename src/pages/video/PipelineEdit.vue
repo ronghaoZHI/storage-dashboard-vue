@@ -279,7 +279,7 @@ const aclConvert2Save = data => {
 }
 </script>
 
-<style lang="less" scope>
+<style lang="less" scoped>
 
 
 @edit-output-line-width: 600px !important;

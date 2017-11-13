@@ -164,6 +164,7 @@
             <Tab-pane :label='$t("STORAGE.CORS_CONFIG")' name="cors">
                 <Button :disabled="rulesNumber===100" class="button-add-rule" type="primary" @click="addCorsRule">{{$t('STORAGE.ADD_RULE')}}</Button>
                 <span class="rules-number" v-model="rulesNumber">{{$t('STORAGE.RULES_AT_MOST', { rulesNumber: rulesNumber })}}</span>
+                <legend-list class="legend-list" :data="legendList"></legend-list>
                 <Table border :context="self" :stripe="true" :columns="listHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
             </Tab-pane>
         </Tabs>
@@ -223,10 +224,18 @@
 <script>
 import { handler } from '@/service/Aws'
 import picDetection from './picDetection'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
             self: this,
+            legendList: [{
+                legendIcon: 'compose',
+                legendText: this.$t('PUBLIC.EDIT')
+            }, {
+                legendIcon: 'ios-trash',
+                legendText: this.$t('PUBLIC.DELETE')
+            }],
             GroupACLList: this.GroupACLList,
             UserACLList: this.UserACLList,
             isAdd: false,
@@ -264,19 +273,19 @@ export default {
                 title: 'Allowed Methods',
                 width: 255,
                 render: (h, params) => {
-                    return h('div', params.row.AllowedMethods.map(item => h('Tag', item)))
+                    return h('div', {style: {padding: '6px 0'}}, params.row.AllowedMethods.map(item => h('Tag', item)))
                 }
             }, {
                 title: 'Allowed Headers',
                 width: 170,
                 render: (h, params) => {
-                    return h('div', params.row.AllowedHeaders.map(item => h('Tag', item)))
+                    return h('div', {style: {padding: '6px 0'}}, params.row.AllowedHeaders.map(item => h('Tag', item)))
                 }
             }, {
                 title: 'Expose Headers',
                 width: 170,
                 render: (h, params) => {
-                    return h('div', params.row.ExposeHeaders.map(item => h('Tag', item)))
+                    return h('div', {style: {padding: '6px 0'}}, params.row.ExposeHeaders.map(item => h('Tag', item)))
                 }
             }, {
                 title: 'Max Age Seconds',
@@ -286,7 +295,6 @@ export default {
                 title: this.$t('STORAGE.TABLE_ACTION'),
                 key: 'actions',
                 width: 85,
-                align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
@@ -295,7 +303,7 @@ export default {
                             placement: 'top'
                         },
                         'class': {
-                            'mar-r-5': true
+                            'mar-r-8': true
                         }
                     }, [h('i-button', {
                         props: {
@@ -339,7 +347,7 @@ export default {
             tabName: 'permission'
         }
     },
-    components: {picDetection},
+    components: {picDetection, legendList},
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -643,6 +651,9 @@ const convertNewUserItem = item => {
         padding-bottom: 8px;
         border-bottom: 1px solid #f2f1f6;
     }
+    .legend-list {
+        float: right;
+    }
     .table-permission {
         .new-user-input {
             width:70%;
@@ -660,11 +671,8 @@ const convertNewUserItem = item => {
             width:30%;
         }
     }
-    .button-add-rule {
-        margin-bottom: 10px
-    }
-    .rules-number {
-        float: right
+    .@{css-prefix}table-wrapper {
+        margin-top: 10px;
     }
 }
 .edit-modal {

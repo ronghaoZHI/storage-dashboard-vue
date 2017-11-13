@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style lang="less" scope>
+<style lang="less" scoped>
 .legend {
     display: inline-flex;
     align-items: center;
