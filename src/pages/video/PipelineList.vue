@@ -2,6 +2,7 @@
     <div class="bsc-pipeline-list">
         <div class="layout-bsc-toolbar">
             <Button class="button-bsc-add-bucket" type="primary" @click="goPipelineEdit('none')">{{$t('VIDEO.NEW_PIPELINE')}}</Button>
+            <legend-list :data="legendList"></legend-list>
         </div>
         <Table border :context="self" :stripe="true" :columns="listHeader" :data="pipelineList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <div class="section-paging">
@@ -15,9 +16,20 @@
 <script>
 import user from '@/store/modules/user'
 import { transcoder } from '@/service/Aws'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
+            legendList: [{
+                legendIcon: 'ios-toggle',
+                legendText: this.$t('VIDEO.STATUS')
+            }, {
+                legendIcon: 'compose',
+                legendText: this.$t('PUBLIC.EDIT')
+            }, {
+                legendIcon: 'ios-trash',
+                legendText: this.$t('PUBLIC.DELETE')
+            }],
             iconSize: 18,
             self: this,
             pipelineList: [],
@@ -62,7 +74,6 @@ export default {
                 title: this.$t('VIDEO.ACTIONS'),
                 key: 'actions',
                 width: 170,
-                align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
@@ -71,7 +82,7 @@ export default {
                             placement: 'top'
                         },
                         'class': {
-                            'mar-r-5': true
+                            'mar-r-8': true
                         }
                     }, [h('i-switch', {
                         props: {
@@ -94,7 +105,7 @@ export default {
                             placement: 'top'
                         },
                         'class': {
-                            'mar-r-5': true
+                            'mar-r-8': true
                         }
                     }, [h('i-button', {
                         props: {
@@ -134,6 +145,9 @@ export default {
                 }
             }]
         }
+    },
+    components: {
+        legendList
     },
     computed: {
         username () {
@@ -247,6 +261,10 @@ export default {
 @switch-off-color: #aca9a9;
 
 .@{css-prefix}pipeline-list {
+    .@{css-prefix}table-cell {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
     .section-paging {
         .wh(100%,40px);
         .fb(flex-end,center);
