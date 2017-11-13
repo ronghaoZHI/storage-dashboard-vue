@@ -79,7 +79,9 @@ export default {
     width: 100%;
 
     .section-add-card {
-        height: 40px;
+        border-bottom: 1px solid #e5e9f2;
+        padding-bottom: 20px;
+        margin-bottom: 14px;
     }
     
     .section-card-list {
