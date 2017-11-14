@@ -1,5 +1,5 @@
 <template>
-    <div class="legend">
+    <div class="bsc-legend">
         <div class="legend-item" v-for="item in data">
             <Icon :type="item.icon" size="14"></Icon><span class="legend-text">{{item.text}}</span><span v-if="item !== data[data.length-1]" class="legend-separator">|</span>
         </div>
@@ -11,9 +11,8 @@ export default {
     props: ['data']
 }
 </script>
-
 <style lang="less" scoped>
-.legend {
+.@{css-prefix}legend {
     display: inline-flex;
     align-items: center;
     line-height: 30px;
