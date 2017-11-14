@@ -1,13 +1,16 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Button class="button-bsc-add-bucket" type="primary" @click="goJobEdit">{{$t('VIDEO.CREATE_JOB')}}</Button>
             <div>
-                <span class="quary-name">{{$t('VIDEO.PIPE')}} : </span>
-                <Select v-model="pipeId" style="width:200px" @on-change="listJobsByPipeline">
-                    <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
-                </Select>
+                <Button class="button-bsc-add-bucket" type="primary" @click="goJobEdit">{{$t('VIDEO.CREATE_JOB')}}</Button>
+                <div class="select-box">
+                    <span class="quary-name">{{$t('VIDEO.PIPE')}} : </span>
+                    <Select v-model="pipeId" style="width:200px" @on-change="listJobsByPipeline">
+                        <Option v-for="item in pipes" :value="item.Id" :key="item.Id">{{ item.Name }}</Option>
+                    </Select>
+                </div>
             </div>
+            <legend-list :data="legendList"></legend-list>
         </div>
         <Table border :context="self" :stripe="true" :columns="listHeader" :data="jobList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <div class="section-paging">
@@ -20,6 +23,7 @@
 <script>
 import { transcoder } from '@/service/Aws'
 import { listPipelines, getTemplateInfo } from '@/pages/video/data'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
@@ -31,6 +35,10 @@ export default {
             nextPageShow: false,
             pageToken: [],
             nextPageToken: '',
+            legendList: [{
+                icon: 'ios-trash',
+                text: this.$t('PUBLIC.DELETE')
+            }],
             listHeader: [{
                 title: this.$t('VIDEO.JOB_ID'),
                 width: 100,
@@ -103,6 +111,9 @@ export default {
                 }
             }]
         }
+    },
+    components: {
+        legendList
     },
     created () {
         this.listJobs()
@@ -267,6 +278,10 @@ const pipelinesData = {
     margin-right: 10px;
     font-size: 13px;
     line-height: 32px;
+}
+.select-box{
+    display:inline-block;
+    padding-left:10px;
 }
 </style>
 

@@ -2,6 +2,7 @@
     <div>
         <div class="layout-bsc-toolbar">
             <Button class="button-bsc-add-bucket" type="primary" @click="goOutputEdit('none', 'none')">{{$t('VIDEO.NEW_CONFIGURATION')}}</Button>
+            <legend-list :data="legendList"></legend-list>
         </div>
         <Table border :context="self" :stripe="true" :columns="listHeader" :data="policyFront" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
     </div>
@@ -10,12 +11,23 @@
 import { handler } from '@/service/Aws'
 import { getBucketList } from '@/service/Data'
 import { getBucketPolicy, putBucketPolicy, getTranscodes } from '@/pages/video/data'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
             iconSize: 18,
             self: this,
             policyFront: this.policyFront,
+            legendList: [{
+                icon: 'ios-toggle',
+                text: this.$t('VIDEO.STATUS')
+            }, {
+                icon: 'compose',
+                text: this.$t('PUBLIC.EDIT')
+            }, {
+                icon: 'ios-trash',
+                text: this.$t('PUBLIC.DELETE')
+            }],
             listHeader: [{
                 title: 'ID',
                 key: 'id',
@@ -147,6 +159,9 @@ export default {
                 }
             }]
         }
+    },
+    components: {
+        legendList
     },
     created () {
         this.listPolify()

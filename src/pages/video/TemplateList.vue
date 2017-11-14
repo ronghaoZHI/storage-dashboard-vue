@@ -2,6 +2,7 @@
     <div>
         <div class="layout-bsc-toolbar">
             <Button class="button-bsc-add-bucket" type="primary" @click="goTemplateEdit">{{$t('VIDEO.NEW_TEMPLATE')}}</Button>
+            <legend-list :data="legendList"></legend-list>
         </div>
         <Table border :context="self" :stripe="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <div class="section-paging">
@@ -13,6 +14,7 @@
 </template>
 <script>
 import { transcoder } from '@/service/Aws'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
@@ -21,6 +23,10 @@ export default {
             templateList: this.templateList,
             pageToken: [],
             nextPageToken: '',
+            legendList: [{
+                icon: 'ios-trash',
+                text: this.$t('PUBLIC.DELETE')
+            }],
             videoNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_PROFILE'), Level: this.$t('VIDEO.CODING_LEVEL'), KeyframesMaxDist: this.$t('VIDEO.FIXED_KEY_FRAME_SPACING'), BitRate: this.$t('VIDEO.BIT_RATE'), FrameRate: this.$t('VIDEO.FRAME_RATE'), Resolution: this.$t('VIDEO.RESOLUTION'), AspectRatio: this.$t('VIDEO.ASPECT_RATIO')},
             audioNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_QUALITY'), SampleRate: this.$t('VIDEO.SAMPLE_RATE'), BitRate: this.$t('VIDEO.BIT_RATE'), Channels: this.$t('VIDEO.CHANNELS')},
             listHeader: [{
@@ -120,6 +126,9 @@ export default {
                 }
             }]
         }
+    },
+    components: {
+        legendList
     },
     created () {
         this.listPresets()
