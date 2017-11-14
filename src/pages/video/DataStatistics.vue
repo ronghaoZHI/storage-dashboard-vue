@@ -13,7 +13,7 @@
                 </Button-group>
             </div>
             <div class="button-export-data">
-                <Button @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
+                <Button type="primary" @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
             </div>
         </div>
         <div class="section-chart-tab">
@@ -159,8 +159,14 @@ const lineOptions = {
         trigger: 'axis',
         textStyle: {
             color: '#fff',
-            fontSize: 14
+            fontSize: 16
         },
+        axisPointer: {
+            lineStyle: {
+                color: '#1e9fff'
+            }
+        },
+        backgroundColor: 'rgba(71, 86, 105, 0.8)',
         padding: 10
     },
     grid: {
@@ -183,7 +189,8 @@ const lineOptions = {
         },
         axisLabel: {
             textStyle: {
-                color: '#8492a6'
+                color: '#8492a6',
+                fontSize: 14
             },
             formatter: function (value) {
                 return date(value)
@@ -195,7 +202,8 @@ const lineOptions = {
         min: 0,
         offset: 5,
         nameTextStyle: {
-            color: '#333'
+            color: '#8492a6',
+            fontSize: 14
         },
         axisLine: {
             show: false,
@@ -208,7 +216,8 @@ const lineOptions = {
         },
         axisLabel: {
             textStyle: {
-                color: '#8492a6'
+                color: '#8492a6',
+                fontSize: 14
             }
         }
     }
@@ -244,8 +253,8 @@ const InitOverviewOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.video_transcoding
@@ -254,8 +263,8 @@ const InitOverviewOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.audio_transcoding
@@ -264,8 +273,8 @@ const InitOverviewOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.snapshot
@@ -274,8 +283,8 @@ const InitOverviewOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.container_only
@@ -284,8 +293,8 @@ const InitOverviewOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.get_metadata
@@ -312,7 +321,7 @@ const InitDistributionOptions = data => {
                 }
             }
         },
-        color: ['#9f61fc', '#1e9fff', '#0cce66', '#1212ee', '#ffac2a', '#8492a6', '#c4cfdf'],
+        color: ['#9f61fc', '#1e9fff', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
         legend: {
             data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', 'audio'],
             top: '20px',
@@ -328,8 +337,8 @@ const InitDistributionOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.SD240
@@ -338,8 +347,8 @@ const InitDistributionOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.SD480
@@ -348,8 +357,8 @@ const InitDistributionOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.SD
@@ -358,8 +367,8 @@ const InitDistributionOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.HD
@@ -368,8 +377,8 @@ const InitDistributionOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data['2K']
@@ -378,8 +387,8 @@ const InitDistributionOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data['4K']
@@ -388,8 +397,8 @@ const InitDistributionOptions = data => {
             type: 'line',
             areaStyle: {
                 normal: {
-                    color: '#83C6F9',
-                    opacity: 0.8
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             },
             data: data.audio
@@ -427,19 +436,19 @@ const chartReload = (data, chart) => {
             border: none;
             border-right: @common-border-dark;
             border-bottom: @common-border-dark;
-            color: @text-color-dark;
-            background-color: @body-background-dark;
+            color: #99a9bf;
+            background-color: #313a41;
         }
         &>button:nth-last-child(1) {
             border-right: 0;
         }
         &>button:nth-last-child(2):focus,
         &>button:nth-last-child(2).buttonFocus {
-            border-right: 1px solid #52626d;
+            border-right: @common-border-dark;
         }
         button:focus,
         .buttonFocus {
-            background-color: @secondary-color-dark;
+            background-color: @body-background-dark;
             border-bottom: 0;
             color: @text-color-dark;
         }
@@ -497,7 +506,7 @@ const chartReload = (data, chart) => {
         button {
             float: left;
             width: 20%;
-            height: 100%;
+            height: 50px;
             text-align: center;
             -ms-touch-action: manipulation;
             touch-action: manipulation;
@@ -540,7 +549,7 @@ const chartReload = (data, chart) => {
 
     .card-chart {
         width: 100%;
-        padding: 4px 4px 10px;
+        padding: 40px 4px 10px;
         border: 1px solid #d3dce6;
         border-top: 0;
         margin-bottom: 16px;

@@ -10,6 +10,16 @@
                     </Tooltip>
                 </div>
                 <div class="button-document">
+                    <Dropdown @on-click="toggleTheme" placement="bottom-end">
+                        <a class="dropdown-link"
+                        href="javascript:void(0)"><Icon type="android-color-palette" size="28"></Icon></a>
+                        <Dropdown-menu slot="list">
+                            <Dropdown-item v-show="theme !== 'dark'" name="dark">切换为黑色版</Dropdown-item>
+                            <Dropdown-item v-show="theme !== 'white'" name="white">切换为白色版</Dropdown-item>
+                        </Dropdown-menu>
+                    </Dropdown>
+                </div>
+                <div class="button-document">
                     <i-switch :only-text="true" v-model="lang" @on-change="toggleLanguage">
                         <span slot="open">中</span>
                         <span slot="close">EN</span>
