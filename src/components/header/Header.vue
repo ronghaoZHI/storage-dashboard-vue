@@ -6,7 +6,7 @@
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
                     <Tooltip :content='$t("STORAGE.DOCUMENTATION")' placement="bottom">
-                        <Icon type="help-circled" :size="26"></Icon>
+                        <Icon type="help-circled" :size="24"></Icon>
                     </Tooltip>
                 </div>
                 <div class="button-document">
