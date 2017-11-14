@@ -74,6 +74,13 @@ export default {
 
 </script>
 <style lang="less" scoped>
+
+.dark .@{css-prefix}keychain {
+    .section-add-card {
+        border-bottom: @common-border-dark;
+    }
+}
+
 .@{css-prefix}keychain {
     min-height: 100%;
     width: 100%;
