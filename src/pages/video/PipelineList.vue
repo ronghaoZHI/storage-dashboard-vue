@@ -21,14 +21,14 @@ export default {
     data () {
         return {
             legendList: [{
-                legendIcon: 'ios-toggle',
-                legendText: this.$t('VIDEO.STATUS')
+                icon: 'ios-toggle',
+                text: this.$t('VIDEO.STATUS')
             }, {
-                legendIcon: 'compose',
-                legendText: this.$t('PUBLIC.EDIT')
+                icon: 'compose',
+                text: this.$t('PUBLIC.EDIT')
             }, {
-                legendIcon: 'ios-trash',
-                legendText: this.$t('PUBLIC.DELETE')
+                icon: 'ios-trash',
+                text: this.$t('PUBLIC.DELETE')
             }],
             iconSize: 18,
             self: this,
