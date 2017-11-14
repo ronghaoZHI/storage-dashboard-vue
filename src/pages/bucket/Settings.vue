@@ -230,7 +230,6 @@
 import { handler } from '@/service/Aws'
 import picDetection from './picDetection'
 import legendList from '@/components/legend/legend'
-import { FETCH_404 } from '@/service/API'
 import backSource from './backSource'
 import whiteList from './whiteList'
 export default {
