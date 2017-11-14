@@ -166,12 +166,12 @@
                 <legend-list class="legend-list" :data="legendList"></legend-list>
                 <Table border :context="self" :stripe="true" :columns="listCorsHeader" :data="corsRulesList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
             </Tab-pane>
-            <Tab-pane :label='$t("STORAGE.BACK_SOURCE")' name="backSource">
+            <!-- <Tab-pane :label='$t("STORAGE.BACK_SOURCE")' name="backSource">
                 <back-source v-if="tabName === 'backSource'"></back-source>
             </Tab-pane>
             <Tab-pane :label='$t("SETTINGS.SECURITY_CHAIN")' name="whiteList">
                 <white-list :bucket="bucket" v-if="tabName === 'whiteList'"></white-list>
-            </Tab-pane>
+            </Tab-pane> -->
         </Tabs>
         <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">
             <div class="form-item">
