@@ -8,8 +8,37 @@
 @input-color: #657180;
 
 .dark .@{css-prefix}edit{
+    .editBlock {
+        color: @text-color-dark;
+        .section-separator {
+            .separator-info {
+                color: @text-color-2-dark;
+            }
+        }
+        .form-item {
+            .form-label {
+                color: @text-color-2-dark;
+            }
+            .@{css-prefix}form-item-label {
+                color: @text-color-2-dark;
+            }
+        }
+    }
     .separator-line {
         border-bottom: @common-border-dark;
+    }
+}
+
+.dark .edit-modal {
+    .form-item {
+        .form-label {
+            color: @text-color-2-dark;
+        }
+    }
+    .@{css-prefix}form {
+        .@{css-prefix}form-item-label {
+            color: @text-color-2-dark;
+        }
     }
 }
 
