@@ -42,10 +42,22 @@ export default {
             listHeader: [{
                 title: this.$t('VIDEO.JOB_ID'),
                 width: 100,
-                key: 'Id'
+                render: (h, params) => {
+                    let idArray = params.row.Id.substr(-7)
+                    return h('Poptip', {
+                        props: {
+                            content: params.row.Id,
+                            placement: 'right',
+                            trigger: 'hover'
+                        },
+                        style: {
+                            cursor: 'pointer'
+                        }
+                    }, [h('div', [idArray])])
+                }
             }, {
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
-                width: 300,
+                width: 250,
                 render: (h, params) => {
                     let names = params.row.outputNames
                     if (names && names.length > 0) {
@@ -58,7 +70,7 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.PIPE_ID'),
-                width: 100,
+                width: 180,
                 key: 'PipelineId'
             }, {
                 title: this.$t('VIDEO.JOB_TEMPLATE'),
@@ -79,7 +91,7 @@ export default {
                 key: 'Status'
             }, {
                 title: this.$t('VIDEO.CREATE_TIME'),
-                width: 100,
+                width: 150,
                 key: 'cTime'
             }, {
                 title: this.$t('VIDEO.OPERATION'),
