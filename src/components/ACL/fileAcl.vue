@@ -93,17 +93,23 @@
                     </td>
                     <td>
                         <Tooltip placement="bottom" :delay="1000">
-                            <Button style="margin: 0 6px;" size="small" :disabled="newUserDisabled" @click="addUserOK">
-                                <Icon type="ios-checkmark" :size="iconSize"></Icon>
-                            </Button>
+                            <Button :disabled="newUserDisabled" @click="addUserOK"
+                                style="margin: 0 6px;"
+                                size="small"
+                                icon="checkmark-round"
+                                shape="circle"
+                                type="success"></Button>
                             <div slot="content">
                                 <p>{{$t('VIDEO.ADD')}}</p>
                             </div>
                         </Tooltip>
                         <Tooltip placement="bottom" :delay="1000">
-                            <Button style="margin: 0 6px;" size="small" @click="isAddUser = false">
-                                <Icon type="ios-close" :size="iconSize"></Icon>
-                            </Button>
+                            <Button @click="isAddUser = false"
+                                style="margin: 0 6px;"
+                                size="small"
+                                icon="close-round"
+                                shape="circle"
+                                type="error"></Button>
                             <div slot="content">
                                 <p>{{$t('VIDEO.CANCEL')}}</p>
                             </div>
@@ -129,16 +135,16 @@
                             <Button v-if="index == 0"
                                 style="margin: 0 6px;"
                                 size="small"
-                                @click="addUser">
-                            <Icon type="ios-plus"
-                                :size="iconSize"></Icon>
-                            </Button>
+                                @click="addUser"
+                                icon="plus-round"
+                                shape="circle"
+                                type="success"></Button>
                             <Button v-else
-                                    style="margin: 0 6px;visibility:hidden;"
-                                    size="small">
-                                <Icon type="ios-plus"
-                                    :size="iconSize"></Icon>
-                            </Button>
+                                style="margin: 0 6px;visibility:hidden;"
+                                size="small"
+                                type="success"
+                                icon="plus-round"
+                                shape="circle"></Button>
                             <div slot="content">
                                 <p>{{$t("STORAGE.ADD_USER")}}</p>
                             </div>
@@ -147,10 +153,10 @@
                             <Button :disabled="username == item.Grantee"
                                 style="margin: 0 6px;"
                                 size="small"
-                                @click="deleteUser(index)">
-                                <Icon type="ios-minus"
-                                    :size="iconSize"></Icon>
-                            </Button>
+                                shape="circle"
+                                @click="deleteUser(index)"
+                                icon="minus-round"
+                                type="error"></Button>
                             <div slot="content">
                                 <p>{{$t("STORAGE.DELETE_USER")}}</p>
                             </div>

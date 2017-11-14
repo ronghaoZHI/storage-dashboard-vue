@@ -135,20 +135,31 @@
                             </td>
                             <td>
                                 <Tooltip placement="bottom">
-                                    <Button v-if="index == 0" style="margin: 0 6px;" size="small" @click="newUserItemInit();isAdd = true">
-                                        <Icon type="ios-plus" :size="iconSize"></Icon>
-                                    </Button>
-                                    <Button v-else style="margin: 0 6px;visibility:hidden;" size="small">
-                                        <Icon type="ios-plus" :size="iconSize"></Icon>
-                                    </Button>
+                                    <Button v-if="index == 0"
+                                        style="margin: 0 6px;"
+                                        size="small"
+                                        @click="newUserItemInit();isAdd = true"
+                                        icon="plus-round"
+                                        shape="circle"
+                                        type="success"></Button>
+                                    <Button v-else
+                                        style="margin: 0 6px;visibility:hidden;"
+                                        size="small"
+                                        type="success"
+                                        icon="plus-round"
+                                        shape="circle"></Button>
                                     <div slot="content">
                                         <p>{{$t("STORAGE.ADD_USER")}}</p>
                                     </div>
                                 </Tooltip>
                                 <Tooltip placement="bottom">
-                                    <Button :disabled="owner == item.Grantee.ID" style="margin: 0 6px;" size="small" @click="deleteUser(item)">
-                                        <Icon type="ios-minus" :size="iconSize"></Icon>
-                                    </Button>
+                                    <Button :disabled="owner == item.Grantee.ID"
+                                        style="margin: 0 6px;"
+                                        size="small"
+                                        shape="circle"
+                                        @click="deleteUser(item)"
+                                        icon="minus-round"
+                                        type="error"></Button>
                                     <div slot="content">
                                         <p>{{$t("STORAGE.DELETE_USER")}}</p>
                                     </div>
