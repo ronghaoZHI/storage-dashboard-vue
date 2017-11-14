@@ -1044,7 +1044,7 @@ const mark2Front = data => {
 
             img {
                 display: block;
-                width: 430px;
+                max-width: 100%;
                 height: 300px;
                 margin-bottom: 15px;
                 background: #000;
@@ -1155,8 +1155,8 @@ const mark2Front = data => {
 
             .input-box-label{
                 padding: 0 5px;
-                .sc(14px,#8492a6);
-                line-height:30px;
+                font-size: 14px;
+                line-height: 30px;
             }
 
             .dis-inline {
