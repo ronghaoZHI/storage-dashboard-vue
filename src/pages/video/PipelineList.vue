@@ -63,11 +63,11 @@ export default {
                             placement: 'right',
                             trigger: 'hover'
                         }
-                    }, [h('div', params.row.permission.map(item => h('div', [h('Tag', {
+                    }, [h('div', params.row.permission.map(item => h('Tag', {
                         props: {
                             type: 'border'
                         }
-                    }, `${item.name}:${item.value}`)]))),
+                    }, `${item.name}:${item.value}`))),
                     h('div', {
                         slot: 'content'
                     }, params.row.permissionDetails.map(item => h('p', `${item.name}:${item.value}`)))]
