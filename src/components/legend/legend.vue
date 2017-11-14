@@ -12,6 +12,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+
+.dark .@{css-prefix}legend {
+    border: @common-border-dark;
+    color: @text-color-dark;
+}
+
 .@{css-prefix}legend {
     display: inline-flex;
     align-items: center;
