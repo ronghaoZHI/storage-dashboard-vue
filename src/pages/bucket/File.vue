@@ -1,6 +1,7 @@
 <template>
     <div class="bsc-file" @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
+            <a class="btn-back" @click="back()">返回</a>
             <bsc-breadcrumb>
                 <bsc-breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
                 <bsc-breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</bsc-breadcrumb-item>
@@ -423,6 +424,9 @@ export default {
                 this.$Message.error(this.$t('STORAGE.RENAME_PLACEHOLDER'))
             }
         },
+        back () {
+            this.$router.back()
+        },
         previousPage () {
             let maker = this.makerArray[this.makerArray.length - 2]
             this.makerArray.pop()
@@ -641,6 +645,11 @@ const getURL = async (bucket, file, prefix) => {
     .layout-bsc-toolbar {
         padding-bottom: 8px;
         border-bottom: @common-border;
+
+        .btn-back {
+            font-size: 14px;
+        }
+
         button {
             margin-right: 1px;
         }

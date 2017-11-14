@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="bsc-flex-section">
-            <div class="bucket" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
+            <div class="bucket" v-bind:class="{'bucket-selected': bucket.selected}" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
             <Spin size="bigger" fix v-if="spinShow"></Spin>
@@ -77,8 +77,8 @@ export default {
                         })
                     })
                 } else {
-                    this.bucketList = _.forEach(res.Buckets, (item) => {
-                        item.selected = false
+                    this.bucketList = _.forEach(res.Buckets, (item, index) => {
+                        item.selected = index === 0
                         item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
                     })
                 }
@@ -219,6 +219,7 @@ const batchDeletion = (list, bucket) => {
         min-height: 100%;
         width: 100%;
         .fb(flex-start,flex-start);
+        margin-top: 8px;
         flex-wrap: wrap;
 
         .bucket {
