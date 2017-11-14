@@ -82,6 +82,8 @@ export default {
                         item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
                     })
                 }
+
+                this.selectedBucket = this.bucketList.length > 0 ? this.bucketList[0] : {}
                 this.$Loading.finish()
                 this.spinShow = false
             } catch (error) {

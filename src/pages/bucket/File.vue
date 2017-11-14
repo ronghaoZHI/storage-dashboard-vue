@@ -15,16 +15,20 @@
                     <Button type="primary" v-show="canUpload" @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
                     <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
                     <Button @click="batchDeleteFileConfirm" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
+                    <Button type="primary" v-if="!showSearch" @click="showSearch = true">查找文件</Button>
+                    <transition name="slide-fade">
+                        <div class="section-search" v-if="showSearch">
+                            <span class="bsc-input">
+                                <span class="input-append-before">{{prefix}}</span>
+                                <input type="text" @focus="searchInputFocus = true" v-model="searchValue" />
+                                <Button type="text" size="small" @click="searchFile(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
+                            </span>
+                        </div>
+                    </transition>
                 </div>
             </Col>
             <Col span="14" style="text-align:right">
-                <div class="section-search">
-                    <span class="bsc-input">
-                        <span class="input-append-before">{{prefix}}</span>
-                        <input type="text" @focus="searchInputFocus = true" v-model="searchValue" />
-                        <Button type="text" size="small" @click="searchFile(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
-                    </span>
-                </div>
+                <legend-list :data="legendList"></legend-list>
             </Col>
         </Row>
         <Spin size="bigger" fix v-if="spinShow"></Spin>
@@ -83,6 +87,7 @@ import bscBreadcrumb from '@/components/breadcrumb'
 import upload from '@/components/upload/upload'
 import Clipboard from 'clipboard'
 import user from '@/store/modules/user'
+import legendList from '@/components/legend/legend'
 import moment from 'moment'
 import filePermission from './FilePermissions'
 export default {
@@ -102,8 +107,28 @@ export default {
             uploadModalMaskClosable: false,
             createFolderValue: '',
             selectedFileKey: '',
+            showSearch: false,
             renameKey: '',
             selectedFileList: [],
+            legendList: [{
+                icon: 'compose',
+                text: 'STORAGE.RENAME'
+            }, {
+                icon: 'gear-a',
+                text: 'STORAGE.FILE_PERMISSIONS'
+            }, {
+                icon: 'ios-cloud-download',
+                text: 'SETTINGS.DOWNLOAD'
+            }, {
+                icon: 'eye',
+                text: 'STORAGE.IMG_PREVIEW'
+            }, {
+                icon: 'link',
+                text: 'PUBLIC.COPY'
+            }, {
+                icon: 'ios-trash',
+                text: 'PUBLIC.DELETE'
+            }],
             inputCheck: false,
             fileList: [],
             self: this,
@@ -356,7 +381,7 @@ export default {
         }
     },
     components: {
-        filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item, upload
+        filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item, upload, legendList
     },
     computed: {
         bucket: function () {
@@ -654,6 +679,17 @@ const getURL = async (bucket, file, prefix) => {
             margin-right: 1px;
         }
     }
+
+    .section-search {
+        position: absolute;
+        z-index: 100;
+
+        .@{css-prefix}input {
+            margin-left: 4px;
+            width: 200px;
+        }
+    }
+
     .section-paging {
         .wh(100%,40px);
         .fb(space-between,center);
@@ -666,6 +702,17 @@ const getURL = async (bucket, file, prefix) => {
             width: 70px;
             margin-left: 6px;
         }
+    }
+
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+    .slide-fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to {
+        transform: translateX(10px);
+        opacity: 0;
     }
 
 }

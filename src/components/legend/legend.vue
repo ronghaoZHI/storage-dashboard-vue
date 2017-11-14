@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-legend">
         <div class="legend-item" v-for="item in data">
-            <Icon :type="item.icon" size="14"></Icon><span class="legend-text">{{item.text}}</span><span v-if="item !== data[data.length-1]" class="legend-separator">|</span>
+            <Icon :type="item.icon" size="14"></Icon><span class="legend-text">{{$t(item.text)}}</span><span v-if="item !== data[data.length-1]" class="legend-separator">|</span>
         </div>
     </div>
 </template>

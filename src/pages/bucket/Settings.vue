@@ -238,10 +238,10 @@ export default {
             self: this,
             legendList: [{
                 icon: 'compose',
-                text: this.$t('PUBLIC.EDIT')
+                text: 'PUBLIC.EDIT'
             }, {
                 icon: 'ios-trash',
-                text: this.$t('PUBLIC.DELETE')
+                text: 'PUBLIC.DELETE'
             }],
             GroupACLList: this.GroupACLList,
             UserACLList: this.UserACLList,
