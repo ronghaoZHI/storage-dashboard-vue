@@ -72,12 +72,12 @@
                                     <div class="gravity-xy">
                                         <span class="input-box-label">x : </span>
                                         <div class="input-text-box">
-                                            <input type='number' v-model="general.x">
+                                            <InputNumber v-model="general.x"></InputNumber>
                                             <span>px</span>
                                         </div>
                                         <span class="input-box-label">y : </span>
                                         <div class="input-text-box">
-                                            <input type='number' v-model="general.y">
+                                            <InputNumber v-model="general.y"></InputNumber>
                                             <span>px</span>
                                         </div>
                                     </div>
@@ -93,13 +93,13 @@
                             </Radio-group>
                             <span>W : </span>
                             <div class="input-text-box">
-                                <input type='number' v-model.number="general.width">
+                                <InputNumber v-model.number="general.width"></InputNumber>
                                 <span v-if="general.dataType === 'pixel'">px</span>
                                 <span v-else>%</span>
                             </div>
                             <span>H : </span>
                             <div class="input-text-box">
-                                <input type='number' v-model.number="general.height">
+                                <InputNumber v-model.number="general.height"></InputNumber>
                                 <span v-if="general.dataType === 'pixel'">px</span>
                                 <span v-else>%</span>
                             </div>
@@ -129,7 +129,7 @@
                             <div class="form-item" v-if="general.angleType === 'angle'">
                                 <span class="form-label">{{$t("STORAGE.ANGLE")}} : </span>
                                 <div class="input-text-box">
-                                    <input type='number' v-model="general.angle">
+                                    <InputNumber v-model="general.angle"></InputNumber>
                                     <span>°</span>
                                 </div>
                             </div><!--angle-->
@@ -188,7 +188,7 @@
                                     <span slot="close">{{$t("STORAGE.OFF")}}</span>
                                 </i-switch>
                                 <div class="input-text-box" v-if="general.border">
-                                    <input type='number' v-model="general.borderSize">
+                                    <InputNumber v-model="general.borderSize"></InputNumber>
                                     <span>px</span>
                                 </div><!--borderSize-->
                                 <ColorPickerInput v-if="general.border" v-model="general.borderColor" style="display:inline"/>
@@ -234,7 +234,7 @@
                                         <Option v-for="item in fontList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                     </Select><!--font_family-->
                                     <div class="input-text-box">
-                                        <input type='number' v-model="fontStyle.font_size">
+                                        <InputNumber v-model="fontStyle.font_size"></InputNumber>
                                         <span>px</span>
                                     </div><!--font_size-->
                                     <ColorPickerInput v-model="fontStyle.font_color" style="display:inline"/>{{fontStyle.font_color}}
@@ -271,14 +271,14 @@
                                     <div class="form-item">
                                         <span class="form-label">{{$t("STORAGE.PADDING_LEFT")}} : </span>
                                         <div class="input-text-box">
-                                            <input type='number' v-model="mark.x">
+                                            <InputNumber v-model="mark.x"></InputNumber>
                                             <span>px</span>
                                         </div>
                                     </div>
                                     <div class="form-item">
                                         <span class="form-label">{{$t("STORAGE.PADDING_TOP")}} : </span>
                                         <div class="input-text-box">
-                                            <input type='number' v-model="mark.y">
+                                            <InputNumber v-model="mark.y"></InputNumber>
                                             <span>px</span>
                                         </div>
                                     </div>
@@ -1145,23 +1145,11 @@ const mark2Front = data => {
 
 
             .input-text-box {
-                width: 100px;
-                height: 32px;
-                border: 1px solid @edit-styles-border-color;
-                border-radius: 4px;
-                padding: 4px 7px;
                 display: inline-block;
-                vertical-align: middle;
-                margin-right: 10px;
-                input {
-                    width: 65px;
-                    line-height: 24px;
-                    border: none;
-                    color: #657180;
-                    outline: none;
-                }
+
                 span {
                     line-height: 24px;
+                    padding-left: 5px;
                 }
             }
 
