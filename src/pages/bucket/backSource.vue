@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="bsc-back-source">
         <Button class="button-add-rule" type="primary" @click="show404ModalFunc()">{{$t('STORAGE.ADD_RULE')}}</Button>
+        <legend-list class="legend-list" :data="legendList"></legend-list>
         <Table border :context="self" :stripe="true" :columns="list404Header" :data="fetchRuleList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <Modal v-model="show404Modal" :title='$t("STORAGE.BACK_SOURCE")' width="600" class="edit-modal">
             <Form ref="formValidate404" :model="formValidate404" :rules="ruleValidate404" :label-width="100">
@@ -23,10 +24,21 @@
 
 <script>
 import { FETCH_404 } from '@/service/API'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
             self: this,
+            legendList: [{
+                icon: 'ios-toggle',
+                text: this.$t('VIDEO.STATUS')
+            }, {
+                icon: 'compose',
+                text: this.$t('PUBLIC.EDIT')
+            }, {
+                icon: 'ios-trash',
+                text: this.$t('PUBLIC.DELETE')
+            }],
             isEdit: false,
             editId: '',
             show404Modal: false,
@@ -58,7 +70,6 @@ export default {
                 title: this.$t('STORAGE.TABLE_ACTION'),
                 key: 'actions',
                 width: '20%',
-                align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
@@ -67,7 +78,7 @@ export default {
                             placement: 'top'
                         },
                         'class': {
-                            'mar-r-5': true
+                            'mar-r-8': true
                         }
                     }, [h('i-switch', {
                         props: {
@@ -90,7 +101,7 @@ export default {
                             placement: 'top'
                         },
                         'class': {
-                            'mar-r-5': true
+                            'mar-r-8': true
                         }
                     }, [h('i-button', {
                         props: {
@@ -132,6 +143,7 @@ export default {
             iconSize: 16
         }
     },
+    components: {legendList},
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -257,8 +269,13 @@ export default {
 }
 </script>
 
-<style lang="less" scope>
-.button-add-rule {
-    margin-bottom: 10px
+<style lang="less" scoped>
+.@{css-prefix}back-source {
+    .button-add-rule {
+        margin-bottom: 10px
+    }
+    .legend-list {
+        float: right
+    }
 }
 </style>
