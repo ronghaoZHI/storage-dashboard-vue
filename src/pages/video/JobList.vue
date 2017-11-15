@@ -37,7 +37,7 @@ export default {
             nextPageToken: '',
             legendList: [{
                 icon: 'ios-trash',
-                text: this.$t('PUBLIC.DELETE')
+                text: 'PUBLIC.DELETE'
             }],
             listHeader: [{
                 title: this.$t('VIDEO.JOB_ID'),

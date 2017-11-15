@@ -20,13 +20,13 @@ export default {
             policyFront: this.policyFront,
             legendList: [{
                 icon: 'ios-toggle',
-                text: this.$t('VIDEO.STATUS')
+                text: 'VIDEO.STATUS'
             }, {
                 icon: 'compose',
-                text: this.$t('PUBLIC.EDIT')
+                text: 'PUBLIC.EDIT'
             }, {
                 icon: 'ios-trash',
-                text: this.$t('PUBLIC.DELETE')
+                text: 'PUBLIC.DELETE'
             }],
             listHeader: [{
                 title: 'ID',
