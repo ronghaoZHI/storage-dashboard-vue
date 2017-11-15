@@ -1,4 +1,5 @@
 @edit-styles-border-color: #d7dde4;
+@edit-styles-border-color-dark: #52626d;
 @edit-output-item-span: 180px;
 @edit-modal-item-span: 120px;
 @edit-output-line-width: 475px;
@@ -175,6 +176,11 @@
     }
 }
 .dark {
+    .@{css-prefix}edit{
+        .separator-line {
+            border-color: @edit-styles-border-color-dark;
+        }
+    }
     .section-search {
         .@{css-prefix}input{
             border-color:#52626d;

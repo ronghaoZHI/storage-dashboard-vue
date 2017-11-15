@@ -1389,7 +1389,7 @@ const mark2Front = data => {
             }
 
         .separator-line {
-            margin: 10px 0 30px -20px;
+            margin: 10px 0 30px;
             border-bottom: 1px solid @edit-styles-border-color;
         }
         .img-button {
@@ -1404,12 +1404,8 @@ const mark2Front = data => {
 }
 .dark{
     .@{css-prefix}edit-styles {
-        .page-right {
-            .form-item {
-                .input-text-box {
-                    
-                }
-            }
+        .separator-line {
+            border-color: @edit-styles-border-color-dark;
         }
     }
 }
