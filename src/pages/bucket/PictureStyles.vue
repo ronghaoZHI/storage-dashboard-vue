@@ -68,7 +68,6 @@ export default {
                 title: 'Actions',
                 key: 'actions',
                 width: 170,
-                align: 'right',
                 render: (h, params) => {
                     return h('div', [
                         h('Tooltip', {

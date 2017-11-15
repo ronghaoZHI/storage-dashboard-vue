@@ -256,7 +256,6 @@ export default {
                 title: 'Actions',
                 key: 'actions',
                 width: 100,
-                align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
@@ -339,7 +338,6 @@ export default {
                 title: 'Actions',
                 key: 'actions',
                 width: 100,
-                align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
