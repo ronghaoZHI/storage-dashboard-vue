@@ -320,7 +320,7 @@
                         <div class="form-item">
                             <span class="form-label required-item">{{$t("STORAGE.PROSCESS_PARAM")}} : </span>
                             <FormItem prop="instructions">
-                                <Input v-model="instructions" type="textarea" :rows="6" :placeholder='$t("STORAGE.SENIOR_INFO")' style="width: 475px"></Input>
+                                <Input v-model="instructions" type="textarea" :rows="6" :placeholder='$t("STORAGE.SENIOR_INFO")' style="width: 475px" :autosize="textareaMinrows"></Input>
                             </FormItem>
                             <p class="style-name-info">{{$t("STORAGE.PIC_EXAMPLE")}}</p>
                             <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>
@@ -384,6 +384,9 @@ export default {
                 instructions: [
                     { validator: this.validateInstructions, trigger: 'change' }
                 ]
+            },
+            textareaMinrows: {
+                minRows: 6
             }
         }
     },
