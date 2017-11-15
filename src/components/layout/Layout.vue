@@ -181,10 +181,10 @@ export default {
         color: #c0ccda;
     }
     .table-permission tr:nth-child(2n) td{
-        background-color: #39434b;
+        background-color: #414e55;
     }
     .table-permission tr:nth-child(2n+1) td{
-        background-color: #52626d;
+        background-color: #39434b;
     }
     .new-user-input{
         background-color: #39434b;
