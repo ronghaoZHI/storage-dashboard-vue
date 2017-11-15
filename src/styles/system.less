@@ -145,6 +145,7 @@
                     transition: color .2s linear, background-color .2s linear;
                     color: #a1acb5;
                     background-color: #f9fafc;
+                    border-radius: 0;
                 }
     
                 .refresh-section {
@@ -411,11 +412,12 @@
         border-bottom: 1px solid #e5e9f2;
     }
     .content-scroll{
-        margin: 12px 0;
         max-height: 300px;
-        overflow-y: scroll;
+        overflow-y: auto;
     }
     .content {
+        padding: 10px 0;
+
         .group-item {
             display: inline-block;
             width: 49%;

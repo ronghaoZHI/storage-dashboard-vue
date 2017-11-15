@@ -37,7 +37,7 @@
         </div>
         <Modal v-model="showDetailModal" title='详细信息' width="900">
             <detail-modal :titles='modalTitles' :data='modalData' class="group-modal"></detail-modal>
-            <div class="section-separator" style="margin-top:24px;" v-if="data.traffic && data.traffic.length >= 0">
+            <div class="section-separator" style="margin-top:24px;" v-if="data.traffic">
                 <div class="separator-body">
                     <span class="separator-icon"></span>
                     <span class="separator-info" style="font-size: 18px">{{$t('SYSTEM.MIGRATION')}}</span>
