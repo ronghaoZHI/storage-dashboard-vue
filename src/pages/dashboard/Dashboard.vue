@@ -489,6 +489,7 @@ const chartReload = (data, chart) => {
             border-bottom: @common-border-dark;
             color: @text-color-dark;
             background-color: @body-background-dark;
+            border-radius: 0;
         }
         &>button:nth-last-child(1) {
             border-right: 0;
@@ -738,11 +739,11 @@ const chartReload = (data, chart) => {
                 margin-top: 30px;
 
                 span:first-child {
-                    font: 36px bolder;
+                    font: 60px bolder;
                 }
 
                 span:nth-child(2) {
-                    font: 20px bolder;
+                    font: 40px bolder;
                 }
 
                 p {
@@ -753,7 +754,7 @@ const chartReload = (data, chart) => {
 
         .upload-traffic,
         .download-traffic {
-            margin-top: 30px;
+            margin-top: 20px;
         }
     }
 
@@ -773,7 +774,7 @@ const chartReload = (data, chart) => {
         text-align: center;
 
         span:first-child {
-            font: 30px bolder;
+            font: 40px bolder;
         }
 
         span:nth-child(2) {
