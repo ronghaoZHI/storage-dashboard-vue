@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="group">
-        <div class="info-title">{{titles.subTitle1}}</div>
+        <div class="info-title">{{titles.groupTitle}}</div>
         <div class="content">
             <div class="group-item" v-for="bi in data.basicInfo" :key="bi.name">
                 <span class="separator-icon"></span>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="group" style="border-top:0">
-        <div class="info-title">{{titles.subTitle2}}</div>
+        <div class="info-title">{{titles.partitionTitle}}</div>
         <Spin size="bigger" fix v-if="spinGroup" class="search-spin"></Spin>
         <div class="content content-scroll">
             <ul class="partition-title">

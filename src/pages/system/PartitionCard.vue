@@ -54,7 +54,7 @@ export default {
         return {
             isWrite: this.data.readonly === 0,
             showDetailModal: false,
-            modalTitles: {subTitle1: this.$t('SYSTEM.BASE_INFO'), subTitle2: this.$t('SYSTEM.GROUP_INFO')},
+            modalTitles: {groupTitle: this.$t('SYSTEM.BASE_INFO'), PartitionTitle: this.$t('SYSTEM.GROUP_INFO')},
             waitingCard: this.data.is_del === 1 || !this.data.not_moving ? 'bsc-waiting-card' : '',
             detailHead: [{name: 'ID', value: 'group_id'},
                 {name: this.$t('SYSTEM.FILE_NUM'), value: 'num_used'},

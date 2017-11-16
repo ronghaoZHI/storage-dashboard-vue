@@ -35,7 +35,7 @@
             <span>{{data.readonly === 0 ? $t('SYSTEM.WRITEABLE') : $t('SYSTEM.READ_ONLY')}}</span>
             <Button v-show="this.data.readonly === 0" type="ghost" size="small" @click="setReadOnly">{{$t('SYSTEM.SET_READ_ONLY')}}</Button>
         </div>
-        <Modal v-model="showDetailModal" title='详细信息' width="900">
+        <Modal v-model="showDetailModal" :title='$t("SYSTEM.DETAILS")' width="900">
             <detail-modal :titles='modalTitles' :data='modalData' class="group-modal"></detail-modal>
             <div class="section-separator" style="margin-top:24px;" v-if="data.traffic">
                 <div class="separator-body">
@@ -77,29 +77,29 @@ export default {
         return {
             showDetailModal: false,
             status: this.data.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY'),
-            isUse: this.data.is_del === 0 ? '正常' : '删除',
-            modalTitles: {subTitle1: 'group 信息', subTitle2: '对应磁盘信息'}
+            isUse: this.data.is_del === 0 ? this.$t('SYSTEM.NORMAL') : this.$t('SYSTEM.DELETED'),
+            modalTitles: { groupTitle: this.$t('SYSTEM.GROUP_INFO'), partitionTitle: this.$t('SYSTEM.PARTITION_INFO') }
         }
     },
-    components: {detailModal},
+    components: { detailModal },
     props: ['data'],
     computed: {
         modalData () {
             let tableData = _.map(this.data.partition, (item) => {
                 let newItem = _.cloneDeep(item)
                 newItem.inn_ips = item.inn_ips[0]
-                newItem.ioutil = `${Math.floor(item.ioutil * 100)}%`
-                newItem.space = `${Math.floor(item.space * 100)}%`
-                newItem.cpu = Math.round(item.cpu * 100) / 100
-                newItem.status = this.data.readonly === 0 ? '可写' : '只读'
+                newItem.ioutil = item.ioutil || '-'
+                newItem.space = `${(item.used_rate || '-')}%`
+                newItem.cpu = Math.round(item.cpu * 100) / 100 || '-'
+                newItem.status = this.data.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY')
                 newItem.isUse = this.isUse
                 return newItem
             })
             let basicInfo = [{name: 'Group ID', value: this.data.group_id},
-                {name: '状态', value: this.data.readonly === 0 ? '可写' : '只读'},
-                {name: '文件数', value: this.data.num_used},
-                {name: '容量', value: '150G'},
-                {name: '创建时间', value: this.data.ts}]
+                {name: this.$t('SYSTEM.GROUP_STATUS'), value: this.data.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY')},
+                {name: this.$t('SYSTEM.FILE_NUMBERS'), value: this.data.num_used},
+                {name: this.$t('SYSTEM.CAPACITY'), value: '150G'},
+                {name: this.$t('SYSTEM.CREATE_TIME'), value: this.data.ts}]
             return {tableData, basicInfo, detailHead}
         }
     },

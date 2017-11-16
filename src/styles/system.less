@@ -12,11 +12,14 @@
             }
 
             & > button {
-                background: #fff;
-                color: #475669;
+                border-color: transparent;
+                background-color: transparent;
+                color: @text-color-dark;
             }
 
-            & > button:focus,
+            & > button:hover {
+                color: #fff;
+            }
             .statusButtonFocus {
                 background: @primary-color;
                 color: #fff;
@@ -97,7 +100,8 @@
                     -ms-user-select: none;
                     user-select: none;
                     font-size: 12px;
-                    background: #fff;
+                    border-color: transparent;
+                    background-color: transparent;
                     color: #475669;
                 }
     
@@ -210,6 +214,8 @@
     .header {
         button {
             color: @primary-color;
+            border-color: transparent;
+            background-color: transparent;
         }
     }
 
@@ -255,30 +261,11 @@
             li {
                 .ip-button {
                     color: @primary-color;
-                    cursor: pointer;
 
                     &:hover {
                         color: #7ec2f3;
                     }
                 }
-            }
-
-            li:nth-child(1) {
-                width: 240px;
-            }
-
-            li:nth-child(3),
-            li:nth-child(4){
-                width: 115px;
-            }
-
-            li:nth-child(2),
-            li:nth-child(5),
-            li:nth-child(6),
-            li:nth-child(7),
-            li:nth-child(8),
-            li:nth-child(9) {
-                width: 53px;
             }
         }
 
@@ -319,6 +306,7 @@
             float: right;
             top: 5px;
             color: @primary-color;
+            background-color: transparent;
         }
     }
 
@@ -521,9 +509,12 @@
                 li:nth-child(5),
                 li:nth-child(6),
                 li:nth-child(7),
-                li:nth-child(8),
                 li:nth-child(9) {
                     width: 53px;
+                }
+
+                li:nth-child(8) {
+                    width: 70px;
                 }
             }
         }
