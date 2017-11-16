@@ -420,11 +420,13 @@ const chartReload = (data, chart) => {
     .toolbar {
         .button-daterange {
             button {
-                border: 1px solid @body-background-dark;
+                border: 1px solid #52626d;
                 border-left: none;
+                background: #414d56;
+                color: #fff;
             }
             button:first-child {
-                border-left: 1px solid @body-background-dark;
+                border-left: 1px solid #52626d;
             }
         }
     }
@@ -489,7 +491,7 @@ const chartReload = (data, chart) => {
         .buttonFocus {
             outline: 0;
             background: #20a0ff !important;
-            border-color: #20a0ff;
+            border-color: #20a0ff !important;
             color: #fff !important;
         }
         .button-export-data {
