@@ -342,6 +342,11 @@ const getURL = async (bucket, key) => {
 </script>
 
 <style lang="less" scoped>
+
+.dark .layout-bsc-toolbar {
+    border-bottom: @common-border-dark;
+}
+
 .layout-bsc-toolbar {
     padding-bottom: 8px;
     border-bottom: 1px solid #f2f1f6;

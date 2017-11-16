@@ -673,6 +673,13 @@ const convertNewUserItem = item => {
 </script>
 
 <style lang="less" scoped>
+
+.dark .@{css-prefix}settings {
+    .@{css-prefix}layout-toolbar {
+        border-bottom: @common-border-dark
+    }
+}
+
 .@{css-prefix}settings {
     .@{css-prefix}layout-toolbar {
         padding-bottom: 8px;
