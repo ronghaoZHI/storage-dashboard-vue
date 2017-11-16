@@ -54,7 +54,7 @@
                 <Col span="17">
                     <div class="view-card">
                         <div>
-                            <img src="../../assets/dashboard/read.png" alt="download_count">
+                            <img v-bind:src="imgSrc[0]" alt="download_count">
                             <Tooltip :content='$t("DASHBOARD.DOWNLOAD_COUNT_ALL_INFO")'>
                                 <div class="content">
                                     <span>{{originOverview.download_count && originOverview.download_count[0]}}</span>
@@ -64,7 +64,7 @@
                             </Tooltip>
                         </div>
                         <div>
-                            <img src="../../assets/dashboard/write.png" alt="upload_count">
+                            <img v-bind:src="imgSrc[1]" alt="upload_count">
                             <Tooltip :content='$t("DASHBOARD.UPLOAD_COUNT_ALL_INFO")'>
                                 <div class="content">
                                     <span>{{originOverview.upload_count && originOverview.upload_count[0]}}</span>
@@ -74,7 +74,7 @@
                             </Tooltip>
                         </div>
                         <div>
-                            <img src="../../assets/dashboard/delete-request.png" alt="delete_count">
+                            <img v-bind:src="imgSrc[2]" alt="delete_count">
                             <Tooltip :content='$t("DASHBOARD.DELETE_COUNT_ALL_INFO")'>
                                 <div class="content">
                                     <span>{{originOverview.delete_count && originOverview.delete_count[0]}}</span>
@@ -84,7 +84,7 @@
                             </Tooltip>
                         </div>
                         <div>
-                            <img src="../../assets/dashboard/delete-traffic.png" alt="delete_space">
+                            <img v-bind:src="imgSrc[3]" alt="delete_space">
                             <Tooltip :content='$t("DASHBOARD.DELETE_SPACE_ALL_INFO")'>
                                 <div class="content">
                                     <span>{{originOverview.delete_space && originOverview.delete_space[0]}}</span>
@@ -138,6 +138,14 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
+import read from '../../assets/dashboard/read.png'
+import readDark from '../../assets/dashboard/read-dark.png'
+import write from '../../assets/dashboard/write.png'
+import writeDark from '../../assets/dashboard/write-dark.png'
+import deleteRequset from '../../assets/dashboard/delete-request.png'
+import deleteRequsetDark from '../../assets/dashboard/delete-request-dark.png'
+import deleteTraffic from '../../assets/dashboard/delete-traffic.png'
+import deleteTrafficDark from '../../assets/dashboard/delete-traffic-dark.png'
 import { getBucketList } from '@/service/Data'
 import { getAnalysisUrl } from '@/service/API'
 import user from '@/store/modules/user'
@@ -182,6 +190,9 @@ export default {
         },
         isFristDay () {
             return new Date().getDate() === 1
+        },
+        imgSrc: function () {
+            return this.$store.state.theme === 'dark' ? [readDark, writeDark, deleteRequsetDark, deleteTrafficDark] : [read, write, deleteRequset, deleteTraffic]
         }
     },
     created () {
@@ -320,6 +331,8 @@ const lineOptions = {
         left: '10',
         right: '40',
         bottom: '10',
+        show: false,
+        backgroundColor: '#293137',
         containLabel: true
     },
     xAxis: {
@@ -327,7 +340,7 @@ const lineOptions = {
         offset: 5,
         axisLine: {
             lineStyle: {
-                color: '#8492a6'
+                color: '#52626d'
             }
         },
         axisTick: {
@@ -352,7 +365,7 @@ const lineOptions = {
         axisLine: {
             show: false,
             lineStyle: {
-                color: '#8492a6'
+                color: '#52626d'
             }
         },
         axisTick: {
@@ -378,13 +391,13 @@ const lineOptions = {
         },
         lineStyle: {
             normal: {
-                color: '#2c96ef'
+                color: '#20a0ff'
             }
         },
         areaStyle: {
             normal: {
-                color: '#83C6F9',
-                opacity: 0.8
+                color: '#20a0ff',
+                opacity: 0.5
             }
         }
     }]
@@ -427,11 +440,13 @@ const chartReload = (data, chart) => {
     .toolbar {
         .button-daterange {
             button {
-                border: 1px solid @body-background-dark;
+                border: 1px solid #52626d;
                 border-left: none;
+                background: #414d56;
+                color: #fff;
             }
             button:first-child {
-                border-left: 1px solid @body-background-dark;
+                border-left: 1px solid #52626d;
             }
         }
     }
@@ -450,6 +465,7 @@ const chartReload = (data, chart) => {
 
             .traffic {
                 color: @text-color-dark;
+                background-color: #313A41;
 
                 .upload-traffic,
                 .download-traffic {
@@ -465,6 +481,7 @@ const chartReload = (data, chart) => {
         .view-card {
             border: @common-border-dark;
             color: @text-color-dark;
+            background-color: #313A41;
 
             &>div {
                 border-right: @common-border-dark;
@@ -488,15 +505,14 @@ const chartReload = (data, chart) => {
             border-right: @common-border-dark;
             border-bottom: @common-border-dark;
             color: @text-color-dark;
-            background-color: @body-background-dark;
-            border-radius: 0;
+            background-color: #414d56;
         }
         &>button:nth-last-child(1) {
             border-right: 0;
         }
         button:focus,
         .buttonFocus {
-            background-color: @secondary-color-dark;
+            background-color: #39434b;
             border-bottom: 0;
             color: @text-color-dark;
         }
@@ -679,10 +695,10 @@ const chartReload = (data, chart) => {
 
         .capacity {
             .content {
-                margin-top: 30px;
+                margin-top: 6px;
 
                 span:first-child {
-                    font: 26px bolder;
+                    font: 45px bolder;
                 }
 
                 p {
@@ -693,7 +709,7 @@ const chartReload = (data, chart) => {
 
         .upload-traffic,
         .download-traffic {
-            margin-top: 15px;
+            margin-top: 10px;
         }
     }
 
@@ -701,7 +717,7 @@ const chartReload = (data, chart) => {
         height: @overview-height;
 
         &>div {
-            margin-top: 40px;
+            margin-top: 34px;
 
             img {
                 width: 32px;
@@ -713,7 +729,7 @@ const chartReload = (data, chart) => {
         text-align: center;
 
         span:first-child {
-            font: 24px bolder;
+            font: 30px bolder;
         }
 
         span:nth-child(2) {
