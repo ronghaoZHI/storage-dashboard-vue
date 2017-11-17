@@ -236,7 +236,8 @@ const lineOptions = {
 const darkLineOptions = {
     grid: {
         show: true,
-        backgroundColor: '#293137'
+        backgroundColor: '#293137',
+        borderColor: '#52626d'
     },
     xAxis: {
         splitLine: {
