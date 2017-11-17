@@ -91,10 +91,10 @@ export default {
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
                     this.overviewData = res
-                    this.overviewOptions = InitOverviewOptions(this.overviewData, this.theme)
+                    this.overviewOptions = initOverviewOptions(this.overviewData, this.theme)
                 }), this.$http.get((this.getApiURL('distribution'))).then(res => {
                     this.distributionData = res
-                    this.distributionOptions = InitDistributionOptions(this.distributionData, this.theme)
+                    this.distributionOptions = initDistributionOptions(this.distributionData, this.theme)
                 })]).then(res => {
                     this.data = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
@@ -141,8 +141,8 @@ export default {
             fileSaver.saveAs(file)
         },
         toggleTheme (theme) {
-            this.overviewOptions = InitOverviewOptions(this.overviewData, theme)
-            this.distributionOptions = InitDistributionOptions(this.distributionData, theme)
+            this.overviewOptions = initOverviewOptions(this.overviewData, theme)
+            this.distributionOptions = initDistributionOptions(this.distributionData, theme)
         }
     },
     watch: {
@@ -254,7 +254,7 @@ const darkLineOptions = {
         }
     }
 }
-const InitOverviewOptions = (data, theme) => {
+const initOverviewOptions = (data, theme) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
@@ -335,7 +335,7 @@ const InitOverviewOptions = (data, theme) => {
     })
     return newOptions
 }
-const InitDistributionOptions = (data, theme) => {
+const initDistributionOptions = (data, theme) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
