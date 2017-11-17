@@ -638,6 +638,7 @@ const chartReload = (data, chart) => {
             transition: color .2s linear, background-color .2s linear;
             color: #a1acb5;
             background-color: #f9fafc;
+            border-radius: 0;
         }
         &>button:nth-last-child(1) {
             border-right: 0;
