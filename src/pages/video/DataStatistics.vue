@@ -76,6 +76,9 @@ export default {
         },
         theme: function () {
             return this.$store.state.theme
+        },
+        xLabelRotate: function () {
+            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 20
         }
     },
     created () {
@@ -91,10 +94,10 @@ export default {
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
                     this.overviewData = res
-                    this.overviewOptions = initOverviewOptions(this.overviewData, this.theme)
+                    this.overviewOptions = initOverviewOptions(this.overviewData, this.theme, this.xLabelRotate)
                 }), this.$http.get((this.getApiURL('distribution'))).then(res => {
                     this.distributionData = res
-                    this.distributionOptions = initDistributionOptions(this.distributionData, this.theme)
+                    this.distributionOptions = initDistributionOptions(this.distributionData, this.theme, this.xLabelRotate)
                 })]).then(res => {
                     this.data = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
@@ -140,9 +143,9 @@ export default {
             let file = new File(Array.from(content), this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
             fileSaver.saveAs(file)
         },
-        toggleTheme (theme) {
-            this.overviewOptions = initOverviewOptions(this.overviewData, theme)
-            this.distributionOptions = initDistributionOptions(this.distributionData, theme)
+        toggleTheme (theme, xLabelRotate) {
+            this.overviewOptions = initOverviewOptions(this.overviewData, theme, xLabelRotate)
+            this.distributionOptions = initDistributionOptions(this.distributionData, theme, xLabelRotate)
         }
     },
     watch: {
@@ -156,7 +159,10 @@ export default {
             chartReload(to.data, this.$refs.distributionLine)
         },
         'theme' (to, from) {
-            this.toggleTheme(to)
+            this.toggleTheme(to, this.xLabelRotate)
+        },
+        'xLabelRotate' (to, from) {
+            this.toggleTheme(this.theme, to)
         }
     }
 }
@@ -194,7 +200,7 @@ const lineOptions = {
                 color: '#8492a6'
             }
         },
-        interval: 86400000 * 2,
+        interval: 86400000,
         axisTick: {
             show: false
         },
@@ -254,8 +260,78 @@ const darkLineOptions = {
         }
     }
 }
-const initOverviewOptions = (data, theme) => {
-    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
+const xLabelRotateOptions = {
+    tooltip: {
+        trigger: 'axis',
+        textStyle: {
+            color: '#fff',
+            fontSize: 16
+        },
+        axisPointer: {
+            lineStyle: {
+                color: '#1e9fff'
+            }
+        },
+        backgroundColor: 'rgba(71, 86, 105, 0.8)',
+        padding: 10
+    },
+    grid: {
+        top: '60',
+        left: '10',
+        right: '80',
+        bottom: '40',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'time',
+        offset: 5,
+        axisLine: {
+            lineStyle: {
+                color: '#8492a6'
+            }
+        },
+        interval: 86400000,
+        axisTick: {
+            show: false
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#8492a6',
+                fontSize: 14
+            },
+            formatter: function (value) {
+                return date(value)
+            },
+            rotate: -30
+        }
+    },
+    yAxis: {
+        type: 'value',
+        min: 0,
+        offset: 5,
+        nameTextStyle: {
+            color: '#8492a6',
+            fontSize: 14
+        },
+        axisLine: {
+            show: false,
+            lineStyle: {
+                color: '#8492a6'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#8492a6',
+                fontSize: 14
+            }
+        }
+    }
+}
+const initOverviewOptions = (data, theme, xLabelRotate) => {
+    let themeLineOptions = xLabelRotate ? (theme === 'dark' ? _.defaultsDeep({}, xLabelRotateOptions, darkLineOptions) : xLabelRotateOptions) : (theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions)
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
@@ -335,8 +411,8 @@ const initOverviewOptions = (data, theme) => {
     })
     return newOptions
 }
-const initDistributionOptions = (data, theme) => {
-    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
+const initDistributionOptions = (data, theme, xLabelRotate) => {
+    let themeLineOptions = xLabelRotate ? (theme === 'dark' ? _.defaultsDeep({}, xLabelRotateOptions, darkLineOptions) : xLabelRotateOptions) : (theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions)
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
@@ -511,7 +587,7 @@ const chartReload = (data, chart) => {
                 margin: 0;
                 font-size: 14px;
                 color: #475669;
-                height: 30px;
+                height: 32px;
                 background: #fff;
                 line-height: 16px;
                 border: 1px solid #d3dce6;
