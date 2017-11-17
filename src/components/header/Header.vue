@@ -15,6 +15,11 @@
                         <span slot="close">EN</span>
                     </i-switch>
                 </div>
+                <div class="button-document" @click="toggleTheme">
+                    <Tooltip :content='$t("STORAGE.TOGGLE_THEME")' placement="bottom">
+                        <Icon type="android-color-palette" :size="24"></Icon>
+                    </Tooltip>
+                </div>
                 <Dropdown style="margin-left: 13px"
                           @on-click="menuClick"
                           placement="bottom-end">
@@ -112,8 +117,8 @@ export default {
             Vue.config.lang = lang
             createCookie('uc_lang', lang)
         },
-        async toggleTheme (value) {
-            await this.$store.dispatch('toggleTheme', value)
+        async toggleTheme () {
+            await this.$store.dispatch('toggleTheme', this.$store.state.theme === 'dark' ? 'white' : 'dark')
             if (this.$store.state.theme === 'dark') {
                 $('body').addClass('dark')
             } else {

@@ -68,6 +68,7 @@ export const messages = {
         },
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
+            TOGGLE_THEME: 'Toggle theme',
             BACK_SOURCE: '404 Back to Source',
             SOURCE_ADDRESS: 'Address',
             SOURCE_MODE: 'Mode',
@@ -803,6 +804,7 @@ export const messages = {
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',
+            TOGGLE_THEME: '切换主题',
             BACK_SOURCE: '404回源',
             SOURCE_ADDRESS: '回源地址',
             SOURCE_MODE: '回源方式',

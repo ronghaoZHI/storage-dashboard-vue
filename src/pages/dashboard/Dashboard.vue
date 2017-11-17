@@ -193,6 +193,9 @@ export default {
         },
         imgSrc: function () {
             return this.$store.state.theme === 'dark' ? [readDark, writeDark, deleteRequsetDark, deleteTrafficDark] : [read, write, deleteRequset, deleteTraffic]
+        },
+        theme: function () {
+            return this.$store.state.theme
         }
     },
     created () {
@@ -228,13 +231,7 @@ export default {
                 }), this.$http.get(this.getApiURL('entire')).then(res => {
                     // echarts data
                     _.extend(this, res)
-                    this.capacityOptions = InitOptions(this.capacity)
-                    this.uploadTrafficOptions = InitOptions(this.upload_space)
-                    this.downloadTrafficOptions = InitOptions(this.download_space)
-                    this.downloadsOptions = InitOptions(this.download_count)
-                    this.uploadsOptions = InitOptions(this.upload_count)
-                    this.deleteCountOptins = InitOptions(this.delete_count)
-                    this.deleteSpaceOptions = InitOptions(this.delete_space)
+                    this.setOptions()
                 })]).then(res => {
                     // export data
                     this.exportData = []
@@ -257,6 +254,15 @@ export default {
                 this.spinShow = false
                 this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
             }
+        },
+        setOptions () {
+            this.capacityOptions = InitOptions(this.capacity, this.theme)
+            this.uploadTrafficOptions = InitOptions(this.upload_space, this.theme)
+            this.downloadTrafficOptions = InitOptions(this.download_space, this.theme)
+            this.downloadsOptions = InitOptions(this.download_count, this.theme)
+            this.uploadsOptions = InitOptions(this.upload_count, this.theme)
+            this.deleteCountOptins = InitOptions(this.delete_count, this.theme)
+            this.deleteSpaceOptions = InitOptions(this.delete_space, this.theme)
         },
         convertData (item, splite = false) {
             if (!item) {
@@ -290,26 +296,8 @@ export default {
         'dateSelect' (to, from) {
             to[0] && this.getInitData()
         },
-        'capacity' (to, from) {
-            chartReload(to.data, this.$refs.capacityLine)
-        },
-        'upload_space' (to, from) {
-            chartReload(to.data, this.$refs.uploadTrafficLine)
-        },
-        'download_space' (to, from) {
-            chartReload(to.data, this.$refs.downloadTrafficLine)
-        },
-        'download_count' (to, from) {
-            chartReload(to.data, this.$refs.downloadsLine)
-        },
-        'upload_count' (to, from) {
-            chartReload(to.data, this.$refs.uploadsLine)
-        },
-        'delete_count' (to, from) {
-            chartReload(to.data, this.$refs.deleteCountLine)
-        },
-        'delete_space' (to, from) {
-            chartReload(to.data, this.$refs.deleteSpaceLine)
+        'theme' (to, from) {
+            this.setOptions()
         }
     }
 }
@@ -331,8 +319,6 @@ const lineOptions = {
         left: '10',
         right: '40',
         bottom: '10',
-        show: false,
-        backgroundColor: '#293137',
         containLabel: true
     },
     xAxis: {
@@ -340,15 +326,17 @@ const lineOptions = {
         offset: 5,
         axisLine: {
             lineStyle: {
-                color: '#52626d'
+                color: '#8492a6'
             }
         },
+        interval: 86400000 * 2,
         axisTick: {
             show: false
         },
         axisLabel: {
             textStyle: {
-                color: '#8492a6'
+                color: '#8492a6',
+                fontSize: 14
             },
             formatter: function (value) {
                 return date(value)
@@ -360,12 +348,13 @@ const lineOptions = {
         min: 0,
         offset: 5,
         nameTextStyle: {
-            color: '#333'
+            color: '#8492a6',
+            fontSize: 14
         },
         axisLine: {
             show: false,
             lineStyle: {
-                color: '#52626d'
+                color: '#8492a6'
             }
         },
         axisTick: {
@@ -373,7 +362,8 @@ const lineOptions = {
         },
         axisLabel: {
             textStyle: {
-                color: '#8492a6'
+                color: '#8492a6',
+                fontSize: 14
             }
         }
     },
@@ -402,8 +392,30 @@ const lineOptions = {
         }
     }]
 }
-const InitOptions = data => {
-    let newOptions = _.defaultsDeep({}, lineOptions, {
+const darkLineOptions = {
+    grid: {
+        show: true,
+        backgroundColor: '#293137',
+        borderColor: '#52626d'
+    },
+    xAxis: {
+        splitLine: {
+            lineStyle: {
+                color: '#52626d'
+            }
+        }
+    },
+    yAxis: {
+        splitLine: {
+            lineStyle: {
+                color: '#52626d'
+            }
+        }
+    }
+}
+const InitOptions = (data, theme) => {
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
+    let newOptions = _.defaultsDeep({}, themeLineOptions, {
         series: [{
             data: data.data,
             name: data.label
@@ -427,10 +439,6 @@ const InitOptions = data => {
         }
     })
     return newOptions
-}
-
-const chartReload = (data, chart) => {
-    chart && chart.mergeOptions({ series: [{ ...data }] })
 }
 </script>
 <style lang='less' scoped>
