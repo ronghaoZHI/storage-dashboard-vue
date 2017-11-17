@@ -73,6 +73,9 @@ export default {
         },
         isFristDay () {
             return new Date().getDate() === 1
+        },
+        theme: function () {
+            return this.$store.state.theme
         }
     },
     created () {
@@ -88,10 +91,10 @@ export default {
             try {
                 await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
                     this.overviewData = res
-                    this.overviewOptions = InitOverviewOptions(this.overviewData)
+                    this.overviewOptions = InitOverviewOptions(this.overviewData, this.theme)
                 }), this.$http.get((this.getApiURL('distribution'))).then(res => {
                     this.distributionData = res
-                    this.distributionOptions = InitDistributionOptions(this.distributionData)
+                    this.distributionOptions = InitDistributionOptions(this.distributionData, this.theme)
                 })]).then(res => {
                     this.data = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
@@ -136,6 +139,10 @@ export default {
             let content = Csv(_.keys(this.data[0]), this.data, ',')
             let file = new File(Array.from(content), this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
             fileSaver.saveAs(file)
+        },
+        toggleTheme (theme) {
+            this.overviewOptions = InitOverviewOptions(this.overviewData, theme)
+            this.distributionOptions = InitDistributionOptions(this.distributionData, theme)
         }
     },
     watch: {
@@ -147,6 +154,9 @@ export default {
         },
         'distributionData' (to, from) {
             chartReload(to.data, this.$refs.distributionLine)
+        },
+        'theme' (to, from) {
+            this.toggleTheme(to)
         }
     }
 }
@@ -184,6 +194,7 @@ const lineOptions = {
                 color: '#8492a6'
             }
         },
+        interval: 86400000 * 2,
         axisTick: {
             show: false
         },
@@ -222,8 +233,29 @@ const lineOptions = {
         }
     }
 }
-const InitOverviewOptions = data => {
-    let newOptions = _.defaultsDeep({}, lineOptions, {
+const darkLineOptions = {
+    grid: {
+        show: true,
+        backgroundColor: '#293137'
+    },
+    xAxis: {
+        splitLine: {
+            lineStyle: {
+                color: '#52626d'
+            }
+        }
+    },
+    yAxis: {
+        splitLine: {
+            lineStyle: {
+                color: '#52626d'
+            }
+        }
+    }
+}
+const InitOverviewOptions = (data, theme) => {
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
+    let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
                 let res = 'Date : ' + date(params[0].value[0])
@@ -302,8 +334,9 @@ const InitOverviewOptions = data => {
     })
     return newOptions
 }
-const InitDistributionOptions = data => {
-    let newOptions = _.defaultsDeep({}, lineOptions, {
+const InitDistributionOptions = (data, theme) => {
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
+    let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
                 let res = 'Date : ' + date(params[0].value[0])
