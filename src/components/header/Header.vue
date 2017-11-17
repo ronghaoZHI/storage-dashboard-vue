@@ -129,22 +129,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.dark .@{css-prefix}header{
-    .layout-header {
-        background: @primary-color-dark;
-        .layout-header-left {
-            .active{
-                background-color: @primary-color-dark;
-            }
-        }
-        
-        .layout-header-right {
-            .button-document {
-                border-right: 1px solid @border-color-dark;
-            }
-        }
-    }
-}
 
 .@{css-prefix}header{
     .layout-header {

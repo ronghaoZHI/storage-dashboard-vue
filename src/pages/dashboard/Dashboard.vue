@@ -256,13 +256,13 @@ export default {
             }
         },
         setOptions () {
-            this.capacityOptions = InitOptions(this.capacity, this.theme)
-            this.uploadTrafficOptions = InitOptions(this.upload_space, this.theme)
-            this.downloadTrafficOptions = InitOptions(this.download_space, this.theme)
-            this.downloadsOptions = InitOptions(this.download_count, this.theme)
-            this.uploadsOptions = InitOptions(this.upload_count, this.theme)
-            this.deleteCountOptins = InitOptions(this.delete_count, this.theme)
-            this.deleteSpaceOptions = InitOptions(this.delete_space, this.theme)
+            this.capacityOptions = initOptions(this.capacity, this.theme)
+            this.uploadTrafficOptions = initOptions(this.upload_space, this.theme)
+            this.downloadTrafficOptions = initOptions(this.download_space, this.theme)
+            this.downloadsOptions = initOptions(this.download_count, this.theme)
+            this.uploadsOptions = initOptions(this.upload_count, this.theme)
+            this.deleteCountOptins = initOptions(this.delete_count, this.theme)
+            this.deleteSpaceOptions = initOptions(this.delete_space, this.theme)
         },
         convertData (item, splite = false) {
             if (!item) {
@@ -413,7 +413,7 @@ const darkLineOptions = {
         }
     }
 }
-const InitOptions = (data, theme) => {
+const initOptions = (data, theme) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         series: [{
