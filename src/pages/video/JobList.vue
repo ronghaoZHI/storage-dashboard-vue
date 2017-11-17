@@ -285,6 +285,9 @@ const pipelinesData = {
 </script>
 <style lang="less" scoped>
 
+.dark .quary-name{
+    color: @text-color-secondary-dark;
+}
 .quary-name{
     margin-right: 10px;
     font-size: 13px;
