@@ -96,10 +96,17 @@
                 <span class="form-label">{{$t('VIDEO.RESOLUTION')}} : </span>
                 <Radio-group v-model="auxiliary.resolution">
                     <Radio label="auto">{{$t('VIDEO.UNALTERED')}}</Radio>
-                    <Radio label="value">{{$t('VIDEO.USER_DEFINED')}}</Radio>
+                    <Radio label="value">{{$t('VIDEO.USER_DEFINED')}} 
+                        <InputNumber :min='1' v-model="auxiliary.width" :disabled="!(auxiliary.resolution === 'value')" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
+                        <InputNumber :min='1' v-model="auxiliary.height" :disabled="!(auxiliary.resolution === 'value')" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
+                    </Radio>
+                    <Radio label="only_width">
+                       {{$t('VIDEO.HIGHLY_ADAPTIVE')}} <InputNumber :min='1' v-model="auxiliary.only_width" :disabled="!(auxiliary.resolution === 'only_width')" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
+                    </Radio>
+                    <Radio label="only_height">
+                        {{$t('VIDEO.WIDTH_ADAPTIVE')}}  <InputNumber :min='1' v-model="auxiliary.only_height" :disabled="!(auxiliary.resolution === 'only_height')" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
+                    </Radio>
                 </Radio-group>
-                <InputNumber :min='1' v-model="auxiliary.width" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.WIDTH")'></InputNumber>
-                <InputNumber :min='1' v-model="auxiliary.height" :disabled="auxiliary.resolution === 'auto'" :placeholder='$t("VIDEO.HEIGHT")'></InputNumber>
             </div>
             <div class="form-item" v-if="template.Video.Codec !== 'auto'">
                 <span class="form-label">{{$t('VIDEO.ASPECT_RATIO')}} : </span>
@@ -293,7 +300,13 @@ const convert2Save = (template, auxiliary) => {
     }
 
     if (auxiliary.resolution !== 'auto') {
-        saved.Video.Resolution = `${auxiliary.width}*${auxiliary.height}`
+        if (auxiliary.resolution === 'only_width') {
+            saved.Video.Resolution = `${auxiliary.only_width}*-2`
+        } else if (auxiliary.resolution === 'only_height') {
+            saved.Video.Resolution = `-2*${auxiliary.only_height}`
+        } else {
+            saved.Video.Resolution = `${auxiliary.width}*${auxiliary.height}`
+        }
     } else {
         saved.Video.Resolution = auxiliary.resolution
     }
