@@ -261,77 +261,19 @@ const darkLineOptions = {
     }
 }
 const xLabelRotateOptions = {
-    tooltip: {
-        trigger: 'axis',
-        textStyle: {
-            color: '#fff',
-            fontSize: 16
-        },
-        axisPointer: {
-            lineStyle: {
-                color: '#1e9fff'
-            }
-        },
-        backgroundColor: 'rgba(71, 86, 105, 0.8)',
-        padding: 10
-    },
-    grid: {
-        top: '60',
-        left: '10',
-        right: '80',
-        bottom: '40',
-        containLabel: true
-    },
     xAxis: {
-        type: 'time',
-        offset: 5,
-        axisLine: {
-            lineStyle: {
-                color: '#8492a6'
-            }
-        },
-        interval: 86400000,
-        axisTick: {
-            show: false
-        },
         axisLabel: {
-            textStyle: {
-                color: '#8492a6',
-                fontSize: 14
-            },
-            formatter: function (value) {
-                return date(value)
-            },
             rotate: -30
-        }
-    },
-    yAxis: {
-        type: 'value',
-        min: 0,
-        offset: 5,
-        nameTextStyle: {
-            color: '#8492a6',
-            fontSize: 14
-        },
-        axisLine: {
-            show: false,
-            lineStyle: {
-                color: '#8492a6'
-            }
-        },
-        axisTick: {
-            show: false
-        },
-        axisLabel: {
-            textStyle: {
-                color: '#8492a6',
-                fontSize: 14
-            }
         }
     }
 }
 const initOverviewOptions = (data, theme, xLabelRotate) => {
-    let themeLineOptions = xLabelRotate ? (theme === 'dark' ? _.defaultsDeep({}, xLabelRotateOptions, darkLineOptions) : xLabelRotateOptions) : (theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions)
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
+    if (xLabelRotate) {
+        themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
+        themeLineOptions.grid.right = '80'
+        themeLineOptions.grid.bottom = '40'
+    }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
@@ -412,7 +354,12 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
     return newOptions
 }
 const initDistributionOptions = (data, theme, xLabelRotate) => {
-    let themeLineOptions = xLabelRotate ? (theme === 'dark' ? _.defaultsDeep({}, xLabelRotateOptions, darkLineOptions) : xLabelRotateOptions) : (theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions)
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
+    if (xLabelRotate) {
+        themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
+        themeLineOptions.grid.right = '80'
+        themeLineOptions.grid.bottom = '40'
+    }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
