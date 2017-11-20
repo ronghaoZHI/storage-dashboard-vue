@@ -318,6 +318,13 @@ const lineOptions = {
             color: '#fff',
             fontSize: 14
         },
+        axisPointer: {
+            lineStyle: {
+                color: '#1e9fff'
+            },
+            z: 0
+        },
+        backgroundColor: 'rgba(71, 86, 105, 0.8)',
         padding: 10
     },
     grid: {
@@ -378,7 +385,6 @@ const lineOptions = {
         type: 'line',
         smooth: true,
         lineWidth: 1.0,
-        symbol: 'none',
         sampling: 'average',
         itemStyle: {
             normal: {
