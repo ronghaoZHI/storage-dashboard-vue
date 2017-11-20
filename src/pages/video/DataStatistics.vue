@@ -180,7 +180,8 @@ const lineOptions = {
         axisPointer: {
             lineStyle: {
                 color: '#1e9fff'
-            }
+            },
+            z: 0
         },
         backgroundColor: 'rgba(71, 86, 105, 0.8)',
         padding: 10
