@@ -1,4 +1,5 @@
 import Layout from '@/components/layout'
+import Overview from '@/pages/overview/Overview'
 import Bucket from '@/pages/bucket/Bucket'
 import File from '@/pages/bucket/File'
 import Dashboard from '@/pages/dashboard/Dashboard'
@@ -29,11 +30,16 @@ import PipelineEdit from '@/pages/video/PipelineEdit'
 
 const layoutChild = [{
     path: '',
-    redirect: user.state.type === 'admin' && !user.state.subUser ? '/user' : '/bucket'
+    redirect: user.state.type === 'admin' && !user.state.subUser ? '/user' : '/overview'
+}, {
+    path: '/overview',
+    name: 'overview',
+    meta: { title: 'Overview', ali: 'overview' }, // 'ali' => Menu.vue
+    component: Overview
 }, {
     path: '/bucket',
     name: 'bucket',
-    meta: { title: 'My storage', ali: 'bucket' }, // 'ali' => Menu.vue
+    meta: { title: 'My storage', ali: 'bucket' },
     component: Bucket
 }, {
     path: '/bucket/:bucket',

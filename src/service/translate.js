@@ -47,6 +47,7 @@ export const messages = {
             PASSWORD_CHECK: 'The password requires 6 charactors'
         },
         SIDEBAR: {
+            OVERVIEW: 'Overview',
             BUCKET: 'My Storage',
             DASHBOARD: 'Dashboard',
             KEYCHAIN: 'Keychain',
@@ -836,6 +837,7 @@ export const messages = {
             DELETE_KEY_COM: '确定删除 [{accesskey}] ？'
         },
         SIDEBAR: {
+            OVERVIEW: '概览',
             BUCKET: '我的存储',
             DASHBOARD: '统计分析',
             KEYCHAIN: '密钥管理',
