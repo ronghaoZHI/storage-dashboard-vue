@@ -196,6 +196,9 @@ export default {
         },
         theme: function () {
             return this.$store.state.theme
+        },
+        xLabelRotate: function () {
+            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 20
         }
     },
     created () {
@@ -256,13 +259,13 @@ export default {
             }
         },
         setOptions () {
-            this.capacityOptions = initOptions(this.capacity, this.theme)
-            this.uploadTrafficOptions = initOptions(this.upload_space, this.theme)
-            this.downloadTrafficOptions = initOptions(this.download_space, this.theme)
-            this.downloadsOptions = initOptions(this.download_count, this.theme)
-            this.uploadsOptions = initOptions(this.upload_count, this.theme)
-            this.deleteCountOptins = initOptions(this.delete_count, this.theme)
-            this.deleteSpaceOptions = initOptions(this.delete_space, this.theme)
+            this.capacityOptions = initOptions(this.capacity, this.theme, this.xLabelRotate)
+            this.uploadTrafficOptions = initOptions(this.upload_space, this.theme, this.xLabelRotate)
+            this.downloadTrafficOptions = initOptions(this.download_space, this.theme, this.xLabelRotate)
+            this.downloadsOptions = initOptions(this.download_count, this.theme, this.xLabelRotate)
+            this.uploadsOptions = initOptions(this.upload_count, this.theme, this.xLabelRotate)
+            this.deleteCountOptins = initOptions(this.delete_count, this.theme, this.xLabelRotate)
+            this.deleteSpaceOptions = initOptions(this.delete_space, this.theme, this.xLabelRotate)
         },
         convertData (item, splite = false) {
             if (!item) {
@@ -298,6 +301,9 @@ export default {
         },
         'theme' (to, from) {
             this.setOptions()
+        },
+        'xLabelRotate' (to, from) {
+            this.setOptions()
         }
     }
 }
@@ -329,7 +335,7 @@ const lineOptions = {
                 color: '#8492a6'
             }
         },
-        interval: 86400000 * 2,
+        interval: 86400000,
         axisTick: {
             show: false
         },
@@ -413,8 +419,20 @@ const darkLineOptions = {
         }
     }
 }
-const initOptions = (data, theme) => {
-    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : lineOptions
+const xLabelRotateOptions = {
+    xAxis: {
+        axisLabel: {
+            rotate: -30
+        }
+    }
+}
+const initOptions = (data, theme, xLabelRotate) => {
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
+    if (xLabelRotate) {
+        themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
+        themeLineOptions.grid.right = '80'
+        themeLineOptions.grid.bottom = '40'
+    }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         series: [{
             data: data.data,
