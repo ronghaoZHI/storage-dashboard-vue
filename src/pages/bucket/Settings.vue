@@ -685,6 +685,9 @@ const convertNewUserItem = item => {
         padding-bottom: 8px;
         border-bottom: 1px solid #f2f1f6;
     }
+    .rules-number {
+        margin-left: 10px;
+    }
     .legend-list {
         float: right;
     }
