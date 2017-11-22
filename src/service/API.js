@@ -64,3 +64,5 @@ export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)
 
 export const getTranscoderUrl = (url) => groupTranscoder(url)
+
+export const getBillOldUrl = (url) => group(`bill/storage_old${url}`)
