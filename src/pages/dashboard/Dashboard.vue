@@ -126,7 +126,7 @@ export default {
             showChart: 0,
             dateDividedBefore: '20171130',
             dateDivided: '20171201',
-            bucketList: this.bucketList,
+            bucketList: [],
             selectedBucket: 'All Buckets',
             dateDefault: {
                 today: [lastNDays(0), lastNDays(0)],

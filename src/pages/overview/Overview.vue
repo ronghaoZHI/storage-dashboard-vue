@@ -12,36 +12,42 @@
                     <div class="storage-card">
                         <div class="title">
                             <div class="images"></div>
-                            <span class="label">
-                                本月存储容量
-                            </span>
-                            <span class="numbers">
-                                1013.023 <span>GB</span>
-                            </span>
+                            <div class="texts">
+                                <p class="label">
+                                    本月存储容量
+                                </p>
+                                <p class="numbers">
+                                    {{originOverview.capacity[0]}} <span>{{originOverview.capacity[1]}}</span>
+                                </p>
+                            </div>
                         </div>
                         <div class="charts"></div>
                     </div>
                     <div class="storage-card">
                         <div class="title">
                             <div class="images"></div>
-                            <span class="label">
-                                本月存储容量
-                            </span>
-                            <span class="numbers">
-                                1013.023 <span>GB</span>
-                            </span>
+                            <div class="texts">
+                                <p class="label">
+                                    本月外网容量
+                                </p>
+                                <p class="numbers">
+                                    {{originOverview.traffic[0]}} <span>{{originOverview.traffic[1]}}</span>
+                                </p>
+                            </div>
                         </div>
                         <div class="charts"></div>
                     </div>
                     <div class="storage-card">
                         <div class="title">
                             <div class="images"></div>
-                            <span class="label">
-                                本月存储容量
-                            </span>
-                            <span class="numbers">
-                                1013.023 <span>GB</span>
-                            </span>
+                            <div class="texts">
+                                <p class="label">
+                                    本月请求数
+                                </p>
+                                <p class="numbers">
+                                    {{originOverview.request[0]}} <span>{{originOverview.request[1]}}</span>
+                                </p>
+                            </div>
                         </div>
                         <div class="charts"></div>
                     </div>
@@ -53,10 +59,36 @@
                             <span class="separator-info">文件访问规则配置</span>
                         </div>
                     </div>
-                    <div class="file-ruler-card"></div>
-                    <div class="file-ruler-card"></div>
-                    <div class="file-ruler-card"></div>
-                    <div class="file-ruler-card"></div>
+                    <div class="card-section">
+                        <div class="file-ruler-card">
+                            <div>
+                                <p>404 回源</p>
+                                <p>2个 Bucket 已配置</p>
+                                <Button type="primary">查看详情</Button>
+                            </div>
+                        </div>
+                        <div class="file-ruler-card">
+                            <div>
+                                <p>404 回源</p>
+                                <p>2个 Bucket 已配置</p>
+                                <Button type="primary">查看详情</Button>
+                            </div>
+                        </div>
+                        <div class="file-ruler-card">
+                            <div>
+                                <p>404 回源</p>
+                                <p>2个 Bucket 已配置</p>
+                                <Button type="primary">查看详情</Button>
+                            </div>
+                        </div>
+                        <div class="file-ruler-card">
+                            <div>
+                                <p>404 回源</p>
+                                <p>2个 Bucket 已配置</p>
+                                <Button type="primary">查看详情</Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="file-handle">
                     <div class="section-separator">
@@ -65,27 +97,154 @@
                             <span class="separator-info">文件处理</span>
                         </div>
                     </div>
-                    <div class="file-handle-card"></div>
-                    <div class="file-handle-card"></div>
-                    <div class="file-handle-card"></div>
+                    <div class="card-section">
+                        <div class="file-handle-card">
+                            <div>
+                                <p>图片服务</p>
+                                <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
+                                <Button type="primary">查看详情</Button>
+                            </div>
+                        </div>
+                        <div class="file-handle-card">
+                            <div>
+                                <p>图片服务</p>
+                                <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
+                                <Button type="primary">查看详情</Button>
+                            </div>
+                        </div>
+                        <div class="file-handle-card">
+                            <div>
+                                <p>图片服务</p>
+                                <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
+                                <Button type="primary">查看详情</Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </Col>
             <Col span="5" class="right-section">
                 <div class="button-section">
-                    button-section
+                    <button>FAQ</button>
+                    <button>SDK</button>
+                    <button>控制台使用手册</button>
                 </div>
-                <div class="bucket-section"></div>
-                <div class="update-history"></div>
+                <div class="bucket-section">
+                    <div class="section-separator">
+                        <div class="separator-body">
+                            <span class="separator-icon"></span>
+                            <span class="separator-info">我的存储</span>
+                        </div>
+                    </div>
+                    <div class="bucket">
+                        <p>5</p>
+                        <p>Bucket</p>
+                    </div>
+                    <div class="buttons">
+                        <Button size="small" type="primary">新建 Bucket</Button>
+                        <Button size="small" type="ghost">我的密钥</Button>
+                    </div>
+                </div>
+                <div class="update-history">
+                    <div class="section-separator">
+                        <div class="separator-body">
+                            <span class="separator-icon"></span>
+                            <span class="separator-info">产品更新</span>
+                        </div>
+                    </div>
+                    <TimelineItem color="green">
+                    <Icon type="trophy" slot="dot"></Icon>
+                    <span>发布里程碑版本</span>
+                </TimelineItem>
+                <TimelineItem>发布1.0版本</TimelineItem>
+                <TimelineItem>发布2.0版本</TimelineItem>
+                <TimelineItem>发布3.0版本</TimelineItem>
+                </div>
             </Col>
         </Row>
     </div>
 </template>
 <script>
+import ECharts from 'vue-echarts/components/ECharts.vue'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/chart/map'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/legend'
+import 'echarts/lib/component/title'
+import { getBucketList } from '@/service/Data'
+import { getAnalysisUrl } from '@/service/API'
+import user from '@/store/modules/user'
+import { bytes, times, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 export default {
     data () {
-        return {}
+        return {
+            thisMonth: [new Date(new Date().setDate(1)), lastNDays(1)],
+            originOverview: {
+                capacity: [],
+                traffic: [],
+                request: []
+            },
+            bucketList: []
+        }
+    },
+    computed: {
+        dateRange () {
+            return formatDate(this.thisMonth[0]) + '-' + formatDate(this.thisMonth[1])
+        }
+    },
+    created () {
+        this.convertBucketList()
+        this.getOverviewsData()
+    },
+    methods: {
+        async convertBucketList () {
+            try {
+                let res = await getBucketList()
+                this.bucketList = [...res.Buckets]
+            } catch (error) {
+                console.log(error)
+                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
+            }
+        },
+        getOverviewsData () {
+            try {
+                this.$http.get(this.getApiURL('overview')).then(res => {
+                    let data = res.data
+                    this.originOverview = {
+                        capacity: this.convertData(data.capacity, true),
+                        traffic: this.convertData({
+                            value: data.upload_space.value + data.download_space.value,
+                            unit: data.upload_space.unit
+                        }, true),
+                        request: this.convertData({
+                            value: data.download_count.value + data.delete_count.value + data.upload_count.value,
+                            unit: data.download_count.unit
+                        }, true)
+                    }
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        convertData (item, splite = false) {
+            console.log(item)
+            if (!item) return '000'
+            return splite ? item.unit === 'byte' ? bytesSpliteUnits(item.value) : timesSpliteUnits(item.value) : item.unit === 'byte' ? bytes(item.value) : times(item.value)
+        },
+        getApiURL (operation) {
+            let path = operation += '?custom_range=' + this.dateRange
+            if (user.state.type === 'admin') {
+                path += '&customer=' + user.state.subUser.username
+            }
+            return getAnalysisUrl(path)
+        }
+    },
+    components: {
+        chart: ECharts
     }
 }
+const fixDate = n => n < 10 ? '0' + n : '' + n
+const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
+const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
 </script>
 <style scoped lang="less">
 .@{css-prefix}overview {
@@ -108,6 +267,7 @@ export default {
                 .title {
                     height: 100px;
                     border-bottom: @common-border;
+                    display: flex;
 
                     .images {
                         position: relative;
@@ -115,30 +275,47 @@ export default {
                         width: 80px;
                         top: 10px;
                         left: 10px;
-                        background-image: url('../../assets/overview/capacity.png');
                         background-size: 80px;
                     }
 
-                    .label {
-                        position: relative;
-                        left: 100px;
-                        top: -78px;
-                        font-size: 14px;
-                        color: #475669;
-                    }
+                    .texts {
+                        display: inline-block;
+                        height: 80px;
+                        flex: 1;
 
-                    .numbers {
-                        position: relative;
-                        left: 12px;
-                        top: -32px;
-                        font-size: 26px;
-                        color: #475669;
-
-                        span {
+                        .label {
+                            position: relative;
+                            left: 20px;
+                            top: 20px;
                             font-size: 14px;
+                            color: #475669;
+                        }
+
+                        .numbers {
+                            position: relative;
+                            left: 20px;
+                            top: 20px;
+                            font-size: 34px;
+                            color: #475669;
+
+                            span {
+                                font-size: 14px;
+                            }
                         }
                     }
                 }
+            }
+
+            .storage-card:nth-child(2) .images {
+                background-image: url('../../assets/overview/capacity.png');
+            }
+
+            .storage-card:nth-child(3) .images {
+                background-image: url('../../assets/overview/traffic.png');
+            }
+
+            .storage-card:nth-child(4) .images {
+                background-image: url('../../assets/overview/request.png');
             }
 
             .storage-card:not(:last-child) {
@@ -147,28 +324,246 @@ export default {
         }
 
         .file-ruler {
-            .file-ruler-card{
-                display: inline-block;
-                height: 80px;
-                border: @common-border;
-                width: calc(~'25% - 15px');
+
+            .card-section{
+                width: 100%;
+                .fb(space-between, center);
             }
 
-            .file-ruler-card:not(:last-child) {
-                margin-right: 16px;
+            .file-ruler-card {
+                height: 100px;
+                text-align: left;
+                background-size: 70px 65px;
+                background-position:10px center;
+                border: @common-border;
+                background-repeat: no-repeat;
+                flex: 1;
+
+                button {
+                    display: none;
+                }
+
+                p {
+                    width: calc(~'100% - 90px');
+                }
+
+                p:first-child {
+                    position: relative;
+                    font-size: 16px;
+                    top: 20px;
+                    left: 90px;
+                }
+                p:nth-child(2) {
+                    position: relative;
+                    font-size: 14px;
+                    top: 30px;
+                    left: 90px;
+                }
+
+                &:nth-child(2),
+                &:nth-child(3)  {
+                    margin: 0 8px;
+                }
+
+                .waiting {
+                    background-image: url('../../assets/overview/waiting.png');
+                    background-position:center 20px;
+
+                    p {
+                        position: relative;
+                        font-size: 14px;
+                        top: 60px;
+                    }
+                }
+
+                &:nth-child(1) {
+                    background-image: url('../../assets/overview/permisson.png');
+                }
+
+                &:nth-child(2) {
+                    background-image: url('../../assets/overview/www.png');
+                }
+
+                &:nth-child(3) {
+                    background-image: url('../../assets/overview/404.png');
+                }
+
+                &:first-child {
+                    margin-right: 8px;
+                }
+
+                &:last-child {
+                    margin-left: 8px;
+                    background-image: url('../../assets/overview/IP.png');
+                }
+
+                p {
+                    color: #475669;
+                }
+
+                & > div {
+                    height: 98px;
+                }
+
+                & > div:hover {
+                    text-align: center;
+
+                    p {
+                        color: #f9fafc;
+                    }
+
+                    button {
+                        display: inline-block;
+                        position: relative;
+                        z-index: 100;
+                        margin-top: -10px;
+                    }
+                    background-color: #f9fafc;
+                }
             }
         }
 
         .file-handle {
-            .file-handle-card{
+
+            .card-section {
+                width: 100%;
+                .fb(space-between, center);
+            }
+            .file-handle-card {
                 display: inline-block;
-                height: 80px;
+                flex: 1;
+                height: 100px;
                 border: @common-border;
                 width: calc(~'33% - 11px');
+                text-align: left;
+                background-size: 65px;
+                background-position:30px center;
+                background-repeat: no-repeat;
+
+                button {
+                    display: none;
+                }
+
+                p {
+                    left: 120px;
+                }
+
+                p:first-child {
+                    width: calc(~'100% - 130px');
+                    position: relative;
+                    font-size: 16px;
+                    top: 14px;
+                }
+
+                p:nth-child(2) {
+                    width: calc(~'100% - 130px');
+                    position: relative;
+                    top: 20px;
+                }
+
+                &:first-child {
+                    background-image: url('../../assets/overview/pic.png');
+                }
+
+                &:nth-child(2) {
+                    background-image: url('../../assets/overview/sex.png');
+                }
+
+                &:last-child {
+                    background-image: url('../../assets/overview/video.png');
+                }
+
+                &:not(:last-child) {
+                    margin-right: 16px;
+                }
+
+                & > div {
+                    height: 98px;
+                }
+
+                & > div:hover {
+                    text-align: center;
+
+                    p {
+                        color: #f9fafc;
+                    }
+
+                    button {
+                        display: inline-block;
+                        position: relative;
+                        z-index: 100;
+                        margin-top: -40px;
+                    }
+                    background-color: #f9fafc;
+                }
+            }
+        }
+    }
+
+    .right-section {
+        .button-section {
+            button {
+                margin: 0;
+                font-size: 14px;
+                color: #475669;
+                height: 32px;
+                background: #fff;
+                padding: 0 12px;
+                border: @common-border;
+                border-radius: 0;
+            }
+        }
+
+        .bucket-section,
+        .update-history {
+            border: @common-border;
+            margin-top: 12px;
+            padding: 16px;
+
+            .section-separator {
+                margin-bottom: 20px;
+                padding-bottom: 14px;
+                border-bottom: @common-border;
+            }
+        }
+
+        .bucket-section {
+            height: 250px;
+            text-align: center;
+
+            .bucket {
+                height: 120px;
+                width: 120px;
+                text-align: center;
+                margin: 5px auto 0 auto;
+                background-color: #f9fafc;
+                background-image: url('../../assets/bucket.png');
+                background-repeat: no-repeat;
+                background-position: center 25px;
+                background-size: 50px;
+
+                p:first-child {
+                    position: relative;
+                    top: 42px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #fff;
+                }
+
+                p:last-child {
+                    position: relative;
+                    top: 52px;
+                    font-size: 14px;
+                    color: #475669;
+                }
             }
 
-            .file-handle-card:not(:last-child) {
-                margin-right: 16px;
+            .buttons {
+                margin-top: 20px;
+
+                button:last-child {
+                    margin-left: 8px;
+                }
             }
         }
     }

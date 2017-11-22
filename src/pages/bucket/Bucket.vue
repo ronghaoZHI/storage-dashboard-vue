@@ -236,7 +236,7 @@ const batchDeletion = (list, bucket) => {
             border-radius: 5px;
             margin: 4px;
             padding: 5px;
-            background: url('../../assets/Bucket_folder.png') no-repeat center;
+            background: url('../../assets/bucket.png') no-repeat center;
             background-size: 66px 66px;
 
             &:hover{
