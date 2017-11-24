@@ -7,7 +7,7 @@
         </div>
         <div class="content">
             <div class="files">
-                <div class="progress">
+                <div class="progress" :class="{redBack: myData.cpu > 20}">
                     <span class="file-count io-count" :class="{redBack: myData.ioutil > 90}">
                         IO : {{myData.ioutil}}%
                     </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">{{$t('SYSTEM.CAPACITY')}} : {{myData.used_rate}}%</span>
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="details">
-                <p><span>ID : </span>{{myData.partition_id}}</p>  
+                <p><span>ID : </span>{{myData.partition_id}}</p>
                 <p><span>IDC : </span>{{myData.idc}}</p>
                 <p><span>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} : </span>{{myData.space}}/{{myData.capacity}}</p>
                 <p><span>{{$t('SYSTEM.MEDIA_TYPE')}} : </span>{{myData.media_type}}</p>
@@ -100,10 +100,10 @@ export default {
                 {name: 'path', value: this.myData.partition_path},
                 {name: 'IDC', value: this.myData.idc},
                 {name: 'IP', value: this.myData.inn_ips[0]},
-                {name: this.$t('SYSTEM.CAPACITY'), value: `${this.myData.used_rate}%`},
-                {name: 'CPU', value: `${this.myData.cpu}%`, tooltip: this.$t('SYSTEM.PARTITION_CPU_INFO')},
+                {name: this.$t('SYSTEM.CAPACITY'), value: `${this.myData.used_rate}%`, isRed: this.myData.used_rate > 99},
+                {name: 'CPU', value: `${this.myData.cpu}%`, tooltip: this.$t('SYSTEM.PARTITION_CPU_INFO'), isRed: this.myData.cpu > 20},
                 {name: this.$t('SYSTEM.MEDIA_TYPE'), value: this.myData.media_type},
-                {name: 'IO', value: `${this.myData.ioutil}%`},
+                {name: 'IO', value: `${this.myData.ioutil}%`, isRed: this.myData.ioutil > 90},
                 {name: this.$t('SYSTEM.RW_STATUS'), value: this.myData.readonlyFont},
                 {name: this.$t('SYSTEM.IS_DEL'), value: this.myData.failFont, isRed: this.myData.fail}]
             let detailHead = this.detailHead

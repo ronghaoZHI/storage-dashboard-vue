@@ -1321,7 +1321,7 @@ export const messages = {
             MIGRATE: '迁移',
             MIGRATION: '迁移中',
             BASIC_INFO: '基础信息',
-            PARTITION_INFO: '磁盘信息',
+            PARTITION_INFO: '对应磁盘信息',
             RW_STATUS: '读写状态',
             IS_DEL: '可用状态',
             NORMAL: '可用',

@@ -22,7 +22,7 @@
             </ul>
             <h1 class="no-data" v-if="data.tableData.length === 0">No Group</h1>
             <ul class="partition-list" v-for="td in data.tableData" :key="td.partition_idx">
-                <li v-for='dh in data.detailHead' :key="dh.name">{{td[dh.value]}}</li>
+                <li v-for='dh in data.detailHead' :key="dh.name" :class="{redFont: redList(dh.value,td[dh.value])}">{{td[dh.value]}}</li>
             </ul>
         </div>
     </div>
@@ -34,7 +34,13 @@ export default {
         return {
         }
     },
-    props: ['titles', 'data', 'spinGroup']
+    props: ['titles', 'data', 'spinGroup'],
+    methods: {
+        redList (name, value) {
+            const num = parseFloat(value.slice(0, -1))
+            return name === 'ioutil' && num > 90 || name === 'space' && num > 99 || name === 'cpu' && num > 20
+        }
+    }
 }
 </script>
 <style lang="less" scoped>

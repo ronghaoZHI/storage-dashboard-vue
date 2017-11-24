@@ -23,9 +23,9 @@
                 </ul>
                 <ul class="ip-list" v-for="(pt,index) in data.partition" :key="pt.partition_idx">
                     <li>{{pt.inn_ips[0]}}</li>
-                    <li v-bind:class="{'system-warning': pt.used_rate >= 90}">{{pt.used_rate}}%</li>
-                    <li v-bind:class="{'system-warning': pt.ioutil >= 90}">{{pt.ioutil}}%</li>
-                    <li v-bind:class="{'system-warning': pt.cpu >= 90}">{{pt.cpu.toFixed(2)}}%</li>
+                    <li v-bind:class="{'redFont': pt.used_rate > 99}">{{pt.used_rate}}%</li>
+                    <li v-bind:class="{'redFont': pt.ioutil > 90}">{{pt.ioutil}}%</li>
+                    <li v-bind:class="{'redFont': pt.cpu > 20}">{{pt.cpu.toFixed(2)}}%</li>
                     <li v-if="data.traffic && pt.partition_id === data.traffic.src_partition_id[0]">{{$t('SYSTEM.MIGRATION')}}</li>
                     <li v-else><span class="ip-button" @click="migrate(pt,index)">{{$t('SYSTEM.MIGRATE')}}</span></li>
                 </ul>
