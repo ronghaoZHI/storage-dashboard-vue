@@ -114,8 +114,8 @@ export default {
                 {name: this.$t('SYSTEM.USED_CAPACITY'), value: bytes(this.data.space_used)},
                 {name: this.$t('SYSTEM.CREATE_TIME'), value: this.data.ts}]
             return {
-                tableData, 
-                basicInfo, 
+                tableData,
+                basicInfo,
                 detailHead: this.detailHead
             }
         }
