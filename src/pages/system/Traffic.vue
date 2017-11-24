@@ -43,7 +43,7 @@ export default {
             listHeader: [{
                 title: 'Group ID',
                 key: 'group_id',
-                width: 100
+                width: 150
             }, {
                 title: this.$t('SYSTEM.PROGRESS'),
                 key: 'process_percent',
@@ -69,30 +69,30 @@ export default {
             }, {
                 title: this.$t('SYSTEM.GROUP_STATUS'),
                 key: 'group_status',
-                width: 120
+                width: 150
             }, {
                 title: this.$t('SYSTEM.SOURCE_DISK'),
                 key: 'source_disk',
-                width: 270,
+                width: 200,
                 render: (h, params) => {
-                    return h('div', {style: {padding: '8px 0'}}, params.row.source_disk.map(item => h('Tooltip', {
+                    return h('div', {style: {padding: '8px 0'}}, params.row.source_disk.map(item => [h('Tooltip', {
                         props: {
-                            content: `${item[0]}/${item[1]}`,
-                            placement: 'top-start'
+                            content: item[2],
+                            placement: 'top-end'
                         }
-                    }, [h('div', {style: {margin: '2px 0'}}, item[2])])))
+                    }, [h('div', {style: {margin: '2px 0'}}, `${item[0]}:/s2/drive/${item[1]}`)]), h('br')]))
                 }
             }, {
                 title: this.$t('SYSTEM.TARGET_DISK'),
                 key: 'target_disk',
-                width: 270,
+                width: 200,
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {
-                            content: `${params.row.target_disk[0]}/${params.row.target_disk[1]}`,
-                            placement: 'top-start'
+                            content: params.row.target_disk[2],
+                            placement: 'top-end'
                         }
-                    }, params.row.target_disk[2])
+                    }, `${params.row.target_disk[0]}:/s2/drive/${params.row.target_disk[1]}`)
                 }
             }]
         }
@@ -171,7 +171,6 @@ export default {
 
         .status {
             .refresh-section {
-                display: inline-block;
                 float: right;
                 position: relative;
                 top: 6px;
