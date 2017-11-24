@@ -25,6 +25,7 @@ const thousands = numbers => `${numbers}`.replace(/\d{1,3}(?=(\d{3})+$)/g, funct
     return s + ','
 })
 const bytes = (bytes, digit = 1) => {
+    if (bytes === undefined) return '-'
     let bytesArray = bytesSpliteUnits(bytes, digit = 1)
 
     return bytesArray[0] + ' ' + bytesArray[1]
@@ -47,6 +48,7 @@ const bytesSpliteUnits = (bytes, digit = 1) => {
     return [number, units[exponent]]
 }
 const times = (times) => {
+    if (times === undefined) return '-'
     times = typeof (times) === 'string' ? times : times.toString()
     let len = times.length
     if (len < 3) return times

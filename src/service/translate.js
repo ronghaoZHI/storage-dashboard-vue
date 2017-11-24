@@ -341,9 +341,10 @@ export const messages = {
             NEXT_PAGE: 'Next page'
         },
         DASHBOARD: {
-            THIS_MONTH: 'this month',
+            THIS_MONTH: 'This month',
             LAST_MONTH: 'last month',
             YESTERDAY: 'Yesterday',
+            TODAY: 'Today',
             SEVEN_DAYS: 'Last 7 days',
             THIRTY_DAYS: 'Last 30 days',
             THIS_SEASON: 'this season',
@@ -1109,6 +1110,7 @@ export const messages = {
             THIS_MONTH: '本月',
             LAST_MONTH: '上月',
             YESTERDAY: '昨天',
+            TODAY: '今天',
             SEVEN_DAYS: '近7天',
             THIRTY_DAYS: '近30天',
             THIS_SEASON: '本季度',
