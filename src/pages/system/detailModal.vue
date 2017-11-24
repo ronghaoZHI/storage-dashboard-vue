@@ -1,11 +1,5 @@
 <template>
 <div>
-    <div class="section-separator">
-        <div class="separator-body">
-            <span class="separator-icon"></span>
-            <span class="separator-info" style="font-size: 18px">{{$t('SYSTEM.BASIC_INFO')}}</span>
-        </div>
-    </div>
     <div class="group">
         <div class="info-title">{{titles.groupTitle}}</div>
         <div class="content">

@@ -1,15 +1,16 @@
 <template>
     <div class="bsc-system bsc-group">
         <div class="header">
-            <div class="search">
+            <div class="search" @keyup.enter="getGroupList(false)">
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
                     <Icon slot="prepend" size="18" type="ios-grid-view"></Icon>
                     <Option value="group_id">Group ID</Option>
-                    <Option value="node_ip">Node IP</Option>
+                    <Option value="node_ip">Server IP</Option>
                     <Option value="partition_id">Partition ID</Option>
                 </Select>
-                <Input v-model="searchValue" :placeholder="$t('SYSTEM.PLEASE_ENTER')+ searchType" style="width:260px"></Input>
+                <Input v-model="searchValue" :placeholder="$t('SYSTEM.PLEASE_ENTER')" style="width:260px"></Input>
                 <Button type="primary" @click="getGroupList(false)">{{$t('SYSTEM.SEARCH')}}</Button>
+                <Button type="primary" @click="resetParams()">{{$t('PUBLIC.RESET')}}</Button>
             </div>
             <div class="status">
                 <span class="group-status-prefix">{{$t('SYSTEM.GROUP_STATUS')}}:</span>
@@ -49,7 +50,7 @@ export default {
         return {
             searchType: 'group_id',
             searchValue: '',
-            read_only: 'ignore',
+            read_only: 0,
             showChart: 'group_id',
             groupList: [],
             nextGroupId: 0,
@@ -72,8 +73,8 @@ export default {
             this.$Loading.start()
             try {
                 let groupData = await this.$http.get(GROUP_LIST, { params: {
-                    start_group_id: this.searchType === 'group_id' ? this.searchValue.replace(/\s+/g, '') || this.nextGroupId || 0 : 0,
-                    [this.searchType]: this.searchValue.replace(/\s+/g, ''),
+                    start_group_id: this.searchType === 'group_id' ? parseInt(this.searchValue.replace(/\s+/g, '')) || this.nextGroupId || 0 : 0,
+                    [this.searchType]: this.searchValue.replace(/\s+/g, '') || 'ignore',
                     count: this.pageCount,
                     read_only: this.read_only
                 }})
@@ -108,6 +109,10 @@ export default {
                 }
             })
         },
+        resetParams () {
+            this.cleanParams()
+            this.searchType = 'group_id'
+        },
         cleanParams () {
             this.nextGroupId = 0
             this.start_group_id = 0
@@ -120,7 +125,6 @@ export default {
             this.getGroupList(false, true)
         },
         'showChart' (to, from) {
-            this.cleanParams()
             this.getSortedGroupList(this.groupList, to)
         }
     }
