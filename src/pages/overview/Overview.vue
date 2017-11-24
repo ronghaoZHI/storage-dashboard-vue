@@ -62,8 +62,16 @@
                     <div class="card-section">
                         <div class="file-ruler-card">
                             <div>
-                                <p>404 回源</p>
+                                <p>权限设置</p>
+                                <p><span>{{permissionsList.length}}</span> 个Bucket 已配置</p>
+                                <Button type="primary" @click="showPermissionModal = true">查看详情</Button>
+                            </div>
+                        </div>
+                        <div class="file-ruler-card">
+                            <div>
+                                <p>自定义域名</p>
                                 <p>2个 Bucket 已配置</p>
+                                <p class="waiting">敬请期待</p>
                                 <Button type="primary">查看详情</Button>
                             </div>
                         </div>
@@ -76,14 +84,7 @@
                         </div>
                         <div class="file-ruler-card">
                             <div>
-                                <p>404 回源</p>
-                                <p>2个 Bucket 已配置</p>
-                                <Button type="primary">查看详情</Button>
-                            </div>
-                        </div>
-                        <div class="file-ruler-card">
-                            <div>
-                                <p>404 回源</p>
+                                <p>tables 黑白名单</p>
                                 <p>2个 Bucket 已配置</p>
                                 <Button type="primary">查看详情</Button>
                             </div>
@@ -107,15 +108,15 @@
                         </div>
                         <div class="file-handle-card">
                             <div>
-                                <p>图片服务</p>
-                                <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
+                                <p>图片鉴黄</p>
+                                <p>智能内容识别服务，快速识别色情图片</p>
                                 <Button type="primary">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-handle-card">
                             <div>
-                                <p>图片服务</p>
-                                <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
+                                <p>媒体转码</p>
+                                <p>支持自动转码和主动转码，将多媒体数据转码成多种终端播放格式</p>
                                 <Button type="primary">查看详情</Button>
                             </div>
                         </div>
@@ -161,6 +162,9 @@
                 </div>
             </Col>
         </Row>
+        <Modal v-model="showPermissionModal" title='showPermissionModal' width="700" class="permission-modal">
+            <Table :stripe="true" :columns="permissionHeader" :data="permissionsList"></Table>
+        </Modal>
     </div>
 </template>
 <script>
@@ -172,6 +176,7 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { getBucketList } from '@/service/Data'
 import { getAnalysisUrl } from '@/service/API'
+import { handler } from '@/service/Aws'
 import user from '@/store/modules/user'
 import { bytes, times, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 export default {
@@ -183,7 +188,25 @@ export default {
                 traffic: [],
                 request: []
             },
-            bucketList: []
+            permissionsList: [],
+            bucketList: [],
+            showPermissionModal: false,
+            permissionHeader: [{
+                title: 'Name',
+                width: 90,
+                key: 'Name'
+            }, {
+                title: 'Grants',
+                key: 'Grants'
+            }, {
+                title: 'Actions',
+                key: 'actions',
+                width: 80,
+                align: 'right',
+                render: (h, params) => {
+                    return '管理'
+                }
+            }]
         }
     },
     computed: {
@@ -199,6 +222,15 @@ export default {
         async convertBucketList () {
             try {
                 let res = await getBucketList()
+                res.Buckets.forEach((item) => {
+                    this.getBucketAcl(item.Name).then(acl => {
+                        this.convertGrants(acl.Grants)
+                        acl.Grants.length > 1 && this.permissionsList.push({
+                            name: item.Name,
+                            permissions: this.convertGrants(acl.Grants)
+                        })
+                    })
+                })
                 this.bucketList = [...res.Buckets]
             } catch (error) {
                 console.log(error)
@@ -225,8 +257,22 @@ export default {
                 console.log(error)
             }
         },
+        convertGrants (grants) {
+            let permissions = {
+                allUser: [],
+                AuthUser: []
+            }
+            _.each(grants, grant => {
+                if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers') {
+                    permissions.allUser.push(grant.Permission)
+                } else if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers') {
+                    permissions.AuthUser.push(grant.Permission)
+                }
+            })
+
+            return permissions
+        },
         convertData (item, splite = false) {
-            console.log(item)
             if (!item) return '000'
             return splite ? item.unit === 'byte' ? bytesSpliteUnits(item.value) : timesSpliteUnits(item.value) : item.unit === 'byte' ? bytes(item.value) : times(item.value)
         },
@@ -236,6 +282,15 @@ export default {
                 path += '&customer=' + user.state.subUser.username
             }
             return getAnalysisUrl(path)
+        },
+        async getBucketAcl (name) {
+            try {
+                return await handler('getBucketAcl', {
+                    Bucket: name
+                })
+            } catch (error) {
+                console.log(error)
+            }
         }
     },
     components: {
@@ -345,6 +400,10 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
 
                 p {
                     width: calc(~'100% - 90px');
+
+                    span {
+                        color: #f85959;
+                    }
                 }
 
                 p:first-child {
@@ -365,23 +424,37 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                     margin: 0 8px;
                 }
 
-                .waiting {
-                    background-image: url('../../assets/overview/waiting.png');
-                    background-position:center 20px;
-
-                    p {
-                        position: relative;
-                        font-size: 14px;
-                        top: 60px;
-                    }
-                }
-
                 &:nth-child(1) {
                     background-image: url('../../assets/overview/permisson.png');
                 }
 
                 &:nth-child(2) {
                     background-image: url('../../assets/overview/www.png');
+                    .waiting {
+                        display: none;
+                    }
+
+                    & > div:hover {
+                        background-image: url('../../assets/overview/waiting.png');
+                        background-position:center 20px;
+                        background-repeat: no-repeat;
+                        button {
+                            display: none;
+                        }
+
+                        p:not(.waiting) {
+                            display: none;
+                        }
+
+                        .waiting {
+                            display: inline-block;
+                            width: 100%;
+                            color: #475669;
+                            position: relative;
+                            font-size: 14px;
+                            top: 60px;
+                        }
+                    }
                 }
 
                 &:nth-child(3) {
@@ -409,14 +482,14 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                     text-align: center;
 
                     p {
-                        color: #f9fafc;
+                        display: none;
                     }
 
                     button {
                         display: inline-block;
                         position: relative;
                         z-index: 100;
-                        margin-top: -10px;
+                        margin-top: 35px;
                     }
                     background-color: #f9fafc;
                 }
@@ -485,14 +558,14 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                     text-align: center;
 
                     p {
-                        color: #f9fafc;
+                        display: none;
                     }
 
                     button {
                         display: inline-block;
                         position: relative;
                         z-index: 100;
-                        margin-top: -40px;
+                        top: 33px;
                     }
                     background-color: #f9fafc;
                 }
