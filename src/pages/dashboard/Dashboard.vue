@@ -136,7 +136,7 @@ import deleteTrafficDark from '../../assets/dashboard/delete-traffic-dark.png'
 import { getBucketList } from '@/service/Data'
 import { getBillOldUrl, getBillUrl } from '@/service/API'
 import user from '@/store/modules/user'
-import { bytes, times, timesK, date, dateTime, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
+import { bytes, times, timesK, dateTime, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
@@ -188,7 +188,7 @@ export default {
             return this.$store.state.theme
         },
         xLabelRotate: function () {
-            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 20
+            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 12
         }
     },
     created () {
@@ -234,7 +234,7 @@ export default {
                         this.exportData = []
                         _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
                             this.exportData.push({
-                                time: date(time),
+                                time: dateTime(time),
                                 capacity: this.distributed.space_used[index],
                                 uploadTraffic: this.distributed.flow_up[index],
                                 downloadTraffic: this.distributed.flow_down[index],
@@ -273,7 +273,7 @@ export default {
                         this.exportData = []
                         _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
                             this.exportData.push({
-                                time: date(time),
+                                time: dateTime(time),
                                 capacity: this.distributed.space_used[index],
                                 uploadTraffic: this.distributed.flow_up_cdn[index] + this.distributed.flow_up_pub[index],
                                 cdnUploadTraffic: this.distributed.flow_up_cdn[index],
@@ -401,7 +401,7 @@ export default {
                         this.exportData = []
                         _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
                             this.exportData.push({
-                                time: date(time),
+                                time: dateTime(time),
                                 capacity: echartData.space_used[index],
                                 uploadTraffic: echartData.flow_up[index],
                                 cdnUploadTraffic: echartData.flow_up_cdn[index],
@@ -612,7 +612,7 @@ const lineOptions = {
                 fontSize: 14
             },
             formatter: function (value) {
-                return date(value)
+                return dateTime(value)
             }
         }
     },
@@ -673,10 +673,13 @@ const xLabelRotateOptions = {
 // old storage
 const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate) {
+    if (xLabelRotate || (newOneDayFlag && data.data.length >= 12)) {
         themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
         themeLineOptions.grid.right = '80'
         themeLineOptions.grid.bottom = '40'
+    }
+    if (newOneDayFlag) {
+        themeLineOptions.xAxis.interval = 3600000
     }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         series: [{
@@ -704,7 +707,7 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + date(params[0].value[0])
+                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + dateTime(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
                     res += data.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
@@ -726,10 +729,13 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
 // new storage
 const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate) {
+    if (xLabelRotate || (newOneDayFlag && dataTotal.data.length >= 12)) {
         themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
         themeLineOptions.grid.right = '80'
         themeLineOptions.grid.bottom = '40'
+    }
+    if (newOneDayFlag) {
+        themeLineOptions.xAxis.interval = 3600000
     }
     themeLineOptions.grid.top = '60'
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
@@ -783,7 +789,7 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + date(params[0].value[0])
+                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + dateTime(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
                     res += dataTotal.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])

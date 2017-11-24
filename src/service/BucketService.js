@@ -58,29 +58,37 @@ const times = (times) => {
     }
     return result
 }
-const timesK = (times) => {
+const timesK = (times, digit = 0) => {
     if (typeof times !== 'number') {
         times = parseFloat(times)
     }
-    if (times < 1000) {
-        return times
+    if (times < 1) {
+        return 0
     } else if (isNaN(times) || !isFinite(times)) {
         return '-'
-    } else {
-        return (times / 1000).toFixed(1) + 'K'
     }
+
+    const units = ['', 'Thousand', 'Million', 'Billion']
+    const exponent = Math.min(Math.floor(Math.log(times) / Math.log(1000)), units.length - 1)
+    const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(digit)
+
+    return number + units[exponent]
 }
-const timesSpliteUnits = (times) => {
+const timesSpliteUnits = (times, digit = 0) => {
     if (typeof times !== 'number') {
         times = parseFloat(times)
     }
-    if (times < 1000) {
-        return [times]
+    if (times < 1) {
+        return [0]
     } else if (isNaN(times) || !isFinite(times)) {
         return ['-']
-    } else {
-        return [(times / 1000).toFixed(1), 'K']
     }
+
+    const units = ['', 'Thousand', 'Million', 'Billion']
+    const exponent = Math.min(Math.floor(Math.log(times) / Math.log(1000)), units.length - 1)
+    const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(digit)
+
+    return [number, units[exponent]]
 }
 const date = (value) => {
     let date = new Date(value)
@@ -92,8 +100,12 @@ const date = (value) => {
 const dateTime = (value) => {
     let date = new Date(value)
     let month = date.getMonth() >= 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
-    let texts = [date.getFullYear(), month, date.getDate()]
-    return texts.join('-') + ' ' + date.getHours() + '点'
+    let day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+    let dateTexts = [month, day]
+    let hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+    let minute = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+    let timeTexts = [hour, minute]
+    return dateTexts.join('-') + ' ' + timeTexts.join(':')
 }
 
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
