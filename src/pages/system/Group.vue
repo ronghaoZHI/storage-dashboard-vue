@@ -22,10 +22,10 @@
         <div class="content">
             <Spin size="bigger" fix v-if="spinShow"></Spin>
             <div class="section-chart-tab">
-                <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">{{$t('SYSTEM.CREATE_TIME')}}</button>
-                <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU</button>
-                <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="tabToggle('ioutil')">IO</button>
-                <button v-bind:class="{buttonFocus: showChart === 'space'}" @click="tabToggle('space')">Capacity</button>
+                <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">{{$t('SYSTEM.CREATE_TIME')}} <Icon type="arrow-down-c" size="16"></Icon></button>
+                <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU <Icon type="arrow-down-c" size="16"></Icon></button>
+                <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="tabToggle('ioutil')">IO <Icon type="arrow-down-c" size="16"></Icon></button>
+                <button v-bind:class="{buttonFocus: showChart === 'space'}" @click="tabToggle('space')">Capacity <Icon type="arrow-down-c" size="16"></Icon></button>
                 <div class="refresh-section">
                     <span @click="getGroupList(false, true)"><Icon type="refresh" size="20"></Icon></span>
                 </div>
@@ -93,10 +93,10 @@ export default {
                 group.cpu = 0
                 group.ioutil = 0
                 group.space = 0
-                group.partition.length > 0 && group.partition.forEach(partition => {
+                _.forIn(group.partition, (partition, kes) => {
                     if (partition.cpu > group.cpu) group.cpu = partition.cpu
                     if (partition.ioutil > group.ioutil) group.ioutil = partition.ioutil
-                    if (partition.space > group.space) group.space = partition.space
+                    if (partition.used_rate > group.space) group.space = partition.used_rate
                 })
             })
         },

@@ -7,26 +7,27 @@
                 <button v-bind:class="{statusButtonFocus: tabName === 'unused'}" @click="tabToggle('unused')">{{$t('SYSTEM.PARTITION_UNUSED')}}</button>
                 <button v-bind:class="{statusButtonFocus: tabName === 'deleted'}" @click="tabToggle('deleted')">{{$t('SYSTEM.PARTITION_DELETED')}}</button>
             </div>
-            <div class="search" v-if="tabName !== 'deleted'">
-                <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.idc">
+            <div class="search" v-if="tabName !== 'deleted'" @keyup.enter="searchList">
+                <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.idc" @on-change="searchList">
                     <Icon slot="prepend" size="18" type="android-person"></Icon>
                     <Option value="ignore" key="ignore">{{$t('SYSTEM.IDC_ALL')}}</Option>
                     <Option v-for="idc in idcAll" :value="idc" :key="idc">{{idc}}</Option>
                 </Select>
-                <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.media_type">
+                <Select :prepend="true" style="width:180px;margin-right:8px;" v-model="search.media_type" @on-change="searchList">
                     <Icon slot="prepend" size="18" type="soup-can"></Icon>
                     <Option v-for="media in typeArray" :value="media.value" :key="media.value">{{media.name}}</Option>
                 </Select>
-                <Select :prepend="true" style="width:180px;margin-right:8px;" v-if="tabName === 'used'" v-model="search.read_only">
+                <Select :prepend="true" style="width:180px;margin-right:8px;" v-if="tabName === 'used'" v-model="search.read_only" @on-change="searchList">
                     <Icon slot="prepend" size="18" type="compose"></Icon>
                     <Option v-for="read in readArray" :value="read.value" :key="read.value">{{read.name}}</Option>
                 </Select>
-                <Select :prepend="true" style="width:180px;margin-right:8px;" v-if="tabName === 'used'" v-model="search.fail">
+                <Select :prepend="true" style="width:180px;margin-right:8px;" v-if="tabName === 'used'" v-model="search.fail" @on-change="searchList">
                     <Icon slot="prepend" size="18" type="android-radio-button-on"></Icon>
                     <Option v-for="fail in failArray" :value="fail.value" :key="fail.value">{{fail.name}}</Option>
                 </Select>
                 <Input v-model="search.ip" :placeholder="$t('SYSTEM.SERVER_IP')" style="width:260px"></Input>
                 <Button type="primary" @click="searchList" v-if="tabName === 'used'">{{$t('SYSTEM.SEARCH')}}</Button>
+                <Button type="primary" @click="resetParams" v-if="tabName === 'used'">{{$t('PUBLIC.RESET')}}</Button>
             </div>
             <div class="search search-unused" v-if="tabName === 'unused'">
                 {{$t('SYSTEM.OVERALL_CAPACITY')}}: {{capacity}}
@@ -50,9 +51,9 @@
                     <idc-card v-for="idc in idcList" :data="idc" :key="idc.idc"></idc-card>
                 </div>
                 <div class="section-chart-tab">
-                    <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">{{$t('SYSTEM.IO_UTILIZATION_RATE')}}</button>
-                    <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="chartToggle('cpu')">CPU Load</button>
-                    <button v-bind:class="{buttonFocus: showChart === 'used_rate'}" @click="chartToggle('used_rate')">{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}}</button>
+                    <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">{{$t('SYSTEM.IO_UTILIZATION_RATE')}} <Icon type="arrow-down-c" size="16"></Icon></button>
+                    <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="chartToggle('cpu')">CPU Load <Icon type="arrow-down-c" size="16"></Icon></button>
+                    <button v-bind:class="{buttonFocus: showChart === 'used_rate'}" @click="chartToggle('used_rate')">{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} <Icon type="arrow-down-c" size="16"></Icon></button>
                     <div class="refresh-section">
                         <span @click="getUsedList"><Icon type="refresh" size="20"></Icon></span>
                     </div>
@@ -298,6 +299,19 @@ export default {
             } catch (error) {
                 this.spinContent = false
                 this.$Loading.error()
+            }
+        },
+        resetParams () {
+            this.search = {
+                idc: 'ignore',
+                media_type: 'ignore',
+                read_only: 'ignore',
+                fail: 'ignore',
+                ip: '',
+                lower_capacity: '',
+                upper_capacity: '',
+                lower_free: '',
+                upper_free: ''
             }
         }
     },
