@@ -1326,7 +1326,7 @@ export const messages = {
             IS_DEL: '可用状态',
             NORMAL: '可用',
             DELETED: '不可用',
-            NO_PROGRESS: '暂无进度',
+            NO_PROGRESS: '暂不迁移',
             REFRESH: '刷新',
             PROGRESS: '进度百分比',
             TIME_SPENT: '已用时间',
