@@ -136,7 +136,7 @@ import deleteTrafficDark from '../../assets/dashboard/delete-traffic-dark.png'
 import { getBucketList } from '@/service/Data'
 import { getBillOldUrl, getBillUrl } from '@/service/API'
 import user from '@/store/modules/user'
-import { bytes, times, timesK, date, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
+import { bytes, times, timesK, date, dateTime, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
@@ -438,37 +438,42 @@ export default {
                 this.deleteCountOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'time', '删除请求'), this.theme, this.xLabelRotate)
                 this.deleteSpaceOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_space, 'byte', '删除容量'), this.theme, this.xLabelRotate)
             } else if (url === 'new') {
-                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate)
+                let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1])
+                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate, newOneDayFlag)
                 this.uploadTrafficOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_up_cdn, this.distributed.flow_up_pub), 'byte', '上传流量'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_cdn, 'byte', 'cdn上传流量'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_pub, 'byte', 'pub上传流量'),
                     this.theme,
-                    this.xLabelRotate
+                    this.xLabelRotate,
+                    newOneDayFlag
                 )
                 this.downloadTrafficOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_down_cdn, this.distributed.flow_down_pub), 'byte', '下载流量'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_cdn, 'byte', 'cdn下载流量'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_pub, 'byte', 'pub下载流量'),
                     this.theme,
-                    this.xLabelRotate
+                    this.xLabelRotate,
+                    newOneDayFlag
                 )
                 this.downloadsOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.get_count, this.distributed.head_count), 'time', '读取请求'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.get_count, 'time', 'get读取请求'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.head_count, 'time', 'head读取请求'),
                     this.theme,
-                    this.xLabelRotate
+                    this.xLabelRotate,
+                    newOneDayFlag
                 )
                 this.uploadsOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.post_count, this.distributed.put_count), 'time', '写入请求'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.post_count, 'time', 'post写入请求'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.put_count, 'time', 'put写入请求'),
                     this.theme,
-                    this.xLabelRotate
+                    this.xLabelRotate,
+                    newOneDayFlag
                 )
-                this.deleteCountOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'time', '删除请求'), this.theme, this.xLabelRotate)
-                this.deleteSpaceOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_space, 'byte', '删除容量'), this.theme, this.xLabelRotate)
+                this.deleteCountOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'time', '删除请求'), this.theme, this.xLabelRotate, newOneDayFlag)
+                this.deleteSpaceOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_space, 'byte', '删除容量'), this.theme, this.xLabelRotate, newOneDayFlag)
             } else {
                 this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate)
                 this.uploadTrafficOptions = initNewOptions(
@@ -555,10 +560,10 @@ export default {
             to[0] && this.getInitData()
         },
         'theme' (to, from) {
-            this.setOptions()
-        },
-        'xLabelRotate' (to, from) {
-            this.setOptions()
+            let dateStart = formatDate(this.dateSelect[0])
+            let dateEnd = formatDate(this.dateSelect[1])
+            let url = dateEnd < this.dateDivided ? 'old' : dateStart >= this.dateDivided ? 'new' : 'oldAndNew'
+            this.setOptions(url)
         }
     }
 }
@@ -666,7 +671,7 @@ const xLabelRotateOptions = {
 }
 
 // old storage
-const initOptions = (data, theme, xLabelRotate) => {
+const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
     if (xLabelRotate) {
         themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
@@ -699,7 +704,7 @@ const initOptions = (data, theme, xLabelRotate) => {
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = 'Date : ' + date(params[0].value[0])
+                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + date(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
                     res += data.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
@@ -719,7 +724,7 @@ const initOptions = (data, theme, xLabelRotate) => {
 }
 
 // new storage
-const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate) => {
+const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
     if (xLabelRotate) {
         themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
@@ -778,7 +783,7 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate) =>
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = 'Date : ' + date(params[0].value[0])
+                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + date(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
                     res += dataTotal.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])

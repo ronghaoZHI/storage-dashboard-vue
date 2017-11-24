@@ -89,6 +89,13 @@ const date = (value) => {
     return texts.join('-')
 }
 
+const dateTime = (value) => {
+    let date = new Date(value)
+    let month = date.getMonth() >= 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
+    let texts = [date.getFullYear(), month, date.getDate()]
+    return texts.join('-') + ' ' + date.getHours() + '点'
+}
+
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
 
 Vue.filter('userType', (Grantee) => {
@@ -165,4 +172,4 @@ const Utf8ArrayToStr = array => {
     }
     return out
 }
-export { time, bytes, times, timesK, date, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits, thousands }
+export { time, bytes, times, timesK, date, dateTime, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits, thousands }
