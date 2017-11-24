@@ -762,8 +762,6 @@ export default {
         },
         convert2Front (data) {
             let front = _.cloneDeep(data)
-            front.failure_callback_url = data.failure_callback_url.split('http://')[1] || ''
-            front.success_callback_url = data.success_callback_url.split('http://')[1] || ''
             if (!data.outputs || isEmpty(data.outputs)) {
                 front.outputs = []
             } else {
