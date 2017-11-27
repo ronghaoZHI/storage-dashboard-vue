@@ -147,7 +147,7 @@ export default {
                 }
             }
             .idc-circel:hover .idc-detail{
-                height: 92px;
+                height: 96px;
                 padding-top: 16px;
                 padding-bottom: 16px;
             }
@@ -162,5 +162,27 @@ export default {
         }
     }
     
+}
+.dark{
+    .@{css-prefix}idc-card {
+        border-color: @border-color-dark;
+        color: @text-color-dark;
+        .header {
+            background: #414e55;
+            border-bottom: 1px solid #52626d;
+        }
+        .content{
+            &.two-type {
+                .idc-content-left{
+                    border-color: @border-color-dark;
+                }
+                .idc-circel{
+                    .idc-detail{
+                        background-color: rgba(71,86,105,0.95);
+                    }
+                }
+            }
+        }
+    }
 }
 </style>

@@ -221,7 +221,15 @@ export default {
     .deleting-content {
         .fb(center,center,flex, column)
     }
-
 }
-
+.dark{
+    .@{css-prefix}waiting-card {
+        .deleting-content {
+            background: rgba(57,67,75,0.9);
+            span {
+                color: @text-color-dark;
+            }
+        }
+    }
+}
 </style>

@@ -356,4 +356,19 @@ export default {
         margin:30px 0 20px;
     }
 }
+.dark{
+    .@{css-prefix}partition {
+        position: relative;
+        min-height: calc( 100vh - 60px);
+        .header {
+            .search {
+                border-top: 1px dashed #52626d;
+            }
+
+            .search-unused{
+                color: @text-color-dark;
+            }
+        }
+    }
+}
 </style>
