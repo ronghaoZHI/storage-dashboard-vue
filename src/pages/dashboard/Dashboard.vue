@@ -143,8 +143,8 @@ export default {
     data () {
         return {
             showChart: 0,
-            dateDividedBefore: '20171031',
-            dateDivided: '20171101',
+            dateDividedBefore: '20171121',
+            dateDivided: '20171122',
             bucketList: this.bucketList,
             selectedBucket: 'All Buckets',
             dateDefault: {
@@ -188,7 +188,7 @@ export default {
             return this.$store.state.theme
         },
         xLabelRotate: function () {
-            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 12
+            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 15
         }
     },
     created () {
@@ -321,17 +321,9 @@ export default {
                             time_nodes: res.time_nodes,
                             space_used: res.distributed.space_used,
                             flow_up: res.distributed.flow_up,
-                            flow_up_cdn: (new Array(res.time_nodes.length)),
-                            flow_up_pub: (new Array(res.time_nodes.length)),
                             flow_down: res.distributed.flow_down,
-                            flow_down_cdn: new Array(res.time_nodes.length),
-                            flow_down_pub: new Array(res.time_nodes.length),
                             read_count: res.distributed.read_count,
-                            get_count: new Array(res.time_nodes.length),
-                            head_count: new Array(res.time_nodes.length),
                             write_count: res.distributed.write_count,
-                            post_count: new Array(res.time_nodes.length),
-                            put_count: new Array(res.time_nodes.length),
                             delete_count: res.distributed.delete_count,
                             delete_space: res.distributed.delete_space
                         }
@@ -351,11 +343,11 @@ export default {
                             time_nodes: res.time_nodes,
                             space_used: res.distributed.space_used,
                             flow_up: this.combineTwoArray(res.distributed.flow_up_cdn, res.distributed.flow_up_cdn),
-                            flow_up_cdn: res.distributed.flow_up_cdn,
                             flow_up_pub: res.distributed.flow_up_cdn,
+                            up_cdn: res.distributed.up_cdn,
                             flow_down: this.combineTwoArray(res.distributed.flow_down_cdn, res.distributed.flow_down_pub),
-                            flow_down_cdn: res.distributed.flow_down_cdn,
                             flow_down_pub: res.distributed.flow_down_pub,
+                            down_cdn: res.distributed.down_cdn,
                             read_count: this.combineTwoArray(res.distributed.get_count, res.distributed.head_count),
                             get_count: res.distributed.get_count,
                             head_count: res.distributed.head_count,
@@ -381,17 +373,17 @@ export default {
                             time_nodes: echartDataOld.time_nodes.concat(echartDataNew.time_nodes),
                             space_used: echartDataOld.space_used.concat(echartDataNew.space_used),
                             flow_up: echartDataOld.flow_up.concat(echartDataNew.flow_up),
-                            flow_up_cdn: echartDataOld.flow_up_cdn.concat(echartDataNew.flow_up_cdn),
-                            flow_up_pub: echartDataOld.flow_up_pub.concat(echartDataNew.flow_up_pub),
+                            flow_up_pub: echartDataNew.flow_up_pub,
+                            up_cdn: echartDataNew.up_cdn,
                             flow_down: echartDataOld.flow_down.concat(echartDataNew.flow_down),
-                            flow_down_cdn: echartDataOld.flow_down_cdn.concat(echartDataNew.flow_down_cdn),
-                            flow_down_pub: echartDataOld.flow_down_pub.concat(echartDataNew.flow_down_pub),
+                            flow_down_pub: echartDataNew.flow_down_pub,
+                            down_cdn: echartDataNew.down_cdn,
                             read_count: echartDataOld.read_count.concat(echartDataNew.read_count),
-                            get_count: echartDataOld.get_count.concat(echartDataNew.get_count),
-                            head_count: echartDataOld.head_count.concat(echartDataNew.head_count),
+                            get_count: echartDataNew.get_count,
+                            head_count: echartDataNew.head_count,
                             write_count: echartDataOld.write_count.concat(echartDataNew.write_count),
-                            post_count: echartDataOld.post_count.concat(echartDataNew.post_count),
-                            put_count: echartDataOld.put_count.concat(echartDataNew.put_count),
+                            post_count: echartDataNew.post_count,
+                            put_count: echartDataNew.put_count,
                             delete_count: echartDataOld.delete_count.concat(echartDataNew.delete_count),
                             delete_space: echartDataOld.delete_space.concat(echartDataNew.delete_space)
                         }
@@ -404,10 +396,8 @@ export default {
                                 time: dateTime(time),
                                 capacity: echartData.space_used[index],
                                 uploadTraffic: echartData.flow_up[index],
-                                cdnUploadTraffic: echartData.flow_up_cdn[index],
                                 pubUploadTraffic: echartData.flow_up_pub[index],
                                 downloadTraffic: echartData.flow_down[index],
-                                cdnDownloadTraffic: echartData.flow_down_cdn[index],
                                 pubDownloadTraffic: echartData.flow_down_pub[index],
                                 readRequest: echartData.read_count[index],
                                 getRequest: echartData.get_count[index],
@@ -442,16 +432,16 @@ export default {
                 this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate, newOneDayFlag)
                 this.uploadTrafficOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_up_cdn, this.distributed.flow_up_pub), 'byte', '上传流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_cdn, 'byte', 'cdn上传流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_pub, 'byte', 'pub上传流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_pub, 'byte', '公网上传流量'),
+                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.distributed.up_cdn, 'byte', 'up'),
                     this.theme,
                     this.xLabelRotate,
                     newOneDayFlag
                 )
                 this.downloadTrafficOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_down_cdn, this.distributed.flow_down_pub), 'byte', '下载流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_cdn, 'byte', 'cdn下载流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_pub, 'byte', 'pub下载流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_pub, 'byte', '公网下载流量'),
+                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.distributed.down_cdn, 'byte', 'down'),
                     this.theme,
                     this.xLabelRotate,
                     newOneDayFlag
@@ -478,15 +468,15 @@ export default {
                 this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate)
                 this.uploadTrafficOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up, 'byte', '上传流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_cdn, 'byte', 'cdn上传流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_pub, 'byte', 'pub上传流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_pub, 'byte', '公网上传流量'),
+                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.up_cdn, 'byte', 'up'),
                     this.theme,
                     this.xLabelRotate
                 )
                 this.downloadTrafficOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down, 'byte', '下载流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down_cdn, 'byte', 'cdn下载流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down_pub, 'byte', 'pub下载流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down_pub, 'byte', '公网下载流量'),
+                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.down_cdn, 'byte', 'down'),
                     this.theme,
                     this.xLabelRotate
                 )
@@ -516,8 +506,9 @@ export default {
             return combinedData
         },
         combineTimeDataUnitLabel (time, data, unit, label) {
+            let _time = time.length === data.length ? time : time.slice(time.length - data.length)
             let combinedData = []
-            _.forEach(time, (value, key) => {
+            _.forEach(_time, (value, key) => {
                 combinedData.push([value * 1000, data[key]])
             })
             let object = {
@@ -526,6 +517,23 @@ export default {
                 data: combinedData
             }
             return object
+        },
+        combineTimeDataUnitLabelToObjectArray (time, data, unit, upOrDown) {
+            let objectArray = []
+            _.forEach(data, (value, key) => {
+                let _time = time.length === value.length ? time : time.slice(time.length - value.length)
+                let combinedData = []
+                _.forEach(_time, (value, index) => {
+                    combinedData.push([value * 1000, data[key][index]])
+                })
+                let object = {
+                    label: key + (upOrDown === 'up' ? '上传流量' : '下载流量'),
+                    unit: unit,
+                    data: combinedData
+                }
+                objectArray.push(object)
+            })
+            return objectArray
         },
         convertData (value, splite = false, unit) {
             if (!value) {
@@ -673,7 +681,7 @@ const xLabelRotateOptions = {
 // old storage
 const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate || (newOneDayFlag && data.data.length >= 12)) {
+    if (xLabelRotate || (newOneDayFlag && data.data.length >= 15)) {
         themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
         themeLineOptions.grid.right = '80'
         themeLineOptions.grid.bottom = '40'
@@ -718,7 +726,7 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
         yAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return data.unit === 'byte' ? bytes(value) : timesK(value) + ' times'
+                    return data.unit === 'byte' ? bytes(value) : timesK(value)
                 }
             }
         }
@@ -729,7 +737,7 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
 // new storage
 const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate || (newOneDayFlag && dataTotal.data.length >= 12)) {
+    if (xLabelRotate || (newOneDayFlag && dataTotal.data.length >= 15)) {
         themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
         themeLineOptions.grid.right = '80'
         themeLineOptions.grid.bottom = '40'
@@ -738,43 +746,50 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
         themeLineOptions.xAxis.interval = 3600000
     }
     themeLineOptions.grid.top = '60'
-    let newOptions = _.defaultsDeep({}, themeLineOptions, {
-        color: ['#20a0ff', '#9f61fc', '#0cce66'],
-        legend: {
-            data: [dataTotal.label, dataPart1.label, dataPart2.label],
-            top: '20px',
-            textStyle: {
-                color: '#1E9FFF',
-                fontSize: 14
-            },
-            icon: 'square',
-            itemGap: 80
-        },
-        series: [{
-            type: 'line',
-            data: dataTotal.data,
-            name: dataTotal.label,
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
+    let seriesArray = [{
+        type: 'line',
+        data: dataTotal.data,
+        name: dataTotal.label,
+        smooth: true,
+        sampling: 'average',
+        areaStyle: {
+            normal: {
+                color: '#20a0ff',
+                opacity: 0.5
+            }
+        }
+    }, {
+        type: 'line',
+        data: dataPart1.data,
+        name: dataPart1.label,
+        smooth: true,
+        sampling: 'average',
+        areaStyle: {
+            normal: {
+                color: '#20a0ff',
+                opacity: 0.5
+            }
+        }
+    }]
+    if (dataPart2 instanceof Array) {
+        _.forEach(dataPart2, (value, index) => {
+            let seriesItem = {
+                type: 'line',
+                data: dataPart2[index].data,
+                name: dataPart2[index].label,
+                smooth: true,
+                sampling: 'average',
+                areaStyle: {
+                    normal: {
+                        color: '#20a0ff',
+                        opacity: 0.5
+                    }
                 }
             }
-        }, {
-            type: 'line',
-            data: dataPart1.data,
-            name: dataPart1.label,
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            }
-        }, {
+            seriesArray.push(seriesItem)
+        })
+    } else {
+        let seriesItem = {
             type: 'line',
             data: dataPart2.data,
             name: dataPart2.label,
@@ -786,7 +801,30 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
                     opacity: 0.5
                 }
             }
-        }],
+        }
+        seriesArray.push(seriesItem)
+    }
+    let legendData = [dataTotal.label, dataPart1.label]
+    if (dataPart2 instanceof Array) {
+        _.forEach(dataPart2, (value, index) => {
+            legendData.push(dataPart2[index].label)
+        })
+    } else {
+        legendData.push(dataPart2.label)
+    }
+    let newOptions = _.defaultsDeep({}, themeLineOptions, {
+        color: ['#1e9fff', '#9f61fc', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
+        legend: {
+            data: legendData,
+            top: '20px',
+            textStyle: {
+                color: '#1E9FFF',
+                fontSize: 14
+            },
+            icon: 'square',
+            itemGap: 40
+        },
+        series: seriesArray,
         tooltip: {
             formatter: function (params, ticket, callback) {
                 let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + dateTime(params[0].value[0])
@@ -800,7 +838,7 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
         yAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return dataTotal.unit === 'byte' ? bytes(value) : timesK(value) + ' times'
+                    return dataTotal.unit === 'byte' ? bytes(value) : timesK(value)
                 }
             }
         }

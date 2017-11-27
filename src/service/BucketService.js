@@ -68,13 +68,13 @@ const timesK = (times, digit = 0) => {
         return '-'
     }
 
-    const units = ['', 'Thousand', 'Million', 'Billion']
+    const units = ['Times', 'Thousand', 'Million', 'Billion']
     const exponent = Math.min(Math.floor(Math.log(times) / Math.log(1000)), units.length - 1)
     const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(digit)
 
-    return number + units[exponent]
+    return number + ' ' + units[exponent]
 }
-const timesSpliteUnits = (times, digit = 0) => {
+const timesSpliteUnits = (times, digit = 1) => {
     if (typeof times !== 'number') {
         times = parseFloat(times)
     }
