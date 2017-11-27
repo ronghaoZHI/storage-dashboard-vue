@@ -73,15 +73,9 @@
                 <Tag>{{fileList.length}} files or folders in this page</Tag>
             </div>
             <div>
-                <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top">
-                    <Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost">{{$t("PUBLIC.PAGE_FIRST")}}</Button>
-                </Tooltip>
-                <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top">
-                    <Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost">{{$t("PUBLIC.PAGE_PREV")}}</Button>
-                </Tooltip>
-                <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top">
-                    <Button v-show="nextMarker" @click="nextPage()" type="ghost">{{$t("PUBLIC.PAGE_NEXT")}}</Button>
-                </Tooltip>
+                <Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost" size="small">{{$t("PUBLIC.PAGE_FIRST")}}</Button>
+                <Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost" size="small">{{$t("PUBLIC.PAGE_PREV")}}</Button>
+                <Button v-show="nextMarker" @click="nextPage()" type="ghost" size="small">{{$t("PUBLIC.PAGE_NEXT")}}</Button>
             </div>
         </div>
     </div>
@@ -715,7 +709,6 @@ const getURL = async (bucket, file, prefix) => {
         }
 
         button {
-            width: 70px;
             margin-left: 6px;
         }
     }
