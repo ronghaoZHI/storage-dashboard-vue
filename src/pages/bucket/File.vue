@@ -669,13 +669,6 @@ const getURL = async (bucket, file, prefix) => {
         span{
             background: transparent;
         }
-        .@{css-prefix}input input{
-            background: transparent !important;
-        }
-        button{
-            border: none;
-            background: transparent;
-        }
     }
 }
 
@@ -704,10 +697,6 @@ const getURL = async (bucket, file, prefix) => {
         .@{css-prefix}input {
             margin-left: 4px;
             width: 200px;
-        }
-        button{
-            border: none;
-            background: transparent;
         }
     }
 
