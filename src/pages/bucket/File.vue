@@ -73,9 +73,15 @@
                 <Tag>{{fileList.length}} files or folders in this page</Tag>
             </div>
             <div>
-                <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
-                <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
-                <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="nextMarker" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+                <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top">
+                    <Button v-show="makerArray.length > 0" @click="getData('',searchValue);makerArray.length = 0" type="ghost">{{$t("PUBLIC.PAGE_FIRST")}}</Button>
+                </Tooltip>
+                <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top">
+                    <Button v-show="makerArray.length > 0" @click="previousPage()" type="ghost">{{$t("PUBLIC.PAGE_PREV")}}</Button>
+                </Tooltip>
+                <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top">
+                    <Button v-show="nextMarker" @click="nextPage()" type="ghost">{{$t("PUBLIC.PAGE_NEXT")}}</Button>
+                </Tooltip>
             </div>
         </div>
     </div>

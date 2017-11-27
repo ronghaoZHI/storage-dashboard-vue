@@ -16,6 +16,9 @@ export const messages = {
             NUM_PLEASE: 'Please enter a numeric value',
             NOT_LESS: 'Not less than{num}',
             NOT_GREATER: 'Not greater than{num}',
+            PAGE_PREV: 'Previous Page',
+            PAGE_NEXT: 'Next Page',
+            PAGE_FIRST: 'First Page',
             EDIT: 'Edit'
         },
         LOGIN: {
@@ -758,6 +761,9 @@ export const messages = {
             NUM_PLEASE: '请输入数字值',
             NOT_LESS: '输入值不能小于{num}',
             NOT_GREATER: '输入值不能大于{num}',
+            PAGE_PREV: '上一页',
+            PAGE_NEXT: '下一页',
+            PAGE_FIRST: '首页',
             EDIT: '编辑'
         },
         LOGIN: {

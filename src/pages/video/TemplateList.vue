@@ -6,9 +6,9 @@
         </div>
         <Table border :context="self" :stripe="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <div class="section-paging">
-            <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="listPresets();pageToken.length = 0" type="ghost"><Icon type="home" size="18"></Icon></Button></Tooltip>
-            <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="previousPage()" type="ghost"><Icon type="arrow-left-b" size="18"></Icon></Button></Tooltip>
-            <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="nextPageToken" @click="nextPage()" type="ghost"><Icon type="arrow-right-b" size="18"></Icon></Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.HOME_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="listPresets();pageToken.length = 0" type="ghost">{{$t("PUBLIC.PAGE_FIRST")}}</Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.PRE_PAGE")' placement="top"><Button v-show="pageToken.length > 0" @click="previousPage()" type="ghost">{{$t("PUBLIC.PAGE_PREV")}}</Button></Tooltip>
+            <Tooltip :content='$t("STORAGE.NEXT_PAGE")' placement="top"><Button v-show="nextPageToken" @click="nextPage()" type="ghost">{{$t("PUBLIC.PAGE_NEXT")}}</Button></Tooltip>
         </div>
     </div>
 </template>
@@ -239,5 +239,13 @@ const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
     padding-left: 5px;
     vertical-align: text-top;
 }
+.section-paging {
+    .wh(100%,40px);
+    .fb(flex-end,center);
+    button {
+        margin-left: 6px;
+    }
+}
+
 </style>
 
