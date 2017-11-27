@@ -32,16 +32,17 @@
             <div class="search search-unused" v-if="tabName === 'unused'">
                 {{$t('SYSTEM.OVERALL_CAPACITY')}}: {{capacity}}
                 <span class="title">{{$t('SYSTEM.TOTAL_CAPACITY')}}</span>
-                <InputNumber :max="lowerCapacityMax" :min="0" v-model="search.lower_capacity"></InputNumber>
+                <InputNumber :max="lowerCapacityMax" :min="0" v-model="search.min_capacity"></InputNumber>
                 <span>T</span><span class="separate">—</span>
-                <InputNumber :min="upperCapacityMin" v-model="search.upper_capacity"></InputNumber>
+                <InputNumber :min="upperCapacityMin" v-model="search.max_capacity"></InputNumber>
                 <span>T</span>
                 <span class="title">{{$t('SYSTEM.AVAILABLE')}}</span>
-                <InputNumber :max="lowerFreeMax" :min="0" v-model="search.lower_free"></InputNumber>
+                <InputNumber :max="lowerFreeMax" :min="0" v-model="search.min_free"></InputNumber>
                 <span>T</span><span class="separate">—</span> 
-                <InputNumber :min="upperFreeMin" v-model="search.upper_free"></InputNumber>
+                <InputNumber :min="upperFreeMin" v-model="search.max_free"></InputNumber>
                 <span>T</span>
                 <Button type="primary" @click="searchList" class="search-button">{{$t('SYSTEM.SEARCH')}}</Button>
+                <Button type="primary" @click="resetParams">{{$t('PUBLIC.RESET')}}</Button>
             </div>
         </div>
         <div class="content">
@@ -78,7 +79,7 @@ import partitionCard from './PartitionCard'
 import idcCard from './IdcCard'
 import partitionUnused from './partitionUnused'
 import partitionDeleted from './partitionDeleted'
-import { bytes } from '@/service/bucketService'
+import bytes from 'bytes'
 import {PARTITION_IDC_LIST, PARTITION_USED_LIST, PARTITION_USED_DETAIL, PARTITION_UNUSED_LIST, PARTITION_DELETED_LIST} from '@/service/API'
 export default {
     data () {
@@ -93,10 +94,10 @@ export default {
                 read_only: 'ignore',
                 fail: 'ignore',
                 ip: '',
-                lower_capacity: '',
-                upper_capacity: '',
-                lower_free: '',
-                upper_free: ''
+                min_capacity: '',
+                max_capacity: '',
+                min_free: '',
+                max_free: ''
             },
             showChart: 'ioutil',
             spinContent: false,
@@ -125,26 +126,26 @@ export default {
             return this.search.ip.length === 0 ? 'ignore' : this.search.ip
         },
         lowerCapacityMax () {
-            if (!!this.search.upper_capacity) {
-                return this.search.upper_capacity
+            if (!!this.search.max_capacity) {
+                return this.search.max_capacity
             }
             return 10000
         },
         upperCapacityMin () {
-            if (!!this.search.lower_capacity) {
-                return this.search.lower_capacity
+            if (!!this.search.min_capacity) {
+                return this.search.min_capacity
             }
             return 0
         },
         lowerFreeMax () {
-            if (!!this.search.upper_free) {
-                return this.search.upper_free
+            if (!!this.search.max_free) {
+                return this.search.max_free
             }
             return 10000
         },
         upperFreeMin () {
-            if (!!this.search.lower_free) {
-                return this.search.lower_free
+            if (!!this.search.min_free) {
+                return this.search.min_free
             }
             return 0
         }
@@ -271,10 +272,10 @@ export default {
                     idc: this.search.idc,
                     media_type: this.search.media_type,
                     ip: this.IPparam,
-                    lower_capacity: this.search.lower_capacity || 'ignore',
-                    upper_capacity: this.search.upper_capacity || 'ignore',
-                    lower_free: this.search.lower_free || 'ignore',
-                    upper_free: this.search.upper_free || 'ignore',
+                    min_capacity: this.search.min_capacity ? bytes(`${this.search.min_capacity}TB`) : 'ignore',
+                    max_capacity: this.search.max_capacity ? bytes(`${this.search.max_capacity}TB`) : 'ignore',
+                    min_free: this.search.min_free ? bytes(`${this.search.min_free}TB`) : 'ignore',
+                    max_free: this.search.max_free ? bytes(`${this.search.max_free}TB`) : 'ignore',
                     page: this.pageCount,
                     count: 20
                 }
@@ -311,10 +312,10 @@ export default {
                 read_only: 'ignore',
                 fail: 'ignore',
                 ip: '',
-                lower_capacity: '',
-                upper_capacity: '',
-                lower_free: '',
-                upper_free: ''
+                min_capacity: '',
+                max_capacity: '',
+                min_free: '',
+                max_free: ''
             }
         }
     },
