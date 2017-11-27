@@ -665,6 +665,18 @@ const getURL = async (bucket, file, prefix) => {
     .layout-bsc-toolbar {
          border-bottom: @common-border-dark;
     }
+    .section-search {
+        span{
+            background: transparent;
+        }
+        .@{css-prefix}input input{
+            background: transparent !important;
+        }
+        button{
+            border: none;
+            background: transparent;
+        }
+    }
 }
 
 .@{css-prefix}file {
@@ -686,9 +698,16 @@ const getURL = async (bucket, file, prefix) => {
         position: absolute;
         z-index: 100;
 
+        span{
+            background-color: transparent !important;
+        }
         .@{css-prefix}input {
             margin-left: 4px;
             width: 200px;
+        }
+        button{
+            border: none;
+            background: transparent;
         }
     }
 
