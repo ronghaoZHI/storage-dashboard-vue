@@ -194,17 +194,32 @@ export default {
             permissionHeader: [{
                 title: 'Name',
                 width: 90,
-                key: 'Name'
+                key: 'name'
             }, {
                 title: 'Grants',
-                key: 'Grants'
+                key: 'permissions'
             }, {
                 title: 'Actions',
                 key: 'actions',
                 width: 80,
                 align: 'right',
                 render: (h, params) => {
-                    return '管理'
+                    return h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.gotoBucketPermissionsSetting(params.row)
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'ios-cog',
+                            size: 18
+                        }
+                    })
+                    ])
                 }
             }]
         }
@@ -256,6 +271,9 @@ export default {
             } catch (error) {
                 console.log(error)
             }
+        },
+        gotoBucketPermissionsSetting (data) {
+            this.$router.push({ name: 'bucketSettings', params: { bucket: data.name, tabName: 'permission' } })
         },
         convertGrants (grants) {
             let permissions = {
