@@ -10,7 +10,7 @@
         <div class="content">
             <div class="details">
                 <p><span>IDC : </span>{{partition.idc}}</p>
-                <p><span>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} : </span>{{`${bytes(partition.free)}/${bytes(partition.capacity)}`}}</p>
+                <p><span>{{$t('SYSTEM.UNUSED_TOTAL_CAPACITY')}} : </span>{{`${bytes(partition.free)}/${bytes(partition.capacity)}`}}</p>
                 <p><span>{{$t('SYSTEM.MEDIA_TYPE')}} : </span>{{partition.media_type}}</p>
             </div>
         </div>
