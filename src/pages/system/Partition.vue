@@ -153,11 +153,13 @@ export default {
         chartToggle (index) {
             this.showChart = index
             this.pageCount = 1
+            this.pageTotal = 1
             this.getUsedList()
         },
         tabToggle (index) {
             this.tabName = index
             this.pageCount = 1
+            this.pageTotal = 1
             if (index === 'used') {
                 this.getUsedList()
             } else if (index === 'unused') {
@@ -168,6 +170,7 @@ export default {
         },
         searchList () {
             this.pageCount = 1
+            this.pageTotal = 1
             if (this.tabName === 'used') {
                 this.spinContent = true
                 this.searchIdc()
@@ -351,12 +354,6 @@ export default {
         width:100%;
         text-align: center;
         margin:30px 0 20px;
-        opacity: 0.3;
-        position: fixed;
-        bottom: 50px;
-    }
-    .page:hover{
-        opacity: 1;
     }
 }
 </style>
