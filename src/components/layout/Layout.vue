@@ -50,7 +50,7 @@ export default {
 }
 
 .layout-bsc-toolbar {
-    .fb(space-between,center,flex);
+    .fb(flex-start,center,flex);
     margin-bottom: 14px;
 }
 

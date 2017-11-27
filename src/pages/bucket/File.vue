@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-file" @keyup.enter="searchValue !== '' && searchFile(searchValue)">
         <div class="layout-bsc-toolbar">
-            <a class="btn-back" @click="back()">返回</a>
+            <a class="btn-back" @click="back()"><Icon type="chevron-left"></Icon></a>
             <bsc-breadcrumb>
                 <bsc-breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
                 <bsc-breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</bsc-breadcrumb-item>
@@ -674,6 +674,7 @@ const getURL = async (bucket, file, prefix) => {
 
         .btn-back {
             font-size: 14px;
+            margin-right: 10px;
         }
 
         button {

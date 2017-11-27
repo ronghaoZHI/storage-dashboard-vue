@@ -8,7 +8,7 @@
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
                 <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 40%;float:left;"></Date-picker>
-                <Button type="primary" style="width:15%;float:left;margin-left:16px;" @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
+                <Button type="primary" style="float:left;margin-left:16px;" @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
             </div>
             <div class="button-daterange">
                 <Button-group>
@@ -26,7 +26,7 @@
                             <div class="content">
                                 <span>{{originOverview.capacity && originOverview.capacity[0]}}</span>
                                 <span>{{originOverview.capacity && originOverview.capacity[1]}}</span>
-                                <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help"></Icon></p>
+                                <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                             </div>
                         </Tooltip>
                     </div>
@@ -36,7 +36,7 @@
                                 <div class="content">
                                     <span>{{originOverview.upload_space && originOverview.upload_space[0]}}</span>
                                     <span>{{originOverview.upload_space && originOverview.upload_space[1]}}</span>
-                                    <p>{{ $t("DASHBOARD.UPLOAD_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                                    <p>{{ $t("DASHBOARD.UPLOAD_SPACE_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                                 </div>
                             </Tooltip>
                         </div>
@@ -45,7 +45,7 @@
                                 <div class="content">
                                     <span>{{originOverview.download_space && originOverview.download_space[0]}}</span>
                                     <span>{{originOverview.download_space && originOverview.download_space[1]}}</span>
-                                    <p>{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                                    <p>{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                                 </div>
                             </Tooltip>
                         </div>
@@ -59,7 +59,7 @@
                                 <div class="content">
                                     <span>{{originOverview.download_count && originOverview.download_count[0]}}</span>
                                     <span>{{originOverview.download_count && originOverview.download_count[1]}}</span>
-                                    <p>{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
+                                    <p>{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                                 </div>
                             </Tooltip>
                         </div>
@@ -69,7 +69,7 @@
                                 <div class="content">
                                     <span>{{originOverview.upload_count && originOverview.upload_count[0]}}</span>
                                     <span>{{originOverview.upload_count && originOverview.upload_count[1]}}</span>
-                                    <p>{{ $t("DASHBOARD.UPLOAD_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
+                                    <p>{{ $t("DASHBOARD.UPLOAD_COUNT_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                                 </div>
                             </Tooltip>
                         </div>
@@ -79,7 +79,7 @@
                                 <div class="content">
                                     <span>{{originOverview.delete_count && originOverview.delete_count[0]}}</span>
                                     <span>{{originOverview.delete_count && originOverview.delete_count[1]}}</span>
-                                    <p>{{ $t("DASHBOARD.DELETE_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
+                                    <p>{{ $t("DASHBOARD.DELETE_COUNT_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                                 </div>
                             </Tooltip>
                         </div>
@@ -89,7 +89,7 @@
                                 <div class="content">
                                     <span>{{originOverview.delete_space && originOverview.delete_space[0]}}</span>
                                     <span>{{originOverview.delete_space && originOverview.delete_space[1]}}</span>
-                                    <p>{{ $t("DASHBOARD.DELETE_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                                    <p>{{ $t("DASHBOARD.DELETE_SPACE_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                                 </div>
                             </Tooltip>
                         </div>
@@ -730,7 +730,7 @@ const initOptions = (data, theme, xLabelRotate) => {
                 margin-top: 6px;
 
                 span:first-child {
-                    font: 45px bolder;
+                    font-size: 45px;
                 }
 
                 p {
@@ -761,11 +761,11 @@ const initOptions = (data, theme, xLabelRotate) => {
         text-align: center;
 
         span:first-child {
-            font: 30px bolder;
+            font-size: 30px;
         }
 
         span:nth-child(2) {
-            font: 14px bolder;
+            font-size: 14px;
         }
 
         p {
@@ -787,11 +787,11 @@ const initOptions = (data, theme, xLabelRotate) => {
                 margin-top: 30px;
 
                 span:first-child {
-                    font: 60px bolder;
+                    font-size: 60px;
                 }
 
                 span:nth-child(2) {
-                    font: 40px bolder;
+                    font-size: 40px;
                 }
 
                 p {
@@ -822,11 +822,11 @@ const initOptions = (data, theme, xLabelRotate) => {
         text-align: center;
 
         span:first-child {
-            font: 40px bolder;
+            font-size: 40px;
         }
 
         span:nth-child(2) {
-            font: 16px bolder;
+            font-size: 16px;
         }
 
         p {

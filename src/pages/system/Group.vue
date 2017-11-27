@@ -158,6 +158,7 @@ export default {
         .section-chart {
             .card-chart {
                 .show-more {
+                    color: @text-color-dark;
                     &:hover {
                         border: @common-border-dark;
                     }
@@ -191,7 +192,7 @@ export default {
                     cursor: pointer;
                     margin: 60px;
                     font-weight: bold;
-
+                    color: @text-color;
                     &:hover {
                         border: @group-common-border;
                     }

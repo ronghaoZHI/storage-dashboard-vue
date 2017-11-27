@@ -14,18 +14,15 @@ export default {
 <style lang="less" scoped>
 
 .dark .@{css-prefix}legend {
-    border: @common-border-dark;
-    color: @text-color-dark;
+    color: @text-color-secondary-dark;
 }
 
 .@{css-prefix}legend {
     display: inline-flex;
     align-items: center;
     line-height: 30px;
-    border: 1px solid #d3dce6;
     padding: 0 15px;
-    border-radius: 4px;
-
+    color: @text-color-secondary;
     .legend-item {
         display: flex;
         align-items: center;
