@@ -38,7 +38,7 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
-import { getTranscoderAnalysisUrl } from '@/service/API'
+import { getBillTranscoderUrl } from '@/service/API'
 import { time, date } from '@/service/bucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
@@ -78,7 +78,7 @@ export default {
             return this.$store.state.theme
         },
         xLabelRotate: function () {
-            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 20
+            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 15
         }
     },
     created () {
@@ -92,11 +92,10 @@ export default {
             this.showChart = 0
 
             try {
-                await Promise.all([this.$http.get(this.getApiURL('overview')).then(res => {
-                    this.overviewData = res
+                await Promise.all([this.$http.get(this.getApiURL()).then(res => {
+                    this.overviewData = res.overview
                     this.overviewOptions = initOverviewOptions(this.overviewData, this.theme, this.xLabelRotate)
-                }), this.$http.get((this.getApiURL('distribution'))).then(res => {
-                    this.distributionData = res
+                    this.distributionData = res.distribution
                     this.distributionOptions = initDistributionOptions(this.distributionData, this.theme, this.xLabelRotate)
                 })]).then(res => {
                     this.data = []
@@ -125,13 +124,13 @@ export default {
                 this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
             }
         },
-        getApiURL (operation) {
-            let path = operation
+        getApiURL () {
+            let path = ''
             path += '?custom_range=' + this.dateRange
             if (user.state.type === 'admin') {
                 path += '&customer=' + user.state.subUser.username
             }
-            return getTranscoderAnalysisUrl(path)
+            return getBillTranscoderUrl(path)
         },
         tabToggle (index, ref) {
             let vm = this
@@ -280,7 +279,7 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
             formatter: function (params, ticket, callback) {
                 let res = 'Date : ' + date(params[0].value[0])
                 _.each(params, function (item) {
-                    res += '<br/>' + item.seriesName + ' : '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
                     res += item.value[1]
                 })
                 return res
@@ -366,7 +365,7 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
             formatter: function (params, ticket, callback) {
                 let res = 'Date : ' + date(params[0].value[0])
                 _.each(params, function (item) {
-                    res += '<br/>' + item.seriesName + ' : '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
                     res += time(item.value[1], 2)
                 })
                 return res
