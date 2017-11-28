@@ -552,8 +552,8 @@ const lineOptions = {
         padding: 10
     },
     grid: {
-        top: '20',
-        left: '10',
+        top: '40',
+        left: '20',
         right: '40',
         bottom: '10',
         containLabel: true
@@ -583,6 +583,7 @@ const lineOptions = {
     yAxis: {
         type: 'value',
         min: 0,
+        minInterval: 1,
         offset: 5,
         nameTextStyle: {
             color: '#8492a6',
@@ -680,6 +681,7 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
             }
         },
         yAxis: {
+            name: data.unit === 'byte' ? '' : data.unit === 'times' ? '单位：次' : '单位：个',
             axisLabel: {
                 formatter: function (value) {
                     return data.unit === 'byte' ? bytes(value) : timesK(value)
@@ -781,7 +783,7 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, xLabel
         legendData = legendData.concat([dataPart2.label, dataPart3.label])
     }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
-        color: ['#1e9fff', '#9f61fc', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
+        color: ['#9f61fc', '#1e9fff', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
         legend: {
             data: legendData,
             top: '20px',
@@ -804,6 +806,7 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, xLabel
             }
         },
         yAxis: {
+            name: dataPart.unit === 'byte' ? '' : dataPart.unit === 'times' ? '单位：次' : '单位：个',
             axisLabel: {
                 formatter: function (value) {
                     return dataPart.unit === 'byte' ? bytes(value) : timesK(value)
