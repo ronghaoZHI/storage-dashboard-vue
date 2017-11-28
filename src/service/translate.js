@@ -629,6 +629,7 @@ export const messages = {
             MIGRATION_PROGRESS: 'Progress',
             DELETED_INFO: 'If you have a partition long time (5 minutes) does not appear in the unused page, please go to the parrtition directory, delete file folders named by partition id',
             UNUSED_INFO: 'Unused partition will come into force after 1 minute',
+            GROUP_ID_SEARCH_INFO: 'The Group ID for search can only be a number',
             IMPLEMENTATION: 'implementation'
         },
         SETTINGS: {
@@ -1370,6 +1371,7 @@ export const messages = {
             MIGRATION_PROGRESS: '迁移进度',
             DELETED_INFO: '如果已删除磁盘长时间（5分钟）未出现在未使用磁盘页面，请到该磁盘路径下，删除以partition id为文件名的文件夹',
             UNUSED_INFO: '未使用磁盘上线后生效时间为一分钟',
+            GROUP_ID_SEARCH_INFO: '用于搜索的Group ID只能是数字',
             IMPLEMENTATION: '上线'
         },
         SETTINGS: {

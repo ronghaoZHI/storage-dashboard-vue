@@ -11,6 +11,7 @@
                 <Input v-model="searchValue" :placeholder="$t('SYSTEM.PLEASE_ENTER')" style="width:260px"></Input>
                 <Button type="primary" @click="getGroupList(false)">{{$t('SYSTEM.SEARCH')}}</Button>
                 <Button type="primary" @click="resetParams()">{{$t('PUBLIC.RESET')}}</Button>
+                <p class="redFont search-info" v-if="searchValueError">{{$t('SYSTEM.GROUP_ID_SEARCH_INFO')}}</p>
             </div>
             <div class="status">
                 <span class="group-status-prefix">{{$t('SYSTEM.GROUP_STATUS')}}:</span>
@@ -62,6 +63,11 @@ export default {
     created () {
         this.getGroupList()
     },
+    computed: {
+        searchValueError () {
+            return this.searchType === 'group_id' && !!this.searchValue && !parseInt(this.searchValue.replace(/\s+/g, ''))
+        }
+    },
     components: {
         groupCard
     },
@@ -70,11 +76,15 @@ export default {
             this.showChart = index
         },
         async getGroupList (isAppend = false, cleanParams = false) {
-            this.spinShow = true
-            this.$Loading.start()
+            if (this.searchValueError) {
+                this.$Message.warning(this.$t('SYSTEM.GROUP_ID_SEARCH_INFO'))
+                return
+            }
             try {
+                this.spinShow = true
+                this.$Loading.start()
                 let groupData = await this.$http.get(GROUP_LIST, { params: {
-                    start_group_id: this.searchType === 'group_id' ? parseInt(this.searchValue.replace(/\s+/g, '')) || this.nextGroupId || 0 : 0,
+                    start_group_id: isAppend ? this.nextGroupId : this.searchType === 'group_id' && !!this.searchValue ? parseInt(this.searchValue.replace(/\s+/g, '')) : 0,
                     [this.searchType]: this.searchValue.replace(/\s+/g, '') || 'ignore',
                     count: this.pageCount,
                     read_only: this.read_only
@@ -161,6 +171,11 @@ export default {
     & > .header {
             .search {
                 border-bottom: 1px dashed #d3dce6;
+                .search-info{
+                    display: inline-block;
+                    padding-left: 10px;
+                    vertical-align: middle;
+                }
             }
     }
     .content {
