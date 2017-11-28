@@ -32,8 +32,9 @@
             </div>
             <div class="section-chart">
                 <div class="card-chart">
+                    <h1 class="no-data" v-if="groupList.length === 0">No Groups</h1>
                     <group-card v-for="group in groupList" :key="group.group_id" :data="group" :sortBy="showChart"></group-card>
-                    <div class="show-more" v-show="nextGroupId !== null" @click="getGroupList(true)">
+                    <div class="show-more" v-show="nextGroupId !== null && nextGroupId !== undefined " @click="getGroupList(true)">
                         <p>show more</p>
                         <Icon type="chevron-down"></Icon>
                     </div>
@@ -79,11 +80,17 @@ export default {
                     read_only: this.read_only
                 }})
                 this.nextGroupId = groupData.next_group_id
-                this.addPartitionCountToGroup(groupData.group)
-                this.groupList = isAppend ? this.getSortedGroupList(this.groupList.concat(groupData.group), this.showChart) : this.getSortedGroupList(groupData.group, this.showChart)
+                if (groupData.group) {
+                    this.addPartitionCountToGroup(groupData.group)
+                    this.groupList = isAppend ? this.getSortedGroupList(this.groupList.concat(groupData.group), this.showChart) : this.getSortedGroupList(groupData.group, this.showChart)
+                } else {
+                    this.groupList = []
+                    this.$Message.warning(groupData)
+                }
                 this.spinShow = false
                 this.$Loading.finish()
             } catch (error) {
+                console.log(error)
                 this.spinShow = false
                 this.$Loading.error()
             }

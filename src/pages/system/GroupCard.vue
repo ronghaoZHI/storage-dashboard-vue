@@ -23,9 +23,9 @@
                 </ul>
                 <ul class="ip-list" v-for="(pt,index) in data.partition" :key="pt.partition_idx">
                     <li>{{pt.inn_ips[0]}}</li>
-                    <li v-bind:class="{'redFont': pt.used_rate > 99}">{{pt.used_rate}}%</li>
-                    <li v-bind:class="{'redFont': pt.ioutil > 90}">{{pt.ioutil}}%</li>
-                    <li v-bind:class="{'redFont': pt.cpu > 20}">{{pt.cpu.toFixed(2)}}%</li>
+                    <li v-bind:class="{'redFont': pt.used_rate > 99}">{{pt.used_rate ? `${pt.used_rate}%` : '--'}}</li>
+                    <li v-bind:class="{'redFont': pt.ioutil > 90}">{{pt.ioutil ? `${pt.ioutil}%` : '--'}}</li>
+                    <li v-bind:class="{'redFont': pt.cpu > 20}">{{pt.cpu ? `${pt.cpu.toFixed(2)}%` : '--'}}</li>
                     <li v-if="data.traffic && pt.partition_id === data.traffic.src_partition_id[0]">{{$t('SYSTEM.MIGRATION')}}</li>
                     <li v-else><span class="ip-button" @click="migrate(pt,index)">{{$t('SYSTEM.MIGRATE')}}</span></li>
                 </ul>
@@ -101,9 +101,9 @@ export default {
             let tableData = _.map(this.data.partition, (item) => {
                 let newItem = _.cloneDeep(item)
                 newItem.inn_ips = item.inn_ips[0]
-                newItem.ioutil = `${item.ioutil}%`
-                newItem.space = `${item.used_rate}%`
-                newItem.cpu = `${(Math.round(item.cpu * 100) / 100).toFixed(2) || 0}%`
+                newItem.ioutil = item.ioutil ? `${item.ioutil}%` : '--'
+                newItem.space = item.used_rate ? `${item.used_rate}%` : '--'
+                newItem.cpu = item.cpu ? `${item.cpu.toFixed(2)}%` : '--'
                 newItem.status = item.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY')
                 newItem.isUse = item.is_del === 0 ? this.$t('SYSTEM.NORMAL') : this.$t('SYSTEM.DELETED')
                 return newItem
@@ -226,13 +226,16 @@ export default {
 
                 li:nth-child(2) {
                     width: 55px;
+                    text-align: right;
                 }
 
                 li:nth-child(3),li:nth-child(4) {
                     width: 50px;
+                    text-align: right;
                 }
                 li:nth-child(5) {
                     width: 58px;
+                    text-align: right;
                 }
             }
 
