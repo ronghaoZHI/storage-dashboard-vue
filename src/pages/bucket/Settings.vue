@@ -139,15 +139,11 @@
                                         style="margin: 0 6px;"
                                         size="small"
                                         @click="newUserItemInit();isAdd = true"
-                                        icon="plus-round"
-                                        shape="circle"
-                                        type="success"></Button>
+                                        icon="plus-round"></Button>
                                     <Button v-else
                                         style="margin: 0 6px;visibility:hidden;"
                                         size="small"
-                                        type="success"
-                                        icon="plus-round"
-                                        shape="circle"></Button>
+                                        icon="plus-round"></Button>
                                     <div slot="content">
                                         <p>{{$t("STORAGE.ADD_USER")}}</p>
                                     </div>
@@ -156,10 +152,8 @@
                                     <Button :disabled="owner == item.Grantee.ID"
                                         style="margin: 0 6px;"
                                         size="small"
-                                        shape="circle"
                                         @click="deleteUser(item)"
-                                        icon="minus-round"
-                                        type="error"></Button>
+                                        icon="minus-round"></Button>
                                     <div slot="content">
                                         <p>{{$t("STORAGE.DELETE_USER")}}</p>
                                     </div>

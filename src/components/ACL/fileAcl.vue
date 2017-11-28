@@ -96,9 +96,7 @@
                             <Button :disabled="newUserDisabled" @click="addUserOK"
                                 style="margin: 0 6px;"
                                 size="small"
-                                icon="checkmark-round"
-                                shape="circle"
-                                type="success"></Button>
+                                icon="checkmark-round"></Button>
                             <div slot="content">
                                 <p>{{$t('VIDEO.ADD')}}</p>
                             </div>
@@ -107,9 +105,7 @@
                             <Button @click="isAddUser = false"
                                 style="margin: 0 6px;"
                                 size="small"
-                                icon="close-round"
-                                shape="circle"
-                                type="error"></Button>
+                                icon="close-round"></Button>
                             <div slot="content">
                                 <p>{{$t('VIDEO.CANCEL')}}</p>
                             </div>
@@ -136,15 +132,11 @@
                                 style="margin: 0 6px;"
                                 size="small"
                                 @click="addUser"
-                                icon="plus-round"
-                                shape="circle"
-                                type="success"></Button>
+                                icon="plus-round"></Button>
                             <Button v-else
                                 style="margin: 0 6px;visibility:hidden;"
                                 size="small"
-                                type="success"
-                                icon="plus-round"
-                                shape="circle"></Button>
+                                icon="plus-round"></Button>
                             <div slot="content">
                                 <p>{{$t("STORAGE.ADD_USER")}}</p>
                             </div>
@@ -153,10 +145,8 @@
                             <Button :disabled="username == item.Grantee"
                                 style="margin: 0 6px;"
                                 size="small"
-                                shape="circle"
                                 @click="deleteUser(index)"
-                                icon="minus-round"
-                                type="error"></Button>
+                                icon="minus-round"></Button>
                             <div slot="content">
                                 <p>{{$t("STORAGE.DELETE_USER")}}</p>
                             </div>
