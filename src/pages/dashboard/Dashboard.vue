@@ -23,97 +23,71 @@
             <div>
                 <Tooltip :content='$t("DASHBOARD.CAPACITY_ALL_INFO")'>
                     <div class="content">
-                        <span>{{originOverview.space_used && originOverview.space_used[0]}}</span>
-                        <span>{{originOverview.space_used && originOverview.space_used[1]}}</span>
+                        <span>{{originOverview.capacity && originOverview.capacity[0]}}</span>
+                        <span>{{originOverview.capacity && originOverview.capacity[1]}}</span>
                         <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help"></Icon></p>
                     </div>
                 </Tooltip>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.UPLOAD_SPACE_ALL_INFO")'>
+                <Tooltip :content='$t("DASHBOARD.INFLOWS_ALL_INFO")'>
                     <div class="content">
-                        <span>{{originOverview.flow_up && originOverview.flow_up[0]}}</span>
-                        <span>{{originOverview.flow_up && originOverview.flow_up[1]}}</span>
-                        <p>{{ $t("DASHBOARD.UPLOAD_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                        <span>{{originOverview.inflows && originOverview.inflows[0]}}</span>
+                        <span>{{originOverview.inflows && originOverview.inflows[1]}}</span>
+                        <p>{{ $t("DASHBOARD.INFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
                     </div>
                 </Tooltip>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.DOWNLOAD_SPACE_ALL_INFO")'>
+                <Tooltip :content='$t("DASHBOARD.OUTFLOWS_ALL_INFO")'>
                     <div class="content">
-                        <span>{{originOverview.flow_down && originOverview.flow_down[0]}}</span>
-                        <span>{{originOverview.flow_down && originOverview.flow_down[1]}}</span>
-                        <p>{{ $t("DASHBOARD.DOWNLOAD_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                        <span>{{originOverview.outflows && originOverview.outflows[0]}}</span>
+                        <span>{{originOverview.outflows && originOverview.outflows[1]}}</span>
+                        <p>{{ $t("DASHBOARD.OUTFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
                     </div>
                 </Tooltip>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.DOWNLOAD_COUNT_ALL_INFO")'>
+                <Tooltip :content='$t("DASHBOARD.REQUESTS_ALL_INFO")'>
                     <div class="content">
-                        <span>{{originOverview.read_count && originOverview.read_count[0]}}</span>
-                        <span>{{originOverview.read_count && originOverview.read_count[1]}}</span>
-                        <p>{{ $t("DASHBOARD.DOWNLOAD_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
+                        <span>{{originOverview.requests && originOverview.requests[0]}}</span>
+                        <span>{{originOverview.requests && originOverview.requests[1]}}</span>
+                        <p>{{ $t("DASHBOARD.REQUESTS_ALL")}}<Icon type="ios-help"></Icon></p>
                     </div>
                 </Tooltip>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.UPLOAD_COUNT_ALL_INFO")'>
+                <Tooltip :content='$t("DASHBOARD.FILES_ALL_INFO")'>
                     <div class="content">
-                        <span>{{originOverview.write_count && originOverview.write_count[0]}}</span>
-                        <span>{{originOverview.write_count && originOverview.write_count[1]}}</span>
-                        <p>{{ $t("DASHBOARD.UPLOAD_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
-                    </div>
-                </Tooltip>
-            </div>
-            <div>
-                <Tooltip :content='$t("DASHBOARD.DELETE_COUNT_ALL_INFO")'>
-                    <div class="content">
-                        <span>{{originOverview.delete_count && originOverview.delete_count[0]}}</span>
-                        <span>{{originOverview.delete_count && originOverview.delete_count[1]}}</span>
-                        <p>{{ $t("DASHBOARD.DELETE_COUNT_ALL")}}<Icon type="ios-help"></Icon></p>
-                    </div>
-                </Tooltip>
-            </div>
-            <div>
-                <Tooltip :content='$t("DASHBOARD.DELETE_SPACE_ALL_INFO")'>
-                    <div class="content">
-                        <span>{{originOverview.delete_space && originOverview.delete_space[0]}}</span>
-                        <span>{{originOverview.delete_space && originOverview.delete_space[1]}}</span>
-                        <p>{{ $t("DASHBOARD.DELETE_SPACE_ALL")}}<Icon type="ios-help"></Icon></p>
+                        <span>{{originOverview.files && originOverview.files[0]}}</span>
+                        <span>{{originOverview.files && originOverview.files[1]}}</span>
+                        <p>{{ $t("DASHBOARD.FILES_ALL")}}<Icon type="ios-help"></Icon></p>
                     </div>
                 </Tooltip>
             </div>
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">{{ $t("DASHBOARD.CAPACITY")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'uploadTrafficLine')">{{ $t("DASHBOARD.UPLOAD_SPACE")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'downloadTrafficLine')">{{ $t("DASHBOARD.DOWNLOAD_SPACE")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'downloadsLine')">{{ $t("DASHBOARD.DOWNLOAD_COUNT")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'uploadsLine')">{{ $t("DASHBOARD.UPLOAD_COUNT")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 5}" @click="tabToggle(5,'deleteCountLine')">{{ $t("DASHBOARD.DELETE_COUNT")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 6}" @click="tabToggle(6,'deleteSpaceLine')">{{ $t("DASHBOARD.DELETE_SPACE")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'inflowsLine')">{{ $t("DASHBOARD.INFLOWS")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'outflowsLine')">{{ $t("DASHBOARD.OUTFLOWS")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'requestsLine')">{{ $t("DASHBOARD.REQUESTS")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'filesLine')">{{ $t("DASHBOARD.FILES")}}</button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
                 <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 1">
-                <chart :options="uploadTrafficOptions" auto-resize ref="uploadTrafficLine"></chart>
+                <chart :options="inflowsOptions" auto-resize ref="inflowsLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 2">
-                <chart :options="downloadTrafficOptions" auto-resize ref="downloadTrafficLine"></chart>
+                <chart :options="outflowsOptions" auto-resize ref="outflowsLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 3">
-                <chart :options="downloadsOptions" auto-resize ref="downloadsLine"></chart>
+                <chart :options="requestsOptions" auto-resize ref="requestsLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 4">
-                <chart :options="uploadsOptions" auto-resize ref="uploadsLine"></chart>
-            </div>
-            <div class="card-chart" v-show="showChart === 5">
-                <chart :options="deleteCountOptions" auto-resize ref="deleteCountLine"></chart>
-            </div>
-            <div class="card-chart" v-show="showChart === 6">
-                <chart :options="deleteSpaceOptions" auto-resize ref="deleteSpaceLine"></chart>
+                <chart :options="filesOptions" auto-resize ref="filesLine"></chart>
             </div>
         </div>
     </div>
@@ -163,12 +137,10 @@ export default {
             exportData: [],
             spinShow: true,
             capacityOptions: lineOptions,
-            uploadTrafficOptions: lineOptions,
-            downloadTrafficOptions: lineOptions,
-            downloadsOptions: lineOptions,
-            uploadsOptions: lineOptions,
-            deleteCountOptions: lineOptions,
-            deleteSpaceOptions: lineOptions
+            inflowsOptions: lineOptions,
+            outflowsOptions: lineOptions,
+            requestsOptions: lineOptions,
+            filesOptions: lineOptions
         }
     },
     components: {
@@ -218,13 +190,11 @@ export default {
                     await Promise.all([this.$http.get(this.getApiURL('old', this.dateRange)).then(res => {
                         // overview data old
                         this.originOverview = {
-                            space_used: this.convertData(res.total.space_used, true, 'byte'),
-                            flow_up: this.convertData(res.sum.flow_up, true, 'byte'),
-                            flow_down: this.convertData(res.sum.flow_down, true, 'byte'),
-                            read_count: this.convertData(res.sum.read_count, true, 'time'),
-                            write_count: this.convertData(res.sum.write_count, true, 'time'),
-                            delete_count: this.convertData(res.sum.delete_count, true, 'time'),
-                            delete_space: this.convertData(res.sum.delete_space, true, 'byte')
+                            capacity: this.convertData(res.total.space_used, true, 'byte'),
+                            inflows: this.convertData(res.sum.flow_up, true, 'byte'),
+                            outflows: this.convertData(res.sum.flow_down, true, 'byte'),
+                            requests: this.convertData(res.sum.read_count + res.sum.write_count + res.sum.delete_count, true, 'times'),
+                            files: this.convertData(res.total.num_used, true, '个')
                         }
                         // echarts data old
                         _.extend(this, res)
@@ -235,13 +205,13 @@ export default {
                         _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
                             this.exportData.push({
                                 time: dateTime(time),
-                                capacity: this.distributed.space_used[index],
-                                uploadTraffic: this.distributed.flow_up[index],
-                                downloadTraffic: this.distributed.flow_down[index],
-                                readRequest: this.distributed.read_count[index],
-                                writeRequest: this.distributed.write_count[index],
-                                deleteRequest: this.distributed.delete_count[index],
-                                deleteCapacity: this.distributed.delete_space[index]
+                                '存储容量（字节）': this.distributed.space_used[index],
+                                '流入流量（字节）': this.distributed.flow_up[index],
+                                '流出流量（字节）': this.distributed.flow_down[index],
+                                '读请求数（次）': this.distributed.read_count[index],
+                                '写请求数（次）': this.distributed.write_count[index],
+                                '删除请求数（次）': this.distributed.delete_count[index],
+                                '文件数（个）': this.distributed.num_used[index]
                             })
                         })
                         this.spinShow = false
@@ -257,13 +227,11 @@ export default {
                     await Promise.all([this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
                         // overview data new
                         this.originOverview = {
-                            space_used: this.convertData(res.total.space_used, true, 'byte'),
-                            flow_up: this.convertData(res.sum.flow_up_cdn + res.sum.flow_up_pub, true, 'byte'),
-                            flow_down: this.convertData(res.sum.flow_down_cdn + res.sum.flow_down_pub, true, 'byte'),
-                            read_count: this.convertData(res.sum.get_count + res.sum.head_count, true, 'time'),
-                            write_count: this.convertData(res.sum.post_count + res.sum.put_count, true, 'time'),
-                            delete_count: this.convertData(res.sum.delete_count, true, 'time'),
-                            delete_space: this.convertData(res.sum.delete_space, true, 'byte')
+                            capacity: this.convertData(res.total.space_used, true, 'byte'),
+                            inflows: this.convertData(res.sum.flow_up_cdn + res.sum.flow_up_pub, true, 'byte'),
+                            outflows: this.convertData(res.sum.flow_down_cdn + res.sum.flow_down_pub, true, 'byte'),
+                            requests: this.convertData(res.sum.get_count + res.sum.head_count + res.sum.post_count + res.sum.put_count + res.sum.delete_count + res.sum.list_count, true, 'times'),
+                            files: this.convertData(res.total.num_used, true, '个')
                         }
                         // echarts data new
                         _.extend(this, res)
@@ -272,24 +240,26 @@ export default {
                         // export data new
                         this.exportData = []
                         _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
-                            this.exportData.push({
+                            let exportData = {
                                 time: dateTime(time),
-                                capacity: this.distributed.space_used[index],
-                                uploadTraffic: this.distributed.flow_up_cdn[index] + this.distributed.flow_up_pub[index],
-                                cdnUploadTraffic: this.distributed.flow_up_cdn[index],
-                                pubUploadTraffic: this.distributed.flow_up_pub[index],
-                                downloadTraffic: this.distributed.flow_down_cdn[index] + this.distributed.flow_down_pub[index],
-                                cdnDownloadTraffic: this.distributed.flow_down_cdn[index],
-                                pubDownloadTraffic: this.distributed.flow_down_pub[index],
-                                readRequest: this.distributed.get_count[index] + this.distributed.head_count[index],
-                                getRequest: this.distributed.get_count[index],
-                                headRequest: this.distributed.head_count[index],
-                                writeRequest: this.distributed.post_count[index] + this.distributed.put_count[index],
-                                postRequest: this.distributed.post_count[index],
-                                putRequest: this.distributed.put_count[index],
-                                deleteRequest: this.distributed.delete_count[index],
-                                deleteCapacity: this.distributed.delete_space[index]
+                                '存储容量（字节）': this.distributed.space_used[index],
+                                '流入流量（字节）': this.distributed.flow_up_cdn[index] + this.distributed.flow_up_pub[index],
+                                '公网流入流量（字节）': this.distributed.flow_up_pub[index],
+                                '流出流量（字节）': this.distributed.flow_down_cdn[index] + this.distributed.flow_down_pub[index],
+                                '公网流出流量（字节）': this.distributed.flow_down_pub[index],
+                                '读请求数（次）': this.distributed.get_count[index] + this.distributed.head_count[index],
+                                '写请求数（次）': this.distributed.post_count[index] + this.distributed.put_count[index],
+                                '删除请求数（次）': this.distributed.delete_count[index],
+                                '列文件请求数（次）': this.distributed.delete_count[index],
+                                '文件数（个）': this.distributed.num_used[index]
+                            }
+                            _.forEach(this.distributed.up_cdn, (value, key) => {
+                                exportData[`${key}流入流量（字节）`] = value[index]
                             })
+                            _.forEach(this.distributed.down_cdn, (value, key) => {
+                                exportData[`${key}流出流量（字节）`] = value[index]
+                            })
+                            this.exportData.push(exportData)
                         })
                         this.spinShow = false
                     })
@@ -304,17 +274,14 @@ export default {
                 let originOverviewNew = {}
                 let echartDataOld = {}
                 let echartDataNew = {}
+                let oldTimeLength = ''
                 try {
                     await Promise.all([this.$http.get(this.getApiURL('old', dateStart + '-' + this.dateDividedBefore)).then(res => {
                         // overview data old
                         originOverviewOld = {
-                            space_used: res.total.space_used,
-                            flow_up: res.sum.flow_up,
-                            flow_down: res.sum.flow_down,
-                            read_count: res.sum.read_count,
-                            write_count: res.sum.write_count,
-                            delete_count: res.sum.delete_count,
-                            delete_space: res.sum.delete_space
+                            inflows: res.sum.flow_up,
+                            outflows: res.sum.flow_down,
+                            requests: res.sum.read_count + res.sum.write_count + res.sum.delete_count
                         }
                         // echarts data old
                         echartDataOld = {
@@ -325,18 +292,17 @@ export default {
                             read_count: res.distributed.read_count,
                             write_count: res.distributed.write_count,
                             delete_count: res.distributed.delete_count,
-                            delete_space: res.distributed.delete_space
+                            num_used: res.distributed.num_used
                         }
+                        oldTimeLength = res.time_nodes.length
                     }), this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
                         // overview data new
                         originOverviewNew = {
-                            space_used: res.total.space_used,
-                            flow_up: res.sum.flow_up_cdn + res.sum.flow_up_pub,
-                            flow_down: res.sum.flow_down_cdn + res.sum.flow_down_pub,
-                            read_count: res.sum.get_count + res.sum.head_count,
-                            write_count: res.sum.post_count + res.sum.put_count,
-                            delete_count: res.sum.delete_count,
-                            delete_space: res.sum.delete_space
+                            capacity: res.total.space_used,
+                            inflows: res.sum.flow_up_cdn + res.sum.flow_up_pub,
+                            outflows: res.sum.flow_down_cdn + res.sum.flow_down_pub,
+                            requests: res.sum.get_count + res.sum.head_count + res.sum.post_count + res.sum.put_count + res.sum.delete_count + res.sum.list_count,
+                            files: res.total.num_used
                         }
                         // echarts data new
                         echartDataNew = {
@@ -349,24 +315,19 @@ export default {
                             flow_down_pub: res.distributed.flow_down_pub,
                             down_cdn: res.distributed.down_cdn,
                             read_count: this.combineTwoArray(res.distributed.get_count, res.distributed.head_count),
-                            get_count: res.distributed.get_count,
-                            head_count: res.distributed.head_count,
                             write_count: this.combineTwoArray(res.distributed.post_count, res.distributed.put_count),
-                            post_count: res.distributed.post_count,
-                            put_count: res.distributed.put_count,
                             delete_count: res.distributed.delete_count,
-                            delete_space: res.distributed.delete_space
+                            list_count: res.distributed.list_count,
+                            num_used: res.distributed.num_used
                         }
                     })]).then(res => {
                         // overview data total
                         this.originOverview = {
-                            space_used: this.convertData(originOverviewNew.space_used, true, 'byte'),
-                            flow_up: this.convertData(originOverviewOld.flow_up + originOverviewNew.flow_up, true, 'byte'),
-                            flow_down: this.convertData(originOverviewOld.flow_down + originOverviewNew.flow_down, true, 'byte'),
-                            read_count: this.convertData(originOverviewOld.read_count + originOverviewNew.read_count, true, 'time'),
-                            write_count: this.convertData(originOverviewOld.write_count + originOverviewNew.write_count, true, 'time'),
-                            delete_count: this.convertData(originOverviewOld.delete_count + originOverviewNew.delete_count, true, 'time'),
-                            delete_space: this.convertData(originOverviewOld.delete_space + originOverviewNew.delete_space, true, 'byte')
+                            capacity: this.convertData(originOverviewNew.capacity, true, 'byte'),
+                            inflows: this.convertData(originOverviewOld.inflows + originOverviewNew.inflows, true, 'byte'),
+                            outflows: this.convertData(originOverviewOld.outflows + originOverviewNew.outflows, true, 'byte'),
+                            requests: this.convertData(originOverviewOld.requests + originOverviewNew.requests, true, 'time'),
+                            files: this.convertData(originOverviewNew.files, true, 'time')
                         }
                         // echarts data total
                         let echartData = {
@@ -379,35 +340,36 @@ export default {
                             flow_down_pub: echartDataNew.flow_down_pub,
                             down_cdn: echartDataNew.down_cdn,
                             read_count: echartDataOld.read_count.concat(echartDataNew.read_count),
-                            get_count: echartDataNew.get_count,
-                            head_count: echartDataNew.head_count,
                             write_count: echartDataOld.write_count.concat(echartDataNew.write_count),
-                            post_count: echartDataNew.post_count,
-                            put_count: echartDataNew.put_count,
                             delete_count: echartDataOld.delete_count.concat(echartDataNew.delete_count),
-                            delete_space: echartDataOld.delete_space.concat(echartDataNew.delete_space)
+                            list_count: echartDataNew.list_count,
+                            num_used: echartDataOld.num_used.concat(echartDataNew.num_used)
                         }
                         _.extend(this, echartData)
                         this.setOptions('oldAndNew')
                         // export data total
                         this.exportData = []
                         _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
-                            this.exportData.push({
+                            let exportData = {
                                 time: dateTime(time),
-                                capacity: echartData.space_used[index],
-                                uploadTraffic: echartData.flow_up[index],
-                                pubUploadTraffic: echartData.flow_up_pub[index],
-                                downloadTraffic: echartData.flow_down[index],
-                                pubDownloadTraffic: echartData.flow_down_pub[index],
-                                readRequest: echartData.read_count[index],
-                                getRequest: echartData.get_count[index],
-                                headRequest: echartData.head_count[index],
-                                writeRequest: echartData.write_count[index],
-                                postRequest: echartData.post_count[index],
-                                putRequest: echartData.put_count[index],
-                                deleteRequest: echartData.delete_count[index],
-                                deleteCapacity: echartData.delete_space[index]
+                                '存储容量（字节）': echartData.space_used[index],
+                                '流入流量（字节）': echartData.flow_up[index],
+                                '公网流入流量（字节）': index < oldTimeLength ? '' : echartData.flow_up_pub[index - oldTimeLength],
+                                '流出流量（字节）': echartData.flow_down[index],
+                                '公网流出流量（字节）': index < oldTimeLength ? '' : echartData.flow_down_pub[index - oldTimeLength],
+                                '读请求数（次）': echartData.read_count[index],
+                                '写请求数（次）': echartData.write_count[index],
+                                '删除请求数（次）': echartData.delete_count[index],
+                                '列文件请求数（次）': index < oldTimeLength ? '' : echartData.delete_count[index - oldTimeLength],
+                                '文件数（个）': echartData.num_used[index]
+                            }
+                            _.forEach(echartData.up_cdn, (value, key) => {
+                                exportData[`${key}流入流量（字节）`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
                             })
+                            _.forEach(echartData.down_cdn, (value, key) => {
+                                exportData[`${key}流出流量（字节）`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
+                            })
+                            this.exportData.push(exportData)
                         })
                         this.spinShow = false
                     })
@@ -421,81 +383,75 @@ export default {
         setOptions (url) {
             if (url === 'old') {
                 this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate)
-                this.uploadTrafficOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up, 'byte', '上传流量'), this.theme, this.xLabelRotate)
-                this.downloadTrafficOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down, 'byte', '下载流量'), this.theme, this.xLabelRotate)
-                this.downloadsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.read_count, 'time', '读取请求'), this.theme, this.xLabelRotate)
-                this.uploadsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.write_count, 'time', '写入请求'), this.theme, this.xLabelRotate)
-                this.deleteCountOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'time', '删除请求'), this.theme, this.xLabelRotate)
-                this.deleteSpaceOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_space, 'byte', '删除容量'), this.theme, this.xLabelRotate)
+                this.inflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up, 'byte', '流入流量'), this.theme, this.xLabelRotate)
+                this.outflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down, 'byte', '流出流量'), this.theme, this.xLabelRotate)
+                this.requestsOptions = initNewOptions(
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.read_count, 'times', '读请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.write_count, 'times', '写请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'times', '删除请求数'),
+                    '',
+                    this.theme,
+                    this.xLabelRotate
+                )
+                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.num_used, '个', '文件数'), this.theme, this.xLabelRotate)
             } else if (url === 'new') {
                 let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1])
                 this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate, newOneDayFlag)
-                this.uploadTrafficOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_up_cdn, this.distributed.flow_up_pub), 'byte', '上传流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_pub, 'byte', '公网上传流量'),
+                this.inflowsOptions = initNewOptions(
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_up_cdn, this.distributed.flow_up_pub), 'byte', '流入流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_pub, 'byte', '公网流入流量'),
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.distributed.up_cdn, 'byte', 'up'),
+                    '',
                     this.theme,
                     this.xLabelRotate,
                     newOneDayFlag
                 )
-                this.downloadTrafficOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_down_cdn, this.distributed.flow_down_pub), 'byte', '下载流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_pub, 'byte', '公网下载流量'),
+                this.outflowsOptions = initNewOptions(
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_down_cdn, this.distributed.flow_down_pub), 'byte', '流出流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_pub, 'byte', '公网流出流量'),
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.distributed.down_cdn, 'byte', 'down'),
+                    '',
                     this.theme,
                     this.xLabelRotate,
                     newOneDayFlag
                 )
-                this.downloadsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.get_count, this.distributed.head_count), 'time', '读取请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.get_count, 'time', 'get读取请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.head_count, 'time', 'head读取请求'),
+                this.requestsOptions = initNewOptions(
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.get_count, this.distributed.head_count), 'times', '读请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.post_count, this.distributed.put_count), 'times', '写请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'times', '删除请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.list_count, 'times', '列文件请求数'),
                     this.theme,
                     this.xLabelRotate,
                     newOneDayFlag
                 )
-                this.uploadsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.post_count, this.distributed.put_count), 'time', '写入请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.post_count, 'time', 'post写入请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.put_count, 'time', 'put写入请求'),
-                    this.theme,
-                    this.xLabelRotate,
-                    newOneDayFlag
-                )
-                this.deleteCountOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'time', '删除请求'), this.theme, this.xLabelRotate, newOneDayFlag)
-                this.deleteSpaceOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_space, 'byte', '删除容量'), this.theme, this.xLabelRotate, newOneDayFlag)
+                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.num_used, '个', '文件数'), this.theme, this.xLabelRotate, newOneDayFlag)
             } else {
                 this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate)
-                this.uploadTrafficOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up, 'byte', '上传流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_pub, 'byte', '公网上传流量'),
+                this.inflowsOptions = initNewOptions(
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up, 'byte', '流入流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_pub, 'byte', '公网流入流量'),
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.up_cdn, 'byte', 'up'),
+                    '',
                     this.theme,
                     this.xLabelRotate
                 )
-                this.downloadTrafficOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down, 'byte', '下载流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down_pub, 'byte', '公网下载流量'),
+                this.outflowsOptions = initNewOptions(
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down, 'byte', '流出流量'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down_pub, 'byte', '公网流出流量'),
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.down_cdn, 'byte', 'down'),
+                    '',
                     this.theme,
                     this.xLabelRotate
                 )
-                this.downloadsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.read_count, 'time', '读取请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.get_count, 'time', 'get读取请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.head_count, 'time', 'head读取请求'),
+                this.requestsOptions = initNewOptions(
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.read_count, 'times', '读请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.write_count, 'times', '写请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.delete_count, 'times', '删除请求数'),
+                    this.combineTimeDataUnitLabel(this.time_nodes, this.list_count, 'times', '列文件请求数'),
                     this.theme,
                     this.xLabelRotate
                 )
-                this.uploadsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.write_count, 'time', '写入请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.post_count, 'time', 'post写入请求'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.put_count, 'time', 'put写入请求'),
-                    this.theme,
-                    this.xLabelRotate
-                )
-                this.deleteCountOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.delete_count, 'time', '删除请求'), this.theme, this.xLabelRotate)
-                this.deleteSpaceOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.delete_space, 'byte', '删除容量'), this.theme, this.xLabelRotate)
+                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.num_used, '个', '文件数'), this.theme, this.xLabelRotate)
             }
         },
         combineTwoArray (array1, array2) {
@@ -527,7 +483,7 @@ export default {
                     combinedData.push([value * 1000, data[key][index]])
                 })
                 let object = {
-                    label: key + (upOrDown === 'up' ? '上传流量' : '下载流量'),
+                    label: key + (upOrDown === 'up' ? '流入流量' : '流出流量'),
                     unit: unit,
                     data: combinedData
                 }
@@ -735,9 +691,9 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
 }
 
 // new storage
-const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, newOneDayFlag) => {
+const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, xLabelRotate, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate || (newOneDayFlag && dataTotal.data.length >= 15)) {
+    if (xLabelRotate || (newOneDayFlag && dataPart.data.length >= 15)) {
         themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
         themeLineOptions.grid.right = '80'
         themeLineOptions.grid.bottom = '40'
@@ -748,8 +704,8 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
     themeLineOptions.grid.top = '60'
     let seriesArray = [{
         type: 'line',
-        data: dataTotal.data,
-        name: dataTotal.label,
+        data: dataPart.data,
+        name: dataPart.label,
         smooth: true,
         sampling: 'average',
         areaStyle: {
@@ -789,7 +745,7 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
             seriesArray.push(seriesItem)
         })
     } else {
-        let seriesItem = {
+        let seriesItem = [{
             type: 'line',
             data: dataPart2.data,
             name: dataPart2.label,
@@ -801,16 +757,28 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
                     opacity: 0.5
                 }
             }
-        }
-        seriesArray.push(seriesItem)
+        }, {
+            type: 'line',
+            data: dataPart3.data,
+            name: dataPart3.label,
+            smooth: true,
+            sampling: 'average',
+            areaStyle: {
+                normal: {
+                    color: '#20a0ff',
+                    opacity: 0.5
+                }
+            }
+        }]
+        seriesArray = seriesArray.concat(seriesItem)
     }
-    let legendData = [dataTotal.label, dataPart1.label]
+    let legendData = [dataPart.label, dataPart1.label]
     if (dataPart2 instanceof Array) {
         _.forEach(dataPart2, (value, index) => {
             legendData.push(dataPart2[index].label)
         })
     } else {
-        legendData.push(dataPart2.label)
+        legendData = legendData.concat([dataPart2.label, dataPart3.label])
     }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         color: ['#1e9fff', '#9f61fc', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
@@ -830,7 +798,7 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
                 let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + dateTime(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
-                    res += dataTotal.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
+                    res += dataPart.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
                 })
                 return res
             }
@@ -838,7 +806,7 @@ const initNewOptions = (dataTotal, dataPart1, dataPart2, theme, xLabelRotate, ne
         yAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return dataTotal.unit === 'byte' ? bytes(value) : timesK(value)
+                    return dataPart.unit === 'byte' ? bytes(value) : timesK(value)
                 }
             }
         }
