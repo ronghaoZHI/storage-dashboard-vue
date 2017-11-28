@@ -585,6 +585,7 @@ export default {
             await Promise.all(Array.map(self.selectedFileList, (file) => self.downloadFile(file)))
         },
         openFolder (item) {
+            this.searchValue = ''
             this.$router.push({ name: 'file', params: { bucket: this.bucket, prefix: item.Prefix } })
         },
         getUrl (prefix) {
