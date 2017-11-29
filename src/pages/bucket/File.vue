@@ -692,9 +692,9 @@ const getURL = async (bucket, file, prefix) => {
         z-index: 100;
         width: 400px;
 
-        span{
-            background-color: transparent !important;
-            max-width: 150px;
+        span.input-append-before{
+            background-color: #ccc !important;
+            width: 150px;
         }
         .@{css-prefix}input {
             margin-left: 4px;
