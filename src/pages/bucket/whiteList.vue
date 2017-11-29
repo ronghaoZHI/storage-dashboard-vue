@@ -47,7 +47,7 @@
             <Checkbox v-model="newBlack.delete">{{$t('SETTINGS.DELETE')}}</Checkbox>
         </div>
         <Table border :stripe="true" :columns="blackHeader" :data="blackList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
-        <Button type="primary" class="mar-t-35" @click="accessSet()">{{$t('SETTINGS.SAVE')}}</Button>
+        <Button type="primary" class="settings-btn" @click="accessSet()">{{$t('SETTINGS.SAVE')}}</Button>
     </div>
 </template>
 <script>
@@ -384,5 +384,9 @@ const savedDefult = {
         line-height: 40px;
         margin-right: 8px;
     }
+}
+.settings-btn{
+    display: block;
+    margin: 35px auto 0;
 }
 </style>
