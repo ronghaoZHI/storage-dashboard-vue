@@ -3,7 +3,7 @@
         <div class="layout-bsc-toolbar">
             <a class="btn-back" @click="back()"><Icon type="chevron-left"></Icon></a>
             <bsc-breadcrumb>
-                <bsc-breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
+                <bsc-breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
                 <bsc-breadcrumb-item :href="getUrl('noprefix')">{{bucket}}</bsc-breadcrumb-item>
                 <bsc-breadcrumb-item v-for="bc in breadcrumb" :href="getUrl(bc.prefix)" :key="bc.text">{{bc.text}}</bsc-breadcrumb-item>
             </bsc-breadcrumb>
@@ -392,6 +392,9 @@ export default {
         },
         breadcrumb: function () {
             return convertPrefix2Router(this.prefix)
+        },
+        bucketPath () {
+            return `/bucket/${this.$route.params.bucket}`
         }
     },
     created () {

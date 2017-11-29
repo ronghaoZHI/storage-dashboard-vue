@@ -42,6 +42,11 @@ export default {
             spinShow: true
         }
     },
+    computed: {
+        bucket: function () {
+            return this.$route.params.bucket || ''
+        }
+    },
     created () {
         this.convertBucketList()
     },
@@ -69,7 +74,6 @@ export default {
                         this.getBucketAcl(item.Name).then(acl => {
                             acl.Grants.forEach(grant => {
                                 if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
-                                    item.selected = false
                                     item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
                                     this.bucketList.push(item)
                                 }
@@ -78,11 +82,12 @@ export default {
                     })
                 } else {
                     this.bucketList = _.forEach(res.Buckets, (item, index) => {
-                        item.selected = index === 0
                         item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
                     })
                 }
-
+                this.bucketList = _.forEach(this.bucketList, (item, index) => {
+                    item.selected = this.bucket ? item.Name === this.bucket : index === 0
+                })
                 this.selectedBucket = this.bucketList.length > 0 ? this.bucketList[0] : {}
                 this.$Loading.finish()
                 this.spinShow = false

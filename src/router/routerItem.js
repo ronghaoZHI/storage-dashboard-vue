@@ -36,6 +36,11 @@ const layoutChild = [{
     meta: { title: 'My storage', ali: 'bucket' }, // 'ali' => Menu.vue
     component: Bucket
 }, {
+    path: '/bucket/:bucket',
+    name: 'bucket',
+    meta: { title: 'My storage', ali: 'bucket' }, // 'ali' => Menu.vue
+    component: Bucket
+}, {
     path: '/bucket/:bucket/prefix/:prefix',
     name: 'file',
     meta: { title: 'My storage', ali: 'bucket' },

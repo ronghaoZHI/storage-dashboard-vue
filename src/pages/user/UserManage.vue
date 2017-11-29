@@ -106,6 +106,7 @@
 <script>
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
+import moment from 'moment'
 import { BOUND_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, UNBIND_USER } from '@/service/API'
 export default {
     data () {
@@ -187,6 +188,16 @@ export default {
                     key: 'email'
                 },
                 {
+                    title: 'Creation time',
+                    width: 150,
+                    align: 'left',
+                    render: (h, params) => {
+                        let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
+                        const formatTime = moment(creationTime).format('YYYY-MM-DD hh:mm:ss')
+                        return h('div', [formatTime])
+                    }
+                },
+                {
                     title: 'Actions',
                     key: 'actions',
                     width: 50,
@@ -232,6 +243,16 @@ export default {
                         return params.row.acl ? Array.map(params.row.acl, (acl) => {
                             return h('Tag', {props: {type: 'border'}}, `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${acl.file_acl}`)
                         }) : 'No acl'
+                    }
+                },
+                {
+                    title: 'Creation time',
+                    width: 400,
+                    align: 'left',
+                    render: (h, params) => {
+                        let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
+                        const formatTime = moment(creationTime).format('YYYY-MM-DD hh:mm:ss')
+                        return h('div', [formatTime])
                     }
                 },
                 {
