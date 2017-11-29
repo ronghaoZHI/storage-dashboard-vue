@@ -117,8 +117,8 @@ export default {
     data () {
         return {
             showChart: 0,
-            dateDividedBefore: '20171120',
-            dateDivided: '20171121',
+            dateDividedBefore: '20171122',
+            dateDivided: '20171123',
             bucketList: this.bucketList,
             selectedBucket: 'All Buckets',
             dateDefault: {
@@ -181,10 +181,7 @@ export default {
             this.spinShow = true
             if (!this.dateSelect) return
 
-            let dateStart = formatDate(this.dateSelect[0])
-            let dateEnd = formatDate(this.dateSelect[1])
-
-            if (dateEnd < this.dateDivided) {
+            if (formatDate(this.dateSelect[1]) < this.dateDivided) {
                 // old storage
                 try {
                     await Promise.all([this.$http.get(this.getApiURL('old', this.dateRange)).then(res => {
@@ -203,62 +200,16 @@ export default {
                         // export data old
                         this.exportData = []
                         _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
-                            this.exportData.push({
-                                time: dateTime(time),
-                                '存储容量（字节）': this.distributed.space_used[index],
-                                '流入流量（字节）': this.distributed.flow_up[index],
-                                '流出流量（字节）': this.distributed.flow_down[index],
-                                '读请求数（次）': this.distributed.read_count[index],
-                                '写请求数（次）': this.distributed.write_count[index],
-                                '删除请求数（次）': this.distributed.delete_count[index],
-                                '文件数（个）': this.distributed.num_used[index]
-                            })
-                        })
-                        this.spinShow = false
-                    })
-                } catch (error) {
-                    console.log(error)
-                    this.spinShow = false
-                    this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
-                }
-            } else if (dateStart >= this.dateDivided) {
-                // new storage
-                try {
-                    await Promise.all([this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
-                        // overview data new
-                        this.originOverview = {
-                            capacity: this.convertData(res.total.space_used, true, 'byte'),
-                            inflows: this.convertData(res.sum.flow_up_cdn + res.sum.flow_up_pub, true, 'byte'),
-                            outflows: this.convertData(res.sum.flow_down_cdn + res.sum.flow_down_pub, true, 'byte'),
-                            requests: this.convertData(res.sum.get_count + res.sum.head_count + res.sum.post_count + res.sum.put_count + res.sum.delete_count + res.sum.list_count, true, 'times'),
-                            files: this.convertData(res.total.num_used, true, '个')
-                        }
-                        // echarts data new
-                        _.extend(this, res)
-                        this.setOptions('new')
-                    })]).then(res => {
-                        // export data new
-                        this.exportData = []
-                        _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
                             let exportData = {
-                                time: dateTime(time),
-                                '存储容量（字节）': this.distributed.space_used[index],
-                                '流入流量（字节）': this.distributed.flow_up_cdn[index] + this.distributed.flow_up_pub[index],
-                                '公网流入流量（字节）': this.distributed.flow_up_pub[index],
-                                '流出流量（字节）': this.distributed.flow_down_cdn[index] + this.distributed.flow_down_pub[index],
-                                '公网流出流量（字节）': this.distributed.flow_down_pub[index],
-                                '读请求数（次）': this.distributed.get_count[index] + this.distributed.head_count[index],
-                                '写请求数（次）': this.distributed.post_count[index] + this.distributed.put_count[index],
-                                '删除请求数（次）': this.distributed.delete_count[index],
-                                '列文件请求数（次）': this.distributed.delete_count[index],
-                                '文件数（个）': this.distributed.num_used[index]
+                                time: dateTime(time)
                             }
-                            _.forEach(this.distributed.up_cdn, (value, key) => {
-                                exportData[`${key}流入流量（字节）`] = value[index]
-                            })
-                            _.forEach(this.distributed.down_cdn, (value, key) => {
-                                exportData[`${key}流出流量（字节）`] = value[index]
-                            })
+                            exportData[exportDic.capacity] = this.distributed.space_used[index]
+                            exportData[exportDic.inflows] = this.distributed.flow_up[index]
+                            exportData[exportDic.outflows] = this.distributed.flow_down[index]
+                            exportData[exportDic.readRequests] = this.distributed.read_count[index]
+                            exportData[exportDic.writeRequests] = this.distributed.write_count[index]
+                            exportData[exportDic.deleteRequests] = this.distributed.delete_count[index]
+                            exportData[exportDic.files] = this.distributed.num_used[index]
                             this.exportData.push(exportData)
                         })
                         this.spinShow = false
@@ -269,110 +220,75 @@ export default {
                     this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
                 }
             } else {
-                // old and new storage
-                let originOverviewOld = {}
-                let originOverviewNew = {}
-                let echartDataOld = {}
-                let echartDataNew = {}
-                let oldTimeLength = ''
+                let resOld = {}
+                let resNew = {}
+                let oldTimeLength = 0
                 try {
-                    await Promise.all([this.$http.get(this.getApiURL('old', dateStart + '-' + this.dateDividedBefore)).then(res => {
-                        // overview data old
-                        originOverviewOld = {
-                            inflows: res.sum.flow_up,
-                            outflows: res.sum.flow_down,
-                            requests: res.sum.read_count + res.sum.write_count + res.sum.delete_count
+                    if (formatDate(this.dateSelect[0]) >= this.dateDivided) {
+                        // new storage
+                        await Promise.all([this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
+                            resNew = res
+                        })])
+                    } else {
+                        // old and new storage
+                        await Promise.all([this.$http.get(this.getApiURL('old', formatDate(this.dateSelect[0]) + '-' + this.dateDividedBefore)).then(res => {
+                            resOld = res
+                            oldTimeLength = res.time_nodes.length
+                        }), this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
+                            resNew = res
+                        })])
+                    }
+                    // overview data total
+                    this.originOverview = {
+                        capacity: this.convertData(resNew.total.space_used, true, 'byte'),
+                        inflows: this.convertData(resOld.sum === undefined ? resNew.sum.flow_up_cdn + resNew.sum.flow_up_pub : resOld.sum.flow_up + resNew.sum.flow_up_cdn + resNew.sum.flow_up_pub, true, 'byte'),
+                        outflows: this.convertData(resOld.sum === undefined ? resNew.sum.flow_down_cdn + resNew.sum.flow_down_pub : resOld.sum.flow_down + resNew.sum.flow_down_cdn + resNew.sum.flow_down_pub, true, 'byte'),
+                        requests: this.convertData(resOld.sum === undefined ? resNew.sum.get_count + resNew.sum.head_count + resNew.sum.post_count + resNew.sum.put_count + resNew.sum.delete_count + resNew.sum.list_count : resOld.sum.read_count + resOld.sum.write_count + resOld.sum.delete_count + resNew.sum.get_count + resNew.sum.head_count + resNew.sum.post_count + resNew.sum.put_count + resNew.sum.delete_count + resNew.sum.list_count, true, 'times'),
+                        files: this.convertData(resNew.total.num_used, true, '')
+                    }
+                    // echarts data total
+                    let echartData = {
+                        time_nodes: resOld.time_nodes === undefined ? resNew.time_nodes : resOld.time_nodes.concat(resNew.time_nodes),
+                        space_used: resOld.distributed === undefined ? resNew.distributed.space_used : resOld.distributed.space_used.concat(resNew.distributed.space_used),
+                        flow_up: resOld.distributed === undefined ? this.combineTwoArray(resNew.distributed.flow_up_cdn, resNew.distributed.flow_up_cdn) : resOld.distributed.flow_up.concat(this.combineTwoArray(resNew.distributed.flow_up_cdn, resNew.distributed.flow_up_cdn)),
+                        flow_up_pub: resNew.distributed.flow_up_cdn,
+                        up_cdn: resNew.distributed.up_cdn,
+                        flow_down: resOld.distributed === undefined ? this.combineTwoArray(resNew.distributed.flow_down_cdn, resNew.distributed.flow_down_pub) : resOld.distributed.flow_down.concat(this.combineTwoArray(resNew.distributed.flow_down_cdn, resNew.distributed.flow_down_pub)),
+                        flow_down_pub: resNew.distributed.flow_down_pub,
+                        down_cdn: resNew.distributed.down_cdn,
+                        read_count: resOld.distributed === undefined ? this.combineTwoArray(resNew.distributed.get_count, resNew.distributed.head_count) : resOld.distributed.read_count.concat(this.combineTwoArray(resNew.distributed.get_count, resNew.distributed.head_count)),
+                        write_count: resOld.distributed === undefined ? this.combineTwoArray(resNew.distributed.post_count, resNew.distributed.put_count) : resOld.distributed.write_count.concat(this.combineTwoArray(resNew.distributed.post_count, resNew.distributed.put_count)),
+                        delete_count: resOld.distributed === undefined ? resNew.distributed.delete_count : resOld.distributed.delete_count.concat(resNew.distributed.delete_count),
+                        list_count: resNew.distributed.list_count,
+                        num_used: resOld.distributed === undefined ? resNew.distributed.num_used : resOld.distributed.num_used.concat(resNew.distributed.num_used)
+                    }
+                    _.extend(this, echartData)
+                    this.setOptions('oldAndNew')
+                    // export data total
+                    this.exportData = []
+                    _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
+                        let exportData = {
+                            time: dateTime(time)
                         }
-                        // echarts data old
-                        echartDataOld = {
-                            time_nodes: res.time_nodes,
-                            space_used: res.distributed.space_used,
-                            flow_up: res.distributed.flow_up,
-                            flow_down: res.distributed.flow_down,
-                            read_count: res.distributed.read_count,
-                            write_count: res.distributed.write_count,
-                            delete_count: res.distributed.delete_count,
-                            num_used: res.distributed.num_used
-                        }
-                        oldTimeLength = res.time_nodes.length
-                    }), this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
-                        // overview data new
-                        originOverviewNew = {
-                            capacity: res.total.space_used,
-                            inflows: res.sum.flow_up_cdn + res.sum.flow_up_pub,
-                            outflows: res.sum.flow_down_cdn + res.sum.flow_down_pub,
-                            requests: res.sum.get_count + res.sum.head_count + res.sum.post_count + res.sum.put_count + res.sum.delete_count + res.sum.list_count,
-                            files: res.total.num_used
-                        }
-                        // echarts data new
-                        echartDataNew = {
-                            time_nodes: res.time_nodes,
-                            space_used: res.distributed.space_used,
-                            flow_up: this.combineTwoArray(res.distributed.flow_up_cdn, res.distributed.flow_up_cdn),
-                            flow_up_pub: res.distributed.flow_up_cdn,
-                            up_cdn: res.distributed.up_cdn,
-                            flow_down: this.combineTwoArray(res.distributed.flow_down_cdn, res.distributed.flow_down_pub),
-                            flow_down_pub: res.distributed.flow_down_pub,
-                            down_cdn: res.distributed.down_cdn,
-                            read_count: this.combineTwoArray(res.distributed.get_count, res.distributed.head_count),
-                            write_count: this.combineTwoArray(res.distributed.post_count, res.distributed.put_count),
-                            delete_count: res.distributed.delete_count,
-                            list_count: res.distributed.list_count,
-                            num_used: res.distributed.num_used
-                        }
-                    })]).then(res => {
-                        // overview data total
-                        this.originOverview = {
-                            capacity: this.convertData(originOverviewNew.capacity, true, 'byte'),
-                            inflows: this.convertData(originOverviewOld.inflows + originOverviewNew.inflows, true, 'byte'),
-                            outflows: this.convertData(originOverviewOld.outflows + originOverviewNew.outflows, true, 'byte'),
-                            requests: this.convertData(originOverviewOld.requests + originOverviewNew.requests, true, 'time'),
-                            files: this.convertData(originOverviewNew.files, true, 'time')
-                        }
-                        // echarts data total
-                        let echartData = {
-                            time_nodes: echartDataOld.time_nodes.concat(echartDataNew.time_nodes),
-                            space_used: echartDataOld.space_used.concat(echartDataNew.space_used),
-                            flow_up: echartDataOld.flow_up.concat(echartDataNew.flow_up),
-                            flow_up_pub: echartDataNew.flow_up_pub,
-                            up_cdn: echartDataNew.up_cdn,
-                            flow_down: echartDataOld.flow_down.concat(echartDataNew.flow_down),
-                            flow_down_pub: echartDataNew.flow_down_pub,
-                            down_cdn: echartDataNew.down_cdn,
-                            read_count: echartDataOld.read_count.concat(echartDataNew.read_count),
-                            write_count: echartDataOld.write_count.concat(echartDataNew.write_count),
-                            delete_count: echartDataOld.delete_count.concat(echartDataNew.delete_count),
-                            list_count: echartDataNew.list_count,
-                            num_used: echartDataOld.num_used.concat(echartDataNew.num_used)
-                        }
-                        _.extend(this, echartData)
-                        this.setOptions('oldAndNew')
-                        // export data total
-                        this.exportData = []
-                        _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
-                            let exportData = {
-                                time: dateTime(time),
-                                '存储容量（字节）': echartData.space_used[index],
-                                '流入流量（字节）': echartData.flow_up[index],
-                                '公网流入流量（字节）': index < oldTimeLength ? '' : echartData.flow_up_pub[index - oldTimeLength],
-                                '流出流量（字节）': echartData.flow_down[index],
-                                '公网流出流量（字节）': index < oldTimeLength ? '' : echartData.flow_down_pub[index - oldTimeLength],
-                                '读请求数（次）': echartData.read_count[index],
-                                '写请求数（次）': echartData.write_count[index],
-                                '删除请求数（次）': echartData.delete_count[index],
-                                '列文件请求数（次）': index < oldTimeLength ? '' : echartData.delete_count[index - oldTimeLength],
-                                '文件数（个）': echartData.num_used[index]
-                            }
-                            _.forEach(echartData.up_cdn, (value, key) => {
-                                exportData[`${key}流入流量（字节）`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
-                            })
-                            _.forEach(echartData.down_cdn, (value, key) => {
-                                exportData[`${key}流出流量（字节）`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
-                            })
-                            this.exportData.push(exportData)
+                        exportData[exportDic.capacity] = echartData.space_used[index]
+                        exportData[exportDic.inflows] = echartData.flow_up[index]
+                        exportData[exportDic.pubInflows] = index < oldTimeLength ? '' : echartData.flow_up_pub[index - oldTimeLength]
+                        _.forEach(echartData.up_cdn, (value, key) => {
+                            exportData[`${key}${exportDic.inflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
                         })
-                        this.spinShow = false
+                        exportData[exportDic.outflows] = echartData.flow_down[index]
+                        exportData[exportDic.pubOutflows] = index < oldTimeLength ? '' : echartData.flow_down_pub[index - oldTimeLength]
+                        _.forEach(echartData.down_cdn, (value, key) => {
+                            exportData[`${key}${exportDic.outflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
+                        })
+                        exportData[exportDic.readRequests] = echartData.read_count[index]
+                        exportData[exportDic.writeRequests] = echartData.write_count[index]
+                        exportData[exportDic.deleteRequests] = echartData.delete_count[index]
+                        exportData[exportDic.listRequests] = index < oldTimeLength ? '' : echartData.delete_count[index - oldTimeLength]
+                        exportData[exportDic.files] = echartData.num_used[index]
+                        this.exportData.push(exportData)
                     })
+                    this.spinShow = false
                 } catch (error) {
                     console.log(error)
                     this.spinShow = false
@@ -394,46 +310,17 @@ export default {
                     this.xLabelRotate
                 )
                 this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.num_used, '个', '文件数'), this.theme, this.xLabelRotate)
-            } else if (url === 'new') {
-                let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1])
-                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate, newOneDayFlag)
-                this.inflowsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_up_cdn, this.distributed.flow_up_pub), 'byte', '流入流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up_pub, 'byte', '公网流入流量'),
-                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.distributed.up_cdn, 'byte', 'up'),
-                    '',
-                    this.theme,
-                    this.xLabelRotate,
-                    newOneDayFlag
-                )
-                this.outflowsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.flow_down_cdn, this.distributed.flow_down_pub), 'byte', '流出流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down_pub, 'byte', '公网流出流量'),
-                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.distributed.down_cdn, 'byte', 'down'),
-                    '',
-                    this.theme,
-                    this.xLabelRotate,
-                    newOneDayFlag
-                )
-                this.requestsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.get_count, this.distributed.head_count), 'times', '读请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.combineTwoArray(this.distributed.post_count, this.distributed.put_count), 'times', '写请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'times', '删除请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.list_count, 'times', '列文件请求数'),
-                    this.theme,
-                    this.xLabelRotate,
-                    newOneDayFlag
-                )
-                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.num_used, '个', '文件数'), this.theme, this.xLabelRotate, newOneDayFlag)
             } else {
-                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate)
+                let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided
+                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate, newOneDayFlag)
                 this.inflowsOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up, 'byte', '流入流量'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_pub, 'byte', '公网流入流量'),
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.up_cdn, 'byte', 'up'),
                     '',
                     this.theme,
-                    this.xLabelRotate
+                    this.xLabelRotate,
+                    newOneDayFlag
                 )
                 this.outflowsOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down, 'byte', '流出流量'),
@@ -441,7 +328,8 @@ export default {
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.down_cdn, 'byte', 'down'),
                     '',
                     this.theme,
-                    this.xLabelRotate
+                    this.xLabelRotate,
+                    newOneDayFlag
                 )
                 this.requestsOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.read_count, 'times', '读请求数'),
@@ -449,9 +337,10 @@ export default {
                     this.combineTimeDataUnitLabel(this.time_nodes, this.delete_count, 'times', '删除请求数'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.list_count, 'times', '列文件请求数'),
                     this.theme,
-                    this.xLabelRotate
+                    this.xLabelRotate,
+                    newOneDayFlag
                 )
-                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.num_used, '个', '文件数'), this.theme, this.xLabelRotate)
+                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.num_used, '个', '文件数'), this.theme, this.xLabelRotate, newOneDayFlag)
             }
         },
         combineTwoArray (array1, array2) {
@@ -524,14 +413,24 @@ export default {
             to[0] && this.getInitData()
         },
         'theme' (to, from) {
-            let dateStart = formatDate(this.dateSelect[0])
-            let dateEnd = formatDate(this.dateSelect[1])
-            let url = dateEnd < this.dateDivided ? 'old' : dateStart >= this.dateDivided ? 'new' : 'oldAndNew'
+            let url = formatDate(this.dateSelect[1]) < this.dateDivided ? 'old' : 'oldAndNew'
             this.setOptions(url)
         }
     }
 }
 
+const exportDic = {
+    capacity: '存储容量（字节）',
+    inflows: '流入流量（字节）',
+    pubInflows: '公网流入流量（字节）',
+    outflows: '流出流量（字节）',
+    pubOutflows: '公网流出流量（字节）',
+    readRequests: '读请求数（次）',
+    writeRequests: '写请求数（次）',
+    deleteRequests: '删除请求数（次）',
+    listRequests: '列文件请求数（次）',
+    files: '文件数（个）'
+}
 const fixDate = n => n < 10 ? '0' + n : '' + n
 const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
 const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
