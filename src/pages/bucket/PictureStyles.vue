@@ -2,7 +2,7 @@
     <div>
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
+                <Breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
                 <Breadcrumb-item>{{$t("STORAGE.PIC_STYLE")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
         </div>
@@ -177,6 +177,9 @@ export default {
     computed: {
         bucket () {
             return this.$route.params.bucket
+        },
+        bucketPath () {
+            return `/bucket/${this.$route.params.bucket}`
         }
     },
     components: { upload },

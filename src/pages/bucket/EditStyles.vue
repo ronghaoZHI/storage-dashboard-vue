@@ -2,7 +2,7 @@
     <div class="bsc-edit-styles">
         <div class="layout-bsc-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
+                <Breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
                 <Breadcrumb-item :href="styleListHref">{{$t("STORAGE.PIC_STYLE")}}</Breadcrumb-item>
                 <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
@@ -433,6 +433,9 @@ export default {
         },
         fontbackColorError () {
             return !colorTest(this.fontStyle.background)
+        },
+        bucketPath () {
+            return `/bucket/${this.$route.params.bucket}`
         }
     },
     mounted () {

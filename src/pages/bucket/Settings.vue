@@ -2,7 +2,7 @@
     <div class="bsc-settings">
         <div class="bsc-layout-toolbar">
             <Breadcrumb>
-                <Breadcrumb-item href="/">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
+                <Breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
                 <Breadcrumb-item>{{$t("STORAGE.BUCKET_SETTING")}} ({{bucket}})</Breadcrumb-item>
             </Breadcrumb>
             <div></div>
@@ -383,6 +383,9 @@ export default {
             let name = this.newUserItem.name
             let { READ, WRITE, READ_ACP, WRITE_ACP } = this.newUserItem.Permission
             return name && (READ || WRITE || READ_ACP || WRITE_ACP)
+        },
+        bucketPath () {
+            return `/bucket/${this.$route.params.bucket}`
         }
     },
     created () {
