@@ -690,13 +690,15 @@ const getURL = async (bucket, file, prefix) => {
     .section-search {
         position: absolute;
         z-index: 100;
+        width: 400px;
 
         span{
             background-color: transparent !important;
+            max-width: 150px;
         }
         .@{css-prefix}input {
             margin-left: 4px;
-            width: 200px;
+            width: 400px;
         }
     }
 
