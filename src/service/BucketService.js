@@ -108,6 +108,17 @@ const dateTime = (value) => {
     return dateTexts.join('-') + ' ' + timeTexts.join(':')
 }
 
+const dateTimeYear = (value) => {
+    let date = new Date(value)
+    let month = date.getMonth() >= 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
+    let day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+    let dateTexts = [date.getFullYear(), month, day]
+    let hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+    let minute = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+    let timeTexts = [hour, minute]
+    return dateTexts.join('-') + ' ' + timeTexts.join(':')
+}
+
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
 
 Vue.filter('userType', (Grantee) => {
@@ -184,4 +195,4 @@ const Utf8ArrayToStr = array => {
     }
     return out
 }
-export { time, bytes, times, timesK, date, dateTime, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits, thousands }
+export { time, bytes, times, timesK, date, dateTime, dateTimeYear, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits, thousands }

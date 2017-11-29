@@ -110,7 +110,7 @@ import deleteTrafficDark from '../../assets/dashboard/delete-traffic-dark.png'
 import { getBucketList } from '@/service/Data'
 import { getBillOldUrl, getBillUrl } from '@/service/API'
 import user from '@/store/modules/user'
-import { bytes, times, timesK, dateTime, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
+import { bytes, times, timesK, dateTime, dateTimeYear, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
@@ -158,9 +158,6 @@ export default {
         },
         theme: function () {
             return this.$store.state.theme
-        },
-        xLabelRotate: function () {
-            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 15
         }
     },
     created () {
@@ -201,7 +198,7 @@ export default {
                         this.exportData = []
                         _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
                             let exportData = {
-                                time: dateTime(time)
+                                time: dateTimeYear(time)
                             }
                             exportData[exportDic.capacity] = this.distributed.space_used[index]
                             exportData[exportDic.inflows] = this.distributed.flow_up[index]
@@ -268,7 +265,7 @@ export default {
                     this.exportData = []
                     _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
                         let exportData = {
-                            time: dateTime(time)
+                            time: dateTimeYear(time)
                         }
                         exportData[exportDic.capacity] = echartData.space_used[index]
                         exportData[exportDic.inflows] = echartData.flow_up[index]
@@ -298,28 +295,26 @@ export default {
         },
         setOptions (url) {
             if (url === 'old') {
-                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate)
-                this.inflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up, 'byte', '流入流量'), this.theme, this.xLabelRotate)
-                this.outflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down, 'byte', '流出流量'), this.theme, this.xLabelRotate)
+                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme)
+                this.inflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up, 'byte', '流入流量'), this.theme)
+                this.outflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down, 'byte', '流出流量'), this.theme)
                 this.requestsOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.read_count, 'times', '读请求数'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.write_count, 'times', '写请求数'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'times', '删除请求数'),
                     '',
-                    this.theme,
-                    this.xLabelRotate
+                    this.theme
                 )
-                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.num_used, '个', '文件数'), this.theme, this.xLabelRotate)
+                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.num_used, '个', '文件数'), this.theme)
             } else {
                 let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided
-                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, this.xLabelRotate, newOneDayFlag)
+                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, newOneDayFlag)
                 this.inflowsOptions = initNewOptions(
                     this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up, 'byte', '流入流量'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_pub, 'byte', '公网流入流量'),
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.up_cdn, 'byte', 'up'),
                     '',
                     this.theme,
-                    this.xLabelRotate,
                     newOneDayFlag
                 )
                 this.outflowsOptions = initNewOptions(
@@ -328,7 +323,6 @@ export default {
                     this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.down_cdn, 'byte', 'down'),
                     '',
                     this.theme,
-                    this.xLabelRotate,
                     newOneDayFlag
                 )
                 this.requestsOptions = initNewOptions(
@@ -337,10 +331,9 @@ export default {
                     this.combineTimeDataUnitLabel(this.time_nodes, this.delete_count, 'times', '删除请求数'),
                     this.combineTimeDataUnitLabel(this.time_nodes, this.list_count, 'times', '列文件请求数'),
                     this.theme,
-                    this.xLabelRotate,
                     newOneDayFlag
                 )
-                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.num_used, '个', '文件数'), this.theme, this.xLabelRotate, newOneDayFlag)
+                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.num_used, '个', '文件数'), this.theme, newOneDayFlag)
             }
         },
         combineTwoArray (array1, array2) {
@@ -453,7 +446,7 @@ const lineOptions = {
     grid: {
         top: '40',
         left: '20',
-        right: '40',
+        right: '50',
         bottom: '10',
         containLabel: true
     },
@@ -526,24 +519,14 @@ const darkLineOptions = {
         }
     }
 }
-const xLabelRotateOptions = {
-    xAxis: {
-        axisLabel: {
-            rotate: -30
-        }
-    }
-}
 
 // old storage
-const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
+const initOptions = (data, theme, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate || (newOneDayFlag && data.data.length >= 15)) {
-        themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
-        themeLineOptions.grid.right = '80'
-        themeLineOptions.grid.bottom = '40'
-    }
+    let n = Math.floor((data.data.length - 1) / 7) + 1
+    themeLineOptions.xAxis.interval = 86400000 * n
     if (newOneDayFlag) {
-        themeLineOptions.xAxis.interval = 3600000
+        themeLineOptions.xAxis.interval = 3600000 * n
     }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         series: [{
@@ -571,9 +554,9 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
         }],
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + dateTime(params[0].value[0])
+                let res = '时间：' + dateTimeYear(params[0].value[0])
                 _.each(params, function (item) {
-                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
                     res += data.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
                 })
                 return res
@@ -592,15 +575,12 @@ const initOptions = (data, theme, xLabelRotate, newOneDayFlag) => {
 }
 
 // new storage
-const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, xLabelRotate, newOneDayFlag) => {
+const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDayFlag) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate || (newOneDayFlag && dataPart.data.length >= 15)) {
-        themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
-        themeLineOptions.grid.right = '80'
-        themeLineOptions.grid.bottom = '40'
-    }
+    let n = Math.floor((dataPart.data.length - 1) / 7) + 1
+    themeLineOptions.xAxis.interval = 86400000 * n
     if (newOneDayFlag) {
-        themeLineOptions.xAxis.interval = 3600000
+        themeLineOptions.xAxis.interval = 3600000 * n
     }
     themeLineOptions.grid.top = '60'
     let seriesArray = [{
@@ -696,9 +676,9 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, xLabel
         series: seriesArray,
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = newOneDayFlag ? 'Time : ' + dateTime(params[0].value[0]) : 'Date : ' + dateTime(params[0].value[0])
+                let res = '时间：' + dateTimeYear(params[0].value[0])
                 _.each(params, function (item) {
-                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '： '
                     res += dataPart.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
                 })
                 return res
