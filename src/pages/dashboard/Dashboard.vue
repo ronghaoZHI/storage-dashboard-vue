@@ -8,7 +8,7 @@
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
                 </Select>
                 <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width: 40%;float:left;"></Date-picker>
-                <Button type="primary" style="float:left;margin-left:16px;" @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
+                <Button type="primary" style="width:80px;float:left;margin-left:16px;" @click="exportCsv">{{ $t("DASHBOARD.EXPORT_DATA")}}</Button>
             </div>
             <div class="button-daterange">
                 <Button-group>
@@ -21,49 +21,54 @@
         </div>
         <div class="overview">
             <div>
-                <Tooltip :content='$t("DASHBOARD.CAPACITY_ALL_INFO")'>
-                    <div class="content">
-                        <span>{{originOverview.capacity && originOverview.capacity[0]}}</span>
-                        <span>{{originOverview.capacity && originOverview.capacity[1]}}</span>
-                        <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help"></Icon></p>
-                    </div>
+                <img v-bind:src="imgSrc[0]" alt="capacity">
+                <Tooltip :content='$t("DASHBOARD.CAPACITY_ALL_INFO")' placement="top-end">
+                    <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help"></Icon></p>
                 </Tooltip>
+                <div class="content">
+                    <span>{{originOverview.capacity && originOverview.capacity[0]}}</span>
+                    <span>{{originOverview.capacity && originOverview.capacity[1]}}</span>
+                </div>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.INFLOWS_ALL_INFO")'>
-                    <div class="content">
-                        <span>{{originOverview.inflows && originOverview.inflows[0]}}</span>
-                        <span>{{originOverview.inflows && originOverview.inflows[1]}}</span>
-                        <p>{{ $t("DASHBOARD.INFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
-                    </div>
+                <img v-bind:src="imgSrc[1]" alt="inflows">
+                <Tooltip :content='$t("DASHBOARD.INFLOWS_ALL_INFO")' placement="top-end">
+                    <p>{{ $t("DASHBOARD.INFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
                 </Tooltip>
+                <div class="content">
+                    <span>{{originOverview.inflows && originOverview.inflows[0]}}</span>
+                    <span>{{originOverview.inflows && originOverview.inflows[1]}}</span>
+                </div>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.OUTFLOWS_ALL_INFO")'>
-                    <div class="content">
-                        <span>{{originOverview.outflows && originOverview.outflows[0]}}</span>
-                        <span>{{originOverview.outflows && originOverview.outflows[1]}}</span>
-                        <p>{{ $t("DASHBOARD.OUTFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
-                    </div>
+                <img v-bind:src="imgSrc[2]" alt="outflows">
+                <Tooltip :content='$t("DASHBOARD.OUTFLOWS_ALL_INFO")' placement="top-end">
+                    <p>{{ $t("DASHBOARD.OUTFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
                 </Tooltip>
+                <div class="content">
+                    <span>{{originOverview.outflows && originOverview.outflows[0]}}</span>
+                    <span>{{originOverview.outflows && originOverview.outflows[1]}}</span>
+                </div>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.REQUESTS_ALL_INFO")'>
-                    <div class="content">
-                        <span>{{originOverview.requests && originOverview.requests[0]}}</span>
-                        <span>{{originOverview.requests && originOverview.requests[1]}}</span>
-                        <p>{{ $t("DASHBOARD.REQUESTS_ALL")}}<Icon type="ios-help"></Icon></p>
-                    </div>
+                <img v-bind:src="imgSrc[3]" alt="requests">
+                <Tooltip :content='$t("DASHBOARD.REQUESTS_ALL_INFO")' placement="top-end">
+                    <p>{{ $t("DASHBOARD.REQUESTS_ALL")}}<Icon type="ios-help"></Icon></p>
                 </Tooltip>
+                <div class="content">
+                    <span>{{originOverview.requests && originOverview.requests[0]}}</span>
+                    <span>{{originOverview.requests && originOverview.requests[1]}}</span>
+                </div>
             </div>
             <div>
-                <Tooltip :content='$t("DASHBOARD.FILES_ALL_INFO")'>
-                    <div class="content">
-                        <span>{{originOverview.files && originOverview.files[0]}}</span>
-                        <span>{{originOverview.files && originOverview.files[1]}}</span>
-                        <p>{{ $t("DASHBOARD.FILES_ALL")}}<Icon type="ios-help"></Icon></p>
-                    </div>
+                <img v-bind:src="imgSrc[4]" alt="files">
+                <Tooltip :content='$t("DASHBOARD.FILES_ALL_INFO")' placement="top-end">
+                    <p>{{ $t("DASHBOARD.FILES_ALL")}}<Icon type="ios-help"></Icon></p>
                 </Tooltip>
+                <div class="content">
+                    <span>{{originOverview.files && originOverview.files[0]}}</span>
+                    <span>{{originOverview.files && originOverview.files[1]}}</span>
+                </div>
             </div>
         </div>
         <div class="section-chart-tab">
@@ -99,14 +104,16 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
-import read from '../../assets/dashboard/read.png'
-import readDark from '../../assets/dashboard/read-dark.png'
-import write from '../../assets/dashboard/write.png'
-import writeDark from '../../assets/dashboard/write-dark.png'
-import deleteRequset from '../../assets/dashboard/delete-request.png'
-import deleteRequsetDark from '../../assets/dashboard/delete-request-dark.png'
-import deleteTraffic from '../../assets/dashboard/delete-traffic.png'
-import deleteTrafficDark from '../../assets/dashboard/delete-traffic-dark.png'
+import capacitySec from '../../assets/dashboard/capacity-sec.png'
+import capacitySecDark from '../../assets/dashboard/capacity-sec-dark.png'
+import inflows from '../../assets/dashboard/inflows.png'
+import inflowsDark from '../../assets/dashboard/inflows-dark.png'
+import outflows from '../../assets/dashboard/outflows.png'
+import outflowsDark from '../../assets/dashboard/outflows-dark.png'
+import requests from '../../assets/dashboard/requests.png'
+import requestsDark from '../../assets/dashboard/requests-dark.png'
+import files from '../../assets/dashboard/files.png'
+import filesDark from '../../assets/dashboard/files-dark.png'
 import { getBucketList } from '@/service/Data'
 import { getBillOldUrl, getBillUrl } from '@/service/API'
 import user from '@/store/modules/user'
@@ -154,7 +161,7 @@ export default {
             return new Date().getDate() === 1
         },
         imgSrc: function () {
-            return this.$store.state.theme === 'dark' ? [readDark, writeDark, deleteRequsetDark, deleteTrafficDark] : [read, write, deleteRequset, deleteTraffic]
+            return this.$store.state.theme === 'dark' ? [capacitySecDark, inflowsDark, outflowsDark, requestsDark, filesDark] : [capacitySec, inflows, outflows, requests, files]
         },
         theme: function () {
             return this.$store.state.theme
@@ -377,7 +384,7 @@ export default {
             if (!value) {
                 return ['0']
             }
-            return splite ? unit === 'byte' ? bytesSpliteUnits(value) : timesSpliteUnits(value) : unit === 'byte' ? bytes(value) : times(value)
+            return splite ? unit === 'byte' ? bytesSpliteUnits(value, 3) : timesSpliteUnits(value, 3) : unit === 'byte' ? bytes(value) : times(value)
         },
         getApiURL (url, range) {
             let path = ''
@@ -697,10 +704,11 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
 }
 </script>
 <style lang='less' scoped>
-@overview-height: 120px;
+@overview-height: 160px;
 
 .dark .@{css-prefix}dashboard {
     .toolbar {
+        border-bottom: @common-border-dark;
         .button-daterange {
             button {
                 border: 1px solid #52626d;
@@ -715,18 +723,17 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
     }
 
     .overview {
-        border: @common-border-dark;
-        background-color: #303b40;
 
         &>div {
-            border-right: @common-border-dark;
+            border: 0;
+            background-color: #313a41;
             .content {
                 p {
                     color: #8492a6;
                 }
                 
                 span {
-                    color: #ffba42;
+                    color: #ffffff;
                 }
             }
         }
@@ -747,13 +754,14 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
         }
         button:focus,
         .buttonFocus {
-            background-color: #39434b;
+            background-color: #313a41;
             border-bottom: 0;
             color: @text-color-dark;
         }
     }
 
     .card-chart {
+        background-color: #313a41;
         border: @common-border-dark;
         border-top: 0;
     }
@@ -761,7 +769,9 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
 
 .@{css-prefix}dashboard {
     .toolbar {
-        margin-bottom: 20px;
+        padding-bottom: 50px;
+        margin-bottom: 50px;
+        border-bottom: @common-border;
         height: 32px;
 
         .button-datepicker {
@@ -775,7 +785,7 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
                 margin: 0;
                 font-size: 14px;
                 color: #475669;
-                height: 30px;
+                height: 32px;
                 background: #fff;
                 line-height: 16px;
                 border: 1px solid #d3dce6;
@@ -798,41 +808,48 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
     .overview {
         width: 100%;
         display: inline-flex;
-        border: @common-border;
         height: @overview-height;
 
         &>div {
-            display: inline-flex;
+            border: 1px solid #d3dce6;
+            margin-right: 20px;
+            padding-top: 20px;
+            padding-right: 30px;
+            position: relative;
+            text-align: right;
             width: 100%;
             height: 100%;
-            align-items: center;
-            justify-content: center;
-            border-right: @common-border;
+            min-width: 220px;
+
+            img {
+                position: absolute;
+                top: -40px;
+                left: 20px;
+            }
+
+            p {
+                font-size: 18px;
+                color: #8492a6;
+                float: right;
+
+                i {
+                    margin-left: 4px;
+                }
+            }
 
             .content {
-                text-align: center;
-
-                p {
-                    font-size: 14px;
-                    color: #a1acb5;
-
-                    i {
-                        margin-left: 4px;
-                    }
-                }
-
+                margin-top: 40px;
                 span:first-child {
-                    font: 40px bolder;
+                    font: 36px bolder;
                 }
 
                 span:nth-child(2) {
-                    font: 16px bolder;
+                    font: 24px bolder;
                 }
             }
         }
-
         &>div:last-child {
-            border: 0;
+            margin-right: 0;
         }
     }
 
@@ -898,6 +915,42 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
         .echarts {
             width: initial;
             margin-left: 8px;
+        }
+    }
+}
+
+@media (max-width:1775px) {
+    .@{css-prefix}dashboard {
+        .overview {
+            &>div {
+                padding-top: 80px;
+
+                .content {
+                    margin-top: -8px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width:1620px) {
+    .@{css-prefix}dashboard {
+        .overview {
+            &>div {
+                p {
+                font-size: 18px;
+                }
+
+                .content {
+                    span:first-child {
+                        font: 32px bolder;
+                    }
+
+                    span:nth-child(2) {
+                        font: 20px bolder;
+                    }
+                }
+            }
         }
     }
 }

@@ -399,7 +399,7 @@ export const messages = {
             UPLOAD_COUNT_INFO: 'The number of upload and delete requests within a day',
             UNIT: 'unit',
             GET_BUCKET_FAILED: 'Get bucket list fail',
-            EXPORT_DATA: 'Export data'
+            EXPORT_DATA: 'Export'
         },
         USER: {
             CREATE_SUB_USER: 'Create sub user',
