@@ -58,7 +58,7 @@ export default {
             isWrite: this.data.readonly === 0,
             showDetailModal: false,
             modalTitles: {groupTitle: this.$t('SYSTEM.BASE_INFO'), partitionTitle: this.$t('SYSTEM.GROUP_INFO')},
-            waitingCard: this.data.is_del === 1 || (!this.data.not_moving && this.data.group_num !== 0) ? 'bsc-waiting-card' : '',
+            waitingCard: this.data.is_del === 1 || !this.data.not_moving && this.data.group_num !== 0 ? 'bsc-waiting-card' : '',
             detailHead: [{name: 'Group ID', value: 'group_id'},
                 {name: this.$t('SYSTEM.FILE_NUM'), value: 'num_used'},
                 {name: this.$t('SYSTEM.CAPACITY'), value: 'space_used'},
@@ -186,7 +186,7 @@ export default {
     watch: {
         data: {
             handler (to, from) {
-                this.waitingCard = to.is_del === 1 || !to.not_moving ? 'bsc-waiting-card' : ''
+                this.waitingCard = to.is_del === 1 || !to.not_moving && to.group_num !== 0 ? 'bsc-waiting-card' : ''
                 this.isWrite = to.readonly === 0
             },
             deep: true
