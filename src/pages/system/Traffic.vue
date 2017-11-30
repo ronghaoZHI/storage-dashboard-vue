@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-system bsc-traffic">
         <div class="header">
-            <div class="search">
+            <div class="search" @keyup.enter="getFilterTrafficList(true)">
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
                     <Icon slot="prepend" size="18" type="ios-grid-view"></Icon>
                     <Option value="group_id">Group ID</Option>
