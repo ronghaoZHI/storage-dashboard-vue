@@ -380,6 +380,7 @@ export default {
                 content: this.$t('STORAGE.UNBIND_CONFIRMED', {fileName: user.email}),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: 'Unbind',
                 onOk: () => this.unbindUser(user, index)
             })
         },

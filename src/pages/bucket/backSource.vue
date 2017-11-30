@@ -245,6 +245,7 @@ export default {
                 content: this.$t('STORAGE.COMFIRM_DELETE_404_RULE'),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.delete404Rule(row)
             })
         },

@@ -48,6 +48,7 @@ export default {
                 content: this.$t('KEYCHAIN.DELETE_KEY_COM', {accesskey: accesskey}),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.$emit('deleteKey', accesskey)
             })
         }

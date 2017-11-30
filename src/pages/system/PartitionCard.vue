@@ -157,6 +157,7 @@ export default {
                 content: this.$t('SYSTEM.PARTITION_DELETE_CONFIRM'),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.usedDeleted()
             })
         },

@@ -209,6 +209,7 @@ export default {
                 content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: policy.id}),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.deletePolicy(policy.input_bucket, policy.id, policy._index)
             })
         },

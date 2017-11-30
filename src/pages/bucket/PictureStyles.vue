@@ -244,6 +244,7 @@ export default {
                 content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: style.ruleName}),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.deleteStyle(style)
             })
         },

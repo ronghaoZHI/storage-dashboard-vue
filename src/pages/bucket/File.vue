@@ -527,6 +527,7 @@ export default {
                 content: this.$t('STORAGE.DELETE_FILES_CONFIRMED'),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.batchDelete()
             })
         },
@@ -535,6 +536,7 @@ export default {
                 content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: file.Key}),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.deleteFile(file)
             })
         },

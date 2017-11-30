@@ -225,6 +225,7 @@ export default {
                 content: this.$t('STORAGE.DELETE_CONFIRMED', {fileName: rule.name}),
                 okText: this.$t('PUBLIC.CONFIRMED'),
                 cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('PUBLIC.DELETE'),
                 onOk: () => this.deletePreset(rule)
             })
         }
