@@ -169,12 +169,12 @@ export default {
                 this.getDeletedList()
             }
         },
-        searchList () {
+        async searchList () {
             this.pageCount = 1
             this.pageTotal = 1
             if (this.tabName === 'used') {
                 this.spinContent = true
-                this.searchIdc()
+                await this.searchIdc()
                 this.getUsedList()
             } else {
                 this.getUnusedList()
@@ -190,7 +190,7 @@ export default {
         },
         async searchIdc () {
             await this.getIdcList()
-            if (this.search.idc !== 'all') {
+            if (this.search.idc !== 'ignore') {
                 this.idcList = this.idcList.filter(item => {
                     return item.idc === this.search.idc
                 })
