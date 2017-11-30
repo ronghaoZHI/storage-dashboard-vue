@@ -191,11 +191,11 @@ export default {
                     await Promise.all([this.$http.get(this.getApiURL('old', this.dateRange)).then(res => {
                         // overview data old
                         this.originOverview = {
-                            capacity: this.convertData(res.total.space_used, true, 'byte'),
-                            inflows: this.convertData(res.sum.flow_up, true, 'byte'),
-                            outflows: this.convertData(res.sum.flow_down, true, 'byte'),
+                            capacity: this.convertData(res.total.space_used, true),
+                            inflows: this.convertData(res.sum.flow_up, true),
+                            outflows: this.convertData(res.sum.flow_down, true),
                             requests: this.convertData(res.sum.read_count + res.sum.write_count + res.sum.delete_count, true, 'times'),
-                            files: this.convertData(res.total.num_used, true, '个')
+                            files: this.convertData(res.total.num_used, true, '')
                         }
                         // echarts data old
                         _.extend(this, res)
@@ -244,9 +244,9 @@ export default {
                     }
                     // overview data total
                     this.originOverview = {
-                        capacity: this.convertData(resNew.total.space_used, true, 'byte'),
-                        inflows: this.convertData(resOld.sum === undefined ? resNew.sum.flow_up_cdn + resNew.sum.flow_up_pub : resOld.sum.flow_up + resNew.sum.flow_up_cdn + resNew.sum.flow_up_pub, true, 'byte'),
-                        outflows: this.convertData(resOld.sum === undefined ? resNew.sum.flow_down_cdn + resNew.sum.flow_down_pub : resOld.sum.flow_down + resNew.sum.flow_down_cdn + resNew.sum.flow_down_pub, true, 'byte'),
+                        capacity: this.convertData(resNew.total.space_used, true),
+                        inflows: this.convertData(resOld.sum === undefined ? resNew.sum.flow_up_cdn + resNew.sum.flow_up_pub : resOld.sum.flow_up + resNew.sum.flow_up_cdn + resNew.sum.flow_up_pub, true),
+                        outflows: this.convertData(resOld.sum === undefined ? resNew.sum.flow_down_cdn + resNew.sum.flow_down_pub : resOld.sum.flow_down + resNew.sum.flow_down_cdn + resNew.sum.flow_down_pub, true),
                         requests: this.convertData(resOld.sum === undefined ? resNew.sum.get_count + resNew.sum.head_count + resNew.sum.post_count + resNew.sum.put_count + resNew.sum.delete_count + resNew.sum.list_count : resOld.sum.read_count + resOld.sum.write_count + resOld.sum.delete_count + resNew.sum.get_count + resNew.sum.head_count + resNew.sum.post_count + resNew.sum.put_count + resNew.sum.delete_count + resNew.sum.list_count, true, 'times'),
                         files: this.convertData(resNew.total.num_used, true, '')
                     }
@@ -254,8 +254,8 @@ export default {
                     let echartData = {
                         time_nodes: resOld.time_nodes === undefined ? resNew.time_nodes : resOld.time_nodes.concat(resNew.time_nodes),
                         space_used: resOld.distributed === undefined ? resNew.distributed.space_used : resOld.distributed.space_used.concat(resNew.distributed.space_used),
-                        flow_up: resOld.distributed === undefined ? this.combineTwoArray(resNew.distributed.flow_up_cdn, resNew.distributed.flow_up_cdn) : resOld.distributed.flow_up.concat(this.combineTwoArray(resNew.distributed.flow_up_cdn, resNew.distributed.flow_up_cdn)),
-                        flow_up_pub: resNew.distributed.flow_up_cdn,
+                        flow_up: resOld.distributed === undefined ? this.combineTwoArray(resNew.distributed.flow_up_cdn, resNew.distributed.flow_up_pub) : resOld.distributed.flow_up.concat(this.combineTwoArray(resNew.distributed.flow_up_cdn, resNew.distributed.flow_up_pub)),
+                        flow_up_pub: resNew.distributed.flow_up_pub,
                         up_cdn: resNew.distributed.up_cdn,
                         flow_down: resOld.distributed === undefined ? this.combineTwoArray(resNew.distributed.flow_down_cdn, resNew.distributed.flow_down_pub) : resOld.distributed.flow_down.concat(this.combineTwoArray(resNew.distributed.flow_down_cdn, resNew.distributed.flow_down_pub)),
                         flow_down_pub: resNew.distributed.flow_down_pub,
@@ -288,7 +288,7 @@ export default {
                         exportData[exportDic.readRequests] = echartData.read_count[index]
                         exportData[exportDic.writeRequests] = echartData.write_count[index]
                         exportData[exportDic.deleteRequests] = echartData.delete_count[index]
-                        exportData[exportDic.listRequests] = index < oldTimeLength ? '' : echartData.delete_count[index - oldTimeLength]
+                        exportData[exportDic.listRequests] = index < oldTimeLength ? '' : echartData.list_count[index - oldTimeLength]
                         exportData[exportDic.files] = echartData.num_used[index]
                         this.exportData.push(exportData)
                     })
@@ -301,47 +301,39 @@ export default {
             }
         },
         setOptions (url) {
-            if (url === 'old') {
-                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.space_used, 'byte', '存储容量'), this.theme)
-                this.inflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_up, 'byte', '流入流量'), this.theme)
-                this.outflowsOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.flow_down, 'byte', '流出流量'), this.theme)
-                this.requestsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.read_count, 'times', '读请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.write_count, 'times', '写请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.delete_count, 'times', '删除请求数'),
-                    '',
-                    this.theme
-                )
-                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.distributed.num_used, '个', '文件数'), this.theme)
-            } else {
-                let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided
-                this.capacityOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.space_used, 'byte', '存储容量'), this.theme, newOneDayFlag)
-                this.inflowsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up, 'byte', '流入流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_up_pub, 'byte', '公网流入流量'),
-                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.up_cdn, 'byte', 'up'),
-                    '',
-                    this.theme,
-                    newOneDayFlag
-                )
-                this.outflowsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down, 'byte', '流出流量'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.flow_down_pub, 'byte', '公网流出流量'),
-                    this.combineTimeDataUnitLabelToObjectArray(this.time_nodes, this.down_cdn, 'byte', 'down'),
-                    '',
-                    this.theme,
-                    newOneDayFlag
-                )
-                this.requestsOptions = initNewOptions(
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.read_count, 'times', '读请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.write_count, 'times', '写请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.delete_count, 'times', '删除请求数'),
-                    this.combineTimeDataUnitLabel(this.time_nodes, this.list_count, 'times', '列文件请求数'),
-                    this.theme,
-                    newOneDayFlag
-                )
-                this.filesOptions = initOptions(this.combineTimeDataUnitLabel(this.time_nodes, this.num_used, '个', '文件数'), this.theme, newOneDayFlag)
-            }
+            let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided
+            this.capacityOptions = initOptions({
+                dataPart: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.space_used : this.space_used, '存储容量'),
+                theme: this.theme,
+                newOneDayFlag: newOneDayFlag
+            })
+            this.inflowsOptions = initOptions({
+                dataPart: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.flow_up : this.flow_up, '流入流量'),
+                dataPart1: url === 'old' ? '' : this.combineTimeDataUnitLabel(this.flow_up_pub, '公网流入流量'),
+                dataPart2: url === 'old' ? '' : this.combineTimeDataUnitLabelToObjectArray(this.up_cdn, 'up'),
+                theme: this.theme,
+                newOneDayFlag: newOneDayFlag
+            })
+            this.outflowsOptions = initOptions({
+                dataPart: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.flow_down : this.flow_down, '流出流量'),
+                dataPart1: url === 'old' ? '' : this.combineTimeDataUnitLabel(this.flow_down_pub, '公网流出流量'),
+                dataPart2: url === 'old' ? '' : this.combineTimeDataUnitLabelToObjectArray(this.down_cdn, 'down'),
+                theme: this.theme,
+                newOneDayFlag: newOneDayFlag
+            })
+            this.requestsOptions = initOptions({
+                dataPart: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.read_count : this.read_count, '读请求数', 'times'),
+                dataPart1: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.write_count : this.write_count, '写请求数', 'times'),
+                dataPart2: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.delete_count : this.delete_count, '删除请求数', 'times'),
+                dataPart3: url === 'old' ? '' : this.combineTimeDataUnitLabel(this.list_count, '列文件请求数', 'times'),
+                theme: this.theme,
+                newOneDayFlag: newOneDayFlag
+            })
+            this.filesOptions = initOptions({
+                dataPart: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.num_used : this.num_used, '文件数', ''),
+                theme: this.theme,
+                newOneDayFlag: newOneDayFlag
+            })
         },
         combineTwoArray (array1, array2) {
             let combinedData = []
@@ -350,7 +342,7 @@ export default {
             })
             return combinedData
         },
-        combineTimeDataUnitLabel (time, data, unit, label) {
+        combineTimeDataUnitLabel (data, label, unit = 'byte', time = this.time_nodes) {
             let _time = time.length === data.length ? time : time.slice(time.length - data.length)
             let combinedData = []
             _.forEach(_time, (value, key) => {
@@ -363,7 +355,7 @@ export default {
             }
             return object
         },
-        combineTimeDataUnitLabelToObjectArray (time, data, unit, upOrDown) {
+        combineTimeDataUnitLabelToObjectArray (data, upOrDown, unit = 'byte', time = this.time_nodes) {
             let objectArray = []
             _.forEach(data, (value, key) => {
                 let _time = time.length === value.length ? time : time.slice(time.length - value.length)
@@ -380,7 +372,7 @@ export default {
             })
             return objectArray
         },
-        convertData (value, splite = false, unit) {
+        convertData (value, splite = false, unit = 'byte') {
             if (!value) {
                 return ['0']
             }
@@ -527,62 +519,7 @@ const darkLineOptions = {
     }
 }
 
-// old storage
-const initOptions = (data, theme, newOneDayFlag) => {
-    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    let n = Math.floor((data.data.length - 1) / 7) + 1
-    themeLineOptions.xAxis.interval = 86400000 * n
-    if (newOneDayFlag) {
-        themeLineOptions.xAxis.interval = 3600000 * n
-    }
-    let newOptions = _.defaultsDeep({}, themeLineOptions, {
-        series: [{
-            type: 'line',
-            data: data.data,
-            name: data.label,
-            smooth: true,
-            sampling: 'average',
-            itemStyle: {
-                normal: {
-                    color: '#2c96ef'
-                }
-            },
-            lineStyle: {
-                normal: {
-                    color: '#20a0ff'
-                }
-            },
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            }
-        }],
-        tooltip: {
-            formatter: function (params, ticket, callback) {
-                let res = '时间：' + dateTimeYear(params[0].value[0])
-                _.each(params, function (item) {
-                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
-                    res += data.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
-                })
-                return res
-            }
-        },
-        yAxis: {
-            name: data.unit === 'byte' ? '' : data.unit === 'times' ? '单位：次' : '单位：个',
-            axisLabel: {
-                formatter: function (value) {
-                    return data.unit === 'byte' ? bytes(value) : timesK(value)
-                }
-            }
-        }
-    })
-    return newOptions
-}
-
-// new storage
-const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDayFlag) => {
+const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDayFlag}) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
     let n = Math.floor((dataPart.data.length - 1) / 7) + 1
     themeLineOptions.xAxis.interval = 86400000 * n
@@ -590,53 +527,29 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
         themeLineOptions.xAxis.interval = 3600000 * n
     }
     themeLineOptions.grid.top = '60'
-    let seriesArray = [{
-        type: 'line',
-        data: dataPart.data,
-        name: dataPart.label,
-        smooth: true,
-        sampling: 'average',
-        areaStyle: {
-            normal: {
-                color: '#20a0ff',
-                opacity: 0.5
-            }
-        }
-    }, {
-        type: 'line',
-        data: dataPart1.data,
-        name: dataPart1.label,
-        smooth: true,
-        sampling: 'average',
-        areaStyle: {
-            normal: {
-                color: '#20a0ff',
-                opacity: 0.5
-            }
-        }
-    }]
-    if (dataPart2 instanceof Array) {
-        _.forEach(dataPart2, (value, index) => {
-            let seriesItem = {
-                type: 'line',
-                data: dataPart2[index].data,
-                name: dataPart2[index].label,
-                smooth: true,
-                sampling: 'average',
-                areaStyle: {
-                    normal: {
-                        color: '#20a0ff',
-                        opacity: 0.5
-                    }
+    let legendData = []
+    let seriesArray = []
+    if (!dataPart1) {
+        legendData = [dataPart.label]
+        seriesArray = [{
+            type: 'line',
+            data: dataPart.data,
+            name: dataPart.label,
+            smooth: true,
+            sampling: 'average',
+            areaStyle: {
+                normal: {
+                    color: '#20a0ff',
+                    opacity: 0.5
                 }
             }
-            seriesArray.push(seriesItem)
-        })
+        }]
     } else {
-        let seriesItem = [{
+        legendData = [dataPart.label, dataPart1.label]
+        seriesArray = [{
             type: 'line',
-            data: dataPart2.data,
-            name: dataPart2.label,
+            data: dataPart.data,
+            name: dataPart.label,
             smooth: true,
             sampling: 'average',
             areaStyle: {
@@ -647,8 +560,8 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
             }
         }, {
             type: 'line',
-            data: dataPart3.data,
-            name: dataPart3.label,
+            data: dataPart1.data,
+            name: dataPart1.label,
             smooth: true,
             sampling: 'average',
             areaStyle: {
@@ -658,18 +571,56 @@ const initNewOptions = (dataPart, dataPart1, dataPart2, dataPart3, theme, newOne
                 }
             }
         }]
-        seriesArray = seriesArray.concat(seriesItem)
-    }
-    let legendData = [dataPart.label, dataPart1.label]
-    if (dataPart2 instanceof Array) {
-        _.forEach(dataPart2, (value, index) => {
-            legendData.push(dataPart2[index].label)
-        })
-    } else {
-        legendData = legendData.concat([dataPart2.label, dataPart3.label])
+        if (dataPart2 instanceof Array) {
+            _.forEach(dataPart2, (value, index) => {
+                legendData.push(dataPart2[index].label)
+                let seriesItem = {
+                    type: 'line',
+                    data: dataPart2[index].data,
+                    name: dataPart2[index].label,
+                    smooth: true,
+                    sampling: 'average',
+                    areaStyle: {
+                        normal: {
+                            color: '#20a0ff',
+                            opacity: 0.5
+                        }
+                    }
+                }
+                seriesArray.push(seriesItem)
+            })
+        } else {
+            legendData = legendData.concat([dataPart2.label, dataPart3.label])
+            let seriesItem = [{
+                type: 'line',
+                data: dataPart2.data,
+                name: dataPart2.label,
+                smooth: true,
+                sampling: 'average',
+                areaStyle: {
+                    normal: {
+                        color: '#20a0ff',
+                        opacity: 0.5
+                    }
+                }
+            }, {
+                type: 'line',
+                data: dataPart3.data,
+                name: dataPart3.label,
+                smooth: true,
+                sampling: 'average',
+                areaStyle: {
+                    normal: {
+                        color: '#20a0ff',
+                        opacity: 0.5
+                    }
+                }
+            }]
+            seriesArray = seriesArray.concat(seriesItem)
+        }
     }
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
-        color: ['#9f61fc', '#1e9fff', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
+        color: ['#1e9fff', '#9f61fc', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
         legend: {
             data: legendData,
             top: '20px',
