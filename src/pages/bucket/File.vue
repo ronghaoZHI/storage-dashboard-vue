@@ -19,7 +19,7 @@
                     <transition name="slide-fade">
                         <div class="section-search" v-if="showSearch">
                             <span class="bsc-input">
-                                <span class="input-append-before">{{prefix}}</span>
+                                <input type="text" class="input-append-before" disabled :value="prefix" />
                                 <input type="text" @focus="searchInputFocus = true" v-model="searchValue" />
                                 <Button type="text" size="small" @click="searchFile(searchValue)"><Icon type="search" :size="iconSize"></Icon></Button>
                             </span>
@@ -697,9 +697,15 @@ const getURL = async (bucket, file, prefix) => {
         z-index: 100;
         width: 400px;
 
-        span.input-append-before{
-            background-color: #ccc !important;
-            width: 150px;
+        input.input-append-before{
+            border-right: 1px solid #eff2f7;
+            color: #99a9bf;
+            width: 100px;
+            margin: -5px 0 -5px -7px;
+            height: 30px;
+            background-color: #f9fafc !important;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
         }
         .@{css-prefix}input {
             margin-left: 4px;
