@@ -39,7 +39,7 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { getBillTranscoderUrl } from '@/service/API'
-import { time, date } from '@/service/bucketService'
+import { time, timesK, date } from '@/service/bucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
 import user from '@/store/modules/user'
@@ -76,9 +76,6 @@ export default {
         },
         theme: function () {
             return this.$store.state.theme
-        },
-        xLabelRotate: function () {
-            return (this.dateSelect[1] - this.dateSelect[0]) / 86400000 + 1 >= 15
         }
     },
     created () {
@@ -94,9 +91,9 @@ export default {
             try {
                 await Promise.all([this.$http.get(this.getApiURL()).then(res => {
                     this.overviewData = res.overview
-                    this.overviewOptions = initOverviewOptions(this.overviewData, this.theme, this.xLabelRotate)
+                    this.overviewOptions = initOverviewOptions(this.overviewData, this.theme)
                     this.distributionData = res.distribution
-                    this.distributionOptions = initDistributionOptions(this.distributionData, this.theme, this.xLabelRotate)
+                    this.distributionOptions = initDistributionOptions(this.distributionData, this.theme)
                 })]).then(res => {
                     this.data = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
@@ -142,9 +139,9 @@ export default {
             let file = new File(Array.from(content), this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
             fileSaver.saveAs(file)
         },
-        toggleTheme (theme, xLabelRotate) {
-            this.overviewOptions = initOverviewOptions(this.overviewData, theme, xLabelRotate)
-            this.distributionOptions = initDistributionOptions(this.distributionData, theme, xLabelRotate)
+        toggleTheme (theme) {
+            this.overviewOptions = initOverviewOptions(this.overviewData, theme)
+            this.distributionOptions = initDistributionOptions(this.distributionData, theme)
         }
     },
     watch: {
@@ -158,10 +155,7 @@ export default {
             chartReload(to.data, this.$refs.distributionLine)
         },
         'theme' (to, from) {
-            this.toggleTheme(to, this.xLabelRotate)
-        },
-        'xLabelRotate' (to, from) {
-            this.toggleTheme(this.theme, to)
+            this.toggleTheme(to)
         }
     }
 }
@@ -188,7 +182,7 @@ const lineOptions = {
     grid: {
         top: '60',
         left: '10',
-        right: '40',
+        right: '50',
         bottom: '10',
         containLabel: true
     },
@@ -260,20 +254,10 @@ const darkLineOptions = {
         }
     }
 }
-const xLabelRotateOptions = {
-    xAxis: {
-        axisLabel: {
-            rotate: -30
-        }
-    }
-}
-const initOverviewOptions = (data, theme, xLabelRotate) => {
+const initOverviewOptions = (data, theme) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate) {
-        themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
-        themeLineOptions.grid.right = '80'
-        themeLineOptions.grid.bottom = '40'
-    }
+    let n = Math.floor((data.video_transcoding.length - 1) / 7) + 1
+    themeLineOptions.xAxis.interval = 86400000 * n
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
@@ -286,7 +270,12 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
             }
         },
         yAxis: {
-            name: '个'
+            name: '单位：个',
+            axisLabel: {
+                formatter: function (value) {
+                    return timesK(value)
+                }
+            }
         },
         color: ['#9f61fc', '#1e9fff', '#0cce66', '#ffac2a', '#8492a6'],
         legend: {
@@ -302,6 +291,8 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
         series: [{
             name: '视频转码任务数',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -312,6 +303,8 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
         }, {
             name: '音频转码任务数',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -322,6 +315,8 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
         }, {
             name: '视频截图张数',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -332,6 +327,8 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
         }, {
             name: '转封装任务数',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -342,6 +339,8 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
         }, {
             name: '音视频元信息接口调用次数',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -353,13 +352,10 @@ const initOverviewOptions = (data, theme, xLabelRotate) => {
     })
     return newOptions
 }
-const initDistributionOptions = (data, theme, xLabelRotate) => {
+const initDistributionOptions = (data, theme) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
-    if (xLabelRotate) {
-        themeLineOptions = _.defaultsDeep(themeLineOptions, xLabelRotateOptions)
-        themeLineOptions.grid.right = '80'
-        themeLineOptions.grid.bottom = '40'
-    }
+    let n = Math.floor((data.SD240.length - 1) / 7) + 1
+    themeLineOptions.xAxis.interval = 86400000 * n
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
@@ -392,6 +388,8 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
         series: [{
             name: 'SD240',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -402,6 +400,8 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
         }, {
             name: 'SD480',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -412,6 +412,8 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
         }, {
             name: 'SD',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -422,6 +424,8 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
         }, {
             name: 'HD',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -432,6 +436,8 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
         }, {
             name: '2K',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -442,6 +448,8 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
         }, {
             name: '4K',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -452,6 +460,8 @@ const initDistributionOptions = (data, theme, xLabelRotate) => {
         }, {
             name: 'audio',
             type: 'line',
+            smooth: true,
+            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -564,6 +574,7 @@ const chartReload = (data, chart) => {
         border-bottom: 0;
         button {
             float: left;
+            border-radius: 0;
             width: 20%;
             height: 50px;
             text-align: center;
