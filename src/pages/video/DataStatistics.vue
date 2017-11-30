@@ -181,7 +181,7 @@ const lineOptions = {
     },
     grid: {
         top: '60',
-        left: '10',
+        left: '20',
         right: '50',
         bottom: '10',
         containLabel: true
@@ -211,6 +211,7 @@ const lineOptions = {
     yAxis: {
         type: 'value',
         min: 0,
+        minInterval: 1,
         offset: 5,
         nameTextStyle: {
             color: '#8492a6',
