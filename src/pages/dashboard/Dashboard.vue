@@ -14,7 +14,7 @@
                 <Button-group>
                     <Button v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.today[0].getTime()}" @click="dateSelect = dateDefault.today">{{ $t("DASHBOARD.TODAY")}}</Button>
                     <Button v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.seven_days[0].getTime()}" @click="dateSelect = dateDefault.seven_days">{{ $t("DASHBOARD.SEVEN_DAYS")}}</Button>
-                    <Button v-show="!isFristDay" v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.this_month[0].getTime()}" @click="dateSelect = dateDefault.this_month" >{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.this_month[0].getTime()}" @click="dateSelect = dateDefault.this_month" >{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
                     <Button v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.thirty_days[0].getTime()}" @click="dateSelect = dateDefault.thirty_days">{{ $t("DASHBOARD.THIRTY_DAYS")}}</Button>
                 </Button-group>
             </div>
@@ -156,9 +156,6 @@ export default {
     computed: {
         dateRange () {
             return formatDate(this.dateSelect[0]) + '-' + formatDate(this.dateSelect[1])
-        },
-        isFristDay () {
-            return new Date().getDate() === 1
         },
         imgSrc: function () {
             return this.$store.state.theme === 'dark' ? [capacitySecDark, inflowsDark, outflowsDark, requestsDark, filesDark] : [capacitySec, inflows, outflows, requests, files]
@@ -888,6 +885,8 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
     .@{css-prefix}dashboard {
         .overview {
             &>div {
+                padding-right: 20px;
+
                 p {
                 font-size: 18px;
                 }
