@@ -23,7 +23,7 @@
             <div>
                 <img v-bind:src="imgSrc[0]" alt="capacity">
                 <Tooltip :content='$t("DASHBOARD.CAPACITY_ALL_INFO")' placement="top-end">
-                    <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help"></Icon></p>
+                    <p>{{ $t("DASHBOARD.CAPACITY_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
                 <div class="content">
                     <span>{{originOverview.capacity && originOverview.capacity[0]}}</span>
@@ -33,7 +33,7 @@
             <div>
                 <img v-bind:src="imgSrc[1]" alt="inflows">
                 <Tooltip :content='$t("DASHBOARD.INFLOWS_ALL_INFO")' placement="top-end">
-                    <p>{{ $t("DASHBOARD.INFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
+                    <p>{{ $t("DASHBOARD.INFLOWS_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
                 <div class="content">
                     <span>{{originOverview.inflows && originOverview.inflows[0]}}</span>
@@ -43,7 +43,7 @@
             <div>
                 <img v-bind:src="imgSrc[2]" alt="outflows">
                 <Tooltip :content='$t("DASHBOARD.OUTFLOWS_ALL_INFO")' placement="top-end">
-                    <p>{{ $t("DASHBOARD.OUTFLOWS_ALL")}}<Icon type="ios-help"></Icon></p>
+                    <p>{{ $t("DASHBOARD.OUTFLOWS_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
                 <div class="content">
                     <span>{{originOverview.outflows && originOverview.outflows[0]}}</span>
@@ -53,7 +53,7 @@
             <div>
                 <img v-bind:src="imgSrc[3]" alt="requests">
                 <Tooltip :content='$t("DASHBOARD.REQUESTS_ALL_INFO")' placement="top-end">
-                    <p>{{ $t("DASHBOARD.REQUESTS_ALL")}}<Icon type="ios-help"></Icon></p>
+                    <p>{{ $t("DASHBOARD.REQUESTS_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
                 <div class="content">
                     <span>{{originOverview.requests && originOverview.requests[0]}}</span>
@@ -63,7 +63,7 @@
             <div>
                 <img v-bind:src="imgSrc[4]" alt="files">
                 <Tooltip :content='$t("DASHBOARD.FILES_ALL_INFO")' placement="top-end">
-                    <p>{{ $t("DASHBOARD.FILES_ALL")}}<Icon type="ios-help"></Icon></p>
+                    <p>{{ $t("DASHBOARD.FILES_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
                 <div class="content">
                     <span>{{originOverview.files && originOverview.files[0]}}</span>
@@ -771,8 +771,8 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
 
             img {
                 position: absolute;
-                top: -40px;
-                left: 20px;
+                top: -30px;
+                left: 25px;
             }
 
             p {
