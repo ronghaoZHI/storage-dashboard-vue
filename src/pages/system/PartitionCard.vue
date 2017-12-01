@@ -74,12 +74,12 @@ export default {
         myData: {
             get () {
                 let newData = _.cloneDeep(this.data)
-                newData.ioutilFont = this.data.ioutil ? `${this.data.ioutil}%` : '--'
-                newData.cpuFont = this.data.cpu ? `${this.data.cpu}%` : '--'
-                newData.used_rateFont = this.data.used_rate ? `${this.data.used_rate}%` : '--'
-                newData.space = this.data.space ? bytes(this.data.space) : '--'
-                newData.capacity = this.data.capacity ? bytes(this.data.capacity) : '--'
-                newData.failFont = !!this.data.fail ? this.$t('SYSTEM.DELETED') : this.$t('SYSTEM.NORMAL')
+                newData.ioutilFont = this.data.ioutil || this.data.ioutil === 0 ? `${this.data.ioutil}%` : '--'
+                newData.cpuFont = this.data.cpu || this.data.cpu === 0 ? `${this.data.cpu}%` : '--'
+                newData.used_rateFont = this.data.used_rate || this.data.used_rate === 0 ? `${this.data.used_rate}%` : '--'
+                newData.space = this.data.space || this.data.space === 0 ? bytes(this.data.space) : '--'
+                newData.capacity = this.data.capacity || this.data.capacity === 0 ? bytes(this.data.capacity) : '--'
+                newData.failFont = !!this.data.fail || this.data.fail === 0 ? this.$t('SYSTEM.DELETED') : this.$t('SYSTEM.NORMAL')
                 newData.readonlyFont = this.data.readonly === 1 ? this.$t('SYSTEM.READONLY') : this.$t('SYSTEM.WRITABLE')
                 return newData
             },

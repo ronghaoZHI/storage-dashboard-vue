@@ -11,7 +11,7 @@
                 </i-circle>
                 <div class="idc-detail">
                     <p>SATA {{$t('SIDEBAR.PARTITION')}}</p>
-                    <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rate || '-'}}%</p>
+                    <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rateFront}}</p>
                     <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                 </i-circle>
                 <div class="idc-detail">
                     <p>SSD {{$t('SIDEBAR.PARTITION')}}</p>
-                    <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rate || '-'}}%</p>
+                    <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rateFront}}</p>
                     <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             </div>
             <div class="idc-detail idc-content-right">
                 <p>SATA {{$t('SIDEBAR.PARTITION')}}</p>
-                <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rate || '-'}}%</p>
+                <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rateFront}}</p>
                 <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
             </div>
         </div>
@@ -48,7 +48,7 @@
             </div>
             <div class="idc-detail idc-content-right">
                 <p>SSD {{$t('SIDEBAR.PARTITION')}}</p>
-                <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rate || '-'}}%</p>
+                <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rateFront}}</p>
                 <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
             </div>
         </div>
@@ -63,8 +63,10 @@ export default {
             let newData = _.cloneDeep(this.data)
             newData.SSD.used = bytes(this.data.SSD.used)
             newData.SSD.capacity = bytes(this.data.SSD.capacity)
+            newData.SSD.used_rateFront = this.data.SSD.used_rate || this.data.SSD.used_rate === 0 ? `${this.data.SSD.used_rate}%` : '-'
             newData.SATA.used = bytes(this.data.SATA.used)
             newData.SATA.capacity = bytes(this.data.SATA.capacity)
+            newData.SATA.used_rateFront = this.data.SATA.used_rate || this.data.SATA.used_rate === 0 ? `${this.data.SATA.used_rate}%` : '-'
             return newData
         },
         type () {
