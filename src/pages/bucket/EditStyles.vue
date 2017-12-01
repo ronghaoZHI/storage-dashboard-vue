@@ -715,9 +715,6 @@ export default {
         }
     },
     watch: {
-        '$route' (to, from) {
-            to.path !== from.path && this.getData()
-        },
         general: {
             handler: function (val, oldVal) {
                 this.autoSaveAndPreview()

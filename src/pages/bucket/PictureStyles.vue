@@ -323,11 +323,6 @@ export default {
                 this.showUploadModal = false
             })
         }
-    },
-    watch: {
-        '$route' (to, from) {
-            to.path !== from.path && this.getData()
-        }
     }
 }
 
