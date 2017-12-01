@@ -9,9 +9,9 @@
             <div class="files">
                 <div class="progress" :class="{redBack: myData.cpu > 20}">
                     <span class="file-count io-count" :class="{redBack: myData.ioutil > 90}">
-                        IO : {{myData.ioutil}}%
-                    </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">{{$t('SYSTEM.CAPACITY')}} : {{myData.used_rate}}%</span>
-                    CPU : {{myData.cpu}}%
+                        IO : {{myData.ioutilFont}}
+                    </span><span class="file-count capacity-count" :class="{redBack: myData.used_rate > 99}">{{$t('SYSTEM.CAPACITY')}} : {{myData.used_rateFont}}</span>
+                    CPU : {{myData.cpuFont}}
                 </div>
             </div>
             <div class="details">
@@ -74,9 +74,11 @@ export default {
         myData: {
             get () {
                 let newData = _.cloneDeep(this.data)
-                newData.ioutilFont = `${this.data.ioutil}%`
-                newData.space = bytes(this.data.space)
-                newData.capacity = bytes(this.data.capacity)
+                newData.ioutilFont = this.data.ioutil ? `${this.data.ioutil}%` : '--'
+                newData.cpuFont = this.data.cpu ? `${this.data.cpu}%` : '--'
+                newData.used_rateFont = this.data.used_rate ? `${this.data.used_rate}%` : '--'
+                newData.space = this.data.space ? bytes(this.data.space) : '--'
+                newData.capacity = this.data.capacity ? bytes(this.data.capacity) : '--'
                 newData.failFont = !!this.data.fail ? this.$t('SYSTEM.DELETED') : this.$t('SYSTEM.NORMAL')
                 newData.readonlyFont = this.data.readonly === 1 ? this.$t('SYSTEM.READONLY') : this.$t('SYSTEM.WRITABLE')
                 return newData
@@ -100,10 +102,10 @@ export default {
                 {name: 'path', value: this.myData.partition_path},
                 {name: 'IDC', value: this.myData.idc},
                 {name: 'IP', value: this.myData.inn_ips[0]},
-                {name: this.$t('SYSTEM.CAPACITY'), value: `${this.myData.used_rate}%`, isRed: this.myData.used_rate > 99},
-                {name: 'CPU', value: `${this.myData.cpu}%`, tooltip: this.$t('SYSTEM.PARTITION_CPU_INFO'), isRed: this.myData.cpu > 20},
+                {name: this.$t('SYSTEM.CAPACITY'), value: this.myData.used_rateFont, isRed: this.myData.used_rate > 99},
+                {name: 'CPU', value: this.myData.cpuFont, tooltip: this.$t('SYSTEM.PARTITION_CPU_INFO'), isRed: this.myData.cpu > 20},
                 {name: this.$t('SYSTEM.MEDIA_TYPE'), value: this.myData.media_type},
-                {name: 'IO', value: `${this.myData.ioutil}%`, isRed: this.myData.ioutil > 90},
+                {name: 'IO', value: this.myData.ioutilFont, isRed: this.myData.ioutil > 90},
                 {name: this.$t('SYSTEM.RW_STATUS'), value: this.myData.readonlyFont},
                 {name: this.$t('SYSTEM.IS_DEL'), value: this.myData.failFont, isRed: this.myData.fail}]
             let detailHead = this.detailHead
