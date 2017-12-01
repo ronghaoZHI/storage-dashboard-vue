@@ -115,7 +115,7 @@ export default {
         }
     },
     created () {
-        this.getIdcList()
+        this.searchIdc()
         this.getUsedList()
     },
     components: {
@@ -199,6 +199,10 @@ export default {
                 const type = this.search.media_type
                 this.idcList = this.idcList.filter(item => {
                     return item[type].capacity !== 0
+                })
+            } else {
+                this.idcList = this.idcList.filter(item => {
+                    return item.SSD.capacity !== 0 || item.SATA.capacity !== 0
                 })
             }
         },
