@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="footer">
-            <i-switch size="large" v-model="isWrite" @on-change="usedSet" id="isWrite">
+            <i-switch size="large" v-model="isWrite" @on-change="usedSetConfirm" id="isWrite">
                 <span slot="open">{{$t('SYSTEM.WRITABLE')}}</span>
                 <span slot="close">{{$t('SYSTEM.READONLY')}}</span>
             </i-switch>
@@ -114,6 +114,17 @@ export default {
         openDetail () {
             this.$parent.getUsedDetail(this.myData.partition_id)
             this.showDetailModal = true
+        },
+        usedSetConfirm (newWrite) {
+            const contentText = newWrite ? this.$t('SYSTEM.WRITABLE') : this.$t('SYSTEM.READONLY')
+            this.$Modal.confirm({
+                content: this.$t('SYSTEM.WRITABLE_CONFIRM', {state: contentText}),
+                okText: this.$t('PUBLIC.CONFIRMED'),
+                cancelText: this.$t('PUBLIC.CANCLE'),
+                title: this.$t('SYSTEM.WRITABLE_CONFIRM_TITLE'),
+                onCancel: () => { this.isWrite = !newWrite },
+                onOk: () => this.usedSet(newWrite)
+            })
         },
         async usedSet (newWrite) {
             this.spinShow = true
