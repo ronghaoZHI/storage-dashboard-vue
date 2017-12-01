@@ -674,6 +674,11 @@ const getURL = async (bucket, file, prefix) => {
         span{
             background: transparent;
         }
+        input.input-append-before{
+            border-color: #52626d;
+            color: #71818d;
+            background-color: #414d56 !important;
+        }
     }
 }
 
