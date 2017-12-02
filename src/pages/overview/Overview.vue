@@ -197,7 +197,22 @@ export default {
                 key: 'name'
             }, {
                 title: 'Grants',
-                key: 'permissions'
+                key: 'permissions',
+                render: (h, params) => {
+                    let allUserValue = ''
+                    let AuthUserValue = ''
+                    params.row.permissions.allUser.map(item => {
+                        item === 'READ' ? allUserValue += this.$t('STORAGE.READ') : ''
+                        item === 'WRITE' ? allUserValue += this.$t('STORAGE.WRITE') : ''
+                    })
+                    params.row.permissions.AuthUser.map(item => {
+                        item === 'READ' ? AuthUserValue += this.$t('STORAGE.READ') : ''
+                        item === 'WRITE' ? AuthUserValue += this.$t('STORAGE.WRITE') : ''
+                    })
+                    allUserValue = allUserValue.length > 0 ? allUserValue : '--'
+                    AuthUserValue = AuthUserValue.length > 0 ? AuthUserValue : '--'
+                    return h('div', [`allUser:${allUserValue};AuthUser:${AuthUserValue}`])
+                }
             }, {
                 title: 'Actions',
                 key: 'actions',
