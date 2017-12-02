@@ -103,7 +103,7 @@
                             <div>
                                 <p>图片服务</p>
                                 <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
-                                <Button type="primary">查看详情</Button>
+                                <Button type="primary" @click="showPictureModal = true">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-handle-card">
@@ -171,6 +171,9 @@
         <Modal v-model="showAccessModal" title='防盗链' width="700" class="permission-modal">
             <Table :stripe="true" :columns="accessHeader" :data="accessList"></Table>
         </Modal>
+        <Modal v-model="showPictureModal" title='图片处理' width="500" class="permission-modal">
+            <Table :stripe="true" :columns="pictureHeader" :data="bucketList"></Table>
+        </Modal>
     </div>
 </template>
 <script>
@@ -201,6 +204,7 @@ export default {
             showPermissionModal: false,
             showSourceModal: false,
             showAccessModal: false,
+            showPictureModal: false,
             permissionHeader: [{
                 title: 'Name',
                 width: 90,
@@ -306,7 +310,38 @@ export default {
                     })
                     ])
                 }
-            }]
+            }],
+            pictureHeader: [
+                {
+                    title: 'Name',
+                    width: 90,
+                    key: 'Name'
+                },
+                {
+                    title: 'Actions',
+                    key: 'actions',
+                    width: 80,
+                    align: 'right',
+                    render: (h, params) => {
+                        return h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.gotoBucketPictureStyle(params.row)
+                                }
+                            }
+                        }, [h('Icon', {
+                            props: {
+                                type: 'ios-cog',
+                                size: 18
+                            }
+                        })
+                        ])
+                    }
+                }
+            ]
         }
     },
     computed: {
@@ -376,6 +411,9 @@ export default {
         },
         gotoBucketAccessSetting (data) {
             this.$router.push({ name: 'bucketSettings', params: { bucket: data.name, tabName: 'whiteList' } })
+        },
+        gotoBucketPictureStyle (data) {
+            this.$router.push({ name: 'pictureStyles', params: { bucket: data.Name } })
         },
         convertGrants (grants) {
             let permissions = {
