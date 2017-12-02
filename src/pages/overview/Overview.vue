@@ -77,16 +77,16 @@
                         </div>
                         <div class="file-ruler-card">
                             <div>
-                                <p>404 回源</p>
+                                <p>镜像回源</p>
                                 <p>2个 Bucket 已配置</p>
-                                <Button type="primary">查看详情</Button>
+                                <Button type="primary" @click="showSourceModal = true">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
                             <div>
                                 <p>tables 黑白名单</p>
                                 <p>2个 Bucket 已配置</p>
-                                <Button type="primary">查看详情</Button>
+                                <Button type="primary" @click="showAccessModal = true">查看详情</Button>
                             </div>
                         </div>
                     </div>
@@ -162,8 +162,14 @@
                 </div>
             </Col>
         </Row>
-        <Modal v-model="showPermissionModal" title='showPermissionModal' width="700" class="permission-modal">
+        <Modal v-model="showPermissionModal" title='权限' width="700" class="permission-modal">
             <Table :stripe="true" :columns="permissionHeader" :data="permissionsList"></Table>
+        </Modal>
+        <Modal v-model="showSourceModal" title='镜像回源' width="700" class="permission-modal">
+            <Table :stripe="true" :columns="sourceHeader" :data="sourceList"></Table>
+        </Modal>
+        <Modal v-model="showAccessModal" title='防盗链' width="700" class="permission-modal">
+            <Table :stripe="true" :columns="accessHeader" :data="accessList"></Table>
         </Modal>
     </div>
 </template>
@@ -175,7 +181,7 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { getBucketList } from '@/service/Data'
-import { getAnalysisUrl } from '@/service/API'
+import { getAnalysisUrl, FETCH_404, ACCESS_LIST } from '@/service/API'
 import { handler } from '@/service/Aws'
 import user from '@/store/modules/user'
 import { bytes, times, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
@@ -190,28 +196,21 @@ export default {
             },
             permissionsList: [],
             bucketList: [],
+            sourceList: [],
+            accessList: [],
             showPermissionModal: false,
+            showSourceModal: false,
+            showAccessModal: false,
             permissionHeader: [{
                 title: 'Name',
                 width: 90,
                 key: 'name'
             }, {
                 title: 'Grants',
-                key: 'permissions',
                 render: (h, params) => {
-                    let allUserValue = ''
-                    let AuthUserValue = ''
-                    params.row.permissions.allUser.map(item => {
-                        item === 'READ' ? allUserValue += this.$t('STORAGE.READ') : ''
-                        item === 'WRITE' ? allUserValue += this.$t('STORAGE.WRITE') : ''
-                    })
-                    params.row.permissions.AuthUser.map(item => {
-                        item === 'READ' ? AuthUserValue += this.$t('STORAGE.READ') : ''
-                        item === 'WRITE' ? AuthUserValue += this.$t('STORAGE.WRITE') : ''
-                    })
-                    allUserValue = allUserValue.length > 0 ? allUserValue : '--'
-                    AuthUserValue = AuthUserValue.length > 0 ? AuthUserValue : '--'
-                    return h('div', [`allUser:${allUserValue};AuthUser:${AuthUserValue}`])
+                    let allUser = params.row.permissions.allUser
+                    let authUser = params.row.permissions.AuthUser
+                    return h('div', [`allUser:${allUser.length > 0 ? allUser.join(',') : '--'};AuthUser:${authUser.length > 0 ? authUser.join(',') : '--'}`])
                 }
             }, {
                 title: 'Actions',
@@ -226,6 +225,77 @@ export default {
                         on: {
                             click: () => {
                                 this.gotoBucketPermissionsSetting(params.row)
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'ios-cog',
+                            size: 18
+                        }
+                    })
+                    ])
+                }
+            }],
+            sourceHeader: [{
+                title: 'Name',
+                width: 90,
+                key: 'name'
+            }, {
+                title: '回源方式',
+                render: (h, params) => {
+                    return h('div', [h('div'), [`回源方式：${params.row.source.domain}`], h('div', [`响应方式：${params.row.source.fetch_mode.split('_')[1]}`])])
+                }
+            }, {
+                title: 'Actions',
+                key: 'actions',
+                width: 80,
+                align: 'right',
+                render: (h, params) => {
+                    return h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.gotoBucketSourceSetting(params.row)
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'ios-cog',
+                            size: 18
+                        }
+                    })
+                    ])
+                }
+            }],
+            accessHeader: [{
+                title: 'Name',
+                width: 90,
+                key: 'name'
+            }, {
+                title: 'IP黑名单',
+                render: (h, params) => {
+                    return h('div', params.row.blackList.map(item => h('div', [`${item.ip}:${item.access}`])))
+                }
+            }, {
+                title: 'IP白名单',
+                render: (h, params) => {
+                    return h('div', params.row.whiteList.map(item => h('div', [`${item.ip}:${item.access}`])))
+                }
+            }, {
+                title: 'Actions',
+                key: 'actions',
+                width: 80,
+                align: 'right',
+                render: (h, params) => {
+                    return h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.gotoBucketAccessSetting(params.row)
                             }
                         }
                     }, [h('Icon', {
@@ -260,6 +330,17 @@ export default {
                             permissions: this.convertGrants(acl.Grants)
                         })
                     })
+                    this.getBucketSource(item.Name).then(source => {
+                        source.length > 0 && source.map(sourceItem => {
+                            !!sourceItem.is_active && this.sourceList.push({
+                                name: item.Name,
+                                source: sourceItem
+                            })
+                        })
+                    })
+                    this.getAccessList(item.Name).then(access => {
+                        this.convertAccess(item.Name, access)
+                    })
                 })
                 this.bucketList = [...res.Buckets]
             } catch (error) {
@@ -290,6 +371,12 @@ export default {
         gotoBucketPermissionsSetting (data) {
             this.$router.push({ name: 'bucketSettings', params: { bucket: data.name, tabName: 'permission' } })
         },
+        gotoBucketSourceSetting (data) {
+            this.$router.push({ name: 'bucketSettings', params: { bucket: data.name, tabName: 'backSource' } })
+        },
+        gotoBucketAccessSetting (data) {
+            this.$router.push({ name: 'bucketSettings', params: { bucket: data.name, tabName: 'whiteList' } })
+        },
         convertGrants (grants) {
             let permissions = {
                 allUser: [],
@@ -297,12 +384,23 @@ export default {
             }
             _.each(grants, grant => {
                 if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers') {
-                    permissions.allUser.push(grant.Permission)
+                    if (grant.Permission === 'READ') {
+                        permissions.allUser.push(this.$t('STORAGE.READ'))
+                    } else if (grant.Permission === 'WRITE') {
+                        permissions.allUser.push(this.$t('STORAGE.WRITE'))
+                    } else if (grant.Permission === 'FULL_CONTROL') {
+                        permissions.allUser.push(this.$t('STORAGE.READ'), this.$t('STORAGE.WRITE'))
+                    }
                 } else if (grant.Grantee.URI && grant.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers') {
-                    permissions.AuthUser.push(grant.Permission)
+                    if (grant.Permission === 'READ') {
+                        permissions.AuthUser.push(this.$t('STORAGE.READ'))
+                    } else if (grant.Permission === 'WRITE') {
+                        permissions.AuthUser.push(this.$t('STORAGE.WRITE'))
+                    } else if (grant.Permission === 'FULL_CONTROL') {
+                        permissions.AuthUser.push(this.$t('STORAGE.READ'), this.$t('STORAGE.WRITE'))
+                    }
                 }
             })
-
             return permissions
         },
         convertData (item, splite = false) {
@@ -324,6 +422,53 @@ export default {
             } catch (error) {
                 console.log(error)
             }
+        },
+        async getBucketSource (name) {
+            let rule = {
+                action: 'list',
+                bucket: name
+            }
+            try {
+                return await this.$http.post(FETCH_404, rule)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getAccessList (name) {
+            const params = {
+                action: 'get',
+                bucket: name,
+                user: user.state.username
+            }
+            try {
+                return await this.$http.post(ACCESS_LIST, params)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        convertAccess (bucket, access) {
+            let blackIPs = [...access.delete_file.black_list, ...access.download_file.black_list, ...access.upload_file.black_list]
+            let whiteIPs = [...access.delete_file.white_list, ...access.download_file.white_list, ...access.upload_file.white_list]
+            let blackList = []
+            let whiteList = []
+            blackIPs[0] && blackList.push({ip: blackIPs[0], access: this.accessValue(blackIPs[0], access)})
+            blackIPs[1] && blackList.push({ip: blackIPs[1], access: this.accessValue(blackIPs[1], access)})
+            whiteIPs[0] && whiteList.push({ip: whiteIPs[0], access: this.accessValue(whiteIPs[0], access, 'white_list')})
+            whiteIPs[1] && whiteList.push({ip: whiteIPs[1], access: this.accessValue(whiteIPs[1], access, 'white_list')})
+            if (blackList.length > 0 || whiteList.length > 0) {
+                this.accessList.push({
+                    name: bucket,
+                    blackList,
+                    whiteList
+                })
+            }
+        },
+        accessValue (ip, access, listName = 'black_list') {
+            let value = []
+            access.upload_file[listName].includes(ip) && value.push(this.$t('SETTINGS.UPLOAD'))
+            access.download_file[listName].includes(ip) && value.push(this.$t('SETTINGS.DOWNLOAD'))
+            access.delete_file[listName].includes(ip) && value.push(this.$t('SETTINGS.DELETE'))
+            return value.join(',')
         }
     },
     components: {
