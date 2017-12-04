@@ -850,7 +850,6 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
     .right-section {
         .button-section {
             button {
-                margin-top: 42px;
                 margin-right: 8px;
                 border-radius: 3px;
             }
@@ -1023,6 +1022,11 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
     }
 
     .right-section {
+        .button-section {
+            button {
+                margin-top: 42px;
+            }
+        }
         .bucket-section,
         .update-history {
             border: none;
