@@ -570,22 +570,21 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
 
                 .title {
                     height: 100px;
+                    width: calc(~'100% - 20px');
                     border-bottom: @common-border;
-                    display: flex;
+                    margin: 0 10px;
+                    .fb(center,center);
 
                     .images {
-                        position: relative;
-                        height: 80px;
-                        width: 80px;
-                        top: 10px;
-                        left: 10px;
-                        background-size: 80px;
+                        height: 100px;
+                        background-size: 60px;
+                        flex: 7;
                     }
 
                     .texts {
                         display: inline-block;
-                        height: 80px;
-                        flex: 1;
+                        height: 100px;
+                        flex: 13;
 
                         .label {
                             position: relative;
@@ -611,15 +610,15 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
             }
 
             .storage-card:nth-child(2) .images {
-                background-image: url('../../assets/overview/capacity.png');
+                background: url('../../assets/overview/capacity.png') center center no-repeat;
             }
 
             .storage-card:nth-child(3) .images {
-                background-image: url('../../assets/overview/traffic.png');
+                background: url('../../assets/overview/traffic.png') center center no-repeat;
             }
 
             .storage-card:nth-child(4) .images {
-                background-image: url('../../assets/overview/request.png');
+                background: url('../../assets/overview/request.png') center center no-repeat;
             }
 
             .storage-card:not(:last-child) {
