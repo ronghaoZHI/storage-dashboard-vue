@@ -63,14 +63,14 @@
                         <div class="file-ruler-card">
                             <div>
                                 <p>权限设置</p>
-                                <p><span>{{permissionsList.length}}</span> 个Bucket 已配置</p>
+                                <p><span>{{permissionsList.length}}</span>个 Bucket 已配置</p>
                                 <Button type="primary" @click="showPermissionModal = true">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
                             <div>
                                 <p>自定义域名</p>
-                                <p>2个 Bucket 已配置</p>
+                                <p><span>0</span>个 Bucket 已配置</p>
                                 <p class="waiting">敬请期待</p>
                                 <Button type="primary">查看详情</Button>
                             </div>
@@ -78,14 +78,14 @@
                         <div class="file-ruler-card">
                             <div>
                                 <p>镜像回源</p>
-                                <p>2个 Bucket 已配置</p>
+                                <p><span>{{sourceList.length}}</span>个 Bucket 已配置</p>
                                 <Button type="primary" @click="showSourceModal = true">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
                             <div>
                                 <p>tables 黑白名单</p>
-                                <p>2个 Bucket 已配置</p>
+                                <p><span>{{accessList.length}}</span>个 Bucket 已配置</p>
                                 <Button type="primary" @click="showAccessModal = true">查看详情</Button>
                             </div>
                         </div>
@@ -110,14 +110,14 @@
                             <div>
                                 <p>图片鉴黄</p>
                                 <p>智能内容识别服务，快速识别色情图片</p>
-                                <Button type="primary">查看详情</Button>
+                                <p class="waiting">联系商务</p>
                             </div>
                         </div>
                         <div class="file-handle-card">
                             <div>
                                 <p>媒体转码</p>
                                 <p>支持自动转码和主动转码，将多媒体数据转码成多种终端播放格式</p>
-                                <Button type="primary">查看详情</Button>
+                                <Button type="primary" @click="gotoVideoTemplate">查看详情</Button>
                             </div>
                         </div>
                     </div>
@@ -125,9 +125,9 @@
             </Col>
             <Col span="5" class="right-section">
                 <div class="button-section">
-                    <button>FAQ</button>
-                    <button>SDK</button>
-                    <button>控制台使用手册</button>
+                    <a href="http://doc.bscstorage.com/faq-pub.html"><button>FAQ</button></a>
+                    <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><button>SDK</button></a>
+                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><button>控制台使用手册</button></a>
                 </div>
                 <div class="bucket-section">
                     <div class="section-separator">
@@ -136,13 +136,13 @@
                             <span class="separator-info">我的存储</span>
                         </div>
                     </div>
-                    <div class="bucket">
-                        <p>5</p>
+                    <div class="bucket" @click="gotoBucket">
+                        <p>{{bucketNum}}</p>
                         <p>Bucket</p>
                     </div>
                     <div class="buttons">
-                        <Button size="small" type="primary">新建 Bucket</Button>
-                        <Button size="small" type="ghost">我的密钥</Button>
+                        <Button size="small" type="primary" @click="createBucketModal = true">新建 Bucket</Button>
+                        <Button size="small" type="ghost" @click="gotoKeychain">我的密钥</Button>
                     </div>
                 </div>
                 <div class="update-history">
@@ -173,6 +173,11 @@
         </Modal>
         <Modal v-model="showPictureModal" title='图片处理' width="500" class="permission-modal">
             <Table :stripe="true" :columns="pictureHeader" :data="bucketList"></Table>
+        </Modal>
+        <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="inputCheck=false;createBucketValue = ''">
+            <Input v-model="createBucketValue" autofocus @on-enter="addBucket" :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")' pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/">
+            </Input>
+            <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
         </Modal>
     </div>
 </template>
@@ -205,6 +210,8 @@ export default {
             showSourceModal: false,
             showAccessModal: false,
             showPictureModal: false,
+            createBucketModal: false,
+            createBucketValue: '',
             permissionHeader: [{
                 title: 'Name',
                 width: 90,
@@ -347,6 +354,12 @@ export default {
     computed: {
         dateRange () {
             return formatDate(this.thisMonth[0]) + '-' + formatDate(this.thisMonth[1])
+        },
+        inputCheck () {
+            !(this.createBucketValue.length >= 3)
+        },
+        bucketNum () {
+            return this.bucketList.length
         }
     },
     created () {
@@ -414,6 +427,15 @@ export default {
         },
         gotoBucketPictureStyle (data) {
             this.$router.push({ name: 'pictureStyles', params: { bucket: data.Name } })
+        },
+        gotoVideoTemplate (data) {
+            this.$router.push({ name: 'template' })
+        },
+        gotoBucket () {
+            this.$router.push({ name: 'bucket' })
+        },
+        gotoKeychain () {
+            this.$router.push({ name: 'keychain' })
         },
         convertGrants (grants) {
             let permissions = {
@@ -507,6 +529,17 @@ export default {
             access.download_file[listName].includes(ip) && value.push(this.$t('SETTINGS.DOWNLOAD'))
             access.delete_file[listName].includes(ip) && value.push(this.$t('SETTINGS.DELETE'))
             return value.join(',')
+        },
+        async addBucket () {
+            this.createBucketModal = false
+            if (this.createBucketValue.length > 2) {
+                await handler('createBucket', { Bucket: this.createBucketValue })
+                this.bucketList.push({Name: this.createBucketValue})
+                this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
+                this.createBucketValue = ''
+            } else {
+                this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
+            }
         }
     },
     components: {
@@ -618,7 +651,7 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                     width: calc(~'100% - 90px');
 
                     span {
-                        color: #f85959;
+                        color: @primary-color;
                     }
                 }
 
@@ -756,6 +789,32 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
 
                 &:nth-child(2) {
                     background-image: url('../../assets/overview/sex.png');
+                    .waiting {
+                        display: none;
+                    }
+
+                    & > div:hover {
+                        background-image: url('../../assets/overview/phone-white.png');
+                        background-position:center 20px;
+                        background-repeat: no-repeat;
+                        button {
+                            display: none;
+                        }
+
+                        p:not(.waiting) {
+                            display: none;
+                        }
+
+                        .waiting {
+                            display: inline-block;
+                            width: 100%;
+                            color: #475669;
+                            position: relative;
+                            font-size: 14px;
+                            top: 60px;
+                            left: 0;
+                        }
+                    }
                 }
 
                 &:last-child {
@@ -800,6 +859,12 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                 padding: 0 12px;
                 border: @common-border;
                 border-radius: 0;
+                outline: none;
+                cursor: pointer;
+            }
+            button:hover {
+                color: @primary-color;
+                border-color: @primary-color;
             }
         }
 
@@ -830,6 +895,7 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                 background-repeat: no-repeat;
                 background-position: center 25px;
                 background-size: 50px;
+                cursor: pointer;
 
                 p:first-child {
                     position: relative;
