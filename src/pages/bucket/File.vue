@@ -547,7 +547,7 @@ export default {
                 } else {
                     this.deleteFolders(file)
                 }
-                this.fileList.splice(file._index, 1)
+                this.getData()
                 this.$Message.success(this.$t('STORAGE.DELETE_FILES_SUCCESS', {fileName: file.Key}))
             } catch (error) {
                 this.spinShow = false
