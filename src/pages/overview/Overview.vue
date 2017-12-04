@@ -125,9 +125,9 @@
             </Col>
             <Col span="5" class="right-section">
                 <div class="button-section">
-                    <a href="http://doc.bscstorage.com/faq-pub.html"><button>FAQ</button></a>
-                    <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><button>SDK</button></a>
-                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><button>控制台使用手册</button></a>
+                    <a href="http://doc.bscstorage.com/faq-pub.html"><Button type="ghost">FAQ</Button></a>
+                    <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><Button type="ghost">SDK</Button></a>
+                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="ghost">控制台使用手册</Button></a>
                 </div>
                 <div class="bucket-section">
                     <div class="section-separator">
@@ -851,23 +851,11 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
     .right-section {
         .button-section {
             button {
-                margin: 0;
-                font-size: 14px;
-                color: #475669;
-                height: 32px;
-                background: #fff;
-                padding: 0 12px;
-                border: @common-border;
-                border-radius: 0;
-                outline: none;
-                cursor: pointer;
-            }
-            button:hover {
-                color: @primary-color;
-                border-color: @primary-color;
+                margin-top: 42px;
+                margin-right: 8px;
+                border-radius: 3px;
             }
         }
-
         .bucket-section,
         .update-history {
             border: @common-border;
@@ -918,6 +906,146 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
 
                 button:last-child {
                     margin-left: 8px;
+                }
+            }
+        }
+    }
+}
+.dark .@{css-prefix}overview {
+    .left-section {
+        padding-right: 20px;
+
+        & > div {
+            border-color: transparent;
+        }
+
+        .storage {
+            .storage-card {
+                border-color: @card-border-color-dark;
+                background-color: @card-bg-dark;
+
+                .title {
+                    border-color: @card-border-color-dark;
+                    .texts {
+                        .label {
+                            color: #8492a6;
+                        }
+
+                        .numbers {
+                            color: #ffba42;
+                        }
+                    }
+                }
+            }
+
+            .storage-card:nth-child(2) .images {
+                background-image: url('../../assets/overview/capacity-dark.png');
+            }
+
+            .storage-card:nth-child(3) .images {
+                background-image: url('../../assets/overview/traffic-dark.png');
+            }
+
+            .storage-card:nth-child(4) .images {
+                background-image: url('../../assets/overview/request-dark.png');
+            }
+        }
+
+        .file-ruler {
+
+            .file-ruler-card {
+                border-color: @card-border-color-dark;
+                background-color: @card-bg-dark;
+                &:nth-child(1) {
+                    background-image: url('../../assets/overview/permisson-dark.png');
+                }
+
+                &:nth-child(2) {
+                    background-image: url('../../assets/overview/www-dark.png');
+
+                    & > div:hover {
+                        background-image: url('../../assets/overview/waiting-dark.png');
+
+                        .waiting {
+                            color: @text-color-dark;
+                        }
+                    }
+                }
+
+                &:nth-child(3) {
+                    background-image: url('../../assets/overview/404-dark.png');
+                }
+
+                &:last-child {
+                    background-image: url('../../assets/overview/IP-dark.png');
+                }
+
+                p {
+                    color: @text-color-secondary-dark;
+                }
+
+                & > div:hover {
+                    background-color: @card-hover-bg-dark;
+                }
+            }
+        }
+
+        .file-handle {
+
+            .file-handle-card {
+                border-color: @card-border-color-dark;
+                background-color: @card-bg-dark;
+
+                &:first-child {
+                    background-image: url('../../assets/overview/pic-dark.png');
+                }
+
+                &:nth-child(2) {
+                    background-image: url('../../assets/overview/sex-dark.png');
+
+                    & > div:hover {
+                        background-image: url('../../assets/overview/phone-dark.png');
+
+                        .waiting {
+                            color: @text-color-dark;
+                        }
+                    }
+                }
+
+                &:last-child {
+                    background-image: url('../../assets/overview/video-dark.png');
+                }
+
+                & > div:hover {
+                    background-color: @card-hover-bg-dark;
+                }
+            }
+        }
+    }
+
+    .right-section {
+        .bucket-section,
+        .update-history {
+            border: none;
+            background-color: @card-bg-dark;
+
+            .section-separator {
+                border-color: @card-border-color-dark;
+            }
+        }
+
+        .bucket-section {
+            .bucket {
+                background-color: transparent;
+                border: @common-border-dark;
+
+                p:first-child {
+                    color: #fff;
+                    text-shadow: 0 0 1px 0px rgba(0,0,0,0.24)
+                }
+
+                p:last-child {
+                    color: @text-color-dark;
                 }
             }
         }

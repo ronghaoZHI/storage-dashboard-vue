@@ -94,7 +94,7 @@ export default {
 .dark .section-separator {
     .separator-body {
         .separator-info {
-            .sc(16px,@text-color-dark);
+            .sc(16px,@text-color-secondary-dark);
         }
     }
 }
