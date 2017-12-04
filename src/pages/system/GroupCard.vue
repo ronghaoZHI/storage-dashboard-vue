@@ -26,8 +26,8 @@
                     <li v-bind:class="{'redFont': pt.used_rate > 99}">{{pt.used_rate ? `${pt.used_rate}%` : '--'}}</li>
                     <li v-bind:class="{'redFont': pt.ioutil > 90}">{{pt.ioutil ? `${pt.ioutil}%` : '--'}}</li>
                     <li v-bind:class="{'redFont': pt.cpu > 20}">{{pt.cpu ? `${pt.cpu.toFixed(2)}%` : '--'}}</li>
-                    <li v-if="data.traffic && pt.partition_id === data.traffic.src_partition_id[0]">{{$t('SYSTEM.MIGRATION')}}</li>
-                    <li v-else><span class="ip-button" @click="migrate(pt,index)">{{$t('SYSTEM.MIGRATE')}}</span></li>
+                    <li v-if="pt.readonly === 1">{{$t('SYSTEM.MIGRATION')}}</li>
+                    <li v-else><span class="ip-button" @click="migrate(pt)">{{$t('SYSTEM.MIGRATE')}}</span></li>
                 </ul>
             </div>
         </div>
@@ -121,14 +121,14 @@ export default {
         }
     },
     methods: {
-        async migrate (partition, index) {
+        async migrate (partition) {
             try {
                 this.$Loading.start()
                 await this.$http.post(GROUP_MOVE, {
                     group_id: this.data.group_id,
                     src_partition_id: partition.partition_id
                 })
-                this.data.partition[0].readonly = 1
+                partition.readonly = 1
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
@@ -246,7 +246,7 @@ export default {
 
             .ip-list {
                 text-align: right;
-                border-top: 0; 
+                border-top: 0;
             }
         }
     }
