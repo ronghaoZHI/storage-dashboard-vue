@@ -295,7 +295,9 @@ export default {
             }
         },
         validateBlackIP (rule, value, callback) {
-            if (!!this.blackList.find(item => item.ip === value)) {
+            if (/((?:(?:25[0-5]|2[0-4]\d|(?:1\d{2}|[1-9]?\d))\.){3}(?:25[0-5]|2[0-4]\d|(?:1\d{2}|[1-9]?\d)))/.test(value)) {
+                callback(new Error(this.$t('SETTINGS.IP_INVALID')))
+            } else if (!!this.blackList.find(item => item.ip === value)) {
                 callback(new Error(this.$t('SETTINGS.IP_EXISTS')))
             } else {
                 callback()

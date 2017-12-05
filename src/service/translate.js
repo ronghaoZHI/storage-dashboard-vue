@@ -646,7 +646,8 @@ export const messages = {
             SAVE: 'Save',
             NEW_IP_PLACEHOLDER: 'Please enter the IP to add',
             ACCESS: 'Access',
-            IP_EXISTS: 'The IP already exists',
+            IP_EXISTS: 'IP exists',
+            IP_INVALID: 'IP invalid',
             SAVED: 'Saved!',
             SECURITY_CHAIN: 'Hotlink Protection',
             WHITE_BLACK: 'IP black-and-white list'
@@ -1394,6 +1395,7 @@ export const messages = {
             NEW_IP_PLACEHOLDER: '请输入要添加的IP',
             ACCESS: '权限',
             IP_EXISTS: 'IP已存在!',
+            IP_INVALID: 'IP无效!',
             SAVED: '保存成功',
             SECURITY_CHAIN: '防盗链',
             WHITE_BLACK: 'IP黑白名单'
