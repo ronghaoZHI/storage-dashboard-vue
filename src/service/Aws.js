@@ -19,7 +19,7 @@ export const config = async ({key, timeout = 10000, host = HOST.awsHost, s3Force
     AWS.config.update({ accessKeyId: _key.accesskey, secretAccessKey: _key.secretkey })
     AWS.config.region = region
     AWS.config.httpOptions = { timeout: timeout }
-    AWS.config.endpoint = 'http://' + host
+    AWS.config.endpoint = '//' + host
     AWS.config.s3ForcePathStyle = s3ForcePathStyle
 }
 
