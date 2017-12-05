@@ -24,7 +24,7 @@
                 <FormItem prop="ip" class="ip-item">
                     <Input v-model="newWhite.ip" class="new-ip" :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')"></Input>
                 </FormItem>
-            </Form>  
+            </Form>
             <Checkbox v-model="newWhite.upload">{{$t('SETTINGS.UPLOAD')}}</Checkbox>
             <Checkbox v-model="newWhite.download">{{$t('SETTINGS.DOWNLOAD')}}</Checkbox>
             <Checkbox v-model="newWhite.delete">{{$t('SETTINGS.DELETE')}}</Checkbox>
@@ -272,7 +272,7 @@ export default {
         addBlack () {
             this.$refs['blackForm'].validate((valid) => {
                 if (!valid) {
-                    this.$Message.error(this.$t('SETTINGS.IP_EXISTS'))
+                    this.$Message.error(this.$t('SETTINGS.IP_INVALID'))
                 } else {
                     this.blackList.push(_.cloneDeep(this.newBlack))
                 }
@@ -281,21 +281,23 @@ export default {
         addWhite () {
             this.$refs['whiteForm'].validate((valid) => {
                 if (!valid) {
-                    this.$Message.error(this.$t('SETTINGS.IP_EXISTS'))
+                    this.$Message.error(this.$t('SETTINGS.IP_INVALID'))
                 } else {
                     this.whiteList.push(_.cloneDeep(this.newWhite))
                 }
             })
         },
         validateWhiteIP (rule, value, callback) {
-            if (!!this.whiteList.find(item => item.ip === value)) {
+            if (!ipReg.test(value)) {
+                callback(new Error(this.$t('SETTINGS.IP_INVALID')))
+            } else if (!!this.whiteList.find(item => item.ip === value)) {
                 callback(new Error(this.$t('SETTINGS.IP_EXISTS')))
             } else {
                 callback()
             }
         },
         validateBlackIP (rule, value, callback) {
-            if (/((?:(?:25[0-5]|2[0-4]\d|(?:1\d{2}|[1-9]?\d))\.){3}(?:25[0-5]|2[0-4]\d|(?:1\d{2}|[1-9]?\d)))/.test(value)) {
+            if (!ipReg.test(value)) {
                 callback(new Error(this.$t('SETTINGS.IP_INVALID')))
             } else if (!!this.blackList.find(item => item.ip === value)) {
                 callback(new Error(this.$t('SETTINGS.IP_EXISTS')))
@@ -361,13 +363,14 @@ const savedDefult = {
         black_list: []
     }
 }
+const ipReg = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
 </script>
 <style lang="less" scoped>
 .mar-t-35{
     margin-top: 35px;
 }
 .new-item{
-    margin: 10px 0;
+    margin: 10px 0 20px;
     .new-ip {
         margin-right: 8px;
         width: 200px
