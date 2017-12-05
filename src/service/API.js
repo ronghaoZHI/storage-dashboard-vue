@@ -3,7 +3,7 @@ import { HOST } from './HOST'
 const VERSION = '/v1/'
 const VERSION_TRANSCODER = '/2012-09-25/'
 
-const group = (url) => 'http://' + HOST.apiHost + VERSION + url
+const group = (url) => '//' + HOST.apiHost + VERSION + url
 const groupTranscoder = (url) => 'http://' + HOST.transcoderHOST + VERSION_TRANSCODER + url
 
 export const LOGIN = group('auth/login')
