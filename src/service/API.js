@@ -5,6 +5,7 @@ const VERSION_TRANSCODER = '/2012-09-25/'
 
 const group = (url) => '//' + HOST.apiHost + VERSION + url
 const groupTranscoder = (url) => '//' + HOST.transcoderHOST + VERSION_TRANSCODER + url
+const groupImgx = (url) => '//' + HOST.imgxHOST + url
 
 export const LOGIN = group('auth/login')
 export const LOGOUT = group('auth/logout')
@@ -47,6 +48,8 @@ export const FETCH_404 = group('retrieve')
 export const ACCESS_LIST = group('access')
 
 export const ADD_SERVICE = group('user/add/service')
+
+export const IMGX_PREVIEW = groupImgx('/image-example/')
 
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 

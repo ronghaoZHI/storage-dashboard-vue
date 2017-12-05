@@ -165,6 +165,8 @@
 </template>
 <script>
 import { transcoder } from '@/service/Aws'
+import { getTranscoderUrl } from '@/service/API'
+
 export default {
     data () {
         return {
@@ -226,7 +228,7 @@ export default {
             let template = convert2Save(this.template, this.auxiliary)
             try {
                 this.$Loading.start()
-                await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/presets', template)
+                await this.$http.post(getTranscoderUrl('presets'), template)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 this.$router.push({ name: 'template' })

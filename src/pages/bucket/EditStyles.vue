@@ -345,6 +345,7 @@ import upload from '@/components/upload/upload'
 import styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview-bsc'
 import encoding from 'text-encoding'
+import { IMGX_PREVIEW } from '@/service/API'
 import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
     data () {
@@ -757,7 +758,7 @@ const putOverlayFile = async (name, body) => {
     }))
 }
 const getImgxUrl = IS => {
-    return 'http://imgx-ss.bscstorage.com/image-example/' + IS + '/dashboard.jpg?' + Date.now()
+    return IMGX_PREVIEW + IS + '/dashboard.jpg?' + Date.now()
 }
 const general2Save = data => {
     let saved = {}

@@ -33,6 +33,7 @@ import { prefix, Utf8ArrayToStr } from '@/service/bucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
 import iView from 'iview-bsc'
+import { IMGX_PREVIEW } from '@/service/API'
 export default {
     data () {
         return {
@@ -293,7 +294,7 @@ export default {
                 })
                 await Promise.all(promises)
             }
-            this.clipUrl = 'http://imgx-ss.bscstorage.com/image-example/' + style.IS + '/dashboard.jpg?' + Date.now()
+            this.clipUrl = IMGX_PREVIEW + style.IS + '/dashboard.jpg?' + Date.now()
             this.selectedStyleName = style.ruleName
             this.showImageModal = true
             this.$Loading.finish()

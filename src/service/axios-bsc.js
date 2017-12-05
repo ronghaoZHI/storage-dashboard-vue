@@ -52,7 +52,7 @@ async function getTranscodeUrlConfig (config) {
 async function getS3ByHttpHeaders (config) {
     let key = await getKey()
     let signed = aws4.sign({
-        host: config.url.split('http://')[1].split('/')[0],
+        host: config.url.split('//')[1].split('/')[0],
         method: config.method.toUpperCase(),
         path: config.url.split('.com')[1],
         body: JSON.stringify(config.data)
