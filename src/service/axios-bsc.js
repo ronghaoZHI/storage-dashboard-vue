@@ -70,6 +70,7 @@ function errorHandle (data) {
         return Promise.reject(data.error)
     } else if (data.error && data.error.status_code >= 400) {
         iView.Message.error(data.error.show_msg || data.error.msg, 1000)
+        return Promise.reject(data.error)
     } else {
         return data.data || data
     }

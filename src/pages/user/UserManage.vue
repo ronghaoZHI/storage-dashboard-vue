@@ -107,7 +107,7 @@
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
 import moment from 'moment'
-import { BOUND_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, UNBIND_USER } from '@/service/API'
+import { BOUND_USER, REMOVE_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, UNBIND_USER } from '@/service/API'
 export default {
     data () {
         return {
@@ -177,7 +177,7 @@ export default {
                 },
                 {
                     title: 'Type',
-                    width: 80,
+                    width: 120,
                     align: 'left',
                     key: 'type'
                 },
@@ -189,7 +189,7 @@ export default {
                 },
                 {
                     title: 'Creation time',
-                    width: 150,
+                    width: 100,
                     align: 'left',
                     render: (h, params) => {
                         let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
@@ -224,7 +224,7 @@ export default {
                 },
                 {
                     title: 'Type',
-                    width: 80,
+                    width: 120,
                     align: 'left',
                     key: 'type'
                 },
@@ -247,7 +247,7 @@ export default {
                 },
                 {
                     title: 'Creation time',
-                    width: 400,
+                    width: 200,
                     align: 'left',
                     render: (h, params) => {
                         let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
@@ -258,24 +258,48 @@ export default {
                 {
                     title: 'Actions',
                     key: 'actions',
-                    width: 80,
+                    width: 120,
                     align: 'left',
                     render: (h, params) => {
-                        return h('i-button', {
-                            props: {
-                                size: 'small'
-                            },
-                            on: {
-                                click: () => {
-                                    this.editSubUserModal(params.row, params.index)
+                        return h('div', [
+                            h('i-button', {
+                                props: {
+                                    size: 'small'
+                                },
+                                'class': {
+                                    'mar-r-5': true
+                                },
+                                on: {
+                                    click: () => {
+                                        this.editSubUserModal(params.row, params.index)
+                                    }
                                 }
-                            }
-                        }, [h('Icon', {
-                            props: {
-                                type: 'compose',
-                                size: this.iconSize
-                            }
-                        })
+                            }, [h('Icon', {
+                                props: {
+                                    type: 'compose',
+                                    size: this.iconSize
+                                }
+                            })
+                            ]),
+                            h('i-button', {
+                                props: {
+                                    size: 'small'
+                                },
+                                'class': {
+                                    'mar-r-5': true
+                                },
+                                on: {
+                                    click: () => {
+                                        this.removeUser(params.row, params.index)
+                                    }
+                                }
+                            }, [h('Icon', {
+                                props: {
+                                    type: 'trash-a',
+                                    size: this.iconSize
+                                }
+                            })
+                            ])
                         ])
                     }
                 }
@@ -387,8 +411,12 @@ export default {
         unbindUser (user, index) {
             this.$http.post(UNBIND_USER, {email: user.email}).then(res => {
                 this.userList.splice(index, 1)
-            }, error => {
-                this.$Message.error(error)
+            })
+        },
+        removeUser (user, index) {
+            this.$http.post(REMOVE_USER + '?username=' + user.username).then(res => {
+                console.log(res)
+                this.userList.splice(index, 1)
             })
         },
         createUser () {
@@ -622,7 +650,7 @@ const convertArray2Object = (array) => {
 }
 
 .table-bucket-acl {
-    width: 100%;    
+    width: 100%;
     border: @common-border;
     border-collapse:collapse;
 
