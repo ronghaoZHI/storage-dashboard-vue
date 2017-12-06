@@ -414,9 +414,13 @@ export default {
             })
         },
         removeUser (user, index) {
+            this.spinShow = true
             this.$http.post(REMOVE_USER + '?username=' + user.username).then(res => {
-                console.log(res)
                 this.userList.splice(index, 1)
+                this.spinShow = false
+            }, err => {
+                this.spinShow = false
+                console.log(err)
             })
         },
         createUser () {
