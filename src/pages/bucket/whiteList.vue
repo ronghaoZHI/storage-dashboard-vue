@@ -19,10 +19,10 @@
                 <span class="separator-info">{{$t('SETTINGS.IP_WHITE_LIST')}}</span>
             </div>
         </div>
-        <div class="new-item" @keyup.enter="addWhite">
+        <div class="new-item">
             <Form ref="whiteForm" :model="newWhite" :rules="whiteRules" class="ip-form">
                 <FormItem prop="ip" class="ip-item">
-                    <Input v-model="newWhite.ip" class="new-ip" :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')"></Input>
+                    <Input v-model="newWhite.ip" class="new-ip" :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')" @keyup.enter="addWhite"></Input>
                 </FormItem>
             </Form>
             <Checkbox v-model="newWhite.upload">{{$t('SETTINGS.UPLOAD')}}</Checkbox>
@@ -363,7 +363,8 @@ const savedDefult = {
         black_list: []
     }
 }
-const ipReg = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
+const ipReg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+
 </script>
 <style lang="less" scoped>
 .mar-t-35{

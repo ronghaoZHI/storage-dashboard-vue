@@ -727,4 +727,16 @@ const convertNewUserItem = item => {
     display: block;
     margin: 0 auto;
 }
+.page-info{
+    width: 100%;
+    font-size: 12px;
+    color: #d3dce6;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+.dark{
+    .page-info{
+        color: #8492a6;
+    }
+}
 </style>

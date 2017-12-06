@@ -72,7 +72,7 @@ export const messages = {
         STORAGE: {
             TABLE_BUCKET_NAME: 'Bucket name',
             TOGGLE_THEME: 'Toggle theme',
-            BACK_SOURCE: '404 Back to Source',
+            BACK_SOURCE: 'Back to Source',
             SOURCE_ADDRESS: 'Address',
             SOURCE_MODE: 'Mode',
             MIRROR: 'Mirror',
@@ -651,6 +651,10 @@ export const messages = {
             IP_INVALID: 'IP invalid',
             SAVED: 'Saved!',
             SECURITY_CHAIN: 'Hotlink Protection',
+            BACK_SOURCE_INFO: '只有一条回源规则生效，通过切换规则状态“开启/关闭”来设置。',
+            FETCH_200_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个200和源文件。',
+            FETCH_302_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个302；客户端根据302中的Location从您的数据源读取数据。',
+            FETCH_404_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储；并返回给用户一个404。',
             WHITE_BLACK: 'IP black-and-white list'
         },
         i: {
@@ -821,9 +825,9 @@ export const messages = {
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',
             TOGGLE_THEME: '切换主题',
-            BACK_SOURCE: '404回源',
+            BACK_SOURCE: '镜像回源',
             SOURCE_ADDRESS: '回源地址',
-            SOURCE_MODE: '回源方式',
+            SOURCE_MODE: '响应方式',
             MIRROR: '镜像回源',
             REDIRECTION: '重定向回源',
             ENTER_SOURCE_DOMAIN: '请填写回源域名',
@@ -1401,6 +1405,10 @@ export const messages = {
             IP_INVALID: 'IP无效!',
             SAVED: '保存成功',
             SECURITY_CHAIN: '防盗链',
+            BACK_SOURCE_INFO: '只有一条回源规则生效，通过切换规则状态“开启/关闭”来设置。',
+            FETCH_200_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个200和源文件。',
+            FETCH_302_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个302；客户端根据302中的Location从您的数据源读取数据。',
+            FETCH_404_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储；并返回给用户一个404。',
             WHITE_BLACK: 'IP黑白名单'
         },
         i: {

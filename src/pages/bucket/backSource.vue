@@ -2,13 +2,37 @@
     <div class="bsc-back-source">
         <Button class="button-add-rule" type="primary" @click="show404ModalFunc()">{{$t('STORAGE.ADD_RULE')}}</Button>
         <legend-list class="legend-list" :data="legendList"></legend-list>
+        <p class="page-info">{{$t('SETTINGS.BACK_SOURCE_INFO')}}</p>
         <Table border :context="self" :stripe="true" :columns="list404Header" :data="fetchRuleList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
         <Modal v-model="show404Modal" :title='$t("STORAGE.BACK_SOURCE")' width="600" class="edit-modal">
             <Form ref="formValidate404" :model="formValidate404" :rules="ruleValidate404" :label-width="100">
                 <FormItem :label='$t("STORAGE.SOURCE_MODE")' prop="fetch_mode">
                     <RadioGroup v-model="formValidate404.fetch_mode">
-                        <Radio label="fetch_200">{{$t("STORAGE.MIRROR")}}</Radio>
-                        <Radio label="fetch_302">{{$t("STORAGE.REDIRECTION")}}</Radio>
+                        <Radio label="fetch_200">
+                            200
+                            <Tooltip>
+                                <Icon type="ios-help-outline"></Icon>
+                                <div slot="content">
+                                    <p style="white-space: normal !important;">{{$t("SETTINGS.FETCH_200_INFO")}}</p>
+                                </div>
+                            </Tooltip>
+                        </Radio>
+                        <Radio label="fetch_302">302
+                            <Tooltip>
+                                <Icon type="ios-help-outline"></Icon>
+                                <div slot="content">
+                                    <p style="white-space: normal !important;">{{$t("SETTINGS.FETCH_302_INFO")}}</p>
+                                </div>
+                            </Tooltip>
+                        </Radio>
+                        <Radio label="fetch_404">404
+                            <Tooltip>
+                                <Icon type="ios-help-outline"></Icon>
+                                <div slot="content">
+                                    <p style="white-space: normal !important;">{{$t("SETTINGS.FETCH_404_INFO")}}</p>
+                                </div>
+                            </Tooltip>
+                        </Radio>
                     </RadioGroup>
                 </FormItem>
                 <FormItem :label='$t("STORAGE.SOURCE_ADDRESS")' prop="domain">
