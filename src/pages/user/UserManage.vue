@@ -280,25 +280,6 @@ export default {
                                     size: this.iconSize
                                 }
                             })
-                            ]),
-                            h('i-button', {
-                                props: {
-                                    size: 'small'
-                                },
-                                'class': {
-                                    'mar-r-5': true
-                                },
-                                on: {
-                                    click: () => {
-                                        this.removeUser(params.row, params.index)
-                                    }
-                                }
-                            }, [h('Icon', {
-                                props: {
-                                    type: 'trash-a',
-                                    size: this.iconSize
-                                }
-                            })
                             ])
                         ])
                     }
