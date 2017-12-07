@@ -28,6 +28,7 @@ export const ALL_USER = group('administrator/list/user')
 export const BIND_USER = group('administrator/bind/user')
 export const UNBIND_USER = group('administrator/unbind/user')
 export const REMOVE_USER = group('superuser/remove/sub_user')
+export const USER_DOMAIN = group('sync/ip_domain')
 
 export const GROUP_LIST = group('group/list')
 export const GROUP_MOVE = group('group/move')

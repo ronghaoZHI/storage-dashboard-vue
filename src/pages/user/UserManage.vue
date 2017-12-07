@@ -107,7 +107,7 @@
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
 import moment from 'moment'
-import { BOUND_USER, REMOVE_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, UNBIND_USER } from '@/service/API'
+import { BOUND_USER, REMOVE_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, UNBIND_USER, USER_DOMAIN } from '@/service/API'
 export default {
     data () {
         return {
@@ -280,7 +280,48 @@ export default {
                                     size: this.iconSize
                                 }
                             })
-                            ])
+                            ]), h('i-button', {
+                                props: {
+                                    size: 'small'
+                                },
+                                'class': {
+                                    'mar-r-5': true
+                                },
+                                on: {
+                                    click: () => {
+                                        this.removeUser(params.row, params.index)
+                                    }
+                                }
+                            }, [h('Icon', {
+                                props: {
+                                    type: 'trash-a',
+                                    size: this.iconSize
+                                }
+                            })]), h('i-button', {
+                                props: {
+                                    size: 'small'
+                                },
+                                'class': {
+                                    'mar-r-5': true
+                                },
+                                on: {
+                                    click: () => {
+                                        this.addDomain(params.row.username)
+                                    }
+                                }
+                            }, ['添加IP和domain']), h('i-button', {
+                                props: {
+                                    size: 'small'
+                                },
+                                'class': {
+                                    'mar-r-5': true
+                                },
+                                on: {
+                                    click: () => {
+                                        this.removeDomain(params.row.username)
+                                    }
+                                }
+                            }, ['删除IP和domain'])
                         ])
                     }
                 }
@@ -504,6 +545,24 @@ export default {
         userType (user) {
             let type = user.info.type
             return type === 'normal' ? this.$t('USER.GENERAL_USER') : type === 'sub' ? this.$t('USER.SUB_USER') : type === 'admin' ? this.$t('USER.ADMIN') : this.$t('USER.SUPER_USER')
+        },
+        async addDomain (username) {
+            try {
+                let url = `${USER_DOMAIN}?username=${username}`
+                await this.$http.post(url)
+                this.$Message.success('添加成功')
+            } catch (error) {
+                this.$Message.success('添加失败')
+            }
+        },
+        async removeDomain (username) {
+            try {
+                let url = `${USER_DOMAIN}?username=${username}`
+                await this.$http.delete(url)
+                this.$Message.success('删除成功')
+            } catch (error) {
+                this.$Message.success('删除失败')
+            }
         }
     }
 }
