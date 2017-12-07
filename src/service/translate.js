@@ -1299,7 +1299,7 @@ export const messages = {
             CONTAINER: '输出格式',
             VIDEO: '视频',
             AUDIO: '音频',
-            TEMPLATE_NAME_TABLE: '模版名称 : ',
+            TEMPLATE_NAME_TABLE: '模版名称',
             CONF: '配置',
             WH_UNALTERED: '根据分辨率计算',
             OUTPUTKEY_REQUIRED: '请填写输出文件名',
