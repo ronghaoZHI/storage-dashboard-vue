@@ -203,6 +203,7 @@ export default {
             }, {
                 title: this.$t('SYSTEM.NUM'),
                 key: 'group_num',
+                align: 'right',
                 width: 90
             }, {
                 title: this.$t('VIDEO.OPERATION'),

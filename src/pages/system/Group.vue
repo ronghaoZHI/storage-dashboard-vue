@@ -1,5 +1,52 @@
 <template>
     <div class="bsc-system bsc-group">
+        <div class="header-card-wrap">
+            <div class="header-card">
+                <div>
+                    <Icon type="ios-analytics" :size="iconSize" :color="iconColor"></Icon>
+                </div>
+                <div>
+                    <p>group数</p>
+                    <p>42个</p>
+                </div>
+            </div>
+            <div class="header-card">
+                <div>
+                    <Icon type="aperture" :size="iconSize" :color="iconColor"></Icon>
+                </div>
+                <div>
+                    <p>group平均大小</p>
+                    <p>10G</p>
+                </div>
+            </div>
+            <div class="header-card">
+                <div>
+                    <Icon type="filing" :size="iconSize" :color="iconColor"></Icon>
+                </div>
+                <div>
+                    <p>group最大大小</p>
+                    <p>60G</p>
+                </div>
+            </div>
+            <div class="header-card">
+                <div>
+                    <Icon type="soup-can" :size="iconSize" :color="iconColor"></Icon>
+                </div>
+                <div>
+                    <p>group5分位大小</p>
+                    <p>871KB</p>
+                </div>
+            </div>
+            <div class="header-card">
+                <div>
+                    <Icon type="soup-can" :size="iconSize" :color="iconColor"></Icon>
+                </div>
+                <div>
+                    <p>group9分位大小</p>
+                    <p>40G</p>
+                </div>
+            </div>
+        </div>
         <div class="header">
             <div class="search" @keyup.enter="getGroupList(false)">
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
@@ -57,7 +104,9 @@ export default {
             groupList: [],
             nextGroupId: 0,
             spinShow: true,
-            pageCount: 20
+            pageCount: 20,
+            iconSize: 36,
+            iconColor: '#6bbefc'
         }
     },
     created () {
@@ -169,6 +218,40 @@ export default {
 }
 
 .@{css-prefix}group {
+    .header-card-wrap {
+        .fb(fast-start, center);
+        width: 100%;
+        padding: 15px 0;
+        border: @group-common-border;
+        margin-bottom: 16px;
+
+        .header-card {
+            height: 80px;
+            flex: 1;
+            border-right: @group-common-border;
+            text-align: center;
+            padding: 15px;
+            .fb(center,center);
+
+            div:first-child {
+                text-align: right;
+                padding-right: 16px;
+            }
+            div:last-child {
+                text-align: left;
+
+                p:first-child{
+                    font-size: 22px;
+                }
+                p:last-child{
+                    font-size: 16px;
+                }
+            }
+        }
+        .header-card:last-child {
+            border-right: none;
+        }
+    }
     & > .header {
             .search {
                 border-bottom: 1px dashed #d3dce6;
