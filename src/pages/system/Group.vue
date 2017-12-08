@@ -198,6 +198,21 @@ export default {
 </script>
 <style lang="less" scoped>
 .dark .@{css-prefix}group {
+    .header-card-wrap {
+        .fb(fast-start, center);
+        border-color: @border-color-dark;
+        .header-card {
+            border-color: @border-color-dark;
+            div:last-child {
+                p:last-child{
+                    color: #ffba42;
+                }
+            }
+        }
+        .header-card:last-child {
+            border-right: none;
+        }
+    }
     .header {
         .search {
             border-bottom: @common-border-dark;
@@ -241,10 +256,11 @@ export default {
                 text-align: left;
 
                 p:first-child{
-                    font-size: 22px;
+                    font-size: 16px;
+                    color: #a1acb5;
                 }
                 p:last-child{
-                    font-size: 16px;
+                    font-size: 22px;
                 }
             }
         }
