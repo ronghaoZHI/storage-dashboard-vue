@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-system-card bsc-group-card">
         <div class ="header">
-            <Icon  type="android-star" size="16"></Icon>
+            <Icon  type="android-star" size="16" :color="iconColor"></Icon>
             <span>{{data.group_id}}</span>
             <Button type="text" size="small" @click="showDetailModal=true">{{$t('SYSTEM.DETAILS')}}</Button>
         </div>
@@ -97,6 +97,9 @@ export default {
     components: { detailModal },
     props: ['data'],
     computed: {
+        iconColor () {
+            return this.data.readonly === 0 ? '#00a854' : '#f85959'
+        },
         modalData () {
             let tableData = _.map(this.data.partition, (item) => {
                 let newItem = _.cloneDeep(item)
