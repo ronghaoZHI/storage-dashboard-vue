@@ -26,6 +26,11 @@ export default {
         username () {
             return user.state.username
         }
+    },
+    created () {
+        this.$Message.config({
+            duration: 3
+        })
     }
 }
 </script>
