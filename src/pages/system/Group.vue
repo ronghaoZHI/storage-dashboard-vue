@@ -6,8 +6,8 @@
                     <Icon type="ios-analytics" :size="iconSize" :color="iconColor"></Icon>
                 </div>
                 <div>
-                    <p>group数</p>
                     <p>42个</p>
+                    <p>group数</p>
                 </div>
             </div>
             <div class="header-card">
@@ -15,8 +15,8 @@
                     <Icon type="aperture" :size="iconSize" :color="iconColor"></Icon>
                 </div>
                 <div>
-                    <p>group平均大小</p>
                     <p>10G</p>
+                    <p>group平均大小</p>
                 </div>
             </div>
             <div class="header-card">
@@ -24,8 +24,8 @@
                     <Icon type="filing" :size="iconSize" :color="iconColor"></Icon>
                 </div>
                 <div>
-                    <p>group最大大小</p>
                     <p>60G</p>
+                    <p>group最大大小</p>
                 </div>
             </div>
             <div class="header-card">
@@ -33,8 +33,8 @@
                     <Icon type="soup-can" :size="iconSize" :color="iconColor"></Icon>
                 </div>
                 <div>
-                    <p>group5分位大小</p>
                     <p>871KB</p>
+                    <p>group5分位大小</p>
                 </div>
             </div>
             <div class="header-card">
@@ -42,11 +42,12 @@
                     <Icon type="soup-can" :size="iconSize" :color="iconColor"></Icon>
                 </div>
                 <div>
-                    <p>group9分位大小</p>
                     <p>40G</p>
+                    <p>group9分位大小</p>
                 </div>
             </div>
         </div>
+        <legend-list :data="legendList"></legend-list>
         <div class="header">
             <div class="search" @keyup.enter="getGroupList(false)">
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
@@ -94,6 +95,7 @@
 <script>
 import { GROUP_LIST } from '@/service/API'
 import groupCard from './GroupCard'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
@@ -106,7 +108,14 @@ export default {
             spinShow: true,
             pageCount: 20,
             iconSize: 36,
-            iconColor: '#6bbefc'
+            iconColor: '#6bbefc',
+            legendList: [{
+                text: 'group:存储单元'
+            }, {
+                text: 'server:服务器'
+            }, {
+                text: 'partition:磁盘'
+            }]
         }
     },
     created () {
@@ -118,7 +127,7 @@ export default {
         }
     },
     components: {
-        groupCard
+        groupCard, legendList
     },
     methods: {
         tabToggle (index, ref) {
@@ -204,7 +213,7 @@ export default {
         .header-card {
             border-color: @border-color-dark;
             div:last-child {
-                p:last-child{
+                p:first-child{
                     color: #ffba42;
                 }
             }
@@ -245,7 +254,7 @@ export default {
             flex: 1;
             border-right: @group-common-border;
             text-align: center;
-            padding: 15px;
+            padding: 8px;
             .fb(center,center);
 
             div:first-child {
@@ -255,12 +264,14 @@ export default {
             div:last-child {
                 text-align: left;
 
-                p:first-child{
+                p:last-child{
                     font-size: 16px;
                     color: #a1acb5;
+                    line-height: 20px;
                 }
-                p:last-child{
+                p:first-child{
                     font-size: 22px;
+                    line-height: 25px;
                 }
             }
         }
