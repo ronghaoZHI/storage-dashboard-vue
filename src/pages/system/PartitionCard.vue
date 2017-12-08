@@ -1,7 +1,7 @@
 <template>
     <div class="bsc-system-card bsc-partition-card" :class="waitingCard">
         <div class="header">
-            <Icon  type="android-star" size="16"></Icon>
+            <Icon  type="android-star" size="16" :color="iconColor"></Icon>
             <span>{{myData.inn_ips[0]}}:{{myData.partition_path}}</span>
             <Button type="text" size="small" @click="openDetail" v-if="myData.is_del !== 1">{{$t('SYSTEM.DETAILS')}}</Button>
         </div>
@@ -71,6 +71,9 @@ export default {
     created () {
     },
     computed: {
+        iconColor () {
+            return !!this.myData.fail ? '#f85959' : '#00a854'
+        },
         myData: {
             get () {
                 let newData = _.cloneDeep(this.data)
