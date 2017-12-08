@@ -154,7 +154,7 @@ export default {
     },
     computed: {
         username () {
-            return user.state.username
+            return user.state.type === 'admin' && user.state.subUser ? user.state.subUser.username : user.state.username
         }
     },
     created () {
@@ -181,7 +181,13 @@ export default {
         convert2Front (data) {
             let frontList = []
             data.forEach(item => {
-                const permissions = item.ContentConfig.Permissions
+                const permissions = item.ContentConfig ? item.ContentConfig.Permissions : [
+                    {
+                        Grantee: this.username,
+                        GranteeType: 'Canonical',
+                        Access: ['FullControl']
+                    }
+                ]
                 const frontItem = {
                     id: item.Id,
                     name: item.Name,

@@ -105,7 +105,7 @@ export default {
             return this.$route.params.id
         },
         username () {
-            return user.state.username
+            return user.state.type === 'admin' && user.state.subUser ? user.state.subUser.username : user.state.username
         },
         owerACL () {
             return {
@@ -146,9 +146,16 @@ export default {
             this.pipeline.Name = data.Name
             this.pipeline.InputBucket = data.InputBucket
             this.pipeline.OutputBucket = data.OutputBucket
-            this.pipeline.SuccessCallbackUrl = data.SuccessCallbackUrl.split('http://')[1] || ''
-            this.pipeline.FailureCallbackUrl = data.FailureCallbackUrl.split('http://')[1] || ''
-            data.ContentConfig.Permissions.forEach(item => {
+            this.pipeline.SuccessCallbackUrl = data.SuccessCallbackUrl ? data.SuccessCallbackUrl.split('http://')[1] : ''
+            this.pipeline.FailureCallbackUrl = data.FailureCallbackUrl ? data.FailureCallbackUrl.split('http://')[1] : ''
+            const permissions = data.ContentConfig ? data.ContentConfig.Permissions : [
+                {
+                    Grantee: this.username,
+                    GranteeType: 'Canonical',
+                    Access: ['FullControl']
+                }
+            ]
+            permissions.forEach(item => {
                 let acc = {
                     Read: false,
                     ReadAcp: false,
