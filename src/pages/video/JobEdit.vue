@@ -687,6 +687,7 @@ const shotDefult = {
 <style lang="less" scoped>
 
 @edit-output-item-span: 170px;
+@edit-output-item-margin: 175px;
 @edit-modal-item-span: 155px;
 
 .@{css-prefix}job-edit {

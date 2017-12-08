@@ -17,7 +17,7 @@
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.TRANSCODING_PATH_RULES')}} : </span>
                 <Radio-group v-model="auxiliary.reg">
-                    <Radio key="extension" label='extension'>{{$t('VIDEO.BY_FILE_EXTENSION_CONFIGURATION')}}</Radio>
+                    <Radio key="extension" label='extension' style="line-height:30px">{{$t('VIDEO.BY_FILE_EXTENSION_CONFIGURATION')}}</Radio>
                     <Radio key="regular" label='regular'>{{$t('VIDEO.REGULAR_EXPRESSION_CONFIGURATION')}}</Radio>
                 </Radio-group>
             </div>
@@ -87,14 +87,14 @@
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.WHETHER_DELETE_ORIGINAL_FILE_AFTER_TRANSCODING')}} : </span>
                 <Radio-group v-model="transcode.delete_origin">
-                    <Radio key="true" label='true'>{{$t('VIDEO.YES')}}</Radio>
+                    <Radio key="true" label='true' style="line-height:30px">{{$t('VIDEO.YES')}}</Radio>
                     <Radio key="false" label='false'>{{$t('VIDEO.NO')}}</Radio>
                 </Radio-group>
             </div>
             <div class="form-item">
                 <span class="form-label">{{$t('VIDEO.WHETHER_RETAIN_ORIGINAL_PATH_AFTER_TRANSCODING')}} : </span>
                 <Radio-group v-model="transcode.keep_input_path">
-                    <Radio key="true" label='true'>{{$t('VIDEO.YES')}}</Radio>
+                    <Radio key="true" label='true' style="line-height:30px">{{$t('VIDEO.YES')}}</Radio>
                     <Radio key="false" label='false'>{{$t('VIDEO.NO')}}</Radio>
                 </Radio-group>
             </div>
@@ -129,7 +129,7 @@
             <div class="form-item" v-if="auxiliary.MP">
                 <span class="form-label">{{$t('VIDEO.SLICE_FORMAT')}} : </span>
                 <Radio-group v-model="transcode.master_playlist.format">
-                    <Radio key="HLSv3" label='HLSv3'>HLSv3</Radio>
+                    <Radio key="HLSv3" label='HLSv3' style="line-height:30px">HLSv3</Radio>
                 </Radio-group>
             </div>
             <div class="form-item" v-if="auxiliary.MP">
@@ -957,6 +957,7 @@ const isEmpty = obj => {
 <style lang="less" scope>
 
 @edit-output-item-span: 205px;
+@edit-output-item-margin: 210px;
 @edit-modal-item-span: 155px;
 
 .@{css-prefix}output-edit{
@@ -972,11 +973,11 @@ const isEmpty = obj => {
             }
 
             .button-add-item {
-                margin-left: @edit-output-item-span !important;
+                margin-left: @edit-output-item-margin !important;
             }
 
             .style-name-info{
-                padding-left: @edit-output-item-span !important;
+                padding-left: @edit-output-item-margin!important;
             }
         }
     }
