@@ -107,7 +107,7 @@
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
 import moment from 'moment'
-import { BOUND_USER, REMOVE_USER, ALL_USER, CREATE_USER, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, UNBIND_USER, USER_DOMAIN } from '@/service/API'
+import { BOUND_USER, BOUND_USER_SUPERADMIN, REMOVE_USER, ALL_USER, ALL_USER_SUPERADMIN, CREATE_USER, CREATE_USER_SUPERADMIN, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, USER_DOMAIN, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, BIND_USER_SUPERADMIN, UNBIND_USER, UNBIND_USER_SUPERADMIN } from '@/service/API'
 export default {
     data () {
         return {
@@ -123,7 +123,7 @@ export default {
             spinShow: true,
             isEditSubUser: false,
             iconSize: 18,
-            isAdmin: user.state && user.state.type === 'admin',
+            isAdmin: user.state && user.state.type === 'admin' || user.state.type === 'superadmin',
             isSuperHigh: user.state.type === 'super' && user.state.super_level === 'high',
             createUserForm: {
                 username: '',
@@ -168,7 +168,7 @@ export default {
                     { type: 'string', message: 'Email format is incorrect', trigger: 'blur' }
                 ]
             },
-            userHeader: user.state && user.state.type === 'admin' ? [
+            userHeader: user.state && user.state.type === 'admin' || user.state.type === 'superadmin' ? [
                 {
                     title: 'User name',
                     width: 150,
@@ -337,7 +337,7 @@ export default {
             this.spinShow = true
             try {
                 if (this.isAdmin) {
-                    this.userList = _.each(await this.$http.get(BOUND_USER), (user) => {
+                    this.userList = _.each(await this.$http.get(user.state.type === 'superadmin' ? BOUND_USER_SUPERADMIN : BOUND_USER), (user) => {
                         user.type = this.userType(user)
                     })
                     await this.$Loading.finish()
@@ -384,7 +384,7 @@ export default {
             this.bindUserModal = true
             if (this.boundUserList.length === 0) {
                 this.spinShow = true
-                let [allUser, boundUser] = await Promise.all([this.$http.get(ALL_USER), this.$http.get(BOUND_USER)])
+                let [allUser, boundUser] = await Promise.all([this.$http.get(user.state.type === 'superadmin' ? ALL_USER_SUPERADMIN : ALL_USER), this.$http.get(user.state.type === 'superadmin' ? BOUND_USER_SUPERADMIN : BOUND_USER)])
                 let boundUserEmailList = []
                 _.each(boundUser, user => {
                     boundUserEmailList.push(user.email)
@@ -410,12 +410,14 @@ export default {
         async bindUser () {
             this.$Loading.start()
             try {
-                await Promise.all(Array.map(this.boundUserList, (user) => {
-                    if (user.selected) {
-                        this.$http.post(BIND_USER, { email: user.email })
-                        this.userList.push({ ...user, type: this.userType(user) })
+                console.log('bind user', this.boundUserList)
+                await Promise.all(Array.map(this.boundUserList, (userinfo) => {
+                    userinfo.selected && console.log(userinfo)
+                    if (userinfo.selected) {
+                        this.$http.post(user.state.type === 'superadmin' ? BIND_USER_SUPERADMIN : BIND_USER, { email: userinfo.email })
+                        this.userList.push({ ...userinfo, type: this.userType(userinfo) })
                     }
-                }))
+                })).then(res => console.log(res), err => console.error(err))
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
@@ -430,8 +432,8 @@ export default {
                 onOk: () => this.unbindUser(user, index)
             })
         },
-        unbindUser (user, index) {
-            this.$http.post(UNBIND_USER, {email: user.email}).then(res => {
+        unbindUser (userinfo, index) {
+            this.$http.post(user.state.type === 'superadmin' ? UNBIND_USER_SUPERADMIN : UNBIND_USER, {email: userinfo.email}).then(res => {
                 this.userList.splice(index, 1)
             })
         },
@@ -450,14 +452,13 @@ export default {
             this.$refs['createUserForm'].validate((valid) => {
                 if (valid) {
                     this.$Loading.start()
-                    self.$http.post(this.isSuperHigh ? CREATE_SUB_USER : CREATE_USER, {...self.createUserForm}).then(res => {
+                    self.$http.post(this.isSuperHigh ? CREATE_SUB_USER : user.state.type === 'superadmin' ? CREATE_USER_SUPERADMIN : CREATE_USER, {...self.createUserForm}).then(res => {
                         self.createUserForm = { username: '', email: '', password: '', company: '', type: 'normal' }
                         this.getUserList()
                         this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
                         this.$Loading.finish()
-                    }, error => {
+                    }, e => {
                         this.$Loading.error()
-                        this.$Message.error(error)
                     })
                 } else {
                     this.$Message.error(this.$t('USER.CREATE_INFO'))
