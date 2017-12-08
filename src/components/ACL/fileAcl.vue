@@ -6,7 +6,7 @@
                 <tr>
                     <th class="percent27" :style="td30Style"> {{$t("STORAGE.ACL_GROUP")}}
                         <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
+                            <span><Icon type="ios-help-outline"></Icon></span>
                             <div slot="content">
                                 <p style="white-space: normal !important;">{{$t("STORAGE.ACL_GROUP_INFO")}}</p>
                             </div>
@@ -14,7 +14,7 @@
                     </th>
                     <th class="percent23" :style="td25Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
+                            <span><Icon type="ios-help-outline"></Icon></span>
                             <div slot="content">
                                 <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_OBJECT_PERMISSIONS_INFO")}}</p>
                             </div>
@@ -22,7 +22,7 @@
                     </th>
                     <th class="percent25" :style="td25Style">{{$t("STORAGE.ACL_PERMISSIONS")}}
                         <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
+                            <span><Icon type="ios-help-outline"></Icon></span>
                             <div slot="content">
                                 <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_ACL_PERMISSIONS_INFO")}}</p>
                             </div>
@@ -54,7 +54,7 @@
                 <tr>
                     <th class="percent27" :style="td30Style"> {{$t("STORAGE.USER")}}
                         <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
+                            <span><Icon type="ios-help-outline"></Icon></span>
                             <div slot="content">
                                 <p style="white-space: normal !important;">{{$t("STORAGE.ACL_USER_INFO")}}</p>
                             </div>
@@ -62,7 +62,7 @@
                     </th>
                     <th class="percent23" :style="td25Style">{{$t("STORAGE.OBJECT_PERMISSIONS")}}
                         <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
+                            <span><Icon type="ios-help-outline"></Icon></span>
                             <div slot="content">
                                 <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_OBJECT_PERMISSIONS_INFO")}}</p>
                             </div>
@@ -70,7 +70,7 @@
                     </th>
                     <th class="percent25" :style="td25Style">{{$t("STORAGE.ACL_PERMISSIONS")}}
                         <Tooltip placement="right">
-                            <span><Icon type="ios-help"></Icon></span>
+                            <span><Icon type="ios-help-outline"></Icon></span>
                             <div slot="content">
                                 <p style="white-space: normal !important;">{{$t("STORAGE.OBJECT_ACL_PERMISSIONS_INFO")}}</p>
                             </div>
