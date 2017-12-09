@@ -140,9 +140,14 @@ export default {
                 key: 'partition_id',
                 width: 260
             }, {
+                title: 'IDC',
+                key: 'idc',
+                align: 'left',
+                width: 150
+            }, {
                 title: 'IO',
                 key: 'ioutil',
-                width: 90,
+                width: 70,
                 align: 'right',
                 sortable: true,
                 render: (h, params) => {
@@ -154,7 +159,7 @@ export default {
             }, {
                 title: '容量',
                 key: 'used_rate',
-                width: 90,
+                width: 77,
                 align: 'right',
                 sortable: true,
                 render: (h, params) => {
@@ -166,7 +171,7 @@ export default {
             }, {
                 title: 'CPU',
                 key: 'cpu',
-                width: 90,
+                width: 80,
                 align: 'right',
                 sortable: true,
                 render: (h, params) => {
@@ -177,7 +182,6 @@ export default {
                 }
             }, {
                 title: this.$t('SYSTEM.USED_TOTAL_CAPACITY'),
-                key: 'group_id',
                 width: 150,
                 render: (h, params) => {
                     const font = (params.row.space || params.row.space === 0) && (params.row.capacity || params.row.capacity === 0) ? `${bytes(params.row.space)}/${bytes(params.row.capacity)}` : '--/--'
@@ -186,11 +190,11 @@ export default {
             }, {
                 title: this.$t('SYSTEM.MEDIA_TYPE'),
                 key: 'media_type',
-                width: 80
+                width: 65
             }, {
                 title: this.$t('SYSTEM.IS_NORMAL'),
                 key: 'fail',
-                width: 80,
+                width: 75,
                 render: (h, params) => {
                     const font = !!params.row.fail ? this.$t('SYSTEM.DELETED') : this.$t('SYSTEM.NORMAL')
                     return h('div', {
@@ -201,10 +205,10 @@ export default {
                 title: this.$t('SYSTEM.NUM'),
                 key: 'group_num',
                 align: 'right',
-                width: 90
+                width: 65
             }, {
                 title: this.$t('VIDEO.OPERATION'),
-                width: 230,
+                width: 200,
                 align: 'right',
                 render: (h, params) => {
                     const buttons = params.row.readonly === 0 ? '' : params.row.group_num === 0 ? h('i-button', {
@@ -239,7 +243,7 @@ export default {
                     return h('div', [h('div', {
                         style: {
                             display: 'inline-block',
-                            padding: '0 10px 0 0'
+                            padding: '0 8px 0 0'
                         }
                     }, [buttons]), h('i-switch', {
                         props: {
@@ -267,7 +271,7 @@ export default {
                             }
                         },
                         style: {
-                            margin: '0 0 0 10px'
+                            margin: '0 0 0 8px'
                         }
                     }, [this.$t('SYSTEM.DETAILS')])
                     ])

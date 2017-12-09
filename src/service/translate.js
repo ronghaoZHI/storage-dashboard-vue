@@ -1350,7 +1350,7 @@ export const messages = {
             WRITEABLE: '可写',
             ALL: '全部',
             CREATE_TIME: '创建时间',
-            DETAILS: '详细信息',
+            DETAILS: '详细',
             FILE_NUMBERS: '文件个数',
             CAPACITY: '容量',
             USED_CAPACITY: '已用容量',
