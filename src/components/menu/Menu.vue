@@ -22,6 +22,7 @@
 </template>
 <script>
 import menuState from '@/store/modules/menu'
+import user from '@/store/modules/user'
 export default {
     data () {
         return {
@@ -39,6 +40,12 @@ export default {
         goRouter (link) {
             this.$router.push({ name: link })
         }
+    },
+    created () {
+        user.state.type === 'superadmin' ? this.$router.push({ name: 'group' }) : ''
+        this.$nextTick(() => {
+            this.activeName = 'group'
+        })
     }
 }
 
