@@ -1385,6 +1385,7 @@ export const messages = {
             WRITABLE_CONFIRM: '确定要将磁盘设置为[{state}]么？',
             WRITABLE_CONFIRM_TITLE: '设置磁盘读写状态',
             DESCENDINHG_ORDER: '降序',
+            PARTITION: '磁盘',
             IMPLEMENTATION: '上线'
         },
         SETTINGS: {

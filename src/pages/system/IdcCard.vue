@@ -10,7 +10,7 @@
                     <span class="circle-inner">SATA</span>
                 </i-circle>
                 <div class="idc-detail">
-                    <p>SATA {{$t('SIDEBAR.PARTITION')}}</p>
+                    <p>SATA {{$t('SYSTEM.PARTITION')}}</p>
                     <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rateFront}}</p>
                     <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
                 </div>
@@ -20,7 +20,7 @@
                     <span class="circle-inner">SSD</span>
                 </i-circle>
                 <div class="idc-detail">
-                    <p>SSD {{$t('SIDEBAR.PARTITION')}}</p>
+                    <p>SSD {{$t('SYSTEM.PARTITION')}}</p>
                     <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rateFront}}</p>
                     <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
                 </div>
@@ -34,7 +34,7 @@
                 </i-circle>
             </div>
             <div class="idc-detail idc-content-right">
-                <p>SATA {{$t('SIDEBAR.PARTITION')}}</p>
+                <p>SATA {{$t('SYSTEM.PARTITION')}}</p>
                 <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SATA.used_rateFront}}</p>
                 <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SATA.used}}/{{info.SATA.capacity}}</p>
             </div>
@@ -47,7 +47,7 @@
                 </i-circle>
             </div>
             <div class="idc-detail idc-content-right">
-                <p>SSD {{$t('SIDEBAR.PARTITION')}}</p>
+                <p>SSD {{$t('SYSTEM.PARTITION')}}</p>
                 <p>{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} ：{{info.SSD.used_rateFront}}</p>
                 <p>{{$t('SYSTEM.USED_TOTAL_CAPACITY')}} ：{{info.SSD.used}}/{{info.SSD.capacity}}</p>
             </div>
@@ -85,7 +85,6 @@ export default {
 @border-color: #d3dce6;
 .@{css-prefix}idc-card {
     display: inline-block;
-    width: 400px;
     border: 1px solid @border-color;
     margin: 0 20px 16px 0;
     .header {
@@ -110,12 +109,13 @@ export default {
         .idc-detail{
             .fb(space-around,flex-start,inline-flex,column);
             font-size: 12px;
-            padding: 16px 8PX;
+            padding: 8PX;
             p{
                 line-height: 20px;
             }
         }
         &.two-type {
+            width: 400px;
             .idc-circel{
                 position: relative;
                 width: 50%;
@@ -150,16 +150,17 @@ export default {
             }
             .idc-circel:hover .idc-detail{
                 height: 96px;
-                padding-top: 16px;
-                padding-bottom: 16px;
+                padding-top: 8px;
+                padding-bottom: 8px;
             }
         }
         &.one-type {
+            width: 330px;
             .idc-content-left{
-                width: 45%;
+                width: 38%;
             }
             .idc-content-right{
-                width: 55%;
+                width: 62%;
             }
         }
     }
