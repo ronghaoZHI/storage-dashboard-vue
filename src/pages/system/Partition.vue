@@ -52,9 +52,9 @@
                     <idc-card v-for="idc in idcList" :data="idc" :key="idc.idc"></idc-card>
                 </div>
                 <div class="section-chart-tab">
-                    <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">{{$t('SYSTEM.IO_UTILIZATION_RATE')}} <Icon type="arrow-down-c" size="16"></Icon></button>
-                    <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="chartToggle('cpu')">CPU Load <Icon type="arrow-down-c" size="16"></Icon></button>
-                    <button v-bind:class="{buttonFocus: showChart === 'used_rate'}" @click="chartToggle('used_rate')">{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} <Icon type="arrow-down-c" size="16"></Icon></button>
+                    <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">{{$t('SYSTEM.IO_UTILIZATION_RATE')}} {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
+                    <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="chartToggle('cpu')">CPU Load {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
+                    <button v-bind:class="{buttonFocus: showChart === 'used_rate'}" @click="chartToggle('used_rate')">{{$t('SYSTEM.CAPACITY_UTILIZATION_RATE')}} {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
                     <div class="refresh-section">
                         <span @click="getUsedList"><Icon type="refresh" size="20"></Icon></span>
                     </div>

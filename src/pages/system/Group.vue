@@ -23,10 +23,10 @@
         <div class="content">
             <Spin size="bigger" fix v-if="spinShow"></Spin>
             <div class="section-chart-tab">
-                <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">{{$t('SYSTEM.CREATE_TIME')}} <Icon type="arrow-down-c" size="16"></Icon></button>
-                <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU <Icon type="arrow-down-c" size="16"></Icon></button>
-                <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="tabToggle('ioutil')">IO <Icon type="arrow-down-c" size="16"></Icon></button>
-                <button v-bind:class="{buttonFocus: showChart === 'space'}" @click="tabToggle('space')">Capacity <Icon type="arrow-down-c" size="16"></Icon></button>
+                <button v-bind:class="{buttonFocus: showChart === 'group_id'}" @click="tabToggle('group_id')">{{$t('SYSTEM.CREATE_TIME')}} {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
+                <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="tabToggle('cpu')">CPU {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
+                <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="tabToggle('ioutil')">IO {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
+                <button v-bind:class="{buttonFocus: showChart === 'space'}" @click="tabToggle('space')">Capacity {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
                 <div class="refresh-section">
                     <span @click="getGroupList(false, true)"><Icon type="refresh" size="20"></Icon></span>
                 </div>

@@ -635,6 +635,7 @@ export const messages = {
             GROUP_ID_SEARCH_INFO: 'The Group ID for search can only be a number',
             WRITABLE_CONFIRM: 'Do you want to set the disk to be [{state}]？',
             WRITABLE_CONFIRM_TITLE: 'Set the disk read-write state',
+            DESCENDINHG_ORDER: 'descending order',
             IMPLEMENTATION: 'implementation'
         },
         SETTINGS: {
@@ -1383,6 +1384,7 @@ export const messages = {
             GROUP_ID_SEARCH_INFO: '用于搜索的Group ID只能是数字',
             WRITABLE_CONFIRM: '确定要将磁盘设置为[{state}]么？',
             WRITABLE_CONFIRM_TITLE: '设置磁盘读写状态',
+            DESCENDINHG_ORDER: '降序',
             IMPLEMENTATION: '上线'
         },
         SETTINGS: {
