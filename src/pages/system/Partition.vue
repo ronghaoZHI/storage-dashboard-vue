@@ -25,7 +25,7 @@
                     <Icon slot="prepend" size="18" type="android-radio-button-on"></Icon>
                     <Option v-for="fail in failArray" :value="fail.value" :key="fail.value">{{fail.name}}</Option>
                 </Select>
-                <Input v-model="search.ip" :placeholder="$t('SYSTEM.SERVER_IP')" style="width:260px"></Input>
+                <Input v-model="search.ip" :placeholder="$t('SYSTEM.SERVER_IP')" style="width:200px"></Input>
                 <Button type="primary" @click="searchList" v-if="tabName === 'used'">{{$t('SYSTEM.SEARCH')}}</Button>
                 <Button type="primary" @click="resetParams" v-if="tabName === 'used'">{{$t('PUBLIC.RESET')}}</Button>
                 <Button type="primary" @click="showType = 'card'" v-if="showType === 'table'">卡片展示</Button>
@@ -54,6 +54,7 @@
                     <idc-card v-for="idc in idcList" :data="idc" :key="idc.idc"></idc-card>
                 </div>
                 <Table v-if="showType === 'table'" border :context="self" :stripe="true" :columns="usedHeader" :data="partitionList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+                <Page v-if="showType === 'table' && pageTotal > 1" class="page" :total="listNum" :page-size="20" @on-change="pageChange" show-elevator></Page>
                 <div class="section-chart-tab" v-if="showType === 'card'">
                     <button v-bind:class="{buttonFocus: showChart === 'ioutil'}" @click="chartToggle('ioutil')">IO {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
                     <button v-bind:class="{buttonFocus: showChart === 'cpu'}" @click="chartToggle('cpu')">CPU Load {{$t('SYSTEM.DESCENDINHG_ORDER')}}</button>
@@ -138,10 +139,6 @@ export default {
                 title: 'ID',
                 key: 'partition_id',
                 width: 260
-            }, {
-                title: 'IDC',
-                key: 'idc',
-                width: 180
             }, {
                 title: 'IO',
                 key: 'ioutil',
