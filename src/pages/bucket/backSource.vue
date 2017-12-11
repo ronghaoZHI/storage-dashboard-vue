@@ -4,12 +4,11 @@
         <legend-list class="legend-list" :data="legendList"></legend-list>
         <p class="page-info">{{$t('SETTINGS.BACK_SOURCE_INFO')}}</p>
         <Table border :context="self" :stripe="true" :columns="list404Header" :data="fetchRuleList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
-        <Modal v-model="show404Modal" :title='$t("STORAGE.BACK_SOURCE")' width="600" class="edit-modal">
-            <Form ref="formValidate404" :model="formValidate404" :rules="ruleValidate404" :label-width="100">
+        <Modal v-model="show404Modal" :title='$t("STORAGE.BACK_SOURCE")' width="650" class="edit-modal">
+            <Form ref="formValidate404" :model="formValidate404" :rules="ruleValidate404" :label-width="150">
                 <FormItem :label='$t("STORAGE.SOURCE_MODE")' prop="fetch_mode">
                     <RadioGroup v-model="formValidate404.fetch_mode">
-                        <Radio label="fetch_200">
-                            200
+                        <Radio label="fetch_200">200
                             <Tooltip>
                                 <Icon type="ios-help-outline"></Icon>
                                 <div slot="content">
@@ -35,8 +34,34 @@
                         </Radio>
                     </RadioGroup>
                 </FormItem>
-                <FormItem :label='$t("STORAGE.SOURCE_ADDRESS")' prop="domain">
-                    <Input v-model="formValidate404.domain" :placeholder='$t("STORAGE.ENTER_SOURCE_DOMAIN")'></Input>
+                <div class="form-item" v-show="formValidate404.fetch_mode !== 'fetch_302'">
+                    <span class="form-label">{{$t("STORAGE.SOURCE_HEADER")}}</span>
+                    <Input v-model="requestHeader" class="line-width" style="width:400px" placeholder="Host:www.example.com" @on-enter="addHeaderTag()"></Input>
+                    <p class="style-error-info redFont" v-if="requestHeader && requestHeaderFormatError">{{$t('STORAGE.CORRECT_FORMAT_HEADER')}}</p>
+                    <p class="style-error-info redFont" v-if="requestHeader && !requestHeaderFormatError">{{$t('STORAGE.PRESS_ENTER_KEY')}}</p>
+                    <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
+                    <div class="tag-margin-left">
+                        <Tag type="border" color="blue" v-for="item in formValidate404.request_headers" :key="item" :name="item" closable @on-close="deleteHeaderTag(item)">{{item}}</Tag>
+                    </div>
+                </div>
+                <FormItem :label='$t("STORAGE.SOURCE_DOMAIN")' prop="domain">
+                    <Input v-model="formValidate404.domain" style="width:400px" :placeholder="$t('STORAGE.ONLY_HTTP_HTTPS')"></Input>
+                    <p class="redFont" v-if="domainError">{{$t('STORAGE.ONLY_HTTP_HTTPS')}}</p>
+                </FormItem>
+                <FormItem :label='$t("STORAGE.URI_PATTERN")' prop="uri_pattern">
+                    <Input v-model="formValidate404.uri_pattern" style="width:400px" placeholder="/(.*)"></Input>
+                    <Tooltip placement="bottom-end">
+                        <Icon type="ios-help-outline" style="width:30px;padding-left:4px;"></Icon>
+                        <div slot="content">
+                            <p style="white-space: normal !important;">{{$t("SETTINGS.URI_PATTERN_INFO")}}</p>
+                        </div>
+                    </Tooltip>
+                </FormItem>
+                <FormItem :label='$t("STORAGE.ALLOW_METHOD")' prop="allow_method">
+                    <CheckboxGroup v-model="formValidate404.allow_method">
+                        <Checkbox label="GET"></Checkbox>
+                        <Checkbox label="HEAD"></Checkbox>
+                    </CheckboxGroup>
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -68,32 +93,57 @@ export default {
             show404Modal: false,
             formValidate404: {
                 fetch_mode: '',
-                domain: ''
+                request_headers: [],
+                domain: '',
+                uri_pattern: '',
+                allow_method: []
             },
+            requestHeader: '',
+            requestHeaderFormatError: false,
+            domainError: false,
             ruleValidate404: {
                 fetch_mode: [
                     { required: true, message: this.$t('STORAGE.MODE_CANNOT_EMPTY'), trigger: 'change' }
                 ],
                 domain: [
-                    { required: true, message: this.$t('STORAGE.ADDRESS_CANNOT_EMPTY'), trigger: 'blur' }
+                    { required: true, message: this.$t('STORAGE.DOMAIN_CANNOT_EMPTY'), trigger: 'blur change' },
+                    { type: 'url', message: this.$t('STORAGE.ENTER_CORRECT_DOMAIN'), trigger: 'blur' }
+                ],
+                allow_method: [
+                    { required: true, type: 'array', min: 1, message: this.$t('STORAGE.ALLOW_METHOD_CANNOT_EMPTY'), trigger: 'change' }
                 ]
             },
             fetchRuleList: [],
             list404Header: [{
-                title: this.$t('STORAGE.SOURCE_ADDRESS'),
-                key: 'domain',
-                width: '50%'
-            }, {
                 title: this.$t('STORAGE.SOURCE_MODE'),
                 key: 'fetch_mode',
-                width: '30%',
+                width: 120,
                 render: (h, params) => {
-                    return h('div', params.row.fetch_mode === 'fetch_200' ? this.$t('STORAGE.MIRROR') : this.$t('STORAGE.REDIRECTION'))
+                    return h('div', params.row.fetch_mode === 'fetch_200' ? 200 : params.row.fetch_mode === 'fetch_302' ? 302 : 404)
                 }
+            }, {
+                title: this.$t('STORAGE.SOURCE_HEADER'),
+                key: 'request_headers',
+                width: 160,
+                render: (h, params) => {
+                    return h('div', {style: {padding: '8px 0'}}, _.map(params.row.request_headers, (value, key) => [h('div', {style: {margin: '2px 0'}}, `${key}:${value}`)]), h('br'))
+                }
+            }, {
+                title: this.$t('STORAGE.SOURCE_DOMAIN'),
+                key: 'domain',
+                width: 160
+            }, {
+                title: this.$t('STORAGE.URI_PATTERN'),
+                key: 'uri_pattern',
+                width: 160
+            }, {
+                title: this.$t('STORAGE.ALLOW_METHOD'),
+                key: 'allow_method',
+                width: 160
             }, {
                 title: this.$t('STORAGE.TABLE_ACTION'),
                 key: 'actions',
-                width: '20%',
+                width: 160,
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
@@ -173,6 +223,14 @@ export default {
             return this.$route.params.bucket
         }
     },
+    watch: {
+        'requestHeader' (to, from) {
+            this.requestHeaderFormatError = !(to.split(':').length && to.split(':')[0] && to.split(':')[1])
+        },
+        'formValidate404.domain' (to, from) {
+            this.domainError = this.formValidate404.domain && !this.formValidate404.domain.match('http')
+        }
+    },
     created () {
         this.list404Rules()
     },
@@ -184,30 +242,31 @@ export default {
             }
             try {
                 this.$Loading.start()
-                let fetchData = await this.$http.post(FETCH_404, rule)
-                this.fetchRuleList = this.convert2Front(fetchData)
+                this.fetchRuleList = await this.$http.post(FETCH_404, rule)
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
             }
         },
-        convert2Front (data) {
-            let frontList = []
-            data.forEach(value => {
-                const frontItem = {
-                    fetch_mode: value.fetch_mode,
-                    domain: value.domain,
-                    is_active: value.is_active,
-                    id: value.id
-                }
-                frontList.push(frontItem)
-            })
-            return frontList
+        addHeaderTag () {
+            if (!this.requestHeaderFormatError) {
+                this.formValidate404.request_headers.push(this.requestHeader)
+                this.requestHeader = ''
+            }
+        },
+        deleteHeaderTag (value) {
+            const index = this.formValidate404.request_headers.indexOf(value)
+            this.formValidate404.request_headers.splice(index, 1)
         },
         show404ModalFunc () {
             this.show404Modal = true
-            this.formValidate404.fetch_mode = ''
-            this.formValidate404.domain = '',
+            this.formValidate404 = {
+                fetch_mode: '',
+                request_headers: [],
+                domain: '',
+                uri_pattern: '',
+                allow_method: []
+            }
             this.isEdit = false
         },
         validate404Rule (name, isEdit) {
@@ -216,13 +275,21 @@ export default {
             })
         },
         async add404Rule (isEdit) {
+            if (this.domainError) return
             let rule = {
                 action: !isEdit ? 'add' : 'set',
                 bucket: this.bucket,
                 id: !isEdit ? '' : this.editId,
-                domain: this.formValidate404.domain,
                 fetch_mode: this.formValidate404.fetch_mode,
-                uri_pattern: '/(.*)'
+                request_headers: {},
+                domain: this.formValidate404.domain,
+                uri_pattern: this.formValidate404.uri_pattern ? this.formValidate404.uri_pattern : '/(.*)',
+                allow_method: this.formValidate404.allow_method.join()
+            }
+            if (rule.fetch_mode !== 'fetch_302' && this.formValidate404.request_headers.length > 0) {
+                this.formValidate404.request_headers.forEach(value => {
+                    rule.request_headers[value.split(':')[0]] = value.split(':')[1]
+                })
             }
             try {
                 this.$Loading.start()
@@ -257,10 +324,18 @@ export default {
                 this.$Message.error(this.$t('STORAGE.SWITCH_STATE_FAIL'))
             }
         },
-        async edit404Rule (row) {
+        edit404Rule (row) {
             this.show404Modal = true
             this.formValidate404.fetch_mode = this.fetchRuleList[row._index].fetch_mode
+            if (this.fetchRuleList[row._index].request_headers) {
+                this.formValidate404.request_headers = []
+                _.forEach(this.fetchRuleList[row._index].request_headers, (value, key) => {
+                    this.formValidate404.request_headers.push(`${key}:${value}`)
+                })
+            }
             this.formValidate404.domain = this.fetchRuleList[row._index].domain
+            this.formValidate404.uri_pattern = this.fetchRuleList[row._index].uri_pattern
+            this.formValidate404.allow_method = this.fetchRuleList[row._index].allow_method.split(',')
             this.isEdit = true,
             this.editId = row.id
         },
@@ -297,10 +372,35 @@ export default {
 <style lang="less" scoped>
 .@{css-prefix}back-source {
     .button-add-rule {
-        margin-bottom: 10px
+        margin-bottom: 8px
     }
     .legend-list {
         float: right
+    }
+    .page-info {
+        margin-bottom: 8px
+    }
+}
+.bsc-radio-wrapper {
+    margin-right: 20px;
+}
+.bsc-checkbox-wrapper {
+    margin-right: 30px;
+}
+.edit-modal {
+    .form-item {
+        .form-label {
+            width: 145px
+        }
+        .style-error-info {
+            margin: 5px 0 5px 148px
+        }
+        .info {
+            margin: 5px 0 5px 148px
+        }
+        .tag-margin-left {
+            margin-left: 148px
+        }
     }
 }
 </style>
