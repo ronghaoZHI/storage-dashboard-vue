@@ -6,7 +6,7 @@
                     <Icon type="ios-analytics" :size="iconSize" :color="iconColor"></Icon>
                 </div>
                 <div>
-                    <p>42个</p>
+                    <p>13,899个</p>
                     <p>group数</p>
                 </div>
             </div>

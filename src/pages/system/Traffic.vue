@@ -1,5 +1,6 @@
 <template>
     <div class="bsc-system bsc-traffic">
+        <legend-list :data="legendList"></legend-list>
         <div class="header">
             <div class="search" @keyup.enter="getFilterTrafficList(true)">
                 <Select :prepend="true" v-model="searchType" style="width:180px;margin-right:8px;">
@@ -30,6 +31,7 @@
 </template>
 <script>
 import { TRAFFIC_LIST } from '@/service/API'
+import legendList from '@/components/legend/legend'
 export default {
     data () {
         return {
@@ -40,6 +42,13 @@ export default {
             tabName: 'group_all',
             trafficListAll: [],
             trafficList: [],
+            legendList: [{
+                text: 'group:存储单元'
+            }, {
+                text: 'server:服务器'
+            }, {
+                text: 'partition:磁盘'
+            }],
             listHeader: [{
                 title: 'Group ID',
                 key: 'group_id',
@@ -96,6 +105,9 @@ export default {
                 }
             }]
         }
+    },
+    components: {
+        legendList
     },
     created () {
         this.getTrafficList()
