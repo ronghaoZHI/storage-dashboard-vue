@@ -45,8 +45,12 @@
                     </div>
                 </div>
                 <FormItem :label='$t("STORAGE.SOURCE_DOMAIN")' prop="domain">
-                    <Input v-model="formValidate404.domain" style="width:400px" :placeholder="$t('STORAGE.ONLY_HTTP_HTTPS')"></Input>
-                    <p class="redFont" v-if="domainError">{{$t('STORAGE.ONLY_HTTP_HTTPS')}}</p>
+                    <Input v-model="formValidate404.domain" style="width:400px">
+                        <Select v-model="domainPrepend" slot="prepend" style="width: 80px">
+                            <Option value="http">http://</Option>
+                            <Option value="https">https://</Option>
+                        </Select>
+                    </Input>
                 </FormItem>
                 <FormItem :label='$t("STORAGE.URI_PATTERN")' prop="uri_pattern">
                     <Input v-model="formValidate404.uri_pattern" style="width:400px" placeholder="/(.*)"></Input>
@@ -100,14 +104,26 @@ export default {
             },
             requestHeader: '',
             requestHeaderFormatError: false,
-            domainError: false,
+            domainPrepend: 'http',
             ruleValidate404: {
                 fetch_mode: [
                     { required: true, message: this.$t('STORAGE.MODE_CANNOT_EMPTY'), trigger: 'change' }
                 ],
                 domain: [
-                    { required: true, message: this.$t('STORAGE.DOMAIN_CANNOT_EMPTY'), trigger: 'blur change' },
-                    { type: 'url', message: this.$t('STORAGE.ENTER_CORRECT_DOMAIN'), trigger: 'blur' }
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            let urlRegExp = new RegExp('^(?:(?:(?:(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$', 'i')
+                            if (!value) {
+                                callback(new Error(this.$t('STORAGE.DOMAIN_CANNOT_EMPTY')))
+                            } else if (!value.match(urlRegExp)) {
+                                callback(new Error(this.$t('STORAGE.ENTER_CORRECT_DOMAIN')))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
                 ],
                 allow_method: [
                     { required: true, type: 'array', min: 1, message: this.$t('STORAGE.ALLOW_METHOD_CANNOT_EMPTY'), trigger: 'change' }
@@ -131,7 +147,10 @@ export default {
             }, {
                 title: this.$t('STORAGE.SOURCE_DOMAIN'),
                 key: 'domain',
-                width: 160
+                width: 160,
+                render: (h, params) => {
+                    return h('div', {style: {padding: '8px 0'}}, params.row.domain)
+                }
             }, {
                 title: this.$t('STORAGE.URI_PATTERN'),
                 key: 'uri_pattern',
@@ -225,10 +244,8 @@ export default {
     },
     watch: {
         'requestHeader' (to, from) {
-            this.requestHeaderFormatError = !(to.split(':').length && to.split(':')[0] && to.split(':')[1])
-        },
-        'formValidate404.domain' (to, from) {
-            this.domainError = this.formValidate404.domain && !this.formValidate404.domain.match('http')
+            let index = to.indexOf(':')
+            this.requestHeaderFormatError = index > 0 ? !(to.slice(0, index).trim() && to.slice(index + 1).trim()) : true
         }
     },
     created () {
@@ -275,20 +292,20 @@ export default {
             })
         },
         async add404Rule (isEdit) {
-            if (this.domainError) return
             let rule = {
                 action: !isEdit ? 'add' : 'set',
                 bucket: this.bucket,
                 id: !isEdit ? '' : this.editId,
                 fetch_mode: this.formValidate404.fetch_mode,
                 request_headers: {},
-                domain: this.formValidate404.domain,
+                domain: `${this.domainPrepend}://${this.formValidate404.domain}`,
                 uri_pattern: this.formValidate404.uri_pattern ? this.formValidate404.uri_pattern : '/(.*)',
                 allow_method: this.formValidate404.allow_method.join()
             }
             if (rule.fetch_mode !== 'fetch_302' && this.formValidate404.request_headers.length > 0) {
                 this.formValidate404.request_headers.forEach(value => {
-                    rule.request_headers[value.split(':')[0]] = value.split(':')[1]
+                    let index = value.indexOf(':')
+                    rule.request_headers[value.slice(0, index).trim()] = value.slice(index + 1).trim()
                 })
             }
             try {
@@ -333,7 +350,8 @@ export default {
                     this.formValidate404.request_headers.push(`${key}:${value}`)
                 })
             }
-            this.formValidate404.domain = this.fetchRuleList[row._index].domain
+            this.domainPrepend = this.fetchRuleList[row._index].domain.split('://')[0]
+            this.formValidate404.domain = this.fetchRuleList[row._index].domain.split('://')[1]
             this.formValidate404.uri_pattern = this.fetchRuleList[row._index].uri_pattern
             this.formValidate404.allow_method = this.fetchRuleList[row._index].allow_method.split(',')
             this.isEdit = true,

@@ -87,7 +87,7 @@ export const messages = {
             ENTER_CORRECT_DOMAIN: 'Please enter a correct domain !',
             ONLY_HTTP_HTTPS: 'Only support http and https !',
             ALLOW_METHOD_CANNOT_EMPTY: 'At least select one !',
-            CORRECT_FORMAT_HEADER: 'Please enter the request header in correct format !',
+            CORRECT_FORMAT_HEADER: 'Please enter a request header in correct format !',
             FORM_FAIL: 'Form validate failed !',
             CREATE_SUCCESS: 'Create success !',
             CREATE_FAIL: 'Create failed !',
@@ -663,7 +663,7 @@ export const messages = {
             FETCH_200_INFO: "When a user accesses, BaishanCloud's offline launches an offline task, downloads the data to BaishanCloud Storage, and returns a 200 and source file to the client.",
             FETCH_302_INFO: "When a user accesses, BaishanCloud's offline launches an offline task, downloads the data to BaishanCloud Storage, and returns a 302 to the client; the client reads the data from your data source according to the Location in 302.",
             FETCH_404_INFO: "When a user accesses, BaishanCloud's offline launches an offline task, downloads the data to BaishanCloud Storage, and returns a 404 to the user.",
-            URI_PATTERN_INFO: 'For example, the uri matching rule is /(a-z)+, the uri is /key1234, then the matched is /key. The default matching rule is /(.*), which does not change the uri rule.',
+            URI_PATTERN_INFO: 'For example, the uri matching rule is /(a-z)+ and the uri is /key1234, then the matched is /key. The default matching rule is /(.*), which does not change the uri rule.',
             WHITE_BLACK: 'IP black-and-white list'
         },
         i: {
@@ -1426,7 +1426,7 @@ export const messages = {
             FETCH_200_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个200和源文件。',
             FETCH_302_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个302；客户端根据302中的Location从您的数据源读取数据。',
             FETCH_404_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给用户一个404。',
-            URI_PATTERN_INFO: '例如：uri匹配规则为 /(a-z)+；当为 /key1234 时，匹配为 /key。默认的为 /(.*)，不改变uri规则。',
+            URI_PATTERN_INFO: '例如：uri匹配规则为 /(a-z)+, uri为 /key1234 ，则匹配为 /key。默认的uri匹配规则为 /(.*)，其不改变uri规则。',
             WHITE_BLACK: 'IP黑白名单'
         },
         i: {
