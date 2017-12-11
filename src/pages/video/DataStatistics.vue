@@ -509,13 +509,6 @@ const chartReload = (data, chart) => {
             color: #99a9bf;
             background-color: #313a41;
         }
-        &>button:nth-last-child(1) {
-            border-right: 0;
-        }
-        &>button:nth-last-child(2):focus,
-        &>button:nth-last-child(2).buttonFocus {
-            border-right: @common-border-dark;
-        }
         button:focus,
         .buttonFocus {
             background-color: @body-background-dark;
@@ -569,7 +562,7 @@ const chartReload = (data, chart) => {
 
     .section-chart-tab {
         width: 100%;
-        height: 40px;
+        height: 50px;
         margin-top: 16px;
         border: 1px solid #d3dce6;
         border-bottom: 0;
@@ -601,13 +594,6 @@ const chartReload = (data, chart) => {
             border-right: 0;
             width: 60%;
             cursor: default;
-        }
-        &>button:nth-last-child(2) {
-            border-right: 0;
-        }
-        &>button:nth-last-child(2):focus,
-        &>button:nth-last-child(2).buttonFocus {
-            border-right: 1px solid #d3dce6;
         }
         button:focus,
         .buttonFocus {
