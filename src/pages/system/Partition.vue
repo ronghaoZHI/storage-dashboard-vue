@@ -159,7 +159,7 @@ export default {
             }, {
                 title: '容量',
                 key: 'used_rate',
-                width: 77,
+                width: 79,
                 align: 'right',
                 sortable: true,
                 render: (h, params) => {
@@ -208,7 +208,7 @@ export default {
                 width: 65
             }, {
                 title: this.$t('VIDEO.OPERATION'),
-                width: 200,
+                width: 198,
                 align: 'right',
                 render: (h, params) => {
                     const buttons = params.row.readonly === 0 ? '' : params.row.group_num === 0 ? h('i-button', {
