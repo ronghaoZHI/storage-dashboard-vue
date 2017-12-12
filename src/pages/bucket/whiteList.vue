@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Spin size="bigger" fix v-if="spinGroup" class="search-spin"></Spin>
         <div class="section-separator">
             <div class="separator-body">
                 <span class="separator-icon"></span>
@@ -39,6 +40,7 @@ export default {
             whiteList: [],
             blackList: [],
             iconSize: 18,
+            spinGroup: false,
             enabled: false
         }
     },
@@ -54,6 +56,7 @@ export default {
     methods: {
         async getList () {
             this.$Loading.start()
+            this.spinGroup = true
             const params = {
                 action: 'get',
                 bucket: this.bucket,
@@ -68,10 +71,11 @@ export default {
                 let blackIP = new Set(listData.download_file.black_list.concat(listData.delete_file.black_list).concat(listData.upload_file.black_list))
                 this.whiteList = list2Front(whiteIP, listData, 'white_list')
                 this.blackList = list2Front(blackIP, listData, 'black_list')
-                console.log('--->>>', this.whiteList)
                 this.$Loading.finish()
+                this.spinGroup = false
             } catch (error) {
                 this.$Loading.error()
+                this.spinGroup = false
             }
         },
         async listEnabled () {
@@ -128,15 +132,31 @@ const list2Front = (ipList, listData, api) => {
     return front
 }
 const list2Saved = (list, saved, api) => {
-    list.map(item => {
-        if (item.download) {
-            saved.download_file[api].push(item.ip)
-        }
-        if (item.delete) {
-            saved.delete_file[api].push(item.ip)
-        }
-        if (item.upload) {
-            saved.upload_file[api].push(item.ip)
+    list.forEach(item => {
+        if (item.ip.includes('*')) {
+            let relIp
+            for (let i = 0; i < 256; i++) {
+                relIp = item.ip.replace('*', i)
+                if (item.download) {
+                    saved.download_file[api].push(relIp)
+                }
+                if (item.delete) {
+                    saved.delete_file[api].push(relIp)
+                }
+                if (item.upload) {
+                    saved.upload_file[api].push(relIp)
+                }
+            }
+        } else {
+            if (item.download) {
+                saved.download_file[api].push(item.ip)
+            }
+            if (item.delete) {
+                saved.delete_file[api].push(item.ip)
+            }
+            if (item.upload) {
+                saved.upload_file[api].push(item.ip)
+            }
         }
     })
     return saved
