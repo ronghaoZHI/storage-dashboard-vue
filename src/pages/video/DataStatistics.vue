@@ -480,9 +480,6 @@ const chartReload = (data, chart) => {
 }
 </script>
 <style lang='less' scoped>
-@overview-height: 180px;
-
-@overview-height: 180px;
 
 .dark .@{css-prefix}data-statistics {
     .toolbar {
