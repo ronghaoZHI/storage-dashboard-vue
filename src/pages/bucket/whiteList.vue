@@ -8,7 +8,7 @@
         </div>
         <div class="is-open">
             <span class="setting-name">{{$t('STORAGE.ISOPEN')}}</span>
-            <i-switch size="large" v-model="enabled">
+            <i-switch size="large" v-model="enabled" @on-change="listEnabled">
                 <span slot="open">{{$t('STORAGE.OPEN')}}</span>
                 <span slot="close">{{$t('STORAGE.CLOSE')}}</span>
             </i-switch>
@@ -19,214 +19,38 @@
                 <span class="separator-info">{{$t('SETTINGS.IP_WHITE_LIST')}}</span>
             </div>
         </div>
-        <div class="new-item">
-            <Form ref="whiteForm" :model="newWhite" :rules="whiteRules" class="ip-form">
-                <FormItem prop="ip" class="ip-item">
-                    <Input v-model="newWhite.ip" class="new-ip" :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')" @keyup.enter="addWhite"></Input>
-                </FormItem>
-            </Form>
-            <Checkbox v-model="newWhite.upload">{{$t('SETTINGS.UPLOAD')}}</Checkbox>
-            <Checkbox v-model="newWhite.download">{{$t('SETTINGS.DOWNLOAD')}}</Checkbox>
-            <Checkbox v-model="newWhite.delete">{{$t('SETTINGS.DELETE')}}</Checkbox>
-        </div>
-        <Table border :stripe="true" :columns="whiteHeader" :data="whiteList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
+        <link-table :listData="whiteList" formName="whiteForm"></link-table>
         <div class="section-separator mar-t-35">
             <div class="separator-body">
                 <span class="separator-icon"></span>
                 <span class="separator-info">{{$t('SETTINGS.IP_BLACK_LIST')}}</span>
             </div>
         </div>
-        <div class="new-item" @keyup.enter="addBlack">
-            <Form ref="blackForm" :model="newBlack" :rules="blackRules" class="ip-form">
-                <FormItem prop="ip" class="ip-item">
-                    <Input v-model="newBlack.ip"  class="new-ip" :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')"></Input>
-                </FormItem>
-            </Form>
-            <Checkbox v-model="newBlack.upload">{{$t('SETTINGS.UPLOAD')}}</Checkbox>
-            <Checkbox v-model="newBlack.download">{{$t('SETTINGS.DOWNLOAD')}}</Checkbox>
-            <Checkbox v-model="newBlack.delete">{{$t('SETTINGS.DELETE')}}</Checkbox>
-        </div>
-        <Table border :stripe="true" :columns="blackHeader" :data="blackList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
-        <Button type="primary" class="settings-btn" @click="accessSet()">{{$t('SETTINGS.SAVE')}}</Button>
+        <link-table :listData="blackList" formName="blackForm"></link-table>
     </div>
 </template>
 <script>
 import { ACCESS_LIST, ADD_SERVICE } from '@/service/API'
 import user from '@/store/modules/user'
+import linkTable from './linkTable'
 export default {
     data () {
         return {
             whiteList: [],
             blackList: [],
             iconSize: 18,
-            enabled: false,
-            newBlack: {
-                ip: '',
-                upload: false,
-                download: false,
-                delete: false
-            },
-            newWhite: {
-                ip: '',
-                upload: false,
-                download: false,
-                delete: false
-            },
-            whiteRules: {
-                ip: [
-                    { validator: this.validateWhiteIP, trigger: 'change' }
-                ]
-            },
-            blackRules: {
-                ip: [
-                    { validator: this.validateBlackIP, trigger: 'change' }
-                ]
-            },
-            whiteHeader: [{
-                title: 'IP',
-                width: 150,
-                key: 'ip'
-            }, {
-                title: this.$t('SETTINGS.ACCESS'),
-                width: 150,
-                render: (h, params) => {
-                    return h('div', [
-                        h('Checkbox', {
-                            props: {
-                                value: params.row.upload
-                            },
-                            on: {
-                                input: value => {
-                                    this.whiteList[params.row._index].upload = value
-                                }
-                            }
-                        }, [this.$t('SETTINGS.UPLOAD')]),
-                        h('Checkbox', {
-                            props: {
-                                value: params.row.download
-                            },
-                            on: {
-                                input: value => {
-                                    this.whiteList[params.row._index].download = value
-                                }
-                            }
-                        }, [this.$t('SETTINGS.DOWNLOAD')]),
-                        h('Checkbox', {
-                            props: {
-                                value: params.row.delete
-                            },
-                            on: {
-                                input: value => {
-                                    this.whiteList[params.row._index].delete = value
-                                }
-                            }
-                        }, [this.$t('SETTINGS.DELETE')])
-                    ])
-                }
-            }, {
-                title: this.$t('VIDEO.OPERATION'),
-                width: 80,
-                align: 'right',
-                render: (h, params) => {
-                    return h('Tooltip', {
-                        props: {
-                            content: this.$t('PUBLIC.DELETE'),
-                            delay: 1000,
-                            placement: 'top'
-                        }
-                    }, [h('i-button', {
-                        props: {
-                            size: 'small'
-                        },
-                        on: {
-                            click: () => {
-                                this.listDelete(this.whiteList, params.row._index)
-                            }
-                        }
-                    }, [h('Icon', {
-                        props: {
-                            type: 'ios-trash',
-                            size: this.iconSize
-                        }
-                    })])])
-                }
-            }],
-            blackHeader: [{
-                title: 'IP',
-                width: 150,
-                key: 'ip'
-            }, {
-                title: this.$t('SETTINGS.ACCESS'),
-                width: 150,
-                render: (h, params) => {
-                    return h('div', [
-                        h('Checkbox', {
-                            props: {
-                                value: params.row.upload
-                            },
-                            on: {
-                                input: value => {
-                                    this.blackList[params.row._index].upload = value
-                                }
-                            }
-                        }, [this.$t('SETTINGS.UPLOAD')]),
-                        h('Checkbox', {
-                            props: {
-                                value: params.row.download
-                            },
-                            on: {
-                                input: value => {
-                                    this.blackList[params.row._index].download = value
-                                }
-                            }
-                        }, [this.$t('SETTINGS.DOWNLOAD')]),
-                        h('Checkbox', {
-                            props: {
-                                value: params.row.delete
-                            },
-                            on: {
-                                input: value => {
-                                    this.blackList[params.row._index].delete = value
-                                }
-                            }
-                        }, [this.$t('SETTINGS.DELETE')])
-                    ])
-                }
-            }, {
-                title: this.$t('VIDEO.OPERATION'),
-                key: 'actions',
-                width: 80,
-                align: 'right',
-                render: (h, params) => {
-                    return h('Tooltip', {
-                        props: {
-                            content: this.$t('PUBLIC.DELETE'),
-                            delay: 1000,
-                            placement: 'top'
-                        }
-                    }, [h('i-button', {
-                        props: {
-                            size: 'small'
-                        },
-                        on: {
-                            click: () => {
-                                this.listDelete(this.blackList, params.row._index)
-                            }
-                        }
-                    }, [h('Icon', {
-                        props: {
-                            type: 'ios-trash',
-                            size: this.iconSize
-                        }
-                    })])])
-                }
-            }]
+            enabled: false
+        }
+    },
+    computed: {
+        bucket () {
+            return this.$route.params.bucket
         }
     },
     created () {
         this.getList()
     },
-    props: ['bucket'],
+    components: {linkTable},
     methods: {
         async getList () {
             this.$Loading.start()
@@ -244,10 +68,23 @@ export default {
                 let blackIP = new Set(listData.download_file.black_list.concat(listData.delete_file.black_list).concat(listData.upload_file.black_list))
                 this.whiteList = list2Front(whiteIP, listData, 'white_list')
                 this.blackList = list2Front(blackIP, listData, 'black_list')
+                console.log('--->>>', this.whiteList)
                 this.$Loading.finish()
             } catch (error) {
                 this.$Loading.error()
             }
+        },
+        async listEnabled () {
+            if (this.enabled) {
+                const params = {service: 'access_control'}
+                await this.$http.post(ADD_SERVICE, params)
+            }
+            const params = {
+                action: this.enabled ? 'enable' : 'disable',
+                bucket: this.bucket,
+                user: user.state.username
+            }
+            await this.$http.post(ACCESS_LIST, params)
         },
         async accessSet () {
             this.$Loading.start()
@@ -261,64 +98,13 @@ export default {
                 user: user.state.username
             }
             try {
-                this.listEnabled()
                 await this.$http.post(ACCESS_LIST, params)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('SETTINGS.SAVED'))
             } catch (error) {
                 this.$Loading.error()
+                this.getList()
             }
-        },
-        addBlack () {
-            this.$refs['blackForm'].validate((valid) => {
-                if (!valid) {
-                    this.$Message.error(this.$t('SETTINGS.IP_INVALID'))
-                } else {
-                    this.blackList.push(_.cloneDeep(this.newBlack))
-                }
-            })
-        },
-        addWhite () {
-            this.$refs['whiteForm'].validate((valid) => {
-                if (!valid) {
-                    this.$Message.error(this.$t('SETTINGS.IP_INVALID'))
-                } else {
-                    this.whiteList.push(_.cloneDeep(this.newWhite))
-                }
-            })
-        },
-        validateWhiteIP (rule, value, callback) {
-            if (!ipReg.test(value)) {
-                callback(new Error(this.$t('SETTINGS.IP_INVALID')))
-            } else if (!!this.whiteList.find(item => item.ip === value)) {
-                callback(new Error(this.$t('SETTINGS.IP_EXISTS')))
-            } else {
-                callback()
-            }
-        },
-        validateBlackIP (rule, value, callback) {
-            if (!ipReg.test(value)) {
-                callback(new Error(this.$t('SETTINGS.IP_INVALID')))
-            } else if (!!this.blackList.find(item => item.ip === value)) {
-                callback(new Error(this.$t('SETTINGS.IP_EXISTS')))
-            } else {
-                callback()
-            }
-        },
-        listDelete (list, index) {
-            list.splice(index, 1)
-        },
-        async listEnabled () {
-            if (this.enabled) {
-                const params = {service: 'access_control'}
-                await this.$http.post(ADD_SERVICE, params)
-            }
-            const params = {
-                action: this.enabled ? 'enable' : 'disable',
-                bucket: this.bucket,
-                user: user.state.username
-            }
-            await this.$http.post(ACCESS_LIST, params)
         }
     }
 }
@@ -329,7 +115,13 @@ const list2Front = (ipList, listData, api) => {
             ip: key,
             upload: listData.upload_file[api].includes(key),
             delete: listData.delete_file[api].includes(key),
-            download: listData.download_file[api].includes(key)
+            download: listData.download_file[api].includes(key),
+            edit: false,
+            before: {
+                upload: listData.upload_file[api].includes(key),
+                delete: listData.delete_file[api].includes(key),
+                download: listData.download_file[api].includes(key)
+            }
         }
         front.push(item)
     })
@@ -363,8 +155,6 @@ const savedDefult = {
         black_list: []
     }
 }
-const ipReg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-
 </script>
 <style lang="less" scoped>
 .mar-t-35{

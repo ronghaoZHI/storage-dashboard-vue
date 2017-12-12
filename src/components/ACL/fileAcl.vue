@@ -98,7 +98,7 @@
                                 size="small"
                                 icon="checkmark-round"></Button>
                             <div slot="content">
-                                <p>{{$t('VIDEO.ADD')}}</p>
+                                <p>{{$t('PUBLIC.ADD')}}</p>
                             </div>
                         </Tooltip>
                         <Tooltip placement="bottom" :delay="1000">

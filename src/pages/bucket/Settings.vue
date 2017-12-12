@@ -175,7 +175,7 @@
                 <back-source v-if="tabName === 'backSource'"></back-source>
             </Tab-pane>
             <Tab-pane :label='$t("SETTINGS.SECURITY_CHAIN")' name="whiteList">
-                <white-list :bucket="bucket" v-if="tabName === 'whiteList'"></white-list>
+                <white-list v-if="tabName === 'whiteList'"></white-list>
             </Tab-pane>
         </Tabs>
         <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">
