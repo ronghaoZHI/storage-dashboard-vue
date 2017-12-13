@@ -129,6 +129,7 @@ const list2Front = (ipList, listData, api) => {
         }
         front.push(item)
     })
+    front = convertGroup(front)
     return front
 }
 const list2Saved = (list, saved, api) => {
@@ -160,6 +161,59 @@ const list2Saved = (list, saved, api) => {
         }
     })
     return saved
+}
+const convertGroup = (list) => {
+    list.forEach(testItem => {
+        for (let j = 0; j < 4; j++) {
+            let sameIpArray = []
+            let testIP = testItem.ip
+            testIP = testIP.split('.')
+            testIP.splice(j, 1)
+            testIP = testIP.join('.')
+            list.forEach(item => {
+                let itemIP = item.ip
+                itemIP = itemIP.split('.')
+                itemIP.splice(j, 1)
+                itemIP = itemIP.join('.')
+                if (itemIP === testIP && item.upload === testItem.upload && item.delete === testItem.delete && item.download === testItem.download) {
+                    sameIpArray.push(item.ip.split('.')[j])
+                }
+            })
+            if (sameIpArray.length === 256) {
+                let flag = true
+                for (let i = 0; i < 256; i++) {
+                    if (!sameIpArray.includes(i.toString())) {
+                        flag = false
+                        break
+                    }
+                }
+                if (flag) {
+                    let ip = testItem.ip.split('.')
+                    ip.splice(j, 1, '*')
+                    list = list.filter((item) => {
+                        let deleteIp = testItem.ip.split('.')
+                        deleteIp.splice(j, 1)
+                        let itemIp = item.ip.split('.')
+                        itemIp.splice(j, 1)
+                        return itemIp.join('.') !== deleteIp.join('.')
+                    })
+                    list.push({
+                        ip: ip.join('.'),
+                        upload: testItem.upload,
+                        delete: testItem.delete,
+                        download: testItem.download,
+                        edit: false,
+                        before: {
+                            upload: testItem.upload,
+                            delete: testItem.delete,
+                            download: testItem.download
+                        }
+                    })
+                }
+            }
+        }
+    })
+    return list
 }
 const savedDefult = {
     download_file: {

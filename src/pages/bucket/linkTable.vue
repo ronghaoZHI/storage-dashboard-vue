@@ -201,9 +201,21 @@ export default {
         validateIP (rule, value, callback) {
             this.newIps = value.replace(/\r\n/ig, ';').replace(/\n/g, ';').replace(/\r/g, ';').replace('/\u21b5/g', ';').split(';')
             let ipsSet = new Set(this.newIps)
+            let exits = !this.newIps.every(ip => !this.listData.find(item => {
+                if (item.ip === ip) return true
+                if (item.ip.includes('*')) {
+                    for (let i = 0; i < 4; i++) {
+                        let itemIp = item.ip.split('.')
+                        let testIp = ip.split('.')
+                        itemIp.splice(i, 1)
+                        testIp.splice(i, 1)
+                        if (itemIp.join('.') === testIp.join('.')) return true
+                    }
+                }
+            }))
             if (!this.newIps.every(ip => ipReg.test(ip))) {
                 callback(new Error(this.$t('SETTINGS.IP_INVALID')))
-            } else if (!this.newIps.every(ip => !this.listData.find(item => item.ip === ip))) {
+            } else if (exits) {
                 callback(new Error(this.$t('SETTINGS.IP_EXISTS')))
             } else if (ipsSet.size !== this.newIps.length) {
                 callback(new Error(this.$t('SETTINGS.IP_REPEAT')))
@@ -226,7 +238,7 @@ export default {
     }
 }
 
-const ipReg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)$/
+const ipReg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)$/
 
 </script>
 <style lang="less" scoped>
