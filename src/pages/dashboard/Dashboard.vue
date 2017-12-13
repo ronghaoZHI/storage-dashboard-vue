@@ -771,8 +771,8 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
 
             img {
                 position: absolute;
-                top: -30px;
-                left: 25px;
+                top: -32px;
+                left: 30px;
             }
 
             p {
