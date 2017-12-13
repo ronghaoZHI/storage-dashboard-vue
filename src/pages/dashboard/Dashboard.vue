@@ -124,8 +124,8 @@ export default {
     data () {
         return {
             showChart: 0,
-            dateDividedBefore: '20171122',
-            dateDivided: '20171123',
+            dateDividedBefore: '20171130',
+            dateDivided: '20171201',
             bucketList: this.bucketList,
             selectedBucket: 'All Buckets',
             dateDefault: {
