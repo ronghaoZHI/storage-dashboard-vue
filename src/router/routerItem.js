@@ -129,22 +129,22 @@ const layoutChild = [{
 }, {
     path: '/system/machine',
     name: 'machine',
-    meta: { title: 'Machine', ali: 'machine' },
+    meta: { title: 'Machine', ali: 'machine', parent: 'system' },
     component: Machine
 }, {
     path: '/system/group',
     name: 'group',
-    meta: { title: 'Group', ali: 'group' },
+    meta: { title: 'Group', ali: 'group', parent: 'system' },
     component: Group
 }, {
     path: '/system/partition',
     name: 'partition',
-    meta: { title: 'Partition', ali: 'partition' },
+    meta: { title: 'Partition', ali: 'partition', parent: 'system' },
     component: Partition
 }, {
     path: '/system/traffic',
     name: 'traffic',
-    meta: { title: 'Traffic', ali: 'Traffic' },
+    meta: { title: 'Traffic', ali: 'Traffic', parent: 'system' },
     component: Traffic
 }, {
     path: '/user',

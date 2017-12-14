@@ -1,6 +1,6 @@
 <template>
     <div class="layout-menu">
-        <Menu :active-name="activeName" theme="dark" :open-names="[openName]" :accordion="true" width="auto" @on-select="goRouter">
+        <Menu ref="menu" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName">
             <div class="layout-logo-left">
                 <img class="logo-big" src="../../assets/logo.png" height="30px" />
             </div>
@@ -28,7 +28,7 @@ export default {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            openName: this.$route.meta.parent || ''
+            openName: this.$route.meta.parent ? [this.$route.meta.parent] : []
         }
     },
     computed: {
@@ -39,6 +39,15 @@ export default {
     methods: {
         goRouter (link) {
             this.$router.push({ name: link })
+        },
+        updateOpenName () {
+            this.$refs['menu'].updateOpened()
+        }
+    },
+    watch: {
+        '$route' (to, from) {
+            this.activeName = to.meta.ali
+            this.openName = to.meta.parent ? [to.meta.parent] : []
         }
     },
     created () {

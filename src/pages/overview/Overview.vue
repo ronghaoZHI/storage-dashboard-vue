@@ -63,7 +63,7 @@
                         <div class="file-ruler-card">
                             <p class="file-ruler-card-title">权限设置</p>
                             <div class="file-ruler-card-body">
-                                <p><span>{{permissionsList.length}}</span>个Bucket 已配置</p>
+                                <p><span>{{permissionsList.length}}</span>个 Bucket 已配置</p>
                             </div>
                             <div class="file-ruler-card-hover">
                                 <Button type="primary" @click="showPermissionModal = true">查看详情</Button>
@@ -72,7 +72,7 @@
                         <div class="file-ruler-card">
                             <p class="file-ruler-card-title">自定义域名</p>
                             <div class="file-ruler-card-body">
-                                <p><span>10</span>个 Bucket 已配置</p>
+                                <p><span>0</span>个 Bucket 已配置</p>
                             </div>
                             <div class="file-ruler-card-hover waiting">
                                 <p class="waiting">敬请期待</p>
@@ -81,7 +81,7 @@
                         <div class="file-ruler-card">
                             <p class="file-ruler-card-title">404回源</p>
                             <div class="file-ruler-card-body">
-                                <p><span>{{sourceList.length}}</span>个Bucket 已配置</p>
+                                <p><span>{{sourceList.length}}</span>个 Bucket 已配置</p>
                             </div>
                             <div class="file-ruler-card-hover">
                                 <Button type="primary" @click="showSourceModal = true">查看详情</Button>
@@ -90,7 +90,7 @@
                         <div class="file-ruler-card">
                             <p class="file-ruler-card-title">IP黑白名单</p>
                             <div class="file-ruler-card-body">
-                                <p><span>{{accessList.length}}</span>个Bucket 已配置</p>
+                                <p><span>{{accessList.length}}</span>个 Bucket 已配置</p>
                             </div>
                             <div class="file-ruler-card-hover">
                                 <Button type="primary" @click="showAccessModal = true">查看详情</Button>
@@ -130,7 +130,7 @@
                                 <p>支持自动转码和主动转码，将多媒体数据转码成多种终端播放格式</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="gotoVideoTemplate = true">查看详情</Button>
+                                <Button type="primary" @click="gotoVideoTemplate">查看详情</Button>
                             </div>
                         </div>
                     </div>
