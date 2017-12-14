@@ -61,31 +61,38 @@
                     </div>
                     <div class="card-section">
                         <div class="file-ruler-card">
-                            <div>
-                                <p>权限设置</p>
-                                <p><span>{{permissionsList.length}}</span>个 Bucket 已配置</p>
+                            <p class="file-ruler-card-title">权限设置</p>
+                            <div class="file-ruler-card-body">
+                                <p><span>{{permissionsList.length}}</span>个Bucket 已配置</p>
+                            </div>
+                            <div class="file-ruler-card-hover">
                                 <Button type="primary" @click="showPermissionModal = true">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <div>
-                                <p>自定义域名</p>
-                                <p><span>0</span>个 Bucket 已配置</p>
+                            <p class="file-ruler-card-title">自定义域名</p>
+                            <div class="file-ruler-card-body">
+                                <p><span>10</span>个 Bucket 已配置</p>
+                            </div>
+                            <div class="file-ruler-card-hover waiting">
                                 <p class="waiting">敬请期待</p>
-                                <Button type="primary">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <div>
-                                <p>镜像回源</p>
-                                <p><span>{{sourceList.length}}</span>个 Bucket 已配置</p>
+                            <p class="file-ruler-card-title">404回源</p>
+                            <div class="file-ruler-card-body">
+                                <p><span>{{sourceList.length}}</span>个Bucket 已配置</p>
+                            </div>
+                            <div class="file-ruler-card-hover">
                                 <Button type="primary" @click="showSourceModal = true">查看详情</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <div>
-                                <p>tables 黑白名单</p>
-                                <p><span>{{accessList.length}}</span>个 Bucket 已配置</p>
+                            <p class="file-ruler-card-title">IP黑白名单</p>
+                            <div class="file-ruler-card-body">
+                                <p><span>{{accessList.length}}</span>个Bucket 已配置</p>
+                            </div>
+                            <div class="file-ruler-card-hover">
                                 <Button type="primary" @click="showAccessModal = true">查看详情</Button>
                             </div>
                         </div>
@@ -99,25 +106,31 @@
                         </div>
                     </div>
                     <div class="card-section">
-                        <div class="file-handle-card">
-                            <div>
-                                <p>图片服务</p>
+                        <div class="file-ruler-card">
+                            <p class="file-ruler-card-title">图片服务</p>
+                            <div class="file-ruler-card-body">
                                 <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
+                            </div>
+                            <div class="file-ruler-card-hover">
                                 <Button type="primary" @click="showPictureModal = true">查看详情</Button>
                             </div>
                         </div>
-                        <div class="file-handle-card">
-                            <div>
-                                <p>图片鉴黄</p>
+                        <div class="file-ruler-card">
+                            <p class="file-ruler-card-title">图片鉴黄</p>
+                            <div class="file-ruler-card-body">
                                 <p>智能内容识别服务，快速识别色情图片</p>
+                            </div>
+                            <div class="file-ruler-card-hover phone">
                                 <p class="waiting">联系商务</p>
                             </div>
                         </div>
-                        <div class="file-handle-card">
-                            <div>
-                                <p>媒体转码</p>
+                        <div class="file-ruler-card">
+                            <p class="file-ruler-card-title">媒体转码</p>
+                            <div class="file-ruler-card-body">
                                 <p>支持自动转码和主动转码，将多媒体数据转码成多种终端播放格式</p>
-                                <Button type="primary" @click="gotoVideoTemplate">查看详情</Button>
+                            </div>
+                            <div class="file-ruler-card-hover">
+                                <Button type="primary" @click="gotoVideoTemplate = true">查看详情</Button>
                             </div>
                         </div>
                     </div>
@@ -626,120 +639,107 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
             }
         }
 
-        .file-ruler {
+        .file-ruler-card {
+            height: 150px;
+            text-align: center;
+            border: @common-border;
+            flex: 1;
+            margin-right: 20px;
+            position: relative;
+            box-sizing: content-box;
 
+            &-title {
+                height: 40px;
+                background-color: #eff2f7;
+                color: #475669;
+                font-size: 14px;
+                line-height: 40px;
+            }
+
+            &-body {
+                height: 110px;
+                width: 100%;
+                background-size: 70px auto;
+                background-position: 10px center;
+                background-repeat: no-repeat;
+                .fb(flex-start, center);
+                text-align: left;
+
+                p {
+                    flex: 13;
+                    padding-left: 90px;
+                    span {
+                        color: #20a0ff;
+                    }
+                }
+
+            }
+
+            &-hover{
+                position: absolute;
+                top: 40px;
+                left: 0;
+                width: 100%;
+                height: 110px;
+                background-color: #fff;
+                opacity: 0;
+                .fb(center, center, inline-flex, column);
+
+                &.waiting {
+                    background: url('../../assets/overview/waiting.png') center 20px no-repeat #fff;
+                }
+                &.phone {
+                    background: url('../../assets/overview/phone-white.png') center 20px no-repeat #fff;
+                }
+                p {
+                    color: #475669;
+                    position: absolute;
+                    top: 66px;
+                }
+            }
+            &:last-child {
+                margin-right: 0;
+            }
+            &:hover {
+                background-color: #fff;
+                border-color: #54b6ff;
+
+                .file-ruler-card-title{
+                    background-color: #54b6ff;
+                    color: #fff;
+                }
+
+                .file-ruler-card-hover{
+                    opacity: 1;
+                }
+            }
+        }
+        .file-ruler {
             .card-section{
                 width: 100%;
                 .fb(space-between, center);
             }
 
             .file-ruler-card {
-                height: 100px;
-                text-align: left;
-                background-size: 70px 65px;
-                background-position:10px center;
-                border: @common-border;
-                background-repeat: no-repeat;
-                flex: 1;
-
-                button {
-                    display: none;
-                }
-
-                p {
-                    width: calc(~'100% - 90px');
-
-                    span {
-                        color: @primary-color;
-                    }
-                }
-
-                p:first-child {
-                    position: relative;
-                    font-size: 16px;
-                    top: 20px;
-                    left: 90px;
-                }
-                p:nth-child(2) {
-                    position: relative;
-                    font-size: 14px;
-                    top: 30px;
-                    left: 90px;
-                }
-
-                &:nth-child(2),
-                &:nth-child(3)  {
-                    margin: 0 8px;
-                }
-
                 &:nth-child(1) {
-                    background-image: url('../../assets/overview/permisson.png');
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/permisson.png');
+                    }
                 }
-
                 &:nth-child(2) {
-                    background-image: url('../../assets/overview/www.png');
-                    .waiting {
-                        display: none;
-                    }
-
-                    & > div:hover {
-                        background-image: url('../../assets/overview/waiting.png');
-                        background-position:center 20px;
-                        background-repeat: no-repeat;
-                        button {
-                            display: none;
-                        }
-
-                        p:not(.waiting) {
-                            display: none;
-                        }
-
-                        .waiting {
-                            display: inline-block;
-                            width: 100%;
-                            color: #475669;
-                            position: relative;
-                            font-size: 14px;
-                            top: 60px;
-                        }
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/www.png');
                     }
                 }
-
                 &:nth-child(3) {
-                    background-image: url('../../assets/overview/404.png');
-                }
-
-                &:first-child {
-                    margin-right: 8px;
-                }
-
-                &:last-child {
-                    margin-left: 8px;
-                    background-image: url('../../assets/overview/IP.png');
-                }
-
-                p {
-                    color: #475669;
-                }
-
-                & > div {
-                    height: 98px;
-                }
-
-                & > div:hover {
-                    text-align: center;
-
-                    p {
-                        display: none;
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/404.png');
                     }
-
-                    button {
-                        display: inline-block;
-                        position: relative;
-                        z-index: 100;
-                        margin-top: 35px;
+                }
+                &:nth-child(4) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/IP.png');
                     }
-                    background-color: #f9fafc;
                 }
             }
         }
@@ -750,98 +750,28 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                 width: 100%;
                 .fb(space-between, center);
             }
-            .file-handle-card {
-                display: inline-block;
-                flex: 1;
-                height: 100px;
-                border: @common-border;
-                width: calc(~'33% - 11px');
-                text-align: left;
-                background-size: 65px;
-                background-position:30px center;
-                background-repeat: no-repeat;
 
-                button {
-                    display: none;
+            .file-ruler-card{
+                &-body p{
+                    padding-right: 10px;
                 }
-
-                p {
-                    left: 120px;
-                }
-
-                p:first-child {
-                    width: calc(~'100% - 130px');
-                    position: relative;
-                    font-size: 16px;
-                    top: 14px;
-                }
-
-                p:nth-child(2) {
-                    width: calc(~'100% - 130px');
-                    position: relative;
-                    top: 20px;
-                }
-
-                &:first-child {
-                    background-image: url('../../assets/overview/pic.png');
-                }
-
-                &:nth-child(2) {
-                    background-image: url('../../assets/overview/sex.png');
-                    .waiting {
-                        display: none;
-                    }
-
-                    & > div:hover {
-                        background-image: url('../../assets/overview/phone-white.png');
-                        background-position:center 20px;
-                        background-repeat: no-repeat;
-                        button {
-                            display: none;
-                        }
-
-                        p:not(.waiting) {
-                            display: none;
-                        }
-
-                        .waiting {
-                            display: inline-block;
-                            width: 100%;
-                            color: #475669;
-                            position: relative;
-                            font-size: 14px;
-                            top: 60px;
-                            left: 0;
-                        }
-                    }
-                }
-
-                &:last-child {
-                    background-image: url('../../assets/overview/video.png');
-                }
-
-                &:not(:last-child) {
-                    margin-right: 16px;
-                }
-
-                & > div {
-                    height: 98px;
-                }
-
-                & > div:hover {
+                &-body {
                     text-align: center;
-
-                    p {
-                        display: none;
+                }
+                &:nth-child(1) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/pic.png');
                     }
-
-                    button {
-                        display: inline-block;
-                        position: relative;
-                        z-index: 100;
-                        top: 33px;
+                }
+                &:nth-child(2) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/sex.png');
                     }
-                    background-color: #f9fafc;
+                }
+                &:nth-child(3) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/video.png');
+                    }
                 }
             }
         }
@@ -850,7 +780,7 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
     .right-section {
         .button-section {
             button {
-                margin-right: 8px;
+                margin-right: 4px;
                 border-radius: 3px;
             }
         }
@@ -949,73 +879,82 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
             }
         }
 
-        .file-ruler {
+        .file-ruler-card {
+            border-color: @card-border-color-dark;
+            background-color: @card-bg-dark;
+            color: #8491a6;
 
-            .file-ruler-card {
-                border-color: @card-border-color-dark;
-                background-color: @card-bg-dark;
-                &:nth-child(1) {
-                    background-image: url('../../assets/overview/permisson-dark.png');
+            &-title {
+                background-color: #293137;
+                color: #8491a6;
+            }
+
+            &-hover{
+                background-color: #293137;
+
+                &.waiting {
+                    background-img: url('../../assets/overview/waiting-dark.png');
                 }
+                &.phone {
+                    background-img: url('../../assets/overview/phone-dark.png');
+                }
+                p {
+                    color: #8492a6;
+                }
+            }
+            &:hover {
+                background-color: #fff;
+                border-color: #54b6ff;
 
-                &:nth-child(2) {
-                    background-image: url('../../assets/overview/www-dark.png');
-
-                    & > div:hover {
-                        background-image: url('../../assets/overview/waiting-dark.png');
-
-                        .waiting {
-                            color: @text-color-dark;
-                        }
+                .file-ruler-card-title{
+                    background-color: #20a0ff;
+                }
+            }
+        }
+        .file-ruler {
+            .file-ruler-card {
+                &:nth-child(1) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/permisson-dark.png');
                     }
                 }
-
+                &:nth-child(2) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/www-dark.png');
+                    }
+                }
                 &:nth-child(3) {
-                    background-image: url('../../assets/overview/404-dark.png');
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/404-dark.png');
+                    }
                 }
-
-                &:last-child {
-                    background-image: url('../../assets/overview/IP-dark.png');
-                }
-
-                p {
-                    color: @text-color-secondary-dark;
-                }
-
-                & > div:hover {
-                    background-color: @card-hover-bg-dark;
+                &:nth-child(4) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/IP-dark.png');
+                    }
                 }
             }
         }
 
         .file-handle {
-
-            .file-handle-card {
-                border-color: @card-border-color-dark;
-                background-color: @card-bg-dark;
-
-                &:first-child {
-                    background-image: url('../../assets/overview/pic-dark.png');
+            .file-ruler-card{
+                &-body {
+                    text-align: center;
                 }
-
-                &:nth-child(2) {
-                    background-image: url('../../assets/overview/sex-dark.png');
-
-                    & > div:hover {
-                        background-image: url('../../assets/overview/phone-dark.png');
-
-                        .waiting {
-                            color: @text-color-dark;
-                        }
+                &:nth-child(1) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/pic-dark.png');
                     }
                 }
-
-                &:last-child {
-                    background-image: url('../../assets/overview/video-dark.png');
+                &:nth-child(2) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/sex-dark.png');
+                    }
                 }
-
-                & > div:hover {
-                    background-color: @card-hover-bg-dark;
+                &:nth-child(3) {
+                    .file-ruler-card-body {
+                        background-image: url('../../assets/overview/video-dark.png');
+                    }
                 }
             }
         }
