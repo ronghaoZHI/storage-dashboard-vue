@@ -676,12 +676,8 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             border: 0;
             background-color: #313a41;
             .content {
-                p {
-                    color: #8492a6;
-                }
-                
                 span {
-                    color: #ffffff;
+                    color: #ffba42;
                 }
             }
         }
@@ -787,6 +783,15 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
 
             .content {
                 margin-top: 40px;
+
+                p {
+                    color: #8492a6;
+                }
+
+                span {
+                    color: #475669;
+                }
+
                 span:first-child {
                     font: 36px bolder;
                 }
