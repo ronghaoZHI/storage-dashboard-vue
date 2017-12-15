@@ -165,13 +165,29 @@
                             <span class="separator-info">产品更新</span>
                         </div>
                     </div>
-                    <TimelineItem color="green">
-                    <Icon type="trophy" slot="dot"></Icon>
-                    <span>发布里程碑版本</span>
-                </TimelineItem>
-                <TimelineItem>发布1.0版本</TimelineItem>
-                <TimelineItem>发布2.0版本</TimelineItem>
-                <TimelineItem>发布3.0版本</TimelineItem>
+                    <Timeline>
+                        <TimelineItem color="green">
+                            <span slot="before">2017.10.12</span>
+                            <div slot="dot" class="timeline-dot"></div>
+                            <span>镜像存储支持200、404方式</span>
+                        </TimelineItem>
+                        <TimelineItem>
+                            <span slot="before">2017.07.22</span>
+                            <span>append追加上传接口上线</span>
+                        </TimelineItem>
+                        <TimelineItem>
+                            <span slot="before">2017.05.08</span>
+                            <span>自动转码上线</span>
+                        </TimelineItem>
+                        <TimelineItem>
+                            <span slot="before">2017.03.05</span>
+                            <span>图片处理支持控制台配置处理样式</span>
+                        </TimelineItem>
+                        <TimelineItem>
+                            <span slot="before">2017.01.11</span>
+                            <span>CWN-X 控制台多语言上线</span>
+                        </TimelineItem>
+                    </Timeline>
                 </div>
             </Col>
         </Row>
@@ -377,7 +393,7 @@ export default {
     },
     created () {
         this.convertBucketList()
-        this.getOverviewsData()
+        // this.getOverviewsData()
     },
     methods: {
         async convertBucketList () {
@@ -788,7 +804,7 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
         .update-history {
             border: @common-border;
             margin-top: 12px;
-            padding: 16px;
+            padding: 16px 20px;
 
             .section-separator {
                 margin-bottom: 20px;
@@ -837,6 +853,20 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                 }
             }
         }
+
+        .update-history {
+            .section-separator {
+                margin-bottom: 30px;
+            }
+        }
+    }
+
+    .timeline-dot{
+        width: 20px;
+        height: 20px;
+        margin: 0 auto;
+        background-image: url('../../assets/overview/update-now-white.png');
+        background-size: cover;
     }
 }
 .dark .@{css-prefix}overview {
@@ -991,6 +1021,10 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                 }
             }
         }
+    }
+
+    .timeline-dot{
+        background-image: url('../../assets/overview/update-now-dark.png')
     }
 }
 </style>
