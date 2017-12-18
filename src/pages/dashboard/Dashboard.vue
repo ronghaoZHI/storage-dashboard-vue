@@ -117,7 +117,7 @@ import filesDark from '../../assets/dashboard/files-dark.png'
 import { getBucketList } from '@/service/Data'
 import { getBillOldUrl, getBillUrl } from '@/service/API'
 import user from '@/store/modules/user'
-import { bytes, times, timesK, dateTime, dateTimeYear, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
+import { bytes, times, timesK, date, dateTime, dateTimeYear, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
@@ -202,7 +202,7 @@ export default {
                         this.exportData = []
                         _.each(this.time_nodes.map(time => time * 1000), (time, index) => {
                             let exportData = {
-                                time: dateTimeYear(time)
+                                time: date(time)
                             }
                             exportData[exportDic.capacity] = this.distributed.space_used[index]
                             exportData[exportDic.inflows] = this.distributed.flow_up[index]
@@ -269,18 +269,18 @@ export default {
                     this.exportData = []
                     _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
                         let exportData = {
-                            time: dateTimeYear(time)
+                            time: formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided ? dateTimeYear(time) : date(time)
                         }
                         exportData[exportDic.capacity] = echartData.space_used[index]
                         exportData[exportDic.inflows] = echartData.flow_up[index]
                         exportData[exportDic.pubInflows] = index < oldTimeLength ? '' : echartData.flow_up_pub[index - oldTimeLength]
                         _.forEach(echartData.up_cdn, (value, key) => {
-                            exportData[`${key}${exportDic.inflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
+                            exportData[`${key} cdn${exportDic.inflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
                         })
                         exportData[exportDic.outflows] = echartData.flow_down[index]
                         exportData[exportDic.pubOutflows] = index < oldTimeLength ? '' : echartData.flow_down_pub[index - oldTimeLength]
                         _.forEach(echartData.down_cdn, (value, key) => {
-                            exportData[`${key}${exportDic.outflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
+                            exportData[`${key} cdn${exportDic.outflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
                         })
                         exportData[exportDic.readRequests] = echartData.read_count[index]
                         exportData[exportDic.writeRequests] = echartData.write_count[index]
@@ -293,6 +293,13 @@ export default {
                 } catch (error) {
                     console.log(error)
                     this.spinShow = false
+                    if (error.msg && error.msg.message && error.msg.message === 'Not found any data in custom_range') {
+                        this.$Modal.warning({
+                            title: this.$t('DASHBOARD.PROMPT'),
+                            content: this.$t('DASHBOARD.PROMPT_CONTENT')
+                        })
+                        return
+                    }
                     this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
                 }
             }
@@ -361,7 +368,7 @@ export default {
                     combinedData.push([value * 1000, data[key][index]])
                 })
                 let object = {
-                    label: key + (upOrDown === 'up' ? '流入流量' : '流出流量'),
+                    label: key + (upOrDown === 'up' ? ' cdn流入流量' : ' cdn流出流量'),
                     unit: unit,
                     data: combinedData
                 }
@@ -462,9 +469,6 @@ const lineOptions = {
             textStyle: {
                 color: '#8492a6',
                 fontSize: 14
-            },
-            formatter: function (value) {
-                return dateTime(value)
             }
         }
     },
@@ -631,12 +635,19 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
         series: seriesArray,
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = '时间：' + dateTimeYear(params[0].value[0])
+                let res = '时间：' + (newOneDayFlag ? dateTimeYear(params[0].value[0]) : date(params[0].value[0]))
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
                     res += dataPart.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
                 })
                 return res
+            }
+        },
+        xAxis: {
+            axisLabel: {
+                formatter: function (value) {
+                    return newOneDayFlag ? dateTime(value) : date(value)
+                }
             }
         },
         yAxis: {
@@ -783,10 +794,6 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
 
             .content {
                 margin-top: 40px;
-
-                p {
-                    color: #8492a6;
-                }
 
                 span {
                     color: #475669;

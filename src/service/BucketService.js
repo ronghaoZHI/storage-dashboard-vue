@@ -93,7 +93,8 @@ const timesSpliteUnits = (times, digit = 1) => {
 const date = (value) => {
     let date = new Date(value)
     let month = date.getMonth() >= 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
-    let texts = [date.getFullYear(), month, date.getDate()]
+    let day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+    let texts = [date.getFullYear(), month, day]
     return texts.join('-')
 }
 
