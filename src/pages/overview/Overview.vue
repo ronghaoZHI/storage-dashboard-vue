@@ -146,7 +146,7 @@
                 <div class="button-section">
                     <a href="http://doc.bscstorage.com/faq-pub.html"><Button type="ghost">FAQ</Button></a>
                     <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><Button type="ghost">SDK</Button></a>
-                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="ghost">{{$t('NAV.DOC')}}</Button></a>
+                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="ghost">{{$t('OVERVIEW.DOC')}}</Button></a>
                 </div>
                 <div class="bucket-section">
                     <div class="section-separator">
