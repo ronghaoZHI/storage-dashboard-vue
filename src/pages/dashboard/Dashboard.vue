@@ -523,10 +523,7 @@ const darkLineOptions = {
 const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDayFlag}) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
     let n = Math.floor((dataPart.data.length - 1) / 7) + 1
-    themeLineOptions.xAxis.interval = 86400000 * n
-    if (newOneDayFlag) {
-        themeLineOptions.xAxis.interval = 3600000 * n
-    }
+    themeLineOptions.xAxis.interval = newOneDayFlag ? (dataPart.data.length === 1 ? 86400000 : 3600000 * n) : 86400000 * n
     themeLineOptions.grid.top = '60'
     let legendData = []
     let seriesArray = []
