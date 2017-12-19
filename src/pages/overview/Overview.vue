@@ -6,7 +6,7 @@
                     <div class="section-separator">
                         <div class="separator-body">
                             <span class="separator-icon"></span>
-                            <span class="separator-info">本月存储使用统计</span>
+                            <span class="separator-info">{{$t('OVERVIEW.DASHBOARD_MONTH')}}</span>
                         </div>
                     </div>
                     <div class="storage-card">
@@ -14,7 +14,7 @@
                             <div class="images"></div>
                             <div class="texts">
                                 <p class="label">
-                                    本月存储容量
+                                    {{$t('OVERVIEW.CAPACITY_MONTH')}}
                                 </p>
                                 <p class="numbers">
                                     {{originOverview.capacity[0]}} <span>{{originOverview.capacity[1]}}</span>
@@ -30,7 +30,7 @@
                             <div class="images"></div>
                             <div class="texts">
                                 <p class="label">
-                                    本月外网容量
+                                    {{$t('OVERVIEW.OUTER_NET_MONTH')}}
                                 </p>
                                 <p class="numbers">
                                     {{originOverview.traffic[0]}} <span>{{originOverview.traffic[1]}}</span>
@@ -46,7 +46,7 @@
                             <div class="images"></div>
                             <div class="texts">
                                 <p class="label">
-                                    本月请求数
+                                    {{$t('OVERVIEW.REQUEST_MONTH')}}
                                 </p>
                                 <p class="numbers">
                                     {{originOverview.request[0]}} <span>{{originOverview.request[1]}}</span>
@@ -62,44 +62,44 @@
                     <div class="section-separator">
                         <div class="separator-body">
                             <span class="separator-icon"></span>
-                            <span class="separator-info">文件访问规则配置</span>
+                            <span class="separator-info">{{$t('OVERVIEW.FILE_RULES')}}</span>
                         </div>
                     </div>
                     <div class="card-section">
                         <div class="file-ruler-card">
-                            <p class="file-ruler-card-title">权限设置</p>
+                            <p class="file-ruler-card-title">{{$t('STORAGE.FILE_PERMISSIONS')}}</p>
                             <div class="file-ruler-card-body">
-                                <p><span>{{permissionsList.length}}</span>个 Bucket 已配置</p>
+                                <p><span>{{permissionsList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="showPermissionModal = true">查看详情</Button>
+                                <Button type="primary" @click="showPermissionModal = true">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <p class="file-ruler-card-title">自定义域名</p>
+                            <p class="file-ruler-card-title">{{$t('OVERVIEW.CUSTOM_DOMAIN')}}</p>
                             <div class="file-ruler-card-body">
-                                <p><span>0</span>个 Bucket 已配置</p>
+                                <p><span>0</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
                             </div>
                             <div class="file-ruler-card-hover waiting">
-                                <p class="waiting">敬请期待</p>
+                                <p class="waiting">{{$t('OVERVIEW.COMING_SOON')}}</p>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <p class="file-ruler-card-title">404回源</p>
+                            <p class="file-ruler-card-title">{{$t('STORAGE.MIRROR')}}</p>
                             <div class="file-ruler-card-body">
-                                <p><span>{{sourceList.length}}</span>个 Bucket 已配置</p>
+                                <p><span>{{sourceList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="showSourceModal = true">查看详情</Button>
+                                <Button type="primary" @click="showSourceModal = true">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <p class="file-ruler-card-title">IP黑白名单</p>
+                            <p class="file-ruler-card-title">{{$t('SETTINGS.SECURITY_CHAIN')}}</p>
                             <div class="file-ruler-card-body">
-                                <p><span>{{accessList.length}}</span>个 Bucket 已配置</p>
+                                <p><span>{{accessList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="showAccessModal = true">查看详情</Button>
+                                <Button type="primary" @click="showAccessModal = true">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                     </div>
@@ -108,35 +108,35 @@
                     <div class="section-separator">
                         <div class="separator-body">
                             <span class="separator-icon"></span>
-                            <span class="separator-info">文件处理</span>
+                            <span class="separator-info">{{$t('OVERVIEW.FILE_HANDLER')}}</span>
                         </div>
                     </div>
                     <div class="card-section">
                         <div class="file-ruler-card">
-                            <p class="file-ruler-card-title">图片服务</p>
+                            <p class="file-ruler-card-title">{{$t('OVERVIEW.PIC_SERVICE')}}</p>
                             <div class="file-ruler-card-body">
-                                <p>支持在 OSS 端对图片文件进行缩放、裁切、水印等处理</p>
+                                <p>{{$t('OVERVIEW.PIC_SERVICE_INFO')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="showPictureModal = true">查看详情</Button>
+                                <Button type="primary" @click="showPictureModal = true">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <p class="file-ruler-card-title">图片鉴黄</p>
+                            <p class="file-ruler-card-title">{{$t('STORAGE.PIC_IDEN')}}</p>
                             <div class="file-ruler-card-body">
-                                <p>智能内容识别服务，快速识别色情图片</p>
+                                <p>{{$t('OVERVIEW.PIC_ADULT_INFO')}}</p>
                             </div>
                             <div class="file-ruler-card-hover phone">
-                                <p class="waiting">联系商务</p>
+                                <p class="waiting">{{$t('OVERVIEW.CONTACT_BUSINESS')}}</p>
                             </div>
                         </div>
                         <div class="file-ruler-card">
-                            <p class="file-ruler-card-title">媒体转码</p>
+                            <p class="file-ruler-card-title">{{$t('OVERVIEW.VIDEO_SERICE')}}</p>
                             <div class="file-ruler-card-body">
-                                <p>支持自动转码和主动转码，将多媒体数据转码成多种终端播放格式</p>
+                                <p>{{$t('OVERVIEW.VIDEO_SERICE_INFO')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="gotoVideoTemplate">查看详情</Button>
+                                <Button type="primary" @click="gotoVideoTemplate">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                     </div>
@@ -146,13 +146,13 @@
                 <div class="button-section">
                     <a href="http://doc.bscstorage.com/faq-pub.html"><Button type="ghost">FAQ</Button></a>
                     <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><Button type="ghost">SDK</Button></a>
-                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="ghost">控制台使用手册</Button></a>
+                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="ghost">{{$t('NAV.DOC')}}</Button></a>
                 </div>
                 <div class="bucket-section">
                     <div class="section-separator">
                         <div class="separator-body">
                             <span class="separator-icon"></span>
-                            <span class="separator-info">我的存储</span>
+                            <span class="separator-info">{{$t('SIDEBAR.BUCKET')}}</span>
                         </div>
                     </div>
                     <div class="bucket" @click="gotoBucket">
@@ -160,53 +160,53 @@
                         <p>Bucket</p>
                     </div>
                     <div class="buttons">
-                        <Button size="small" type="primary" @click="createBucketModal = true">新建 Bucket</Button>
-                        <Button size="small" type="ghost" @click="gotoKeychain">我的密钥</Button>
+                        <Button size="small" type="primary" @click="createBucketModal = true">{{$t('STORAGE.ADD_BUCKET')}}</Button>
+                        <Button size="small" type="ghost" @click="gotoKeychain">{{$t('OVERVIEW.MY_KEYCHAIN')}}</Button>
                     </div>
                 </div>
                 <div class="update-history">
                     <div class="section-separator">
                         <div class="separator-body">
                             <span class="separator-icon"></span>
-                            <span class="separator-info">产品更新</span>
+                            <span class="separator-info">{{$t('OVERVIEW.PRODUCT_UPDATE')}}</span>
                         </div>
                     </div>
                     <Timeline>
                         <TimelineItem color="green">
                             <span slot="before">2017.10.12</span>
                             <div slot="dot" class="timeline-dot"></div>
-                            <span>镜像存储支持200、404方式</span>
+                            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_1012')}}</span>
                         </TimelineItem>
                         <TimelineItem>
                             <span slot="before">2017.07.22</span>
-                            <span>append追加上传接口上线</span>
+                            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0722')}}</span>
                         </TimelineItem>
                         <TimelineItem>
                             <span slot="before">2017.05.08</span>
-                            <span>自动转码上线</span>
+                            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0508')}}</span>
                         </TimelineItem>
                         <TimelineItem>
                             <span slot="before">2017.03.05</span>
-                            <span>图片处理支持控制台配置处理样式</span>
+                            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0305')}}</span>
                         </TimelineItem>
                         <TimelineItem>
                             <span slot="before">2017.01.11</span>
-                            <span>CWN-X 控制台多语言上线</span>
+                            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0111')}}</span>
                         </TimelineItem>
                     </Timeline>
                 </div>
             </Col>
         </Row>
-        <Modal v-model="showPermissionModal" title='权限' width="700" class="permission-modal">
+        <Modal v-model="showPermissionModal" :title="$t('STORAGE.FILE_PERMISSIONS')" width="700" class="permission-modal">
             <Table :stripe="true" :columns="permissionHeader" :data="permissionsList"></Table>
         </Modal>
-        <Modal v-model="showSourceModal" title='镜像回源' width="700" class="permission-modal">
+        <Modal v-model="showSourceModal" :title="$t('STORAGE.MIRROR')" width="700" class="permission-modal">
             <Table :stripe="true" :columns="sourceHeader" :data="sourceList"></Table>
         </Modal>
-        <Modal v-model="showAccessModal" title='防盗链' width="700" class="permission-modal">
+        <Modal v-model="showAccessModal" :title="$t('SETTINGS.SECURITY_CHAIN')" width="700" class="permission-modal">
             <Table :stripe="true" :columns="accessHeader" :data="accessList"></Table>
         </Modal>
-        <Modal v-model="showPictureModal" title='图片处理' width="500" class="permission-modal">
+        <Modal v-model="showPictureModal" :title="$t('STORAGE.PIC_STYLE')" width="500" class="permission-modal">
             <Table :stripe="true" :columns="pictureHeader" :data="bucketList"></Table>
         </Modal>
         <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="inputCheck=false;createBucketValue = ''">
@@ -290,9 +290,9 @@ export default {
                 width: 90,
                 key: 'name'
             }, {
-                title: '回源方式',
+                title: this.$t('STORAGE.SOURCE_ADDRESS'),
                 render: (h, params) => {
-                    return h('div', [h('div'), [`回源方式：${params.row.source.domain}`], h('div', [`响应方式：${params.row.source.fetch_mode.split('_')[1]}`])])
+                    return h('div', [h('div'), [`${this.$t('STORAGE.SOURCE_ADDRESS')}:${params.row.source.domain}`], h('div', [`${this.$t('STORAGE.SOURCE_MODE')}:${params.row.source.fetch_mode.split('_')[1]}`])])
                 }
             }, {
                 title: 'Actions',
@@ -323,12 +323,12 @@ export default {
                 width: 90,
                 key: 'name'
             }, {
-                title: 'IP黑名单',
+                title: this.$t('SETTINGS.IP_BLACK_LIST'),
                 render: (h, params) => {
                     return h('div', params.row.blackList.map(item => h('div', [`${item.ip}:${item.access}`])))
                 }
             }, {
-                title: 'IP白名单',
+                title: this.$t('SETTINGS.IP_WHITE_LIST'),
                 render: (h, params) => {
                     return h('div', params.row.whiteList.map(item => h('div', [`${item.ip}:${item.access}`])))
                 }
