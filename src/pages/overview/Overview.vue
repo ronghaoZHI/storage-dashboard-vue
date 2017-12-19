@@ -21,7 +21,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="charts"></div>
+                        <div class="charts">
+                            <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
+                        </div>
                     </div>
                     <div class="storage-card">
                         <div class="title">
@@ -35,7 +37,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="charts"></div>
+                        <div class="charts">
+                            <chart :options="trafficOptions" auto-resize ref="trafficLine"></chart>
+                        </div>
                     </div>
                     <div class="storage-card">
                         <div class="title">
@@ -49,7 +53,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="charts"></div>
+                        <div class="charts">
+                            <chart :options="requestOptions" auto-resize ref="requestLine"></chart>
+                        </div>
                     </div>
                 </div>
                 <div class="file-ruler">
@@ -218,19 +224,22 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { getBucketList } from '@/service/Data'
-import { getAnalysisUrl, FETCH_404, ACCESS_LIST } from '@/service/API'
+import { getBillUrl, FETCH_404, ACCESS_LIST } from '@/service/API'
 import { handler } from '@/service/Aws'
 import user from '@/store/modules/user'
-import { bytes, times, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
+import { bytes, times, timesK, date, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 export default {
     data () {
         return {
-            thisMonth: [new Date(new Date().setDate(1)), lastNDays(1)],
+            thisMonth: [new Date(new Date().setDate(1)), lastNDays(0)],
             originOverview: {
                 capacity: [],
                 traffic: [],
                 request: []
             },
+            capacityOptions: lineOptions,
+            trafficOptions: lineOptions,
+            requestOptions: lineOptions,
             permissionsList: [],
             bucketList: [],
             sourceList: [],
@@ -389,11 +398,19 @@ export default {
         },
         bucketNum () {
             return this.bucketList.length
+        },
+        theme () {
+            return this.$store.state.theme
+        }
+    },
+    watch: {
+        'theme' (to, from) {
+            this.setOptions()
         }
     },
     created () {
         this.convertBucketList()
-        // this.getOverviewsData()
+        this.getOverviewsData()
     },
     methods: {
         async convertBucketList () {
@@ -425,25 +442,75 @@ export default {
                 this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
             }
         },
-        getOverviewsData () {
+        async getOverviewsData () {
             try {
-                this.$http.get(this.getApiURL('overview')).then(res => {
-                    let data = res.data
+                await this.$http.get(this.getApiURL()).then(res => {
                     this.originOverview = {
-                        capacity: this.convertData(data.capacity, true),
+                        capacity: this.convertData({
+                            value: res.total.space_used,
+                            unit: 'byte'
+                        }, true),
                         traffic: this.convertData({
-                            value: data.upload_space.value + data.download_space.value,
-                            unit: data.upload_space.unit
+                            value: res.sum.flow_up_cdn + res.sum.flow_up_pub + res.sum.flow_down_cdn + res.sum.flow_down_pub,
+                            unit: 'byte'
                         }, true),
                         request: this.convertData({
-                            value: data.download_count.value + data.delete_count.value + data.upload_count.value,
-                            unit: data.download_count.unit
+                            value: res.sum.get_count + res.sum.head_count + res.sum.post_count + res.sum.put_count + res.sum.delete_count + res.sum.list_count,
+                            unit: 'times'
                         }, true)
                     }
+                    _.extend(this, res)
+                    this.setOptions()
                 })
             } catch (error) {
                 console.log(error)
             }
+        },
+        setOptions () {
+            let oneDayFlag = formatDate(this.thisMonth[0]) === formatDate(this.thisMonth[1])
+            this.capacityOptions = initOptions({
+                dataPart1: this.combineTimeDataUnitLabel(this.distributed.space_used, '容量'),
+                theme: this.theme,
+                oneDayFlag: oneDayFlag
+            })
+            this.trafficOptions = initOptions({
+                dataPart1: this.combineTimeDataUnitLabel(this.combineTwoArray(this.distributed.flow_up_cdn, this.distributed.flow_up_pub), '流入'),
+                dataPart2: this.combineTimeDataUnitLabel(this.combineTwoArray(this.distributed.flow_down_cdn, this.distributed.flow_down_pub), '流出'),
+                theme: this.theme,
+                oneDayFlag: oneDayFlag
+            })
+            this.requestOptions = initOptions({
+                dataPart1: this.combineTimeDataUnitLabel(this.combineTwoArray(this.distributed.post_count, this.distributed.put_count), '写', 'times'),
+                dataPart2: this.combineTimeDataUnitLabel(this.combineFourArray(this.distributed.get_count, this.distributed.head_count, this.distributed.delete_count, this.distributed.list_count), '读', 'times'),
+                theme: this.theme,
+                oneDayFlag: oneDayFlag
+            })
+        },
+        combineTwoArray (array1, array2) {
+            let combinedData = []
+            _.forEach(array1, (value, key) => {
+                combinedData.push(value + array2[key])
+            })
+            return combinedData
+        },
+        combineFourArray (array1, array2, array3, array4) {
+            let combinedData = []
+            _.forEach(array1, (value, key) => {
+                combinedData.push(value + array2[key] + array3[key] + array4[key])
+            })
+            return combinedData
+        },
+        combineTimeDataUnitLabel (data, label, unit = 'byte', time = this.time_nodes) {
+            let combinedData = []
+            _.forEach(time, (value, key) => {
+                combinedData.push([value * 1000, data[key]])
+            })
+            let object = {
+                label: label,
+                unit: unit,
+                data: combinedData
+            }
+            return object
         },
         gotoBucketPermissionsSetting (data) {
             this.$router.push({ name: 'bucketSettings', params: { bucket: data.name, tabName: 'permission' } })
@@ -493,15 +560,15 @@ export default {
             return permissions
         },
         convertData (item, splite = false) {
-            if (!item) return '000'
-            return splite ? item.unit === 'byte' ? bytesSpliteUnits(item.value) : timesSpliteUnits(item.value) : item.unit === 'byte' ? bytes(item.value) : times(item.value)
+            if (!item) return [0]
+            return splite ? item.unit === 'byte' ? bytesSpliteUnits(item.value, 3) : timesSpliteUnits(item.value, 3) : item.unit === 'byte' ? bytes(item.value) : times(item.value)
         },
-        getApiURL (operation) {
-            let path = operation += '?custom_range=' + this.dateRange
+        getApiURL () {
+            let path = '?custom_range=' + this.dateRange
             if (user.state.type === 'admin') {
                 path += '&customer=' + user.state.subUser.username
             }
-            return getAnalysisUrl(path)
+            return getBillUrl(path)
         },
         async getBucketAcl (name) {
             try {
@@ -578,6 +645,158 @@ export default {
 const fixDate = n => n < 10 ? '0' + n : '' + n
 const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
 const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
+const lineOptions = {
+    tooltip: {
+        trigger: 'axis',
+        textStyle: {
+            color: '#fff',
+            fontSize: 12
+        },
+        axisPointer: {
+            lineStyle: {
+                color: '#1e9fff'
+            },
+            z: 0
+        },
+        backgroundColor: 'rgba(71, 86, 105, 0.8)',
+        padding: 10
+    },
+    grid: {
+        top: '42',
+        left: '15',
+        right: '40',
+        bottom: '15',
+        containLabel: true,
+        show: true,
+        backgroundColor: '#f9fafc',
+        borderColor: 'rgba(0, 0, 0, 0.06)'
+    },
+    color: ['#62b1fc', '#bce0fc'],
+    legend: {
+        textStyle: {
+            color: '#475669'
+        },
+        icon: 'reac',
+        top: 10,
+        right: 34
+    },
+    xAxis: {
+        type: 'time',
+        offset: 5,
+        splitNumber: 1,
+        axisLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#475669',
+                fontSize: 12
+            },
+            formatter: function (value) {
+                return date(value)
+            }
+        },
+        splitLine: {
+            lineStyle: {
+                color: 'rgba(0, 0, 0, 0.06)'
+            }
+        }
+    },
+    yAxis: {
+        type: 'value',
+        min: 0,
+        minInterval: 1,
+        offset: 5,
+        axisLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#475669',
+                fontSize: 12
+            }
+        },
+        splitLine: {
+            lineStyle: {
+                color: 'rgba(0, 0, 0, 0.06)'
+            }
+        }
+    }
+}
+const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
+    let themeLineOptions = _.defaultsDeep({}, lineOptions)
+    if (theme === 'dark') {
+        themeLineOptions.color = ['#20a0ff', '#7bc7ff']
+        themeLineOptions.legend.textStyle.color = '#8492a6'
+        themeLineOptions.grid.backgroundColor = '#293137'
+        themeLineOptions.grid.borderColor = '#52626d'
+        themeLineOptions.xAxis.splitLine.lineStyle.color = '#52626d'
+        themeLineOptions.yAxis.splitLine.lineStyle.color = '#52626d'
+        themeLineOptions.xAxis.axisLabel.textStyle.color = '#8492a6'
+        themeLineOptions.yAxis.axisLabel.textStyle.color = '#8492a6'
+    }
+    let legendData = []
+    let seriesArray = [{
+        type: 'line',
+        data: dataPart1.data,
+        name: dataPart1.label,
+        smooth: true,
+        sampling: 'average',
+        areaStyle: {
+            normal: {
+                color: theme === 'dark' ? '#20a0ff' : '#62b1fc',
+                opacity: 0.5
+            }
+        }
+    }]
+    if (dataPart2) {
+        legendData = [dataPart1.label, dataPart2.label]
+        let seriesItem = {
+            type: 'line',
+            data: dataPart2.data,
+            name: dataPart2.label,
+            smooth: true,
+            sampling: 'average',
+            areaStyle: {
+                normal: {
+                    color: theme === 'dark' ? '#7bc7ff' : '#bce0fc',
+                    opacity: 0.5
+                }
+            }
+        }
+        seriesArray.push(seriesItem)
+    }
+    let newOptions = _.defaultsDeep({}, themeLineOptions, {
+        legend: {
+            data: legendData
+        },
+        series: seriesArray,
+        tooltip: {
+            formatter: function (params, ticket, callback) {
+                let res = 'Date : ' + date(params[0].value[0])
+                _.each(params, function (item) {
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
+                    res += dataPart1.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
+                })
+                return res
+            }
+        },
+        yAxis: {
+            axisLabel: {
+                formatter: function (value) {
+                    return dataPart1.unit === 'byte' ? bytes(value) : timesK(value)
+                }
+            }
+        }
+    })
+    return newOptions
+}
 </script>
 <style scoped lang="less">
 .@{css-prefix}overview {
@@ -635,6 +854,12 @@ const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() 
                             }
                         }
                     }
+                }
+
+                .echarts {
+                    display: inline-block;
+                    width: 100%;
+                    height: 200px;
                 }
             }
 
