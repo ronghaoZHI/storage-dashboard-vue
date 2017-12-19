@@ -99,7 +99,7 @@ export default {
                 // save user email
                 this.keepEmail ? localStorage.setItem('loginEmail', this.loginForm.email) : localStorage.setItem('loginEmail', '')
                 this.$http.post(LOGIN, {...this.loginForm}).then(res => {
-                    res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
+                    res.type === 'admin' ? this.adminMode(res) : res.type === 'superadmin' ? this.toIndex(res, '/system/group') : this.toIndex(res)
                     this.$Loading.finish()
                 }, error => {
                     this.$Loading.error()

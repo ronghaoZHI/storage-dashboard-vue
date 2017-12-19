@@ -58,7 +58,7 @@ export default {
         async getUserInfo () {
             this.$Loading.start()
             this.$http.get(USERINFO).then(res => {
-                res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
+                res.type === 'admin' ? this.adminMode(res) : res.type === 'superadmin' ? this.toIndex(res, '/system/group') : this.toIndex(res)
                 this.$Loading.finish()
             }, error => {
                 this.$Loading.error()

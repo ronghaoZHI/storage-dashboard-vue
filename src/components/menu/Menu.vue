@@ -22,7 +22,6 @@
 </template>
 <script>
 import menuState from '@/store/modules/menu'
-import user from '@/store/modules/user'
 export default {
     data () {
         return {
@@ -49,12 +48,6 @@ export default {
             this.activeName = to.meta.ali
             this.openName = to.meta.parent ? [to.meta.parent] : []
         }
-    },
-    created () {
-        user.state.type === 'superadmin' ? this.$router.push({ name: 'group' }) : ''
-        this.$nextTick(() => {
-            this.activeName = 'group'
-        })
     }
 }
 
