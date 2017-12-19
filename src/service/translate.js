@@ -673,13 +673,15 @@ export const messages = {
             IP_INVALID: 'IP invalid',
             SAVED: 'Saved!',
             SECURITY_CHAIN: 'Hotlink Protection',
+            WHITE_LIST_INFO: 'The IP in the white list can perform the corresponding hook options (uploading, downloading, deleting) operations',
+            BLACK_LIST_INFO: 'The IP in the blacklist cannot perform the corresponding hook options (uploading, downloading, deleting) operations',
             BACK_SOURCE_INFO: 'Only one of the back source rules takes effect and is set by switching the rule status "open / close".',
             FETCH_200_INFO: "When a user accesses, BaishanCloud's offline launches an offline task, downloads the data to BaishanCloud Storage, and returns a 200 and source file to the client.",
             FETCH_302_INFO: "When a user accesses, BaishanCloud's offline launches an offline task, downloads the data to BaishanCloud Storage, and returns a 302 to the client; the client reads the data from your data source according to the Location in 302.",
             FETCH_404_INFO: "When a user accesses, BaishanCloud's offline launches an offline task, downloads the data to BaishanCloud Storage, and returns a 404 to the user.",
             URI_PATTERN_INFO: 'For example, the uri matching rule is /(a-z)+ and the uri is /key1234, then the matched is /key. The default matching rule is /(.*), which does not change the uri rule.',
             COMFIRM_DELETE_HOTLINK: 'Are you sure you want to delete this ip([{ip}])?',
-            WHITE_LIST_INFO: '支持 * 通配符，且只支持一个*，如 10.11.12.* 将禁止或只允许 10.11.12.0～10.11.12.255 的 IP 访问。',
+            WHITE_BLACK_LIST_INFO: 'upport * but only one, such as 10.11.12.* will prohibit or only allow access to IP from 10.11.12.0 to 10.11.12.255.',
             WHITE_BLACK: 'IP black-and-white list'
         },
         i: {
@@ -1453,12 +1455,14 @@ export const messages = {
             SAVED: '保存成功',
             SECURITY_CHAIN: '防盗链',
             COMFIRM_DELETE_HOTLINK: '确定删除这个ip([{ip}])么?',
+            WHITE_LIST_INFO: '白名单中的IP可以进行对应勾选项(上传、下载、删除)操作',
+            BLACK_LIST_INFO: '黑名单中的IP不能进行对应勾选项(上传、下载、删除)操作',
             BACK_SOURCE_INFO: '只有一条回源规则生效，通过切换规则状态“开启/关闭”来设置。',
             FETCH_200_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个200和源文件。',
             FETCH_302_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个302；客户端根据302中的Location从您的数据源读取数据。',
             FETCH_404_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给用户一个404。',
             URI_PATTERN_INFO: '例如：uri匹配规则为 /(a-z)+, uri为 /key1234 ，则匹配为 /key。默认的uri匹配规则为 /(.*)，其不改变uri规则。',
-            WHITE_LIST_INFO: '支持 * 通配符，且只支持一个*，如 10.11.12.* 将禁止或只允许 10.11.12.0～10.11.12.255 的 IP 访问。',
+            WHITE_BLACK_LIST_INFO: '支持 * 通配符，且只支持一个*，如 10.11.12.* 将禁止或只允许 10.11.12.0～10.11.12.255 的 IP 访问。',
             WHITE_BLACK: 'IP黑白名单'
         },
         i: {

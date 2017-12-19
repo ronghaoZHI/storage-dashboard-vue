@@ -20,14 +20,14 @@
                 <span class="separator-info">{{$t('SETTINGS.IP_WHITE_LIST')}}</span>
             </div>
         </div>
-        <link-table :listData="whiteList" formName="whiteForm"></link-table>
+        <link-table :listData="whiteList" formName="whiteForm" :info="$t('SETTINGS.WHITE_LIST_INFO')"></link-table>
         <div class="section-separator mar-t-35">
             <div class="separator-body">
                 <span class="separator-icon"></span>
                 <span class="separator-info">{{$t('SETTINGS.IP_BLACK_LIST')}}</span>
             </div>
         </div>
-        <link-table :listData="blackList" formName="blackForm"></link-table>
+        <link-table :listData="blackList" formName="blackForm" :info="$t('SETTINGS.BLACK_LIST_INFO')"></link-table>
     </div>
 </template>
 <script>

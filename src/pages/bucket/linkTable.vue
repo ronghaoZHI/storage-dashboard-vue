@@ -11,13 +11,14 @@
             <Checkbox v-model="newItem.delete">{{$t('SETTINGS.DELETE')}}</Checkbox>
             <Button size="small" type="primary" @click="addIPVertify">{{$t('PUBLIC.ADD')}}</Button>
         </div>
-        <p class="page-info">{{$t('SETTINGS.WHITE_LIST_INFO')}}</p>
+        <p class="page-info">{{$t('SETTINGS.WHITE_BLACK_LIST_INFO')}}</p>
+        <p class="page-info">{{info}}</p>
         <Table border :stripe="true" :columns="listHeader" :data="listData" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
     </div>
 </template>
 <script>
 export default {
-    props: ['listData', 'formName'],
+    props: ['listData', 'formName', 'info'],
     data () {
         return {
             iconSize: 18,
