@@ -92,32 +92,26 @@ const timesSpliteUnits = (times, digit = 1) => {
 }
 const date = (value) => {
     let date = new Date(value)
-    let month = date.getMonth() >= 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
-    let day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
-    let texts = [date.getFullYear(), month, day]
+    let texts = [date.getFullYear(), checkTime(date.getMonth() + 1), checkTime(date.getDate())]
     return texts.join('-')
 }
 
 const dateTime = (value) => {
     let date = new Date(value)
-    let month = date.getMonth() >= 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
-    let day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
-    let dateTexts = [month, day]
-    let hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
-    let minute = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
-    let timeTexts = [hour, minute]
+    let dateTexts = [checkTime(date.getMonth() + 1), checkTime(date.getDate())]
+    let timeTexts = [checkTime(date.getHours()), checkTime(date.getMinutes())]
     return dateTexts.join('-') + ' ' + timeTexts.join(':')
 }
 
 const dateTimeYear = (value) => {
     let date = new Date(value)
-    let month = date.getMonth() >= 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
-    let day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
-    let dateTexts = [date.getFullYear(), month, day]
-    let hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
-    let minute = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
-    let timeTexts = [hour, minute]
+    let dateTexts = [date.getFullYear(), checkTime(date.getMonth() + 1), checkTime(date.getDate())]
+    let timeTexts = [checkTime(date.getHours()), checkTime(date.getMinutes())]
     return dateTexts.join('-') + ' ' + timeTexts.join(':')
+}
+
+const checkTime = (value) => {
+    return value > 9 ? value : '0' + value
 }
 
 const removeItemFromArray = (array, item) => array.splice(array.indexOf(item), 1)
