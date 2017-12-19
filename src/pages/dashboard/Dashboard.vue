@@ -269,7 +269,7 @@ export default {
                     this.exportData = []
                     _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
                         let exportData = {
-                            time: formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided ? dateTimeYear(time) : date(time)
+                            time: formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided ? dateTimeYear(time + 3600000) : date(time)
                         }
                         exportData[exportDic.capacity] = echartData.space_used[index]
                         exportData[exportDic.inflows] = echartData.flow_up[index]
@@ -635,7 +635,7 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
         series: seriesArray,
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = '时间：' + (newOneDayFlag ? dateTimeYear(params[0].value[0]) : date(params[0].value[0]))
+                let res = '时间：' + (newOneDayFlag ? dateTimeYear(params[0].value[0] + 3600000) : date(params[0].value[0]))
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
                     res += dataPart.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
@@ -646,7 +646,7 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
         xAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return newOneDayFlag ? dateTime(value) : date(value)
+                    return newOneDayFlag ? dateTime(value + 3600000) : date(value)
                 }
             }
         },
