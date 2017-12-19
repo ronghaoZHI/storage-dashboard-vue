@@ -18,14 +18,13 @@ axios.interceptors.request.use(config => {
     return requestConf(config)
 }, error => Promise.reject(error))
 axios.interceptors.response.use(response => errorHandle(response.data), error => {
-    if ((error.response && error.response.status === 401) || error.message === 'Network Error') {
-        logout('The network may be broken')
+    if ((error.response && error.response.status)) {
+        STATUS_CODE(error.response.status) ? iView.Message.warning(STATUS_CODE(error.response.status)) : iView.Message.warning('Error, please try again')
     } else if (error.request) {
         iView.Message.warning('The network may be broken, please try again')
     } else {
         iView.Message.error(error.response.data.error)
     }
-    console.log('response', error)
     return Promise.reject(error.response.data.error)
 })
 
@@ -65,11 +64,8 @@ async function getS3ByHttpHeaders (config) {
 
 // storage-api convert error to success
 function errorHandle (data) {
-    if (data.error && data.error.status_code >= 500) {
-        !data.error.retryable ? logout(STATUS_CODE[`${data.error.status_code}`] + ',' + data.error.show_msg) : iView.Message.error(data.error.show_msg)
-        return Promise.reject(data.error)
-    } else if (data.error && data.error.status_code >= 400) {
-        iView.Message.error(data.error.show_msg || data.error.msg, 1000)
+    if (data.error && data.error.status_code >= 400) {
+        iView.Message.error(`${STATUS_CODE(data.error.status_code) || ''}${data.error.show_msg || data.error.msg}`, 1000)
         return Promise.reject(data.error)
     } else {
         return data.data || data
