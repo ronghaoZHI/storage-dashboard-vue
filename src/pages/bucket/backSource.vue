@@ -34,16 +34,15 @@
                         </Radio>
                     </RadioGroup>
                 </FormItem>
-                <div class="form-item" v-show="formValidate404.fetch_mode !== 'fetch_302'">
-                    <span class="form-label">{{$t("STORAGE.SOURCE_HEADER")}}</span>
-                    <Input v-model="requestHeader" class="line-width" style="width:400px" placeholder="Host:www.example.com" @on-enter="addHeaderTag()"></Input>
+                <FormItem  v-show="formValidate404.fetch_mode !== 'fetch_302'" :label='$t("STORAGE.SOURCE_HEADER")' prop="source_header">
+                    <Input v-model="requestHeader" style="width:400px" placeholder="Host:www.example.com" @on-enter="addHeaderTag()"></Input>
                     <p class="style-error-info redFont" v-if="requestHeader && requestHeaderFormatError">{{$t('STORAGE.CORRECT_FORMAT_HEADER')}}</p>
                     <p class="style-error-info redFont" v-if="requestHeader && !requestHeaderFormatError">{{$t('STORAGE.PRESS_ENTER_KEY')}}</p>
                     <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
                     <div class="tag-margin-left">
                         <Tag type="border" color="blue" v-for="item in formValidate404.request_headers" :key="item" :name="item" closable @on-close="deleteHeaderTag(item)">{{item}}</Tag>
                     </div>
-                </div>
+                </FormItem>
                 <FormItem :label='$t("STORAGE.SOURCE_DOMAIN")' prop="domain">
                     <Input v-model="formValidate404.domain" style="width:400px">
                         <Select v-model="domainPrepend" slot="prepend" style="width: 80px">
@@ -404,21 +403,5 @@ export default {
 }
 .bsc-checkbox-wrapper {
     margin-right: 30px;
-}
-.edit-modal {
-    .form-item {
-        .form-label {
-            width: 145px
-        }
-        .style-error-info {
-            margin: 5px 0 5px 148px
-        }
-        .info {
-            margin: 5px 0 5px 148px
-        }
-        .tag-margin-left {
-            margin-left: 148px
-        }
-    }
 }
 </style>
