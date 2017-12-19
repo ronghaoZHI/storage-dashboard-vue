@@ -633,7 +633,7 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             formatter: function (params, ticket, callback) {
                 let res = '时间：' + dateTimeYear(params[0].value[0])
                 _.each(params, function (item) {
-                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '： '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
                     res += dataPart.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
                 })
                 return res

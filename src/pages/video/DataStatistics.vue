@@ -98,7 +98,7 @@ export default {
                     this.data = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
                         this.data.push({
-                            date: date(time),
+                            time: date(time),
                             '视频转码任务数(个)': this.overviewData.video_transcoding[index][1],
                             '音频转码任务数(个)': this.overviewData.audio_transcoding[index][1],
                             '视频截图张数(个)': this.overviewData.snapshot[index][1],
@@ -110,7 +110,8 @@ export default {
                             'HD(s)': this.distributionData.HD[index][1],
                             '2K(s)': this.distributionData['2K'][index][1],
                             '4K(s)': this.distributionData['4K'][index][1],
-                            'audio(s)': this.distributionData.audio[index][1]
+                            '音频转码(s)': this.distributionData.audio_transcoding[index][1],
+                            '转封装(s)': this.distributionData.container_only[index][1]
                         })
                     })
                     this.spinShow = false
@@ -262,9 +263,9 @@ const initOverviewOptions = (data, theme) => {
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = 'Date : ' + date(params[0].value[0])
+                let res = '时间：' + date(params[0].value[0])
                 _.each(params, function (item) {
-                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
                     res += item.value[1]
                 })
                 return res
@@ -360,9 +361,9 @@ const initDistributionOptions = (data, theme) => {
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = 'Date : ' + date(params[0].value[0])
+                let res = '时间：' + date(params[0].value[0])
                 _.each(params, function (item) {
-                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
                     res += time(item.value[1], 2)
                 })
                 return res
@@ -375,9 +376,9 @@ const initDistributionOptions = (data, theme) => {
                 }
             }
         },
-        color: ['#9f61fc', '#1e9fff', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
+        color: ['#9f61fc', '#1e9fff', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#aacc11', '#c4cfdf'],
         legend: {
-            data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', 'audio'],
+            data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', '音频转码', '转封装'],
             top: '20px',
             textStyle: {
                 color: '#1E9FFF',
@@ -459,7 +460,7 @@ const initDistributionOptions = (data, theme) => {
             },
             data: data['4K']
         }, {
-            name: 'audio',
+            name: '音频转码',
             type: 'line',
             smooth: true,
             sampling: 'average',
@@ -469,7 +470,19 @@ const initDistributionOptions = (data, theme) => {
                     opacity: 0.5
                 }
             },
-            data: data.audio
+            data: data.audio_transcoding
+        }, {
+            name: '转封装',
+            type: 'line',
+            smooth: true,
+            sampling: 'average',
+            areaStyle: {
+                normal: {
+                    color: '#20a0ff',
+                    opacity: 0.5
+                }
+            },
+            data: data.container_only
         }]
     })
     return newOptions
