@@ -92,25 +92,25 @@ const timesSpliteUnits = (times, digit = 1) => {
 }
 const date = (value) => {
     let date = new Date(value)
-    let texts = [date.getFullYear(), checkTime(date.getMonth() + 1), checkTime(date.getDate())]
+    let texts = [date.getFullYear(), checkDate(date.getMonth() + 1), checkDate(date.getDate())]
     return texts.join('-')
 }
 
 const dateTime = (value) => {
     let date = new Date(value)
-    let dateTexts = [checkTime(date.getMonth() + 1), checkTime(date.getDate())]
-    let timeTexts = [checkTime(date.getHours()), checkTime(date.getMinutes())]
+    let dateTexts = [checkDate(date.getMonth() + 1), checkDate(date.getDate())]
+    let timeTexts = [checkDate(date.getHours()), checkDate(date.getMinutes())]
     return dateTexts.join('-') + ' ' + timeTexts.join(':')
 }
 
 const dateTimeYear = (value) => {
     let date = new Date(value)
-    let dateTexts = [date.getFullYear(), checkTime(date.getMonth() + 1), checkTime(date.getDate())]
-    let timeTexts = [checkTime(date.getHours()), checkTime(date.getMinutes())]
+    let dateTexts = [date.getFullYear(), checkDate(date.getMonth() + 1), checkDate(date.getDate())]
+    let timeTexts = [checkDate(date.getHours()), checkDate(date.getMinutes())]
     return dateTexts.join('-') + ' ' + timeTexts.join(':')
 }
 
-const checkTime = (value) => {
+const checkDate = (value) => {
     return value > 9 ? value : '0' + value
 }
 
