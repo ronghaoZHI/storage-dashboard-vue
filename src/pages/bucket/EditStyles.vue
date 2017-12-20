@@ -1,11 +1,12 @@
 <template>
     <div class="bsc-edit-styles">
         <div class="layout-bsc-toolbar">
-            <Breadcrumb>
-                <Breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
-                <Breadcrumb-item :href="styleListHref">{{$t("STORAGE.PIC_STYLE")}}</Breadcrumb-item>
-                <Breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</Breadcrumb-item>
-            </Breadcrumb>
+            <a class="btn-back" @click="back()"><Icon type="chevron-left"></Icon></a>
+            <bsc-breadcrumb>
+                <bsc-breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
+                <bsc-breadcrumb-item :href="styleListHref">{{$t("STORAGE.PIC_STYLE")}}</bsc-breadcrumb-item>
+                <bsc-breadcrumb-item>{{$t("STORAGE.CREATE_STYLE")}} ({{bucket}})</bsc-breadcrumb-item>
+            </bsc-breadcrumb>
         </div>
         <Tabs size="small" v-model='tabValue' :animated="false">
             <Tab-pane :label='$t("STORAGE.BASIC_EDIT")' name='primary' :disabled='primaryDisable' class="clearfix">
@@ -346,6 +347,7 @@ import styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview-bsc'
 import encoding from 'text-encoding'
 import { IMGX_PREVIEW } from '@/service/API'
+import bscBreadcrumb from '@/components/breadcrumb'
 import {allFontList, previewAccessKey, previewSecretKey, I2J, generalDefult, markerDefult, defaultFontStyle} from './Consts'
 export default {
     data () {
@@ -391,7 +393,7 @@ export default {
             }
         }
     },
-    components: {upload},
+    components: {upload, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item},
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -713,6 +715,9 @@ export default {
             } else {
                 callback(new Error(this.$t('STORAGE.INS_REQUIRED')))
             }
+        },
+        back () {
+            this.$router.back()
         }
     },
     watch: {

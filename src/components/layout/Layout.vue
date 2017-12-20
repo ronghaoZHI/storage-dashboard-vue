@@ -201,5 +201,8 @@ export default {
     overflow: auto;
     zoom: 1;
 }
-
+.btn-back {
+    font-size: 14px;
+    margin-right: 10px;
+}
 </style>

@@ -1,10 +1,11 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar">
-            <Breadcrumb>
-                <Breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
-                <Breadcrumb-item>{{$t("STORAGE.PIC_STYLE")}} ({{bucket}})</Breadcrumb-item>
-            </Breadcrumb>
+            <a class="btn-back" @click="back()"><Icon type="chevron-left"></Icon></a>
+            <bsc-breadcrumb>
+                <bsc-breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
+                <bsc-breadcrumb-item>{{$t("STORAGE.PIC_STYLE")}} ({{bucket}})</bsc-breadcrumb-item>
+            </bsc-breadcrumb>
         </div>
         <div class="toolbar-nav">
             <Button type="primary" @click="goCreateStyle">{{$t("STORAGE.CREATE_STYLE")}}</Button>
@@ -34,6 +35,7 @@ import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
 import iView from 'iview-bsc'
 import { IMGX_PREVIEW } from '@/service/API'
+import bscBreadcrumb from '@/components/breadcrumb'
 export default {
     data () {
         return {
@@ -183,7 +185,7 @@ export default {
             return `/bucket/${this.$route.params.bucket}`
         }
     },
-    components: { upload },
+    components: { upload, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item },
     created () {
         this.getList()
     },
@@ -317,6 +319,9 @@ export default {
         },
         uploadModal () {
             this.showUploadModal = true
+        },
+        back () {
+            this.$router.back()
         },
         uploadSuccess (fileName) {
             const file = {Key: this.prefix + fileName}

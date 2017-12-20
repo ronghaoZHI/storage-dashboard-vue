@@ -687,11 +687,6 @@ const getURL = async (bucket, file, prefix) => {
         padding-bottom: 8px;
         border-bottom: @common-border;
 
-        .btn-back {
-            font-size: 14px;
-            margin-right: 10px;
-        }
-
         button {
             margin-right: 1px;
         }

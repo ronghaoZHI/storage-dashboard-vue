@@ -1,11 +1,11 @@
 <template>
     <div class="bsc-settings">
-        <div class="bsc-layout-toolbar">
-            <Breadcrumb>
-                <Breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</Breadcrumb-item>
-                <Breadcrumb-item>{{$t("STORAGE.BUCKET_SETTING")}} ({{bucket}})</Breadcrumb-item>
-            </Breadcrumb>
-            <div></div>
+        <div class="layout-bsc-toolbar">
+            <a class="btn-back" @click="back()"><Icon type="chevron-left"></Icon></a>
+            <bsc-breadcrumb>
+                <bsc-breadcrumb-item :href="bucketPath">{{$t("STORAGE.TITLE")}}</bsc-breadcrumb-item>
+                <bsc-breadcrumb-item>{{$t("STORAGE.BUCKET_SETTING")}} ({{bucket}})</bsc-breadcrumb-item>
+            </bsc-breadcrumb>
         </div>
         <Tabs size="small" v-model="tabName" @on-click="tabChange" :animated="false">
             <Tab-pane :label='$t("PUBLIC.ACL")' name="permission">
@@ -237,6 +237,7 @@ import picDetection from './picDetection'
 import legendList from '@/components/legend/legend'
 import backSource from './backSource'
 import whiteList from './whiteList'
+import bscBreadcrumb from '@/components/breadcrumb'
 export default {
     data () {
         return {
@@ -358,7 +359,7 @@ export default {
             deleteList: []
         }
     },
-    components: {picDetection, legendList, backSource, whiteList},
+    components: {picDetection, legendList, backSource, whiteList, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item},
     computed: {
         bucket () {
             return this.$route.params.bucket
@@ -574,6 +575,9 @@ export default {
                 name: ''
             }
         },
+        back () {
+            this.$router.back()
+        },
         tabChange (name) {
             this.$router.push({ name: 'bucketSettings', params: { bucket: this.bucket, tabName: name } })
         }
@@ -694,7 +698,7 @@ const convertNewUserItem = item => {
             max-width:50px;
         }
         th.percent20 {
-            width:20%;
+            width:200px;
         }
         th.percent30 {
             width:30%;
@@ -739,4 +743,5 @@ const convertNewUserItem = item => {
         color: #8492a6;
     }
 }
+
 </style>
