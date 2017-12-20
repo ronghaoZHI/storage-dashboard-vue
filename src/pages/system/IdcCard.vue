@@ -6,7 +6,7 @@
         <!--SATA & SSD-->
         <div class="content two-type" v-if="type === 'all'">
             <div class="idc-circel idc-content-left">
-                <i-circle :percent="info.SATA.used_rate || 0" :size="80" :stroke-width="9" :trail-width="8">
+                <i-circle :percent="info.SATA.used_rate || 0" :trail-color="trailColor" :size="80" :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SATA</span>
                 </i-circle>
                 <div class="idc-detail">
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="idc-circel idc-content-right">
-                <i-circle :percent="info.SSD.used_rate || 0" :size="80" stroke-color='#FFDE29' :stroke-width="9" :trail-width="8">
+                <i-circle :percent="info.SSD.used_rate || 0" :trail-color="trailColor" :size="80" stroke-color='#FFDE29' :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SSD</span>
                 </i-circle>
                 <div class="idc-detail">
@@ -29,7 +29,7 @@
         <!-- SATA -->
         <div class="content one-type" v-else-if="type === 'SATA'">
             <div class="idc-circel idc-content-left">
-                <i-circle :percent="info.SATA.used_rate || 0" :size="80" :stroke-width="9" :trail-width="8">
+                <i-circle :percent="info.SATA.used_rate || 0" :trail-color="trailColor" :size="80" :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SATA</span>
                 </i-circle>
             </div>
@@ -42,7 +42,7 @@
         <!-- SSD -->
         <div class="content one-type" v-else-if="type === 'SSD'">
             <div class="idc-circel idc-content-left">
-                <i-circle :percent="info.SSD.used_rate || 0" :size="80" stroke-color='#FFDE29'  :stroke-width="9" :trail-width="8">
+                <i-circle :percent="info.SSD.used_rate || 0" :trail-color="trailColor" :size="80" stroke-color='#FFDE29'  :stroke-width="9" :trail-width="8">
                     <span class="circle-inner">SSD</span>
                 </i-circle>
             </div>
@@ -56,9 +56,13 @@
 </template>
 <script>
 import { bytes } from '@/service/bucketService'
+import store from '@/store'
 export default {
     props: ['data'],
     computed: {
+        trailColor () {
+            return store.state.theme === 'white' ? '#EFF2F6' : '#52626d'
+        },
         info () {
             let newData = _.cloneDeep(this.data)
             newData.SSD.used = bytes(this.data.SSD.used)
