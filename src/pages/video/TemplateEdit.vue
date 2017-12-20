@@ -332,6 +332,8 @@ const auxiliaryDefult = {
     resolution: 'auto',
     width: '',
     height: '',
+    only_width: 1,
+    only_height: 1,
     audioBitRate: 'auto',
     audioBitRateValue: 64
 }
