@@ -64,6 +64,10 @@ export const messages = {
             STATISTICS: 'Statistics',
             JOB: 'Job'
         },
+        OVERVIEW: {
+            PROMPT: 'Prompt',
+            PROMPT_CONTENT: "This month's data is not available, and the statistics will be after 2 o'clock today."
+        },
         KEYCHAIN: {
             ADD_KEY: 'Add accesskey',
             COPY_ACCESSKEY: 'Click to copy accesskey',
@@ -853,6 +857,10 @@ export const messages = {
             PIPELINE: '管道管理',
             STATISTICS: '数据统计',
             JOB: '任务管理'
+        },
+        OVERVIEW: {
+            PROMPT: '提示',
+            PROMPT_CONTENT: '本月数据暂时未统计，今日2点后出统计结果。'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',

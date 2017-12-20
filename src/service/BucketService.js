@@ -68,7 +68,7 @@ const timesK = (times, digit = 1) => {
         return '-'
     }
 
-    const units = ['', 'K', 'Million', 'Billion']
+    const units = ['', 'K', 'M', 'BN']
     const exponent = Math.min(Math.floor(Math.log(times) / Math.log(1000)), units.length - 1)
     const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(digit)
 
@@ -84,7 +84,7 @@ const timesSpliteUnits = (times, digit = 1) => {
         return ['-']
     }
 
-    const units = ['', 'K', 'Million', 'Billion']
+    const units = ['', 'K', 'M', 'BN']
     const exponent = Math.min(Math.floor(Math.log(times) / Math.log(1000)), units.length - 1)
     const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(digit)
 

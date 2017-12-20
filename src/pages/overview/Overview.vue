@@ -227,7 +227,7 @@ import { getBucketList } from '@/service/Data'
 import { getBillUrl, FETCH_404, ACCESS_LIST } from '@/service/API'
 import { handler } from '@/service/Aws'
 import user from '@/store/modules/user'
-import { bytes, times, timesK, date, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
+import { bytes, times, timesK, date, dateTime, dateTimeYear, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 export default {
     data () {
         return {
@@ -464,6 +464,13 @@ export default {
                 })
             } catch (error) {
                 console.log(error)
+                if (error.msg && error.msg.message && error.msg.message === 'Not found any data in custom_range') {
+                    this.$Modal.warning({
+                        title: this.$t('OVERVIEW.PROMPT'),
+                        content: this.$t('OVERVIEW.PROMPT_CONTENT')
+                    })
+                    return
+                }
             }
         },
         setOptions () {
@@ -662,31 +669,30 @@ const lineOptions = {
         padding: 10
     },
     grid: {
-        top: '42',
+        top: '25',
         left: '15',
         right: '40',
-        bottom: '15',
+        bottom: '20',
         containLabel: true,
         show: true,
         backgroundColor: '#f9fafc',
-        borderColor: 'rgba(0, 0, 0, 0.06)'
+        borderColor: '#fff'
     },
-    color: ['#62b1fc', '#bce0fc'],
+    color: ['#20a0ff', '#8ecfff'],
     legend: {
         textStyle: {
             color: '#475669'
         },
         icon: 'reac',
-        top: 10,
         right: 34
     },
     xAxis: {
         type: 'time',
         offset: 5,
-        splitNumber: 1,
         axisLine: {
             show: false
         },
+        interval: 30 * 86400000,
         axisTick: {
             show: false
         },
@@ -694,14 +700,11 @@ const lineOptions = {
             textStyle: {
                 color: '#475669',
                 fontSize: 12
-            },
-            formatter: function (value) {
-                return date(value)
             }
         },
         splitLine: {
             lineStyle: {
-                color: 'rgba(0, 0, 0, 0.06)'
+                color: '#fff'
             }
         }
     },
@@ -732,26 +735,26 @@ const lineOptions = {
 const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
     let themeLineOptions = _.defaultsDeep({}, lineOptions)
     if (theme === 'dark') {
-        themeLineOptions.color = ['#20a0ff', '#7bc7ff']
         themeLineOptions.legend.textStyle.color = '#8492a6'
         themeLineOptions.grid.backgroundColor = '#293137'
-        themeLineOptions.grid.borderColor = '#52626d'
-        themeLineOptions.xAxis.splitLine.lineStyle.color = '#52626d'
-        themeLineOptions.yAxis.splitLine.lineStyle.color = '#52626d'
+        themeLineOptions.grid.borderColor = '#313a41'
+        themeLineOptions.xAxis.splitLine.lineStyle.color = '#313a41'
+        themeLineOptions.yAxis.splitLine.lineStyle.color = 'rgba(255, 255, 255, 0.1)'
         themeLineOptions.xAxis.axisLabel.textStyle.color = '#8492a6'
         themeLineOptions.yAxis.axisLabel.textStyle.color = '#8492a6'
     }
     let legendData = []
     let seriesArray = [{
         type: 'line',
+        symbol: 'none',
         data: dataPart1.data,
         name: dataPart1.label,
         smooth: true,
         sampling: 'average',
         areaStyle: {
             normal: {
-                color: theme === 'dark' ? '#20a0ff' : '#62b1fc',
-                opacity: 0.5
+                color: '#20a0ff',
+                opacity: 0.8
             }
         }
     }]
@@ -759,14 +762,15 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
         legendData = [dataPart1.label, dataPart2.label]
         let seriesItem = {
             type: 'line',
+            symbol: 'none',
             data: dataPart2.data,
             name: dataPart2.label,
             smooth: true,
             sampling: 'average',
             areaStyle: {
                 normal: {
-                    color: theme === 'dark' ? '#7bc7ff' : '#bce0fc',
-                    opacity: 0.5
+                    color: '#8ecfff',
+                    opacity: 0.8
                 }
             }
         }
@@ -779,12 +783,19 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
         series: seriesArray,
         tooltip: {
             formatter: function (params, ticket, callback) {
-                let res = 'Date : ' + date(params[0].value[0])
+                let res = '时间：' + (oneDayFlag ? dateTimeYear(params[0].value[0] + 3600000) : date(params[0].value[0]))
                 _.each(params, function (item) {
-                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + ' : '
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
                     res += dataPart1.unit === 'byte' ? bytes(item.value[1], 3) : times(item.value[1])
                 })
                 return res
+            }
+        },
+        xAxis: {
+            axisLabel: {
+                formatter: function (value) {
+                    return oneDayFlag ? dateTime(value + 3600000) : date(value)
+                }
             }
         },
         yAxis: {
@@ -800,6 +811,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
 </script>
 <style scoped lang="less">
 .@{css-prefix}overview {
+    min-width: 1200px;
     .left-section {
         padding-right: 20px;
 
@@ -836,7 +848,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
 
                         .label {
                             position: relative;
-                            left: 20px;
+                            left: 10px;
                             top: 20px;
                             font-size: 14px;
                             color: #475669;
@@ -844,7 +856,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
 
                         .numbers {
                             position: relative;
-                            left: 20px;
+                            left: 10px;
                             top: 20px;
                             font-size: 34px;
                             color: #475669;
