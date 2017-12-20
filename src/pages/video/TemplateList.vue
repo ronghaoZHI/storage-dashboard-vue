@@ -31,11 +31,10 @@ export default {
             audioNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_QUALITY'), SampleRate: this.$t('VIDEO.SAMPLE_RATE'), BitRate: this.$t('VIDEO.BIT_RATE'), Channels: this.$t('VIDEO.CHANNELS')},
             listHeader: [{
                 title: 'ID',
-                width: 100,
                 key: 'id'
             }, {
                 title: this.$t('VIDEO.TEMPLATE_NAME_TABLE'),
-                width: 100,
+                width: '10%',
                 render: (h, params) => {
                     if (!params.row.description) {
                         return params.row.name
@@ -60,11 +59,11 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.CONTAINER'),
-                width: 100,
+                width: '10%',
                 key: 'container'
             }, {
                 title: this.$t('VIDEO.VIDEO'),
-                width: 400,
+                width: '34%',
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
@@ -83,7 +82,7 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.AUDIO'),
-                width: 380,
+                width: '32%',
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
@@ -103,7 +102,7 @@ export default {
             }, {
                 title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
-                width: 80,
+                width: '65px',
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {

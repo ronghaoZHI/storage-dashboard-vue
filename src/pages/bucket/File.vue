@@ -137,13 +137,12 @@ export default {
             spinShow: true,
             fileHeader: [{
                 type: 'selection',
-                width: 40,
+                width: '58px',
                 align: 'center'
             },
             {
                 title: 'Key',
                 key: 'Key',
-                width: 240,
                 ellipsis: true,
                 sortable: true,
                 render: (h, params) => {
@@ -177,19 +176,19 @@ export default {
                 }
             }, {
                 title: 'Size',
-                width: 90,
+                width: '15%',
                 align: 'right',
                 key: 'convertSize'
             }, {
                 title: 'Create time',
                 key: 'LastModified',
                 align: 'right',
-                width: 140,
+                width: '25%',
                 sortable: true
             }, {
                 title: 'Actions',
                 key: 'actions',
-                width: 170,
+                width: '25%',
                 align: 'right',
                 render: (h, params) => {
                     return params.row.Type === 'folder' ? h('Tooltip', {

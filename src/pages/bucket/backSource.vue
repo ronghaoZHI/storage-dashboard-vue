@@ -132,36 +132,35 @@ export default {
             list404Header: [{
                 title: this.$t('STORAGE.SOURCE_MODE'),
                 key: 'fetch_mode',
-                width: 120,
                 render: (h, params) => {
                     return h('div', params.row.fetch_mode === 'fetch_200' ? 200 : params.row.fetch_mode === 'fetch_302' ? 302 : 404)
                 }
             }, {
                 title: this.$t('STORAGE.SOURCE_HEADER'),
                 key: 'request_headers',
-                width: 160,
+                width: '17%',
                 render: (h, params) => {
                     return h('div', {style: {padding: '8px 0'}}, _.map(params.row.request_headers, (value, key) => [h('div', {style: {margin: '2px 0'}}, `${key}:${value}`)]), h('br'))
                 }
             }, {
                 title: this.$t('STORAGE.SOURCE_DOMAIN'),
                 key: 'domain',
-                width: 160,
+                width: '17%',
                 render: (h, params) => {
                     return h('div', {style: {padding: '8px 0'}}, params.row.domain)
                 }
             }, {
                 title: this.$t('STORAGE.URI_PATTERN'),
                 key: 'uri_pattern',
-                width: 160
+                width: '17%'
             }, {
                 title: this.$t('STORAGE.ALLOW_METHOD'),
                 key: 'allow_method',
-                width: 160
+                width: '17%'
             }, {
                 title: this.$t('STORAGE.TABLE_ACTION'),
                 key: 'actions',
-                width: 160,
+                width: '170px',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {

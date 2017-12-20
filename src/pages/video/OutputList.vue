@@ -30,19 +30,18 @@ export default {
             }],
             listHeader: [{
                 title: 'ID',
-                key: 'id',
-                width: 165
+                key: 'id'
             }, {
                 title: this.$t('VIDEO.INPUT_BUCKET'),
-                width: 150,
+                width: '13%',
                 key: 'input_bucket'
             }, {
                 title: this.$t('VIDEO.OUTPUT_BUCKET'),
-                width: 150,
+                width: '13%',
                 key: 'output_bucket'
             }, {
                 title: this.$t('VIDEO.KEYS_REG'),
-                width: 200,
+                width: '17%',
                 render: (h, params) => {
                     if (params.row.allowed_keys_regex.length > 0) {
                         return params.row.allowed_keys_regex.map(regex => h('p', `${regex}`))
@@ -50,13 +49,13 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.OUTPUT_KEY_PREFIX'),
-                width: 150,
+                width: '13%',
                 render: (h, params) => {
                     return h('p', [params.row.output_key_prefix])
                 }
             }, {
                 title: this.$t('VIDEO.OUTPUTS'),
-                width: 170,
+                width: '15%',
                 render: (h, params) => {
                     let outputs = params.row.outputs || []
                     if (outputs.length > 1) {
@@ -86,7 +85,7 @@ export default {
             }, {
                 title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
-                width: 170,
+                width: '170px',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {

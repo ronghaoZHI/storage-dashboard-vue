@@ -41,7 +41,7 @@ export default {
             }],
             listHeader: [{
                 title: this.$t('VIDEO.JOB_ID'),
-                width: 100,
+                width: '8.6%',
                 render: (h, params) => {
                     let idArray = params.row.Id.substr(-7)
                     return h('Poptip', {
@@ -57,7 +57,6 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
-                width: 250,
                 render: (h, params) => {
                     let names = params.row.outputNames
                     if (names && names.length > 0) {
@@ -70,11 +69,11 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.PIPE_ID'),
-                width: 180,
+                width: '17%',
                 key: 'PipelineId'
             }, {
                 title: this.$t('VIDEO.JOB_TEMPLATE'),
-                width: 300,
+                width: '26%',
                 render: (h, params) => {
                     let templates = params.row.templates
                     if (templates && templates.length > 0) {
@@ -87,16 +86,16 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.STATUS'),
-                width: 100,
+                width: '10%',
                 key: 'Status'
             }, {
                 title: this.$t('VIDEO.CREATE_TIME'),
-                width: 150,
+                width: '17%',
                 key: 'cTime'
             }, {
                 title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
-                width: 80,
+                width: '65px',
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {

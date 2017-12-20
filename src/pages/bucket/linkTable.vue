@@ -37,11 +37,10 @@ export default {
             },
             listHeader: [{
                 title: 'IP',
-                width: 150,
+                width: '40%',
                 key: 'ip'
             }, {
                 title: this.$t('SETTINGS.ACCESS'),
-                width: 150,
                 render: (h, params) => {
                     let itemData = this.listData[params.row._index]
                     let buttons = itemData.edit ? h('div', {
@@ -137,7 +136,7 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.OPERATION'),
-                width: 80,
+                width: '65px',
                 align: 'right',
                 render: (h, params) => {
                     return h('Tooltip', {

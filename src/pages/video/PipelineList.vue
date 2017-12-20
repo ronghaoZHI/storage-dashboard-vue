@@ -38,22 +38,21 @@ export default {
             listHeader: [{
                 title: this.$t('VIDEO.PIPELINE_ID'),
                 key: 'id',
-                width: 170
+                width: '18%'
             }, {
                 title: this.$t('VIDEO.PIPELINE_NAME'),
                 key: 'name',
-                width: 120
+                width: '12%'
             }, {
                 title: this.$t('VIDEO.INPUT_BUCKET'),
                 key: 'input_bucket',
-                width: 120
+                width: '12%'
             }, {
                 title: this.$t('VIDEO.OUTPUT_BUCKET'),
                 key: 'output_bucket',
-                width: 120
+                width: '12%'
             }, {
                 title: this.$t('VIDEO.PERMISSION_SETTINGS'),
-                width: 280,
                 render: (h, params) => {
                     return h('Poptip', {
                         style: {
@@ -76,7 +75,7 @@ export default {
             }, {
                 title: this.$t('VIDEO.ACTIONS'),
                 key: 'actions',
-                width: 170,
+                width: '170px',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
