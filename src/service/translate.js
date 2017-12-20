@@ -715,6 +715,7 @@ export const messages = {
             BUCKET_SETED_NUM: ' buckets have been configured',
             CONTACT_BUSINESS: 'Contact business',
             CUSTOM_DOMAIN: 'Custom domain name',
+            GO_SETTING: 'Config',
             COMING_SOON: 'Coming soon'
         },
         i: {
@@ -1531,6 +1532,7 @@ export const messages = {
             BUCKET_SETED_NUM: '个 Bucket 已配置',
             CONTACT_BUSINESS: '联系商务',
             CUSTOM_DOMAIN: '自定义域名',
+            GO_SETTING: '去配置',
             COMING_SOON: '敬请期待'
         },
         i: {

@@ -72,7 +72,8 @@
                                 <p><span>{{permissionsList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="showPermissionModal = true">{{$t('OVERVIEW.MORE')}}</Button>
+                                <Button v-if="permissionsList.length === 0" type="primary" @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
+                                <Button v-else type="primary" @click="showPermissionModal = true">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
@@ -90,7 +91,8 @@
                                 <p><span>{{sourceList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="showSourceModal = true">{{$t('OVERVIEW.MORE')}}</Button>
+                                <Button v-if="sourceList.length === 0" type="primary" @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
+                                <Button v-else type="primary" @click="showSourceModal = true">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                         <div class="file-ruler-card">
@@ -99,7 +101,8 @@
                                 <p><span>{{accessList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
                             </div>
                             <div class="file-ruler-card-hover">
-                                <Button type="primary" @click="showAccessModal = true">{{$t('OVERVIEW.MORE')}}</Button>
+                                <Button v-if="accessList.length === 0" type="primary" @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
+                                <Button v-else type="primary" @click="showAccessModal = true">{{$t('OVERVIEW.MORE')}}</Button>
                             </div>
                         </div>
                     </div>
