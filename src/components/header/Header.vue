@@ -10,7 +10,7 @@
                     </Tooltip>
                 </div>
                 <div class="button-document">
-                    <i-switch :only-text="true" v-model="lang" @on-change="toggleLanguage">
+                    <i-switch v-model="lang" @on-change="toggleLanguage">
                         <span slot="open">中</span>
                         <span slot="close">EN</span>
                     </i-switch>
