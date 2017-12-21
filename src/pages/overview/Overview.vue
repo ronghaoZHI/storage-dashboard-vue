@@ -255,7 +255,7 @@ export default {
             createBucketValue: '',
             permissionHeader: [{
                 title: 'Name',
-                width: 90,
+                width: 120,
                 key: 'name'
             }, {
                 title: 'Grants',
@@ -290,12 +290,18 @@ export default {
             }],
             sourceHeader: [{
                 title: 'Name',
-                width: 90,
+                width: 120,
                 key: 'name'
             }, {
-                title: this.$t('STORAGE.SOURCE_ADDRESS'),
+                title: this.$t('STORAGE.SOURCE_DOMAIN'),
                 render: (h, params) => {
-                    return h('div', [h('div'), [`${this.$t('STORAGE.SOURCE_ADDRESS')}:${params.row.source.domain}`], h('div', [`${this.$t('STORAGE.SOURCE_MODE')}:${params.row.source.fetch_mode.split('_')[1]}`])])
+                    return h('div', [`${params.row.source.domain}`])
+                }
+            }, {
+                title: this.$t('STORAGE.SOURCE_MODE'),
+                width: 200,
+                render: (h, params) => {
+                    return h('div', [`${params.row.source.fetch_mode.split('_')[1]}`])
                 }
             }, {
                 title: 'Actions',
@@ -323,22 +329,23 @@ export default {
             }],
             accessHeader: [{
                 title: 'Name',
-                width: 90,
                 key: 'name'
             }, {
                 title: this.$t('SETTINGS.IP_BLACK_LIST'),
+                width: '33%',
                 render: (h, params) => {
                     return h('div', params.row.blackList.map(item => h('div', [`${item.ip}:${item.access}`])))
                 }
             }, {
                 title: this.$t('SETTINGS.IP_WHITE_LIST'),
+                width: '33%',
                 render: (h, params) => {
                     return h('div', params.row.whiteList.map(item => h('div', [`${item.ip}:${item.access}`])))
                 }
             }, {
                 title: 'Actions',
                 key: 'actions',
-                width: 80,
+                width: '85px',
                 align: 'right',
                 render: (h, params) => {
                     return h('i-button', {
