@@ -2,6 +2,9 @@
     <div class="bsc-header">
         <div class="layout-header">
             <div class="layout-header-left">
+				<Tooltip content="跳转到 CDN Dashboard" placement="bottom" v-show="cdnUrl">
+					<a href="http://portal.baishancloud.com">CDN-X</a>
+				</Tooltip>
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
@@ -10,7 +13,7 @@
                     </Tooltip>
                 </div>
                 <div class="button-document">
-                    <i-switch v-model="lang" @on-change="toggleLanguage">
+                    <i-switch :only-text="true" v-model="lang" @on-change="toggleLanguage">
                         <span slot="open">中</span>
                         <span slot="close">EN</span>
                     </i-switch>
@@ -64,6 +67,7 @@ export default {
             rePasswordModal: false,
             lang: getCookie('uc_lang') !== 'en',
             isAdminMode: user.state.type === 'admin',
+            cdnUrl: getCookie('uc_cdn_auth') === '1',
             rePasswordForm: {
                 password: ''
             },
@@ -144,11 +148,12 @@ export default {
             a {
                 .fb(center,center);
                 .sc(22px,@menu-text-color);
-                font-weight: bolder;
-                .wh(140px,60px);
-            }
-            .active{
-                background-color: #1b8de2;
+                font-weight: 500;
+				.wh(140px,60px);
+
+				&:active {
+					background-color: #1b8de2;
+				}
             }
         }
 
