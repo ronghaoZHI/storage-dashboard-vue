@@ -678,8 +678,7 @@ const lineOptions = {
         bottom: '20',
         containLabel: true,
         show: true,
-        backgroundColor: '#f9fafc',
-        borderColor: '#fff'
+        borderColor: 'none'
     },
     color: ['#20a0ff', '#8ecfff'],
     legend: {
@@ -739,13 +738,13 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
     let themeLineOptions = _.defaultsDeep({}, lineOptions)
     if (theme === 'dark') {
         themeLineOptions.legend.textStyle.color = '#8492a6'
-        themeLineOptions.grid.backgroundColor = '#293137'
-        themeLineOptions.grid.borderColor = '#313a41'
         themeLineOptions.xAxis.splitLine.lineStyle.color = '#313a41'
         themeLineOptions.yAxis.splitLine.lineStyle.color = 'rgba(255, 255, 255, 0.1)'
         themeLineOptions.xAxis.axisLabel.textStyle.color = '#8492a6'
         themeLineOptions.yAxis.axisLabel.textStyle.color = '#8492a6'
     }
+    themeLineOptions.grid.backgroundColor = theme === 'dark' ? '#293137' : '#f9fafc'
+    themeLineOptions.grid.borderColor = theme === 'dark' ? '#313a41' : '#fff'
     let legendData = []
     let seriesArray = [{
         type: 'line',
