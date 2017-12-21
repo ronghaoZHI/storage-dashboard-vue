@@ -64,10 +64,6 @@ export const messages = {
             STATISTICS: 'Statistics',
             JOB: 'Job'
         },
-        OVERVIEW: {
-            PROMPT: 'Prompt',
-            PROMPT_CONTENT: "This month's data is not available, and the statistics will be after 2 o'clock today."
-        },
         KEYCHAIN: {
             ADD_KEY: 'Add accesskey',
             COPY_ACCESSKEY: 'Click to copy accesskey',
@@ -693,6 +689,8 @@ export const messages = {
         },
         OVERVIEW: {
             DASHBOARD_MONTH: 'Store usage statistics in this month',
+            PROMPT: 'Prompt',
+            PROMPT_CONTENT: "This month's data is not available, and the statistics will be after 2 o'clock today.",
             CAPACITY_MONTH: 'Capacity',
             OUTER_NET_MONTH: 'Outer net capacity',
             REQUEST_MONTH: 'Requests',
@@ -884,10 +882,6 @@ export const messages = {
             PIPELINE: '管道管理',
             STATISTICS: '数据统计',
             JOB: '任务管理'
-        },
-        OVERVIEW: {
-            PROMPT: '提示',
-            PROMPT_CONTENT: '本月数据暂时未统计，今日2点后出统计结果。'
         },
         STORAGE: {
             TABLE_BUCKET_NAME: '空间名',
@@ -1508,6 +1502,8 @@ export const messages = {
         },
         OVERVIEW: {
             DASHBOARD_MONTH: '本月存储使用统计',
+            PROMPT: '提示',
+            PROMPT_CONTENT: '本月数据暂时未统计，今日2点后出统计结果。',
             CAPACITY_MONTH: '本月存储容量',
             OUTER_NET_MONTH: '本月外网容量',
             REQUEST_MONTH: '本月请求数',
