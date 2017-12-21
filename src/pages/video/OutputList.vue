@@ -85,6 +85,7 @@ export default {
             }, {
                 title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
+                align: 'right',
                 width: '170px',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {

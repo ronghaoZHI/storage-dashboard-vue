@@ -63,7 +63,7 @@ export default {
                 key: 'container'
             }, {
                 title: this.$t('VIDEO.VIDEO'),
-                width: '34%',
+                width: '32%',
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
@@ -102,7 +102,8 @@ export default {
             }, {
                 title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
-                width: '65px',
+                width: '82px',
+                align: 'right',
                 render: (h, params) => {
                     return h('Tooltip', {
                         props: {

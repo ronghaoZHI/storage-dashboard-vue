@@ -76,6 +76,7 @@ export default {
                 title: this.$t('VIDEO.ACTIONS'),
                 key: 'actions',
                 width: '170px',
+                align: 'right',
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {

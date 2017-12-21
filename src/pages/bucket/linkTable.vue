@@ -136,7 +136,7 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.OPERATION'),
-                width: '65px',
+                width: '82px',
                 align: 'right',
                 render: (h, params) => {
                     return h('Tooltip', {
