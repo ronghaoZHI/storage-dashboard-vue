@@ -611,7 +611,7 @@ export default {
             const params = {
                 action: 'get',
                 bucket: name,
-                user: user.state.username
+                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
             }
             try {
                 return await this.$http.post(ACCESS_LIST, params)

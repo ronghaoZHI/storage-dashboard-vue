@@ -60,7 +60,7 @@ export default {
             const params = {
                 action: 'get',
                 bucket: this.bucket,
-                user: user.state.username
+                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
             }
             try {
                 let listData = await this.$http.post(ACCESS_LIST, params)
@@ -86,7 +86,7 @@ export default {
             const params = {
                 action: this.enabled ? 'enable' : 'disable',
                 bucket: this.bucket,
-                user: user.state.username
+                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
             }
             await this.$http.post(ACCESS_LIST, params)
         },
@@ -99,7 +99,7 @@ export default {
                 action: 'set',
                 ips: saved,
                 bucket: this.bucket,
-                user: user.state.username
+                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
             }
             try {
                 await this.$http.post(ACCESS_LIST, params)
