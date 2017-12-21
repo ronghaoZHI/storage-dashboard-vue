@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="layout-bsc-toolbar">
+        <div class="layout-bsc-toolbar layout-legend">
             <Button class="button-bsc-add-bucket" type="primary" @click="goOutputEdit('none', 'none')">{{$t('VIDEO.NEW_CONFIGURATION')}}</Button>
             <legend-list :data="legendList"></legend-list>
         </div>

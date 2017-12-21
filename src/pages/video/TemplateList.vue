@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="layout-bsc-toolbar">
+        <div class="layout-bsc-toolbar layout-legend">
             <Button class="button-bsc-add-bucket" type="primary" @click="goTemplateEdit">{{$t('VIDEO.NEW_TEMPLATE')}}</Button>
             <legend-list :data="legendList"></legend-list>
         </div>
@@ -240,6 +240,7 @@ const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
 
 </script>
 <style lang="less">
+
 .icon-disc{
     padding-left: 5px;
     vertical-align: text-top;
@@ -251,6 +252,5 @@ const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
         margin-left: 6px;
     }
 }
-
 </style>
 

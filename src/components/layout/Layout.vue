@@ -205,4 +205,8 @@ export default {
     font-size: 14px;
     margin-right: 10px;
 }
+.layout-legend{
+    width: 100%;
+    .fb(space-between, center);
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="layout-bsc-toolbar">
+        <div class="layout-bsc-toolbar layout-legend">
             <div>
                 <Button class="button-bsc-add-bucket" type="primary" @click="goJobEdit">{{$t('VIDEO.CREATE_JOB')}}</Button>
                 <div class="select-box">

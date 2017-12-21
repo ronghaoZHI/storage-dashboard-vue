@@ -1,6 +1,6 @@
 <template>
     <div class="bsc-pipeline-list">
-        <div class="layout-bsc-toolbar">
+        <div class="layout-bsc-toolbar layout-legend">
             <Button class="button-bsc-add-bucket" type="primary" @click="goPipelineEdit('none')">{{$t('VIDEO.NEW_PIPELINE')}}</Button>
             <legend-list :data="legendList"></legend-list>
         </div>
@@ -288,4 +288,5 @@ export default {
         background-color: @primary-color;
     }
 }
+
 </style>
