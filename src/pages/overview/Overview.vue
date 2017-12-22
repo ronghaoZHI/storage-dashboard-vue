@@ -258,7 +258,7 @@ export default {
                 width: 120,
                 key: 'name'
             }, {
-                title: 'Grants',
+                title: this.$t('STORAGE.OBJECT_PERMISSIONS'),
                 render: (h, params) => {
                     let allUser = params.row.permissions.allUser
                     let authUser = params.row.permissions.AuthUser
@@ -428,8 +428,7 @@ export default {
                 let res = await getBucketList()
                 res.Buckets.forEach((item) => {
                     this.getBucketAcl(item.Name).then(acl => {
-                        this.convertGrants(acl.Grants)
-                        acl.Grants.length > 1 && this.permissionsList.push({
+                        acl.Grants.length > 0 && this.permissionsList.push({
                             name: item.Name,
                             permissions: this.convertGrants(acl.Grants)
                         })

@@ -102,7 +102,7 @@
                                     </div>
                                 </Tooltip>
                             </th>
-                            <th></th>
+                            <th class="percent20"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -698,7 +698,7 @@ const convertNewUserItem = item => {
             max-width:50px;
         }
         th.percent20 {
-            width:200px;
+            width:20%;
         }
         th.percent30 {
             width:30%;
