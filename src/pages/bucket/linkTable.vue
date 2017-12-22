@@ -3,7 +3,7 @@
         <div class="new-item">
             <Form :ref="formName" :model="newItem" :rules="rules" class="ip-form">
                 <FormItem prop="ip" class="ip-item">
-                    <Input type="textarea" v-model="newItem.ip" class="new-ip" :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')" :autosize="true"></Input>
+                    <Input type="textarea" v-model="newItem.ip" class="new-ip" :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')" :autosize="true" style="width: 330px"></Input>
                 </FormItem>
             </Form>
             <Checkbox v-model="newItem.upload">{{$t('SETTINGS.UPLOAD')}}</Checkbox>
