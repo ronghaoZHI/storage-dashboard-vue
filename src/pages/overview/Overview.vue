@@ -609,8 +609,7 @@ export default {
         async getAccessList (name) {
             const params = {
                 action: 'get',
-                bucket: name,
-                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
+                bucket: name
             }
             try {
                 return await this.$http.post(ACCESS_LIST, params)

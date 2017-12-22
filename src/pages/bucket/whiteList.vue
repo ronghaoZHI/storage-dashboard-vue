@@ -32,7 +32,6 @@
 </template>
 <script>
 import { ACCESS_LIST, ADD_SERVICE } from '@/service/API'
-import user from '@/store/modules/user'
 import linkTable from './linkTable'
 export default {
     data () {
@@ -59,8 +58,7 @@ export default {
             this.spinGroup = true
             const params = {
                 action: 'get',
-                bucket: this.bucket,
-                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
+                bucket: this.bucket
             }
             try {
                 let listData = await this.$http.post(ACCESS_LIST, params)
@@ -85,8 +83,7 @@ export default {
             }
             const params = {
                 action: this.enabled ? 'enable' : 'disable',
-                bucket: this.bucket,
-                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
+                bucket: this.bucket
             }
             await this.$http.post(ACCESS_LIST, params)
         },
@@ -98,8 +95,7 @@ export default {
             let params = {
                 action: 'set',
                 ips: saved,
-                bucket: this.bucket,
-                user: user.state.type === 'admin' ? user.state.subUser.username : user.state.username
+                bucket: this.bucket
             }
             try {
                 await this.$http.post(ACCESS_LIST, params)
