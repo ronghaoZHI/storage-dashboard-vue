@@ -9,52 +9,54 @@
                             <span class="separator-info">{{$t('OVERVIEW.DASHBOARD_MONTH')}}</span>
                         </div>
                     </div>
-                    <div class="storage-card">
-                        <div class="title">
-                            <div class="images"></div>
-                            <div class="texts">
-                                <p class="label">
-                                    {{$t('OVERVIEW.CAPACITY_MONTH')}}
-                                </p>
-                                <p class="numbers">
-                                    {{originOverview.capacity[0]}} <span>{{originOverview.capacity[1]}}</span>
-                                </p>
+                    <div class="storage-card-wrap">
+                        <div class="storage-card">
+                            <div class="title">
+                                <div class="images"></div>
+                                <div class="texts">
+                                    <p class="label">
+                                        {{$t('OVERVIEW.CAPACITY_MONTH')}}
+                                    </p>
+                                    <p class="numbers">
+                                        {{originOverview.capacity[0]}} <span>{{originOverview.capacity[1]}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="charts">
+                                <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
                             </div>
                         </div>
-                        <div class="charts">
-                            <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
-                        </div>
-                    </div>
-                    <div class="storage-card">
-                        <div class="title">
-                            <div class="images"></div>
-                            <div class="texts">
-                                <p class="label">
-                                    {{$t('OVERVIEW.OUTER_NET_MONTH')}}
-                                </p>
-                                <p class="numbers">
-                                    {{originOverview.traffic[0]}} <span>{{originOverview.traffic[1]}}</span>
-                                </p>
+                        <div class="storage-card">
+                            <div class="title">
+                                <div class="images"></div>
+                                <div class="texts">
+                                    <p class="label">
+                                        {{$t('OVERVIEW.OUTER_NET_MONTH')}}
+                                    </p>
+                                    <p class="numbers">
+                                        {{originOverview.traffic[0]}} <span>{{originOverview.traffic[1]}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="charts">
+                                <chart :options="trafficOptions" auto-resize ref="trafficLine"></chart>
                             </div>
                         </div>
-                        <div class="charts">
-                            <chart :options="trafficOptions" auto-resize ref="trafficLine"></chart>
-                        </div>
-                    </div>
-                    <div class="storage-card">
-                        <div class="title">
-                            <div class="images"></div>
-                            <div class="texts">
-                                <p class="label">
-                                    {{$t('OVERVIEW.REQUEST_MONTH')}}
-                                </p>
-                                <p class="numbers">
-                                    {{originOverview.request[0]}} <span>{{originOverview.request[1]}}</span>
-                                </p>
+                        <div class="storage-card">
+                            <div class="title">
+                                <div class="images"></div>
+                                <div class="texts">
+                                    <p class="label">
+                                        {{$t('OVERVIEW.REQUEST_MONTH')}}
+                                    </p>
+                                    <p class="numbers">
+                                        {{originOverview.request[0]}} <span>{{originOverview.request[1]}}</span>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="charts">
-                            <chart :options="requestOptions" auto-resize ref="requestLine"></chart>
+                            <div class="charts">
+                                <chart :options="requestOptions" auto-resize ref="requestLine"></chart>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -889,6 +891,10 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
         }
 
         .storage {
+            .storage-card-wrap{
+                .fb(space-between, center);
+                width: 100%;
+            }
             .storage-card {
                 display: inline-block;
                 border: @common-border;
@@ -942,20 +948,16 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                 }
             }
 
-            .storage-card:nth-child(2) .images {
+            .storage-card-wrap .storage-card:nth-child(1) .images {
                 background: url('../../assets/overview/capacity.png') center center no-repeat;
             }
 
-            .storage-card:nth-child(3) .images {
+            .storage-card-wrap .storage-card:nth-child(2) .images {
                 background: url('../../assets/overview/traffic.png') center center no-repeat;
             }
 
-            .storage-card:nth-child(4) .images {
+            .storage-card-wrap .storage-card:nth-child(3) .images {
                 background: url('../../assets/overview/request.png') center center no-repeat;
-            }
-
-            .storage-card:not(:last-child) {
-                margin-right: 16px;
             }
         }
 
@@ -1191,7 +1193,6 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                 margin: 4px 0 20px;
             }
             .storage-card {
-                width: calc(~'33% - 10px');
                 border: none;
                 background-color: @card-bg-dark;
 
@@ -1209,15 +1210,15 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                 }
             }
 
-            .storage-card:nth-child(2) .images {
+            .storage-card-wrap .storage-card:nth-child(1) .images {
                 background-image: url('../../assets/overview/capacity-dark.png');
             }
 
-            .storage-card:nth-child(3) .images {
+            .storage-card-wrap .storage-card:nth-child(2) .images {
                 background-image: url('../../assets/overview/traffic-dark.png');
             }
 
-            .storage-card:nth-child(4) .images {
+            .storage-card-wrap .storage-card:nth-child(3) .images {
                 background-image: url('../../assets/overview/request-dark.png');
             }
         }
