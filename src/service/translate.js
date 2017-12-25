@@ -1497,7 +1497,7 @@ export const messages = {
             FETCH_302_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给客户端一个302；客户端根据302中的Location从您的数据源读取数据。',
             FETCH_404_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给用户一个404。',
             URI_PATTERN_INFO: '例如：uri匹配规则为 /(a-z)+, uri为 /key1234 ，则匹配为 /key。默认的uri匹配规则为 /(.*)，其不改变uri规则。',
-            WHITE_BLACK_LIST_INFO: '支持 * 通配符，且只支持一个*，如 10.11.12.* 将禁止或只允许 10.11.12.0～10.11.12.255 的 IP 访问。',
+            WHITE_BLACK_LIST_INFO: '支持 * 通配符，且每个IP只支持一个*，如 10.11.12.* 将禁止或只允许 10.11.12.0～10.11.12.255 的 IP 访问。',
             WHITE_BLACK: 'IP黑白名单'
         },
         OVERVIEW: {

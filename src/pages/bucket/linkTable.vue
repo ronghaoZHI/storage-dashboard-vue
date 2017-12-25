@@ -213,7 +213,7 @@ export default {
                     }
                 }
             }))
-            if (!this.newIps.every(ip => ipReg.test(ip))) {
+            if (!this.newIps.every(ip => ipReg.test(ip) && ip.split('.').indexOf('*') === ip.split('.').lastIndexOf('*'))) {
                 callback(new Error(this.$t('SETTINGS.IP_INVALID')))
             } else if (exits) {
                 callback(new Error(this.$t('SETTINGS.IP_EXISTS')))
