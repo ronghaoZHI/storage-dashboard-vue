@@ -175,10 +175,22 @@
                         </div>
                     </div>
                     <Timeline>
+                        <TimelineItem>
+                            <span slot="before">2017.12.20</span>
+                            <div slot="dot" class="timeline-dot"></div>
+                            <span>全新概览页上线</span>
+                        </TimelineItem>
+                        <TimelineItem>
+                            <span slot="before">2017.11.20</span>
+                            <span>新版"统计分析"上线</span>
+                        </TimelineItem>
                         <TimelineItem color="green">
                             <span slot="before">2017.10.12</span>
-                            <div slot="dot" class="timeline-dot"></div>
                             <span>{{$t('OVERVIEW.PRODUCT_UPDATE_1012')}}</span>
+                        </TimelineItem>
+                        <TimelineItem>
+                            <span slot="before">2017.09.11</span>
+                            <span>图片处理支持同步预处理</span>
                         </TimelineItem>
                         <TimelineItem>
                             <span slot="before">2017.07.22</span>
@@ -189,12 +201,20 @@
                             <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0508')}}</span>
                         </TimelineItem>
                         <TimelineItem>
+                            <span slot="before">2017.04.10</span>
+                            <span>主动转码上线</span>
+                        </TimelineItem>
+                        <TimelineItem>
                             <span slot="before">2017.03.05</span>
                             <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0305')}}</span>
                         </TimelineItem>
                         <TimelineItem>
                             <span slot="before">2017.01.11</span>
                             <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0111')}}</span>
+                        </TimelineItem>
+                        <TimelineItem style="padding-bottom:0;">
+                            <span slot="before">2016.12.10</span>
+                            <span>图片处理支持图片瘦身</span>
                         </TimelineItem>
                     </Timeline>
                 </div>
@@ -1088,7 +1108,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
         .update-history {
             border: @common-border;
             margin-top: 12px;
-            padding: 16px 20px;
+            padding: 16px 20px 0;
 
             .section-separator {
                 margin-bottom: 20px;
