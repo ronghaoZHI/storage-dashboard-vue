@@ -147,9 +147,9 @@
             </Col>
             <Col span="5" class="right-section">
                 <div class="button-section">
-                    <a href="http://doc.bscstorage.com/faq-pub.html"><Button type="ghost">FAQ</Button></a>
-                    <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><Button type="ghost">SDK</Button></a>
-                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="ghost">{{$t('OVERVIEW.DOC')}}</Button></a>
+                    <a href="http://doc.bscstorage.com/faq-pub.html"><Button type="primary">FAQ</Button></a>
+                    <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><Button type="primary">SDK</Button></a>
+                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="primary">{{$t('OVERVIEW.DOC')}}</Button></a>
                 </div>
                 <div class="bucket-section">
                     <div class="section-separator">
@@ -1066,7 +1066,6 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                 width: 120px;
                 text-align: center;
                 margin: 5px auto 0 auto;
-                background-color: #f9fafc;
                 background-image: url('../../assets/bucket.png');
                 background-repeat: no-repeat;
                 background-position: center 25px;
@@ -1087,6 +1086,10 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                     font-size: 14px;
                     color: #475669;
                 }
+            }
+
+            .bucket:hover{
+                background-color: #f9fafc;
             }
 
             .buttons {
@@ -1122,8 +1125,14 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
         }
 
         .storage {
+            padding: 0;
+            margin-bottom: 15px;
+            .section-separator{
+                margin: 4px 0 20px;
+            }
             .storage-card {
-                border-color: @card-border-color-dark;
+                width: calc(~'33% - 9px');
+                border: none;
                 background-color: @card-bg-dark;
 
                 .title {
@@ -1153,6 +1162,10 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
             }
         }
 
+        .file-handle,
+        .file-ruler {
+            background-color: #313a41;
+        }
         .file-ruler-card {
             border-color: @card-border-color-dark;
             background-color: @card-bg-dark;
@@ -1252,8 +1265,6 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
 
         .bucket-section {
             .bucket {
-                background-color: transparent;
-                border: @common-border-dark;
 
                 p:first-child {
                     color: #fff;
@@ -1263,6 +1274,11 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                 p:last-child {
                     color: @text-color-dark;
                 }
+            }
+
+            .bucket:hover{
+                background-color: transparent;
+                border: @common-border-dark;
             }
         }
     }
