@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="dark"
+    <div id="app"
          v-drop>
         <router-view></router-view>
         <loading></loading>

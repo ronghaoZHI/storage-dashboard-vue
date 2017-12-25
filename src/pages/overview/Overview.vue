@@ -415,6 +415,9 @@ export default {
     },
     watch: {
         'theme' (to, from) {
+            this.$refs['capacityLine'].chart.resize()
+            this.$refs['trafficLine'].chart.resize()
+            this.$refs['requestLine'].chart.resize()
             this.setOptions()
         }
     },
