@@ -935,7 +935,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
             }
 
             .storage-card:not(:last-child) {
-                margin-right: 16px;
+                margin-right: 14px;
             }
         }
 
@@ -1171,7 +1171,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                 margin: 4px 0 20px;
             }
             .storage-card {
-                width: calc(~'33% - 9px');
+                width: calc(~'33% - 10px');
                 border: none;
                 background-color: @card-bg-dark;
 
