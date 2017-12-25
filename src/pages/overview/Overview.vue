@@ -878,7 +878,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
 </script>
 <style scoped lang="less">
 .@{css-prefix}overview {
-    min-width: 1300px;
+    min-width: 1200px;
     .left-section {
         padding-right: 20px;
 
@@ -1240,10 +1240,10 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
                 background-color: #293137;
 
                 &.waiting {
-                    background-img: url('../../assets/overview/waiting-dark.png');
+                    background-image: url('../../assets/overview/waiting-dark.png');
                 }
                 &.phone {
-                    background-img: url('../../assets/overview/phone-dark.png');
+                    background-image: url('../../assets/overview/phone-dark.png');
                 }
                 p {
                     color: #8492a6;
