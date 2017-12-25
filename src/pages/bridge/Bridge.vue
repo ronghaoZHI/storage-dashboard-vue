@@ -58,7 +58,7 @@ export default {
         async getUserInfo () {
             this.$Loading.start()
             this.$http.get(USERINFO).then(res => {
-                res.type === 'admin' ? this.adminMode(res) : res.type === 'superadmin' ? this.toIndex(res, '/system/group') : this.toIndex(res)
+                res.type === 'admin' ? this.adminMode(res) : this.toIndex(res)
                 this.$Loading.finish()
             }, error => {
                 this.$Loading.error()
@@ -151,13 +151,13 @@ export default {
                 border-bottom: 1px solid #52626d;
 
                 & > img {
-                    position: absolute; 
+                    position: absolute;
                     left: @login-card-padding;
                 }
 
                 & > a {
                     .sc(18px,@primary-color);
-                    position: absolute; 
+                    position: absolute;
                     top: @login-card-padding + 3px;
                     right: @login-card-padding;
                     cursor: pointer;
@@ -214,7 +214,7 @@ export default {
                                 padding-right: 4px;
                             }
                         }
-                        
+
                         .icon {
                             position: absolute;
                             color: #fff;
@@ -233,7 +233,7 @@ export default {
                     }
                 }
             }
-            
+
         }
     }
 }

@@ -878,7 +878,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
 </script>
 <style scoped lang="less">
 .@{css-prefix}overview {
-    min-width: 1200px;
+    min-width: 1300px;
     .left-section {
         padding-right: 20px;
 
@@ -955,7 +955,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
             }
 
             .storage-card:not(:last-child) {
-                margin-right: 14px;
+                margin-right: 16px;
             }
         }
 
