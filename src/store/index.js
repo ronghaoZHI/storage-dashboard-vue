@@ -13,7 +13,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         token: sessionStorage.getItem('token'),
-        theme: sessionStorage.getItem('theme') || 'white'
+        theme: sessionStorage.getItem('theme') || 'dark'
     },
     actions,
     getters,

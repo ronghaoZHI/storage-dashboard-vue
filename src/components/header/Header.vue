@@ -2,9 +2,9 @@
     <div class="bsc-header">
         <div class="layout-header">
             <div class="layout-header-left">
-				<Tooltip content="跳转到 CDN Dashboard" placement="bottom" v-show="cdnUrl">
-					<a href="http://portal.baishancloud.com">CDN-X</a>
-				</Tooltip>
+				<a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">CDN-X</a>
+				<a disabled class="active">CWN-X</a>
+				<a disabled>CLN-X</a>
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
@@ -154,7 +154,11 @@ export default {
 				&:active {
 					background-color: #1b8de2;
 				}
-            }
+			}
+
+			.active {
+				background-color: #1b8de2;
+			}
         }
 
         .layout-header-right {
