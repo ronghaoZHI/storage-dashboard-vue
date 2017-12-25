@@ -487,19 +487,19 @@ export default {
             this.capacityOptions = initOptions({
                 dataPart1: this.combineTimeDataUnitLabel(this.distributed.space_used, '容量'),
                 theme: this.theme,
-                oneDayFlag: oneDayFlag
+                oneDayFlag
             })
             this.trafficOptions = initOptions({
                 dataPart1: this.combineTimeDataUnitLabel(this.combineTwoArray(this.distributed.flow_up_cdn, this.distributed.flow_up_pub), '流入'),
                 dataPart2: this.combineTimeDataUnitLabel(this.combineTwoArray(this.distributed.flow_down_cdn, this.distributed.flow_down_pub), '流出'),
                 theme: this.theme,
-                oneDayFlag: oneDayFlag
+                oneDayFlag
             })
             this.requestOptions = initOptions({
                 dataPart1: this.combineTimeDataUnitLabel(this.combineTwoArray(this.distributed.post_count, this.distributed.put_count), '写', 'times'),
                 dataPart2: this.combineTimeDataUnitLabel(this.combineFourArray(this.distributed.get_count, this.distributed.head_count, this.distributed.delete_count, this.distributed.list_count), '读', 'times'),
                 theme: this.theme,
-                oneDayFlag: oneDayFlag
+                oneDayFlag
             })
         },
         combineTwoArray (array1, array2) {
@@ -679,7 +679,7 @@ const lineOptions = {
     grid: {
         top: '25',
         left: '15',
-        right: '40',
+        right: '20',
         bottom: '20',
         containLabel: true,
         show: true,
@@ -750,6 +750,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
     }
     themeLineOptions.grid.backgroundColor = theme === 'dark' ? '#293137' : '#f9fafc'
     themeLineOptions.grid.borderColor = theme === 'dark' ? '#313a41' : '#fff'
+    themeLineOptions.grid.right = oneDayFlag ? '40' : '20'
     let legendData = []
     let seriesArray = [{
         type: 'line',
@@ -801,7 +802,7 @@ const initOptions = ({dataPart1, dataPart2, theme, oneDayFlag}) => {
         xAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return oneDayFlag ? dateTime(value + 3600000) : date(value)
+                    return oneDayFlag ? dateTime(value + 3600000) : date(value, 'MD')
                 }
             }
         },

@@ -90,9 +90,12 @@ const timesSpliteUnits = (times, digit = 1) => {
 
     return [number, units[exponent]]
 }
-const date = (value) => {
+const date = (value, type = 'YMD') => {
     let date = new Date(value)
     let texts = [date.getFullYear(), checkDate(date.getMonth() + 1), checkDate(date.getDate())]
+    if (type === 'MD') {
+        texts = [checkDate(date.getMonth() + 1), checkDate(date.getDate())]
+    }
     return texts.join('-')
 }
 
