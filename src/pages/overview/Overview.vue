@@ -147,9 +147,9 @@
             </Col>
             <Col span="5" class="right-section">
                 <div class="button-section">
-                    <a href="http://doc.bscstorage.com/faq-pub.html"><Button type="primary">FAQ</Button></a>
-                    <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"><Button type="primary">SDK</Button></a>
-                    <a href="http://doc.bscstorage.com/console-use/console-use.html"><Button type="primary">{{$t('OVERVIEW.DOC')}}</Button></a>
+                    <a href="http://doc.bscstorage.com/faq-pub.html" target="_blank"><Button type="primary">FAQ</Button></a>
+                    <a href="http://doc.bscstorage.com/doc/s2/demo/python.html" target="_blank"><Button type="primary">SDK</Button></a>
+                    <a href="http://doc.bscstorage.com/console-use/console-use.html" target="_blank"><Button type="primary">{{$t('OVERVIEW.DOC')}}</Button></a>
                 </div>
                 <div class="bucket-section">
                     <div class="section-separator">
@@ -270,7 +270,16 @@ export default {
                 width: 80,
                 align: 'right',
                 render: (h, params) => {
-                    return h('i-button', {
+                    return h('Tooltip', {
+                        props: {
+                            content: this.$t('OVERVIEW.GO_SETTING'),
+                            delay: 1000,
+                            placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
+                        }
+                    }, [h('i-button', {
                         props: {
                             size: 'small'
                         },
@@ -285,7 +294,7 @@ export default {
                             size: 18
                         }
                     })
-                    ])
+                    ])])
                 }
             }],
             sourceHeader: [{
@@ -309,7 +318,16 @@ export default {
                 width: 80,
                 align: 'right',
                 render: (h, params) => {
-                    return h('i-button', {
+                    return h('Tooltip', {
+                        props: {
+                            content: this.$t('OVERVIEW.GO_SETTING'),
+                            delay: 1000,
+                            placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
+                        }
+                    }, [h('i-button', {
                         props: {
                             size: 'small'
                         },
@@ -324,7 +342,7 @@ export default {
                             size: 18
                         }
                     })
-                    ])
+                    ])])
                 }
             }],
             accessHeader: [{
@@ -348,7 +366,16 @@ export default {
                 width: '85px',
                 align: 'right',
                 render: (h, params) => {
-                    return h('i-button', {
+                    return h('Tooltip', {
+                        props: {
+                            content: this.$t('OVERVIEW.GO_SETTING'),
+                            delay: 1000,
+                            placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-5': true
+                        }
+                    }, [h('i-button', {
                         props: {
                             size: 'small'
                         },
@@ -363,7 +390,7 @@ export default {
                             size: 18
                         }
                     })
-                    ])
+                    ])])
                 }
             }],
             pictureHeader: [
@@ -378,7 +405,16 @@ export default {
                     width: 80,
                     align: 'right',
                     render: (h, params) => {
-                        return h('i-button', {
+                        return h('Tooltip', {
+                            props: {
+                                content: this.$t('OVERVIEW.GO_SETTING'),
+                                delay: 1000,
+                                placement: 'top'
+                            },
+                            'class': {
+                                'mar-r-5': true
+                            }
+                        }, [h('i-button', {
                             props: {
                                 size: 'small'
                             },
@@ -393,7 +429,7 @@ export default {
                                 size: 18
                             }
                         })
-                        ])
+                        ])])
                     }
                 }
             ]
