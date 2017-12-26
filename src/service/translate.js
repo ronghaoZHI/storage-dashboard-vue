@@ -20,7 +20,9 @@ export const messages = {
             PAGE_NEXT: 'Next Page',
             PAGE_FIRST: 'First Page',
             ADD: 'Add',
-            EDIT: 'Edit'
+            EDIT: 'Edit',
+            DOMAIN: 'Change domain name',
+            DOMAIN_ALERT: 'Baishan cloud storage Dashborad domain name has been switched to the current domain name, the original domain name will be offline in the near future processing, please save'
         },
         LOGIN: {
             TITLE: 'LOGIN',
@@ -832,7 +834,9 @@ export const messages = {
             PAGE_NEXT: '下一页',
             PAGE_FIRST: '首页',
             ADD: '添加',
-            EDIT: '编辑'
+            EDIT: '编辑',
+            DOMAIN: '更换域名',
+            DOMAIN_ALERT: '白山云存储 Dashborad 域名已经切换至当前域名,原域名将在不久后做下线处理,请您及时保存'
         },
         LOGIN: {
             TITLE: '登 录',

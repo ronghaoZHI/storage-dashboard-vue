@@ -31,6 +31,14 @@ export default {
         this.$Message.config({
             duration: 3
         })
+        localStorage.getItem('showHost') !== 'false' && this.$Notice.warning({
+            title: this.$t('PUBLIC.DOMAIN'),
+            desc: this.$t('PUBLIC.DOMAIN_ALERT'),
+            duration: 0,
+            onClose: () => {
+                localStorage.setItem('showHost', false)
+            }
+        })
     }
 }
 </script>
@@ -125,7 +133,7 @@ export default {
             .sc(16px,#657180);
         }
     }
-    
+
 }
 
 .info-input-error {
