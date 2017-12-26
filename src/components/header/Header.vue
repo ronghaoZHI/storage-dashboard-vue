@@ -2,9 +2,11 @@
     <div class="bsc-header">
         <div class="layout-header">
             <div class="layout-header-left">
-				<a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">CDN-X</a>
-				<a disabled class="active">CWN-X</a>
-				<a disabled>CLN-X</a>
+                <a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">CDN-X</a>
+                <a disabled class="active">CWN-X</a>
+                <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom">
+                    <a disabled>CLN-X</a>
+                </Tooltip>
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
