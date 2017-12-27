@@ -74,7 +74,7 @@ const timesK = (times, digit = 1) => {
 
     return number + ' ' + units[exponent]
 }
-const timesSpliteUnits = (times, digit = 1) => {
+const timesSpliteUnits = (times, digit = 1, isFloat = false) => {
     if (typeof times !== 'number') {
         times = parseFloat(times)
     }
@@ -86,8 +86,8 @@ const timesSpliteUnits = (times, digit = 1) => {
 
     const units = ['', 'K', 'M', 'BN']
     const exponent = Math.min(Math.floor(Math.log(times) / Math.log(1000)), units.length - 1)
-    const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(digit)
-
+    let specialDigit = units[exponent] ? digit : 0
+    const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(specialDigit)
     return [number, units[exponent]]
 }
 const date = (value, type = 'YMD') => {
