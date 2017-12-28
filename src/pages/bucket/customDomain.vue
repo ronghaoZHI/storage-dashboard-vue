@@ -6,7 +6,7 @@
         <Modal v-model="createModal" :title="$t('SETTINGS.BIND_CUSTOME_DOMAIN')" @on-ok="addDomain" @on-cancel="newDomain = ''">
             <Input v-model="newDomain" autofocus @on-enter="addDomain" :placeholder="$t('SETTINGS.BIND_DOMAIN_PLACEHOLDER')" @on-change="newDomainTest">
             </Input>
-            <span class="info-input-error">{{inputCheck ? '' : $t("SETTINGS.INVALID_DOMAIN")}}</span>{{inputCheck}}
+            <span class="info-input-error">{{inputCheck ? '' : $t("SETTINGS.INVALID_DOMAIN")}}</span>
         </Modal>
     </div>
 </template>
@@ -95,16 +95,22 @@ export default {
             }
         },
         async addDomain () {
-            try {
-                await this.$http.post(`${CUSTOM_DOMAIN}/${this.bucket}`, {custom_domain: this.newDomain})
-                this.listData.push({domain: this.newDomain})
-                this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
-            } catch (error) {
-                console.log(error)
+            if (this.inputCheck) {
+                try {
+                    await this.$http.post(`${CUSTOM_DOMAIN}/${this.bucket}`, {custom_domain: this.newDomain})
+                    this.listData.push({domain: this.newDomain})
+                    this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
+                    this.createModal = false
+                    this.newDomain = ''
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                this.$Message.error(this.$t('SETTINGS.INVALID_DOMAIN'))
             }
         },
         newDomainTest (value) {
-            this.inputCheck = /^[a-zA-Z\d-]{,63}(\.[a-zA-Z\d-]{,63})*$/.test(value)
+            this.inputCheck = /^[a-zA-Z\d-]{0,63}(\.[a-zA-Z\d-]{0,63})+$/.test(this.newDomain)
         }
     }
 }
