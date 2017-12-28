@@ -22,6 +22,9 @@ export const messages = {
             ADD: 'Add',
             EDIT: 'Edit',
             DOMAIN: 'Change domain name',
+            OPTIONS_SUCCESS: 'Operation succeeded!',
+            OPTIONS_FAIL: 'operation failed!',
+            GET_LIST_FAIL: 'Get list failed!',
             DOMAIN_ALERT: 'Baishan cloud storage Dashborad domain name has been switched to the current domain name, the original domain name will be offline in the near future processing, please save'
         },
         LOGIN: {
@@ -681,6 +684,7 @@ export const messages = {
             IP_EXISTS: 'IP exists',
             IP_REPEAT: 'IP repeat',
             IP_INVALID: 'IP invalid',
+            CUSTOM_DOMAIN: 'Custom domain',
             SAVED: 'Saved!',
             SECURITY_CHAIN: 'Hotlink Protection',
             WHITE_LIST_INFO: 'The IP in the white list can perform the corresponding hook options (uploading, downloading, deleting) operations',
@@ -692,6 +696,12 @@ export const messages = {
             URI_PATTERN_INFO: 'For example, the uri matching rule is /(a-z)+ and the uri is /key1234, then the matched is /key. The default matching rule is /(.*), which does not change the uri rule.',
             COMFIRM_DELETE_HOTLINK: 'Are you sure you want to delete this ip([{ip}])?',
             WHITE_BLACK_LIST_INFO: 'upport * but only one, such as 10.11.12.* will prohibit or only allow access to IP from 10.11.12.0 to 10.11.12.255.',
+            DOMAIN_INFO: 'The domain name you bind needs to be put on record by the Ministry of industry and information, otherwise the domain name access will be affected. Please bind your own domain name, do not bind the domain name of other users, or the access will be affected',
+            BIND_CUSTOME_DOMAIN: 'Build custom domain',
+            BIND_DOMAIN_PLACEHOLDER: 'Please enter the domain name to be bound',
+            BOUND_DOMAIN: 'Domain',
+            INVALID_DOMAIN: 'Invalid domain',
+            DOMAIN_DELETE_CONFIRM: 'Are you sure to unbind this domain [{domain}] ?',
             WHITE_BLACK: 'IP black-and-white list'
         },
         OVERVIEW: {
@@ -841,6 +851,9 @@ export const messages = {
             ADD: '添加',
             EDIT: '编辑',
             DOMAIN: '更换域名',
+            OPTIONS_SUCCESS: '操作成功!',
+            OPTIONS_FAIL: '操作失败!',
+            GET_LIST_FAIL: '获取列表失败!',
             DOMAIN_ALERT: '白山云存储 Dashborad 域名已经切换至当前域名,原域名将在不久后做下线处理,请您及时保存'
         },
         LOGIN: {
@@ -1503,6 +1516,7 @@ export const messages = {
             IP_INVALID: 'IP无效!',
             SAVED: '保存成功',
             SECURITY_CHAIN: '防盗链',
+            CUSTOM_DOMAIN: '自定义域名',
             COMFIRM_DELETE_HOTLINK: '确定删除这个ip([{ip}])么?',
             WHITE_LIST_INFO: '白名单中的IP可以进行对应勾选项(上传、下载、删除)操作',
             BLACK_LIST_INFO: '黑名单中的IP不能进行对应勾选项(上传、下载、删除)操作',
@@ -1512,6 +1526,12 @@ export const messages = {
             FETCH_404_INFO: '当有用户访问时，白山云的offline启动一个离线任务，将该数据下载到白山云存储，并返回给用户一个404。',
             URI_PATTERN_INFO: '例如：uri匹配规则为 /(a-z)+, uri为 /key1234 ，则匹配为 /key。默认的uri匹配规则为 /(.*)，其不改变uri规则。',
             WHITE_BLACK_LIST_INFO: '支持 * 通配符，且每个IP只支持一个*，如 10.11.12.* 将禁止或只允许 10.11.12.0～10.11.12.255 的 IP 访问。',
+            DOMAIN_INFO: '您绑定的域名需在工信部备案，否则域名访问将会受到影响。请绑定自己的域名，不要绑定其他用户的域名，否则访问也将会受到影响。',
+            BIND_CUSTOME_DOMAIN: '绑定用户域名',
+            BIND_DOMAIN_PLACEHOLDER: '请输入要绑定的域名',
+            BOUND_DOMAIN: '绑定域名',
+            DOMAIN_DELETE_CONFIRM: '确定要解除该域名的绑定么 [{domain}] ？',
+            INVALID_DOMAIN: '域名不合法!',
             WHITE_BLACK: 'IP黑白名单'
         },
         OVERVIEW: {

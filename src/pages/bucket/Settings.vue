@@ -177,6 +177,9 @@
             <Tab-pane :label='$t("SETTINGS.SECURITY_CHAIN")' name="whiteList">
                 <white-list v-if="tabName === 'whiteList'"></white-list>
             </Tab-pane>
+            <Tab-pane :label='$t("SETTINGS.CUSTOM_DOMAIN")' name="customDomain">
+                <custom-domain v-if="tabName === 'customDomain'"></custom-domain>
+            </Tab-pane>
         </Tabs>
         <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">
             <div class="form-item">
@@ -237,6 +240,7 @@ import picDetection from './picDetection'
 import legendList from '@/components/legend/legend'
 import backSource from './backSource'
 import whiteList from './whiteList'
+import customDomain from './customDomain'
 import bscBreadcrumb from '@/components/breadcrumb'
 export default {
     data () {
@@ -359,7 +363,7 @@ export default {
             deleteList: []
         }
     },
-    components: {picDetection, legendList, backSource, whiteList, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item},
+    components: {picDetection, legendList, backSource, whiteList, customDomain, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item},
     computed: {
         bucket () {
             return this.$route.params.bucket

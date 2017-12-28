@@ -59,6 +59,8 @@ export const ADD_SERVICE = group('user/add/service')
 
 export const IMGX_PREVIEW = groupImgx('/image-example/')
 
+export const CUSTOM_DOMAIN = group('custom_domain')
+
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 
 export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)
