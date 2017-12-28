@@ -2,7 +2,7 @@
     <div class="layout-menu">
         <Menu ref="menu" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName">
             <div class="layout-logo-left">
-                <img class="logo-big" src="../../assets/logo.png" height="30px" />
+                <img class="logo-big" src="../../assets/bsc-logo.svg" height="30px" />
             </div>
             <Menu-item v-for="item in menuList" :name="item.name" :key="item.index" v-if="!item.children">
                 <img v-bind:src="item.icon" class="icon-menu" height="15px" />

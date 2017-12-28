@@ -45,6 +45,9 @@ export const messages = {
             RESELECT_USER: 'Switch user',
             CHANGE_PASSWORD: 'Change password',
             NEW_PASSWORD: 'New password',
+            CWN: 'CWN-X',
+            CDN: 'CDN-X',
+            CLN: 'CLN-X',
             CHANGE_PASSWORD_FAILED: 'Change password failed',
             PASSWORD_CHECK: 'The password requires 6 charactors'
         },
@@ -859,6 +862,9 @@ export const messages = {
             RESELECT_USER: '切换关联账号',
             CHANGE_PASSWORD: '修改密码',
             NEW_PASSWORD: '新密码',
+            CWN: '云存储',
+            CDN: '云分发',
+            CLN: '云聚合',
             CHANGE_PASSWORD_FAILED: '修改密码失败',
             PASSWORD_CHECK: '密码不能少于6个字符'
         },

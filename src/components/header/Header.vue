@@ -2,11 +2,9 @@
     <div class="bsc-header">
         <div class="layout-header">
             <div class="layout-header-left">
-                <a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">CDN-X</a>
-                <a disabled class="active">CWN-X</a>
-                <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom">
-                    <a disabled>CLN-X</a>
-                </Tooltip>
+                <a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">{{$t("NAV.CDN")}}</a>
+                <a disabled class="active">{{$t("NAV.CWN")}}</a>
+                <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom"><a disabled>{{$t("NAV.CLN")}}</a></Tooltip>
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
@@ -148,15 +146,32 @@ export default {
 
         .layout-header-left {
             a {
-                .fb(center,center);
-                .sc(22px,@menu-text-color);
+                display: inline-block;
+                line-height: 60px;
+                .sc(18px,@menu-text-color);
                 font-weight: 500;
-				.wh(140px,60px);
+                .wh(140px,60px);
+                background-repeat: no-repeat;
+                background-size: 30px 30px;
+                background-position: 20px center;
+                padding-left: 60px;
 
 				&:active {
 					background-color: #1b8de2;
-				}
-			}
+                }
+            }
+
+            & > a:nth-child(1){
+                background-image: url('../../assets/CDN.svg');
+            }
+
+            & > a.active {
+                background-image: url('../../assets/CWN.svg');
+            }
+
+            & > div a{
+                background-image: url('../../assets/CLN.svg');
+            }
 
 			.active {
 				background-color: #1b8de2;
