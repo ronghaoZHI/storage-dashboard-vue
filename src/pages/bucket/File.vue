@@ -78,9 +78,11 @@
                 <Button v-show="nextMarker" @click="nextPage()" type="ghost" size="small">{{$t("PUBLIC.PAGE_NEXT")}}</Button>
             </div>
         </div>
+        <picture-preview v-if="showPicturePreview === true" @close="showPicturePreview = false" :selectedIndex="selectedIndex" :fileList="fileList" :bucket="bucket" :prefix="prefix"></picture-preview>
     </div>
 </template>
 <script>
+import picturePreview from '@/components/picturePreview/picturePreview'
 import { getS3, handler } from '@/service/Aws'
 import { bytes, keyFilter, convertPrefix2Router } from '@/service/bucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
@@ -94,6 +96,8 @@ export default {
     data () {
         return {
             clipUrl: '',
+            showPicturePreview: false,
+            selectedIndex: 0,
             searchValue: '',
             copyModal: false,
             nextMarker: '',
@@ -312,7 +316,8 @@ export default {
                             },
                             on: {
                                 click: () => {
-                                    this.imageModal(params.row)
+                                    this.showPicturePreview = true
+                                    this.selectedIndex = params.row._index
                                 }
                             }
                         }, [h('Icon', {
@@ -380,7 +385,7 @@ export default {
         }
     },
     components: {
-        filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item, upload, legendList
+        filePermission, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item, upload, legendList, picturePreview
     },
     computed: {
         bucket: function () {
