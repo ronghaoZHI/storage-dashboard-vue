@@ -63,6 +63,7 @@ export default {
                 {name: this.$t('SYSTEM.FILE_NUM'), value: 'num_used'},
                 {name: this.$t('SYSTEM.CAPACITY'), value: 'space_used'},
                 {name: this.$t('SYSTEM.STATE'), value: 'readonly'},
+                {name: this.$t('SYSTEM.CLOSE_TIME'), value: 'close_ts'},
                 {name: this.$t('SYSTEM.CREATION_TIME'), value: 'ts'},
                 {name: this.$t('SYSTEM.MIGRATION_PROGRESS'), value: 'traffic_status'}]
         }
@@ -99,6 +100,7 @@ export default {
                 newItem.space_used = bytes(item.space_used)
                 newItem.traffic_status = item.traffic_status || this.$t('SYSTEM.NO_PROGRESS')
                 newItem.readonly = item.readonly === '1' ? this.$t('SYSTEM.WRITABLE') : this.$t('SYSTEM.READONLY')
+                newItem.close_ts = item.close_ts === 0 ? this.$t('SYSTEM.NOT_CLOSED') : item.close_ts
                 return newItem
             })
             let basicInfo = [{name: 'Partition ID', value: this.myData.partition_id},

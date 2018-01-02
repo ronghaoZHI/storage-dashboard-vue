@@ -115,7 +115,8 @@ export default {
                 {name: this.$t('SYSTEM.GROUP_STATUS'), value: this.data.readonly === 0 ? this.$t('SYSTEM.WRITEABLE') : this.$t('SYSTEM.READ_ONLY')},
                 {name: this.$t('SYSTEM.FILE_NUMBERS'), value: thousands(this.data.num_used)},
                 {name: this.$t('SYSTEM.USED_CAPACITY'), value: bytes(this.data.space_used)},
-                {name: this.$t('SYSTEM.CREATE_TIME'), value: this.data.ts}]
+                {name: this.$t('SYSTEM.CREATE_TIME'), value: this.data.ts},
+                {name: this.$t('SYSTEM.CLOSE_TIME'), value: this.data.close_ts === 0 ? this.$t('SYSTEM.NOT_CLOSED') : this.data.close_ts}]
             return {
                 tableData,
                 basicInfo,
