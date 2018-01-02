@@ -211,7 +211,7 @@ export default {
                     this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                 } else {
                     if (this.template.Video.FixedGOP) {
-                        this.$refs['videoValidate'].validate((valid) => {
+                        this.$refs['videoValidate'] && this.$refs['videoValidate'].validate((valid) => {
                             if (!valid) {
                                 this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
                             } else {
@@ -228,9 +228,15 @@ export default {
             let template = convert2Save(this.template, this.auxiliary)
             try {
                 this.$Loading.start()
-                await this.$http.post(getTranscoderUrl('presets'), template)
+                if (this.templateId === 'none') {
+                    await this.$http.post(getTranscoderUrl('presets'), template)
+                    this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
+                } else {
+                    delete template.Id
+                    await this.$http.put(getTranscoderUrl(`presets/${this.templateId}`), template)
+                    this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
+                }
                 this.$Loading.finish()
-                this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
                 this.$router.push({ name: 'template' })
             } catch (error) {
                 this.$Loading.error()
@@ -240,7 +246,11 @@ export default {
             if (this.templateId !== 'none') {
                 try {
                     this.$Loading.start()
-                    await transcoder('readPreset', {Id: '153'})
+                    let res = await transcoder('readPreset', {Id: this.templateId})
+                    this.template = res.Preset
+                    this.template.Video.FixedGOP = res.Preset.Video.FixedGOP === 'true'
+                    this.template.FastStart = res.Preset.FastStart === 'true'
+                    this.auxiliary = convert2Front(res.Preset)
                     this.$Loading.finish()
                 } catch (error) {
                     this.$Loading.error()
@@ -248,6 +258,10 @@ export default {
             }
         },
         containerChange (value) {
+            this.template.Video = _.cloneDeep(templateDefult.Video)
+            this.template.Audio = _.cloneDeep(templateDefult.Audio)
+            this.auxiliary.resolution = 'auto'
+            this.auxiliary.audioBitRate = 'auto'
             if (audioOnly.includes(value)) {
                 this.template.Video.Codec = 'auto'
                 this.auxiliary.videoBitRate = 'auto'
@@ -277,7 +291,7 @@ export default {
             }
         },
         validateMaxDist (rule, value, callback) {
-            if (!Number.isInteger(value)) {
+            if (!Number(value)) {
                 callback(new Error(this.$t('PUBLIC.NUM_PLEASE')))
             } else {
                 if (value < 1) {
@@ -292,6 +306,41 @@ export default {
     }
 }
 
+const convert2Front = (data) => {
+    let auxiliary = _.cloneDeep(auxiliaryDefult)
+    if (data.Video.BitRate === 'auto') {
+        auxiliary.videoBitRate = 'auto'
+    } else {
+        auxiliary.videoBitRate = 'value'
+        auxiliary.videoBitRateValue = parseInt(data.Video.BitRate)
+    }
+
+    if (data.Video.Resolution === 'auto') {
+        auxiliary.resolution = 'auto'
+    } else {
+        let values = data.Video.Resolution.split('*')
+        if (values[0] === '-2') {
+            auxiliary.resolution = 'only_height'
+            auxiliary.only_height = parseInt(values[1])
+        } else if (values[1] === '-2') {
+            auxiliary.resolution = 'only_width'
+            auxiliary.only_width = parseInt(values[0])
+        } else {
+            auxiliary.resolution = 'value'
+            auxiliary.width = values[0]
+            auxiliary.height = values[1]
+        }
+    }
+
+    if (data.Audio.BitRate === 'auto') {
+        auxiliary.audioBitRate = 'auto'
+    } else {
+        auxiliary.audioBitRate = 'value'
+        auxiliary.audioBitRateValue = parseInt(data.Audio.BitRate)
+    }
+
+    return auxiliary
+}
 const convert2Save = (template, auxiliary) => {
     let saved = _.cloneDeep(template)
 

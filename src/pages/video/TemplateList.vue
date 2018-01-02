@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="layout-bsc-toolbar layout-legend">
-            <Button class="button-bsc-add-bucket" type="primary" @click="goTemplateEdit">{{$t('VIDEO.NEW_TEMPLATE')}}</Button>
+            <Button class="button-bsc-add-bucket" type="primary" @click="goTemplateEdit('none')">{{$t('VIDEO.NEW_TEMPLATE')}}</Button>
             <legend-list :data="legendList"></legend-list>
         </div>
         <Table border :context="self" :stripe="true" :columns="listHeader" :data="templateList" :no-data-text='$t("STORAGE.NO_LIST")'></Table>
@@ -102,10 +102,33 @@ export default {
             }, {
                 title: this.$t('VIDEO.OPERATION'),
                 key: 'actions',
-                width: '82px',
+                width: '105px',
                 align: 'right',
                 render: (h, params) => {
-                    return h('Tooltip', {
+                    return h('div', [h('Tooltip', {
+                        props: {
+                            content: this.$t('PUBLIC.EDIT'),
+                            delay: 500,
+                            placement: 'top'
+                        },
+                        'class': {
+                            'mar-r-8': true
+                        }
+                    }, [h('i-button', {
+                        props: {
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.goTemplateEdit(params.row.id)
+                            }
+                        }
+                    }, [h('Icon', {
+                        props: {
+                            type: 'compose',
+                            size: this.iconSize
+                        }
+                    })])]), h('Tooltip', {
                         props: {
                             content: this.$t('PUBLIC.DELETE'),
                             delay: 1000,
@@ -125,7 +148,7 @@ export default {
                             type: 'ios-trash',
                             size: this.iconSize
                         }
-                    })])])
+                    })])])])
                 }
             }]
         }
@@ -160,8 +183,8 @@ export default {
             this.nextPageToken && this.pageToken.push(this.nextPageToken)
             this.listPresets(this.nextPageToken)
         },
-        goTemplateEdit () {
-            this.$router.push({ name: 'TemplateEdit', params: { id: 'none' } })
+        goTemplateEdit (id) {
+            this.$router.push({ name: 'TemplateEdit', params: { id: id } })
         },
         async deletePreset (rule) {
             try {
