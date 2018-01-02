@@ -361,7 +361,10 @@ export default {
             }
         },
         handleSearchBindUser () {
-            if (!this.searchBindUserInput) return false
+            if (!this.searchBindUserInput) {
+                this.searchBindUserList = this.boundUserList
+                return false
+            }
             let searchArr = this.searchBindUserInput.split('')
             let reg = new RegExp(searchArr.join('.*'))
             this.searchBindUserList = this.boundUserList.filter(item => reg.exec(item.email) || reg.exec(item.username))
