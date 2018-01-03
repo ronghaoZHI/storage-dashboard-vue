@@ -94,9 +94,7 @@ export default {
             this.pictureUrlList.length = this.pictureNumber = num
             this.pictureUrl = await getURL(this.bucket, this.fileList[this.selectedIndex], this.prefix)
             $(`.gallery-list-item:eq(${this.selectedPictureIndex - 1})`).addClass('active')
-            this.pictureUrlList = await Promise.all(Array.map(this.fileList.filter(file => file.isImage && file.isImage === true), (imageFile) => {
-                return getURL(this.bucket, imageFile, this.prefix)
-            }))
+            this.pictureUrlList = await Promise.all(Array.map(this.fileList.filter(file => file.isImage && file.isImage === true), (imageFile) => getURL(this.bucket, imageFile, this.prefix)))
         },
         changePicture (item, index) {
             this.pictureUrl = item
