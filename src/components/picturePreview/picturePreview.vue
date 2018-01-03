@@ -83,22 +83,20 @@ export default {
     methods: {
         async getUrlList () {
             let num = 0
-            for (let i = 0; i < this.fileList.length; i++) {
-                if (this.fileList[i].isImage && this.fileList[i].isImage === true) {
+            this.fileList.forEach((file, index) => {
+                if (file.isImage && file.isImage === true) {
                     num += 1
-                    if (i === this.selectedIndex) {
+                    if (index === this.selectedIndex) {
                         this.selectedPictureIndex = num
                     }
                 }
-            }
-            this.pictureNumber = num
+            })
+            this.pictureUrlList.length = this.pictureNumber = num
             this.pictureUrl = await getURL(this.bucket, this.fileList[this.selectedIndex], this.prefix)
-            for (let i = 0; i < this.fileList.length; i++) {
-                if (this.fileList[i].isImage && this.fileList[i].isImage === true) {
-                    let url = await getURL(this.bucket, this.fileList[i], this.prefix)
-                    this.pictureUrlList.push(url)
-                }
-            }
+            $(`.gallery-list-item:eq(${this.selectedPictureIndex - 1})`).addClass('active')
+            this.pictureUrlList = await Promise.all(Array.map(this.fileList.filter(file => file.isImage && file.isImage === true), (imageFile) => {
+                return getURL(this.bucket, imageFile, this.prefix)
+            }))
         },
         changePicture (item, index) {
             this.pictureUrl = item
@@ -259,7 +257,6 @@ const getURL = async (bucket, file, prefix) => {
 
         .active {
             border: 1px solid #fff;
-            cursor: default;
             .gallery-list-img {
                 opacity: 1;
             }
