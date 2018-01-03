@@ -68,7 +68,7 @@ export default {
             to >= 5000 ? $('.actions-icon:eq(0)').addClass('disable') : $('.actions-icon:eq(0)').removeClass('disable')
             to <= 120 ? $('.actions-icon:eq(1)').addClass('disable') : $('.actions-icon:eq(1)').removeClass('disable')
             to === this.computeActualSize() ? $('.actions-icon:eq(2)').addClass('disable') : $('.actions-icon:eq(2)').removeClass('disable')
-            to === (this.computeActualSize() > 1280 ? $('.picture-show-box, .big-picture-show-box').width() * 0.7 : this.computeActualSize()) ? $('.actions-icon:eq(3)').addClass('disable') : $('.actions-icon:eq(3)').removeClass('disable')
+            to.toFixed() === (this.computeActualSize() > 1280 ? ($('.picture-show-box, .big-picture-show-box').width() * 0.7).toFixed() : this.computeActualSize().toFixed()) ? $('.actions-icon:eq(3)').addClass('disable') : $('.actions-icon:eq(3)').removeClass('disable')
             to < $('.picture-show-box, .big-picture-show-box').width() && this.height < $('.picture-show-box, .big-picture-show-box').height() ? $('.picture-show-box, .big-picture-show-box').addClass('picture-show-box').removeClass('big-picture-show-box') : $('.picture-show-box, .big-picture-show-box').addClass('big-picture-show-box').removeClass('picture-show-box')
         },
         'height' (to, from) {
