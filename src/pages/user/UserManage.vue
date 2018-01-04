@@ -373,20 +373,20 @@ export default {
         handleSearchUser () {
             if (!this.searchUserInput) {
                 this.searchedUserList = this.userList
-                return false
+                return
             }
             let searchArr = this.searchUserInput.split('')
             let reg = new RegExp(searchArr.join('.*'))
-            this.searchedUserList = this.userList.filter(item => reg.exec(item.email) || reg.exec(item.username))
+            this.searchedUserList = this.userList.filter(item => reg.test(item.email) || reg.test(item.username))
         },
         handleSearchBindUser () {
             if (!this.searchBindUserInput) {
                 this.searchBindUserList = this.boundUserList
-                return false
+                return
             }
             let searchArr = this.searchBindUserInput.split('')
             let reg = new RegExp(searchArr.join('.*'))
-            this.searchBindUserList = this.boundUserList.filter(item => reg.exec(item.email) || reg.exec(item.username))
+            this.searchBindUserList = this.boundUserList.filter(item => reg.test(item.email) || reg.test(item.username))
         },
         async bindUser () {
             this.$Loading.start()

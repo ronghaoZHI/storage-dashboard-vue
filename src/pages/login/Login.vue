@@ -138,11 +138,11 @@ export default {
         handleSearchSubUser () {
             if (!this.searchSubUserInput) {
                 this.searchedSubUserList = this.subUserList
-                return false
+                return
             }
             let searchArr = this.searchSubUserInput.split('')
             let reg = new RegExp(searchArr.join('.*'))
-            this.searchedSubUserList = this.subUserList.filter(item => reg.exec(item.username) || reg.exec(item.company))
+            this.searchedSubUserList = this.subUserList.filter(item => reg.test(item.username) || reg.test(item.company))
         },
         selectSubUser (user) {
             this.switchUser({
