@@ -4,7 +4,14 @@
         <Button type="primary" v-show="isAdmin" @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
         <Button type="primary" v-show="isSuperHigh" @click="createUserModal = true">{{$t("USER.CREATE_SUPER_USER")}}</Button>
         <Button type="primary" v-show="isAdmin" @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
-        <Table class="table" :show-header="true" :stripe="true" :context="self" :columns="userHeader" :data="userList" :no-data-text='$t("USER.NO_USER")'></Table>
+        <Input
+            v-if="userList.length > 0"
+            v-model="searchUserInput"
+            @on-change="handleSearchUser"
+            placeholder="search here"
+            style="width:300px">
+        </Input>
+        <Table class="table" :show-header="true" :stripe="true" :context="self" :columns="userHeader" :data="searchedUserList" :no-data-text='$t("USER.NO_USER")'></Table>
         <Modal v-model="createUserModal" :title='$t("USER.CREATE_USER")' @on-ok="createUser" @on-cancel="createBucketValue = ''">
             <Form ref="createUserForm" :model="createUserForm" :rules="userRuleValidate" :label-width="125">
                 <Form-item :label='$t("USER.USER_NAME")' prop="username">
@@ -41,7 +48,7 @@
                     size="small"
                     v-model="searchBindUserInput"
                     @on-change="handleSearchBindUser"
-                    placeholder="input here"
+                    placeholder="search here"
                     style="width:300px">
                 </Input>
                 <div class="bsc-user-box">
@@ -113,6 +120,8 @@ export default {
         return {
             self: this,
             userList: [],
+            searchUserInput: '',
+            searchedUserList: [],
             boundUserList: [],
             bucketList: [],
             createSubUserModal: false,
@@ -332,6 +341,7 @@ export default {
                     })
                     this.$Loading.finish()
                 }
+                this.searchedUserList = this.userList
                 this.spinShow = false
             } catch (error) {
                 this.$Loading.error()
@@ -360,6 +370,15 @@ export default {
                 this.spinShow = false
             }
         },
+        handleSearchUser () {
+            if (!this.searchUserInput) {
+                this.searchedUserList = this.userList
+                return false
+            }
+            let searchArr = this.searchUserInput.split('')
+            let reg = new RegExp(searchArr.join('.*'))
+            this.searchedUserList = this.userList.filter(item => reg.exec(item.email) || reg.exec(item.username))
+        },
         handleSearchBindUser () {
             if (!this.searchBindUserInput) {
                 this.searchBindUserList = this.boundUserList
@@ -377,7 +396,10 @@ export default {
                     userinfo.selected && console.log(userinfo)
                     if (userinfo.selected) {
                         this.$http.post(user.state.type === 'superadmin' ? BIND_USER_SUPERADMIN : BIND_USER, { email: userinfo.email })
-                        this.userList.push({ ...userinfo, type: this.userType(userinfo) })
+                        this.searchBindUserInput = ''
+                        this.boundUserList = []
+                        this.searchUserInput = ''
+                        this.getUserList()
                     }
                 })).then(res => console.log(res), err => console.error(err))
                 this.$Loading.finish()
@@ -396,7 +418,10 @@ export default {
         },
         unbindUser (userinfo, index) {
             this.$http.post(user.state.type === 'superadmin' ? UNBIND_USER_SUPERADMIN : UNBIND_USER, {email: userinfo.email}).then(res => {
-                this.userList.splice(index, 1)
+                this.searchBindUserInput = ''
+                this.boundUserList = []
+                this.searchUserInput = ''
+                this.getUserList()
             })
         },
         createUser () {
@@ -406,6 +431,7 @@ export default {
                     this.$Loading.start()
                     self.$http.post(this.isSuperHigh ? CREATE_SUB_USER : user.state.type === 'superadmin' ? CREATE_USER_SUPERADMIN : CREATE_USER, {...self.createUserForm}).then(res => {
                         self.createUserForm = { username: '', email: '', password: '', company: '', type: 'normal' }
+                        this.searchUserInput = ''
                         this.getUserList()
                         this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
                         this.$Loading.finish()
@@ -448,6 +474,7 @@ export default {
                             })
                         }
                     }))
+                    this.searchUserInput = ''
                     this.getUserList()
                     this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
                 } catch (error) {
@@ -487,6 +514,7 @@ export default {
                         file_acl: convertObject2Array(acl.file_acl_obj)
                     })
                 }))
+                this.searchUserInput = ''
                 this.getUserList()
                 this.$Message.success(this.$t('USER.UPDATE_SUB_SUCCESS'))
             } catch (error) {

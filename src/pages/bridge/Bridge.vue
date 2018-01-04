@@ -4,11 +4,18 @@
             <div class="tab-register">
                 <div class="header">
                     <img src="../../assets/logo.png" alt="logo" />
+                    <Input
+                        v-if="subUserList.length > 0"
+                        v-model="searchSubUserInput"
+                        @on-change="handleSearchSubUser"
+                        placeholder="search here"
+                        style="width:300px">
+                    </Input>
                     <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
                 </div>
                 <div class="wrap">
                     <div class="body">
-                        <div v-if="subUserList.length > 0" class="card-user" v-for="user in subUserList" :key="user.ts" @click="selectSubUser(user)">
+                        <div v-if="subUserList.length > 0" class="card-user" v-for="user in searchedSubUserList" :key="user.ts" @click="selectSubUser(user)">
                             <span class="info"><Icon type="person"></Icon> {{user.username}}</span>
                             <span class="info"><Icon type="briefcase"></Icon> {{user.company}}</span>
                             <span class="icon" v-show="user.info && user.info.type === 'super'"><Icon type="star"></Icon></span>
@@ -29,6 +36,8 @@ export default {
     data () {
         return {
             lang: getCookie('uc_lang') || 'cn',
+            searchSubUserInput: '',
+            searchedSubUserList: user.state.subUserList || [],
             selectedCustomer: '',
             showUserSelect: false,
             userInfo: user.state || {},
@@ -70,6 +79,7 @@ export default {
             this.userInfo = data
             if (res.length > 0) {
                 this.subUserList = res
+                this.searchedSubUserList = res
                 this.showUserSelect = true
                 await this.$store.dispatch('setUserInfo', {
                     ...data,
@@ -78,6 +88,15 @@ export default {
             } else {
                 this.toIndex(data, 'user')
             }
+        },
+        handleSearchSubUser () {
+            if (!this.searchSubUserInput) {
+                this.searchedSubUserList = this.subUserList
+                return false
+            }
+            let searchArr = this.searchSubUserInput.split('')
+            let reg = new RegExp(searchArr.join('.*'))
+            this.searchedSubUserList = this.subUserList.filter(item => reg.exec(item.username) || reg.exec(item.company))
         },
         selectSubUser (user) {
             this.toIndex({
