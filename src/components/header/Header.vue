@@ -2,9 +2,9 @@
     <div class="bsc-header">
         <div class="layout-header">
             <div class="layout-header-left">
-                <a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">{{$t("NAV.CDN")}}</a>
-                <a disabled class="active">{{$t("NAV.CWN")}}</a>
-                <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom"><a disabled>{{$t("NAV.CLN")}}</a></Tooltip>
+                <a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">CDN-X</a>
+                <a disabled class="active">CWN-X</a>
+                <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom"><a disabled>CLN-X</a></Tooltip>
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
@@ -13,7 +13,7 @@
                     </Tooltip>
                 </div>
                 <div class="button-document">
-                    <i-switch v-model="lang" @on-change="toggleLanguage">
+                    <i-switch v-model="lang" @on-change="toggleLanguage" >
                         <span slot="open">中</span>
                         <span slot="close">EN</span>
                     </i-switch>
@@ -23,7 +23,7 @@
                         <Icon type="android-color-palette" :size="24"></Icon>
                     </Tooltip>
                 </div>
-                <Dropdown style="margin-left: 13px"
+                <Dropdown style="margin-left:20px"
                           @on-click="menuClick"
                           placement="bottom-end">
                     <a class="dropdown-link"
@@ -138,7 +138,7 @@ export default {
     .layout-header {
         .fb(space-between,center);
         .wh(100%,60px);
-        background: @primary-color;
+        background: #20a0ff;
         box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
         position: fixed;
         z-index: 1000;
@@ -148,7 +148,7 @@ export default {
             a {
                 display: inline-block;
                 line-height: 60px;
-                .sc(18px,@menu-text-color);
+                .sc(18px,#d3ebfb);
                 font-weight: 500;
                 .wh(140px,60px);
                 background-repeat: no-repeat;
@@ -156,8 +156,9 @@ export default {
                 background-position: 20px center;
                 padding-left: 60px;
 
-				&:active {
-					background-color: #1b8de2;
+                &:active {
+                    background-color: #1b8de2;
+                    color: #fff;
                 }
             }
 
@@ -174,7 +175,8 @@ export default {
             }
 
 			.active {
-				background-color: #1b8de2;
+                background-color: #1b8de2;
+                color: #fff;
 			}
         }
 
@@ -185,7 +187,7 @@ export default {
             .button-document {
                 .sc(22px,@menu-text-color);
                 font-weight: bolder;
-                padding: 0 15px;
+                padding: 0 20px;
                 border-right: 1px solid #1b8de2;
                 cursor: pointer;
                 i {
@@ -195,9 +197,10 @@ export default {
             }
 
             .icon-top-down {
-                .sc(16px,@menu-text-color);
+                .sc(18px,@menu-text-color);
                 padding-left: 8px;
             }
+
         }
         .dropdown-link {
             .sc(22px,@menu-text-color);
@@ -205,3 +208,9 @@ export default {
     }
 }
 </style>
+<style lang="less">
+.bsc-switch .bsc-switch-checked {
+                border-color: #fff;
+            }
+</style>
+
