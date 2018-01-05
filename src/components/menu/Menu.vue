@@ -2,7 +2,7 @@
     <div class="layout-menu" :class="{'layout-menu-mini': isMini}">
         <Menu ref="menu" class="mini" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName" @on-mini-change="miniChange" :imgSrc="imgSrc">
             <div class="layout-logo-left">
-                <img class="logo-big" src="../../assets/bsc-logo.svg" height="30px" />
+                <img class="logo-big" :src="logoSrc" height="30px" />
             </div>
             <Menu-item v-for="item in menuList" :name="item.name" :key="item.index" v-if="!item.children">
                 <img v-bind:src="item.icon" class="icon-menu" height="15px" />
@@ -26,6 +26,8 @@ import leftBlue from '../../assets/menu-toggle-lb.svg'
 import left from '../../assets/menu-toggle-l.svg'
 import rightBlue from '../../assets/menu-toggle-rb.svg'
 import right from '../../assets/menu-toggle-r.svg'
+import logo from '../../assets/bsc-logo.svg'
+import logoMini from '../../assets/bsc-logo-mini.svg'
 export default {
     data () {
         return {
@@ -40,6 +42,9 @@ export default {
     computed: {
         menuList: function () {
             return _.filter(menuState.state.menuList, item => item.show)
+        },
+        logoSrc () {
+            return this.isMini ? logoMini : logo
         }
     },
     methods: {

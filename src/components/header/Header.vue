@@ -1,6 +1,6 @@
 <template>
     <div class="bsc-header">
-        <div class="layout-header">
+        <div class="layout-header" :class="{'layout-header-mini': miniMenu}">
             <div class="layout-header-left">
                 <a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">CDN-X</a>
                 <a disabled class="active">CWN-X</a>
@@ -84,6 +84,9 @@ export default {
         },
         theme: function () {
             return this.$store.state.theme
+        },
+        miniMenu () {
+            return this.$store.state.miniMenu
         }
     },
     props: ['username'],
@@ -205,6 +208,9 @@ export default {
         .dropdown-link {
             .sc(22px,@menu-text-color);
         }
+    }
+    .layout-header-mini {
+        padding-right: 60px;
     }
 }
 </style>

@@ -14,7 +14,7 @@ const store = new Vuex.Store({
     state: {
         token: sessionStorage.getItem('token'),
         theme: sessionStorage.getItem('theme') || 'dark',
-        miniMenu: sessionStorage.getItem('miniMenu') || false
+        miniMenu: false
     },
     actions,
     getters,

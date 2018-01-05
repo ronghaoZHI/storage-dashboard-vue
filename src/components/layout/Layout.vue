@@ -27,7 +27,6 @@ export default {
             return user.state.username
         },
         miniMenu () {
-            console.log(this.$store.state.miniMenu)
             return this.$store.state.miniMenu
         }
     },
