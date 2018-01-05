@@ -2,7 +2,7 @@
     <div class="layout">
         <Row type="flex" class="layout-row">
             <menu-left></menu-left>
-            <div class="layout-container">
+            <div class="layout-container" :class="{'layout-container-mimi-menu': miniMenu}">
                 <div class="flex-box">
                     <header-top :username='username'></header-top>
                     <div class="layout-content">
@@ -25,6 +25,10 @@ export default {
     computed: {
         username () {
             return user.state.username
+        },
+        miniMenu () {
+            console.log(this.$store.state.miniMenu)
+            return this.$store.state.miniMenu
         }
     },
     created () {
@@ -55,6 +59,9 @@ export default {
         margin-left: @layout-margin-left;
         position: relative;
         background: @body-background;
+    }
+    .layout-container-mimi-menu {
+        margin-left: 60px;
     }
 }
 .flex-box {

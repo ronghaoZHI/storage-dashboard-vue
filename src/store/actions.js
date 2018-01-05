@@ -5,5 +5,6 @@ export const setUserInfo = ({ commit }, info) => info.username && commit(types.S
 export const setToken = ({ commit }, token) => token.length > 1 && commit(types.SET_TOKEN, token)
 export const setBucketList = ({ commit }, list) => commit(types.BUCKET_LIST, list)
 export const toggleTheme = ({ commit }, theme) => commit(types.TOGGLE_THEME, theme)
+export const toggleMiniMenu = ({ commit }, miniMenu) => commit(types.TOGGLE_MINIMENU, miniMenu)
 export const logout = ({ commit }) => commit(types.LOGOUT)
 export const refreshMenu = ({ commit }) => commit(types.REFRESH_MENU)

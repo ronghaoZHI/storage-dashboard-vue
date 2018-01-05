@@ -13,7 +13,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         token: sessionStorage.getItem('token'),
-        theme: sessionStorage.getItem('theme') || 'dark'
+        theme: sessionStorage.getItem('theme') || 'dark',
+        miniMenu: sessionStorage.getItem('miniMenu') || false
     },
     actions,
     getters,
@@ -25,6 +26,10 @@ const store = new Vuex.Store({
         [types.TOGGLE_THEME] (state, theme) {
             state.theme = theme
             sessionStorage.setItem('theme', theme)
+        },
+        [types.TOGGLE_MINIMENU] (state, miniMenu) {
+            state.miniMenu = miniMenu
+            sessionStorage.setItem('miniMenu', miniMenu)
         },
         [types.LOGOUT] (state) {
             sessionStorage.removeItem('user')

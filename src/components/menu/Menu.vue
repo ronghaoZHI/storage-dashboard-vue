@@ -1,6 +1,6 @@
 <template>
-    <div class="layout-menu">
-        <Menu ref="menu" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName">
+    <div class="layout-menu" :class="{'layout-menu-mini': isMini}">
+        <Menu ref="menu" class="mini" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName" @on-mini-change="miniChange" :imgSrc="imgSrc">
             <div class="layout-logo-left">
                 <img class="logo-big" src="../../assets/bsc-logo.svg" height="30px" />
             </div>
@@ -22,12 +22,19 @@
 </template>
 <script>
 import menuState from '@/store/modules/menu'
+import leftBlue from '../../assets/menu-toggle-lb.svg'
+import left from '../../assets/menu-toggle-l.svg'
+import rightBlue from '../../assets/menu-toggle-rb.svg'
+import right from '../../assets/menu-toggle-r.svg'
 export default {
     data () {
         return {
             iconSize: 24,
             activeName: this.$route.meta.ali,
-            openName: this.$route.meta.parent ? [this.$route.meta.parent] : []
+            openName: this.$route.meta.parent ? [this.$route.meta.parent] : [],
+            isMini: false,
+            imgSrc: { leftBlue, left, rightBlue, right },
+            subMenus: ['group', 'partition', 'traffic', 'machine', 'template', 'pipeline', 'output', 'job', 'statistics']
         }
     },
     computed: {
@@ -38,9 +45,17 @@ export default {
     methods: {
         goRouter (link) {
             this.$router.push({ name: link })
+            // if (this.isMini && this.subMenus.includes(link)) {
+            //     this.openName = []
+            //     this.$refs['menu'].updateOpened()
+            // }
         },
         updateOpenName () {
             this.$refs['menu'].updateOpened()
+        },
+        async miniChange (value) {
+            this.isMini = value
+            await this.$store.dispatch('toggleMiniMenu', this.isMini)
         }
     },
     watch: {
@@ -61,15 +76,15 @@ export default {
     background: @menu-background;
     position: fixed;
 }
+.layout-menu-mini{
+    width: 60px;
+}
 
 .layout-logo-left {
     .wh(100%,60px);
     border-radius: @common-radius;
     padding: 15px 15px 0 15px;
-}
-
-.dark .layout-logo-left {
-    background: @primary-color-dark;
+    background: #273138;
 }
 
 </style>
