@@ -104,6 +104,83 @@ export default {
 
 </script>
 <style lang="less" scoped>
+.dark .@{css-prefix}machine-card {
+    border: @common-border-dark;
+    color: #c0ccda;
+
+    .card-title {
+        i {
+            color: #00a854;
+        }
+    }
+
+    .alive {
+        background-color: #414e55;
+        .sc(14px, #c0ccda);
+    }
+
+    .down {
+        background-color: #f85959;
+    }
+
+    .card-mem {
+        border-top: @common-border-dark;
+
+        .mem-show {
+            background: #414e55;
+
+            .mem-used {
+                color: #fff;
+            }
+        }
+    }
+
+    .card-cpu {
+        border-top: @common-border-dark;
+        span {
+            .sc(14px,#c0ccda)
+        }
+    }
+
+    .card-partition {
+        border-top: @common-border-dark;
+    }
+
+    .card-ip {
+        border-top: @common-border-dark;
+        .sc(13px, #c0ccda);
+
+        & > div:not(:first-child) {
+            border-top: @common-border-dark;
+        }
+    }
+
+    .card-footer {
+        background: #414e55;
+        .sc(13px, #c0ccda);
+
+        .button-close {
+            border-top: @common-border-dark;
+        }
+
+        .card-network {
+            background: #414e55;
+            .sc(13px, #c0ccda);
+            border: @common-border-dark;
+
+            .row-network {
+                & > span {
+                    border-top: @common-border-dark;
+                }
+
+                & > span:not(:last-child) {
+                    border-top: @common-border-dark;
+                }
+            }
+        }
+    }
+}
+
 .@{css-prefix}machine-card {
     .wh(300px, 100%);
     margin: 0 15px 15px 0;

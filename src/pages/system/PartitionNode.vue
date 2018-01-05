@@ -37,6 +37,10 @@ export default {
 
 </script>
 <style lang="less" scoped>
+.dark .@{css-prefix}partition-node {
+    border: @common-border-dark;
+    color: #fff;
+}
 .@{css-prefix}partition-node {
     .wh(44px,20px);
     border: @common-border;
