@@ -1,6 +1,6 @@
 <template>
     <div class="layout-menu" :class="{'layout-menu-mini': isMini}">
-        <Menu ref="menu" class="mini" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName" @on-mini-change="miniChange" :imgSrc="imgSrc" :toggleTop="toggleTop">
+        <Menu ref="menu" class="mini" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName" @on-mini-change="miniChange" :imgSrc="imgSrc" toggleTop="610px">
             <div class="layout-logo-left">
                 <img class="logo-big" :src="logoSrc" height="30px" />
             </div>
@@ -45,9 +45,6 @@ export default {
         },
         logoSrc () {
             return this.isMini ? logoMini : logo
-        },
-        toggleTop () {
-            return this.$el ? `${(this.$el.clientHeight / 2)}px` : '400px'
         }
     },
     methods: {
