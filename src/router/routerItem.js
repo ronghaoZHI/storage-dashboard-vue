@@ -30,7 +30,7 @@ import PipelineEdit from '@/pages/video/PipelineEdit'
 
 const layoutChild = [{
     path: '',
-    redirect: user.state.type === 'admin' && !user.state.subUser ? '/user' : '/overview'
+    redirect: user.state.type === 'admin' && !user.state.subUser ? '/user' : user.state.type === 'sub' ? 'bucket' : '/overview'
 }, {
     path: '/overview',
     name: 'overview',

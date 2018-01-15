@@ -2,7 +2,7 @@
     <div class="bsc-header">
         <div class="layout-header" :class="{'layout-header-mini': miniMenu}">
             <div class="layout-header-left">
-                <a v-bind:disabled="!cdnUrl" href="http://portal.baishancloud.com">CDN-X</a>
+                <a @click="getCDNUrl()">CDN-X</a>
                 <a disabled class="active">CWN-X</a>
                 <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom"><a disabled>CLN-X</a></Tooltip>
             </div>
@@ -102,6 +102,10 @@ export default {
                 await clear()
                 this.$router.push('/login')
             }
+        },
+        getCDNUrl () {
+            console.log(!this.cdnUrl ? 'http://portal.qingcdn.com/products/cdnx/index.html' : 'http://portal.baishancloud.com')
+            window.location = !this.cdnUrl ? 'http://portal.qingcdn.com/products/cdnx/index.html' : 'http://portal.baishancloud.com'
         },
         async changePassword () {
             if (this.rePasswordForm.password.length < 6) {
