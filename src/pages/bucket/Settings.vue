@@ -177,9 +177,9 @@
             <Tab-pane :label='$t("SETTINGS.SECURITY_CHAIN")' name="whiteList">
                 <white-list v-if="tabName === 'whiteList'"></white-list>
             </Tab-pane>
-            <Tab-pane :label='$t("SETTINGS.CUSTOM_DOMAIN")' name="customDomain">
+            <!-- <Tab-pane :label='$t("SETTINGS.CUSTOM_DOMAIN")' name="customDomain">
                 <custom-domain v-if="tabName === 'customDomain'"></custom-domain>
-            </Tab-pane>
+            </Tab-pane> -->
         </Tabs>
         <Modal v-model="showCorsModal" :title='$t("STORAGE.CORS_CONFIG")' width="700" class="edit-modal">
             <div class="form-item">
