@@ -1,11 +1,12 @@
 import { HOST } from './HOST'
 
+const HTTP_VERSION = `${location.protocol}//`
 const VERSION = '/v1/'
 const VERSION_TRANSCODER = '/2012-09-25/'
 
-const group = (url) => '//' + HOST.apiHost + VERSION + url
-const groupTranscoder = (url) => '//' + HOST.transcoderHOST + VERSION_TRANSCODER + url
-const groupImgx = (url) => '//' + HOST.imgxHOST + url
+const group = (url) => HTTP_VERSION + HOST.apiHost + VERSION + url
+const groupTranscoder = (url) => HTTP_VERSION + HOST.transcoderHOST + VERSION_TRANSCODER + url
+const groupImgx = (url) => HTTP_VERSION + HOST.imgxHOST + url
 
 export const LOGIN = group('auth/login')
 export const LOGOUT = group('auth/logout')
