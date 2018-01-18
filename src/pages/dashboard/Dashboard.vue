@@ -127,7 +127,7 @@ export default {
     data () {
         return {
             showChart: 0,
-            isRedirect: true,
+            isRedirect: false,
             dateDividedBefore: '20171130',
             dateDivided: '20171201',
             bucketList: [],
