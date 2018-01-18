@@ -3,6 +3,9 @@
         <Spin size="bigger" fix v-if="spinShow"></Spin>
         <div class="toolbar">
             <div class="button-datepicker">
+                <Tooltip class="redirect-info" v-if="isRedirect" :content='$t("DASHBOARD.IS_REDIRECT", {bucket: selectedBucket})' placement="bottom-start">
+                    <span>*</span>
+                </Tooltip>
                 <Select :prepend="true" v-model="selectedBucket" style="width:30%;float:left;margin-right:16px;" @on-change="getInitData">
                     <Icon slot="prepend" type="ios-folder"></Icon>
                     <Option v-for="item in bucketList" :value="item.Name" :key="item.Name">{{ item.Name }}</Option>
@@ -124,6 +127,7 @@ export default {
     data () {
         return {
             showChart: 0,
+            isRedirect: true,
             dateDividedBefore: '20171130',
             dateDivided: '20171201',
             bucketList: [],
@@ -186,6 +190,7 @@ export default {
                 // old storage
                 try {
                     await Promise.all([this.$http.get(this.getApiURL('old', this.dateRange)).then(res => {
+                        this.isRedirect = res.is_redirect
                         // overview data old
                         this.originOverview = {
                             capacity: this.convertData(res.total.space_used, true),
@@ -228,14 +233,17 @@ export default {
                     if (formatDate(this.dateSelect[0]) >= this.dateDivided) {
                         // new storage
                         await Promise.all([this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
+                            this.isRedirect = res.is_redirect
                             resNew = res
                         })])
                     } else {
                         // old and new storage
                         await Promise.all([this.$http.get(this.getApiURL('old', formatDate(this.dateSelect[0]) + '-' + this.dateDividedBefore)).then(res => {
+                            this.isRedirect = res.is_redirect
                             resOld = res
                             oldTimeLength = res.time_nodes.length
                         }), this.$http.get(this.getApiURL('new', this.dateRange)).then(res => {
+                            this.isRedirect = res.is_redirect
                             resNew = res
                         })])
                     }
@@ -755,6 +763,13 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             border-color: #20a0ff !important;
             color: #fff !important;
         }
+    }
+
+    .redirect-info {
+        float: left;
+        color: #8492a6;
+        margin-right: 10px;
+        font-size: 24px;
     }
 
     .overview {
