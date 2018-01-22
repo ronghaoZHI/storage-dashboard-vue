@@ -391,9 +391,7 @@ export default {
         async bindUser () {
             this.$Loading.start()
             try {
-                console.log('bind user', this.boundUserList)
                 await Promise.all(Array.map(this.boundUserList, (userinfo) => {
-                    userinfo.selected && console.log(userinfo)
                     if (userinfo.selected) {
                         this.$http.post(user.state.type === 'superadmin' ? BIND_USER_SUPERADMIN : BIND_USER, { email: userinfo.email })
                         this.searchBindUserInput = ''

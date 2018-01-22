@@ -104,7 +104,6 @@ export default {
             }
         },
         getCDNUrl () {
-            console.log(!this.cdnUrl ? 'http://portal.qingcdn.com/products/cdnx/index.html' : 'http://portal.baishancloud.com')
             window.location = !this.cdnUrl ? 'http://portal.qingcdn.com/products/cdnx/index.html' : 'http://portal.baishancloud.com'
         },
         async changePassword () {

@@ -50,10 +50,7 @@ export default {
     methods: {
         goRouter (link) {
             this.$router.push({ name: link })
-            console.log(this.$el, this.$el.clientHeight)
-            console.log('menu', link, this.openName)
             if (this.isMini && this.subMenus.includes(link)) {
-                console.log('mini', link, this.openName)
                 this.openName = []
                 this.$refs['menu'].updateOpened()
             }

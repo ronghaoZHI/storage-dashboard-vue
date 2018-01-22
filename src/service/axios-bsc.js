@@ -34,6 +34,7 @@ axios.defaults.headers.common['Authorization'] = store.state.token
 
 async function requestConf (config) {
     // transcoder url ? getTranscoderUrlConfig : isLogin(SSO) ? next : login
+    console.log('config====', config)
     return /transcoder-ss.bscstorage.com/.test(config.url) ? getTranscodeUrlConfig(config) : isSSOLogin ? config : logout('Login status is invalid')
 }
 

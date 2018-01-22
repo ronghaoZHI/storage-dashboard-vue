@@ -69,7 +69,6 @@ export default {
             try {
                 let res = await this.$http.get(`${CUSTOM_DOMAIN}/${this.bucket}`)
                 this.listData = res.map(domain => { return { domain } })
-                console.log(res, this.listData)
             } catch (error) {
                 console.log(error)
                 this.noDataText = `${this.$t('PUBLIC.GET_LIST_FAIL')} ${error.msg}`

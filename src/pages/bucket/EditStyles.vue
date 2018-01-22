@@ -480,7 +480,6 @@ export default {
             }
         },
         async submitStyles (autoSave = false) {
-            console.log(autoSave)
             if (this.styles2Save()) {
                 const file = new Blob([JSON.stringify(this.styles2Save())], {'type': 'application/json'})
                 try {
@@ -500,7 +499,6 @@ export default {
             if (this.padColorError || this.borderColorError || this.fontColorError || this.fontbackColorError || this.imgError) {
                 this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
             } else {
-                console.log(autoSave)
                 this.$refs['basicForm'].validate((valid) => {
                     if (valid) {
                         this.submitStyles(autoSave)
