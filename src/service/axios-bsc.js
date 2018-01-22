@@ -4,6 +4,7 @@ import store from '@/store'
 import { aws4 } from '@/service/aws4/aws4'
 import { getKey } from '@/service/Aws'
 import { logout, isSSOLogin } from '@/service/Helper'
+import xml2js from 'xml2js'
 
 const STATUS_CODE = {
     '400': 'INVALID REQUEST',
@@ -12,13 +13,22 @@ const STATUS_CODE = {
     '404': 'NOT FOUND',
     '500': 'SERVER ERROR'
 }
-
+const xmlParser = new xml2js.Parser({ explicitArray: false, ignoreAttrs: true })
+const xml2json = (data) => {
+    let jsonData = {}
+    xmlParser.parseString(data, (err, result) => {
+        jsonData = err ? false : result
+    })
+    return jsonData
+}
 // for cros cookie
 axios.interceptors.request.use(config => {
     return requestConf(config)
 }, error => Promise.reject(error))
 axios.interceptors.response.use(response => errorHandle(response.data), error => {
-    if ((error.response && error.response.status)) {
+    if (error.response && error.response.data && xml2json(error.response.data)) {
+        iView.Message.error(xml2json(error.response.data).Error.Message)
+    } else if ((error.response && error.response.status)) {
         STATUS_CODE[error.response.status] ? iView.Message.warning(STATUS_CODE[error.response.status]) : iView.Message.warning('Error, please try again')
     } else if (error.request) {
         iView.Message.warning('The network may be broken, please try again')
@@ -34,8 +44,7 @@ axios.defaults.headers.common['Authorization'] = store.state.token
 
 async function requestConf (config) {
     // transcoder url ? getTranscoderUrlConfig : isLogin(SSO) ? next : login
-    console.log('config====', config)
-    return /transcoder-ss.bscstorage.com/.test(config.url) ? getTranscodeUrlConfig(config) : isSSOLogin ? config : logout('Login status is invalid')
+    return /transcoder-ss\.bscstorage\.com/.test(config.url) ? getTranscodeUrlConfig(config) : isSSOLogin ? config : logout('Login status is invalid')
 }
 
 async function getTranscodeUrlConfig (config) {
