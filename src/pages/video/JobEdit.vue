@@ -190,7 +190,7 @@
 <script>
 import { listPipelines, getTemplateInfo } from '@/pages/video/data'
 import { handler } from '@/service/Aws'
-
+import { getTranscoderUrl } from '@/service/API'
 export default {
     data () {
         return {
@@ -453,7 +453,7 @@ export default {
             let saved = await this.convert2Save(this.job)
             try {
                 this.$Loading.start()
-                await this.$http.post('http://transcoder-ss.bscstorage.com/2012-09-25/jobs', saved)
+                await this.$http.post(getTranscoderUrl('jobs'), saved)
                 this.$Loading.finish()
                 this.$Message.success(this.$t('VIDEO.CREATED'))
                 this.$router.push({ name: 'job' })
