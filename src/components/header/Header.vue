@@ -2,9 +2,9 @@
     <div class="bsc-header">
         <div class="layout-header" :class="{'layout-header-mini': miniMenu}">
             <div class="layout-header-left">
-                <a @click="getCDNUrl()">CDN-X</a>
-                <a disabled class="active">CWN-X</a>
-                <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom"><a disabled>CLN-X</a></Tooltip>
+                <a @click="getCDNUrl()">{{$t('NAV.CDN')}}</a>
+                <a disabled class="active">{{$t('NAV.CWN')}}</a>
+                <Tooltip :content='$t("OVERVIEW.COMING_SOON")' placement="bottom"><a disabled>{{$t('NAV.CLN')}}</a></Tooltip>
             </div>
             <div class="layout-header-right">
                 <div class="button-document" @click="openDoc">
@@ -173,7 +173,7 @@ export default {
             }
 
             & > a.active {
-                background-image: url('../../assets/CWN.svg');
+                background-image: url('../../assets/CWN-active.svg');
             }
 
             & > div a{
@@ -209,7 +209,7 @@ export default {
 
         }
         .dropdown-link {
-            .sc(22px,@menu-text-color);
+            .sc(16px,@menu-text-color);
         }
     }
     .layout-header-mini {

@@ -1,8 +1,8 @@
 <template>
     <div class="layout-menu" :class="{'layout-menu-mini': isMini}">
-        <Menu ref="menu" class="mini" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName" @on-mini-change="miniChange" :imgSrc="imgSrc" toggleTop="610px">
+        <Menu ref="menu" class="mini" :active-name="activeName" theme="dark" :open-names="openName" :accordion="true" width="auto" @on-select="goRouter" @on-open-change="updateOpenName" @on-mini-change="miniChange" :imgSrc="imgSrc" :toggleTop="toogleTop">
             <div class="layout-logo-left">
-                <img class="logo-big" :src="logoSrc" height="30px" />
+                <img class="logo-big" :src="logoSrc" :width="logoWidth" />
             </div>
             <Menu-item v-for="item in menuList" :name="item.name" :key="item.index" v-if="!item.children">
                 <img v-bind:src="item.icon" class="icon-menu" height="15px" />
@@ -36,6 +36,7 @@ export default {
             openName: this.$route.meta.parent ? [this.$route.meta.parent] : [],
             isMini: false,
             imgSrc: { leftBlue, left, rightBlue, right },
+            toogleTop: `${document.documentElement.clientHeight / 2}px`,
             subMenus: ['group', 'partition', 'traffic', 'machine', 'template', 'pipeline', 'output', 'job', 'statistics']
         }
     },
@@ -45,6 +46,15 @@ export default {
         },
         logoSrc () {
             return this.isMini ? logoMini : logo
+        },
+        logoWidth () {
+            return this.isMini ? '30px' : '164px'
+        }
+    },
+    mounted () {
+        const self = this
+        window.onresize = () => {
+            self.toogleTop = `${document.documentElement.clientHeight / 2}px`
         }
     },
     methods: {
