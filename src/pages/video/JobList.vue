@@ -43,7 +43,7 @@ export default {
                 title: this.$t('VIDEO.JOB_ID'),
                 width: '9%',
                 render: (h, params) => {
-                    let idArray = params.row.Id.substr(-7)
+                    let jobiId = params.row.Id.split('-')[1]
                     return h('Poptip', {
                         props: {
                             content: params.row.Id,
@@ -53,7 +53,7 @@ export default {
                         style: {
                             cursor: 'pointer'
                         }
-                    }, [h('div', [idArray])])
+                    }, [h('div', [jobiId])])
                 }
             }, {
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
