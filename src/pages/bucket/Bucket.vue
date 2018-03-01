@@ -27,6 +27,8 @@ import { removeItemFromArray } from '@/service/bucketService'
 import { getBucketList } from '@/service/Data'
 import moment from 'moment'
 import userStore from '@/store/modules/user'
+import { SUB_USER, REDIRECT_BUCKET } from '@/service/API'
+
 export default {
     data () {
         return {
@@ -147,6 +149,7 @@ export default {
                 this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
                 await this.$store.dispatch('setBucketList', await handler('listBuckets'))
                 this.convertBucketList()
+                userStore.state.type === 'super' && this.createRedirectBucket(this.createBucketValue)
                 this.createBucketValue = ''
             } else {
                 this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
@@ -163,6 +166,18 @@ export default {
             } catch (error) {
                 console.log(error)
             }
+        },
+        async createRedirectBucket (newBucket) {
+            const subUsers = await this.$http.get(SUB_USER)
+            await Promise.all(Array.map(subUsers, (user) => {
+                return this.$http.post(REDIRECT_BUCKET, {
+                    original: newBucket,
+                    email: user.email,
+                    redirect: newBucket + '-' + user.username.replace(/\W|_/g, '').toLowerCase(),
+                    bucket_acl: ['READ_ACP'],
+                    file_acl: ['READ_ACP']
+                })
+            }))
         }
     },
     watch: {
