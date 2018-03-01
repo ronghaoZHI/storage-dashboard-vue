@@ -14,7 +14,6 @@ import Settings from '@/pages/bucket/Settings'
 import PictureStyles from '@/pages/bucket/PictureStyles'
 import EditStyles from '@/pages/bucket/EditStyles'
 import FilePermissions from '@/pages/bucket/FilePermissions'
-import user from '@/store/modules/user'
 import TemplateList from '@/pages/video/TemplateList'
 import TemplateEdit from '@/pages/video/TemplateEdit'
 import OutputList from '@/pages/video/OutputList'
@@ -29,9 +28,6 @@ import PipelineList from '@/pages/video/PipelineList'
 import PipelineEdit from '@/pages/video/PipelineEdit'
 
 const layoutChild = [{
-    path: '',
-    redirect: user.state.type === 'admin' && !user.state.subUser ? '/user' : user.state.type === 'sub' ? 'bucket' : '/overview'
-}, {
     path: '/overview',
     name: 'overview',
     meta: { title: 'Overview', ali: 'overview' }, // 'ali' => Menu.vue

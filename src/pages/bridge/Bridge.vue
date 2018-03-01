@@ -105,8 +105,9 @@ export default {
                 subUserList: this.subUserList
             })
         },
-        async toIndex (data, router = '/') {
-            await this.$store.dispatch('setUserInfo', data)
+        async toIndex (user, router = '/') {
+            router = user.type === 'admin' && !user.subUser ? '/user' : user.type === 'sub' ? 'bucket' : '/overview'
+            await this.$store.dispatch('setUserInfo', user)
             await this.refreshMenu()
 
             let redirect = this.$route.query.callback // get redirect path
