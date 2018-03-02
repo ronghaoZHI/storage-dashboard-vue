@@ -156,13 +156,21 @@ export default {
                 ],
                 company: [
                     { required: true, message: 'Requires company', trigger: 'blur' },
-                    { type: 'string', message: 'Email format is incorrect', trigger: 'blur' }
+                    { type: 'string', message: 'Company format is incorrect', trigger: 'blur' }
                 ]
             },
             createSubUserForm: initSubUser(),
             subUserRuleValidate: {
                 username: [
-                    { required: true, message: 'Requires user name', trigger: 'blur' }
+                    { required: true, message: 'Requires user name', trigger: 'blur' },
+                    { validator: (rule, value, callback) => {
+                        if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+                            callback(new Error('Username can only contain letters , numbers and underlines'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'change' }
                 ],
                 email: [
                     { required: true, message: 'Requires email', trigger: 'blur' },
@@ -174,7 +182,7 @@ export default {
                 ],
                 company: [
                     { required: true, message: 'Requires company', trigger: 'blur' },
-                    { type: 'string', message: 'Email format is incorrect', trigger: 'blur' }
+                    { type: 'string', message: 'Company format is incorrect', trigger: 'blur' }
                 ]
             },
             userHeader: user.state && user.state.type === 'admin' || user.state.type === 'superadmin' ? [
