@@ -10,25 +10,25 @@
     $ brew update
     $ brew install yarn
 
-###开发环境配置
+### 开发环境配置
 
     $ git@git.coding.net:baishancloud/storage-dashboard-vue.git
     $ cd storage-dashboard-vue
     $ cnpm install
-    
-###开发
+
+### 开发
 
     $ npm run dev
 
-###本地构建并推送到release分支
+### 本地构建并推送到release分支
 
 	$ sh build_release.sh
 	$ git checkout release
 	$ git push
 
-###上线测试
+### 上线测试
 
-####测试地址：http://139.224.208.26:8080/
+#### 测试地址：http://139.224.208.26:8080/
 
 本地构建后,登录测试机，并获取需要上线代码，代码需 merge 到 master 分支
 
@@ -37,14 +37,14 @@
 	$ git checkout release & git pull
 	$ cd /root/s2-init
 
-####部署代码
+#### 部署代码
 
     $ sh init.sh -i /root/install/inventory.py -b playbooks/dashboard.yaml
 
 关于S2部署以及配置，请查看s2-init
 
 ### 上线生产环境
-本地构建后,使用跳板机(ps: 申请跳板机联系林飞)，使用ip登录线上标注为[`ansible-server`](https://coding.net/t/baishancloud/p/s2-init/git/blob/master/inventories/all-node.md)的机器。以3copy为例
+本地构建后,使用跳板机(ps: 申请跳板机联系林飞)，使用ip登录线上标注为[`ansible-server`](https://github.com/bsc-s2/s2-init/blob/master/inventories/all-node.md)的机器。以3copy为例
 
     $ ssh root@222.222.12.247
     $ sudo -s
@@ -54,17 +54,17 @@
     $ cd /root/baishan/s2-init
     $ sh init.sh -i inventories/baishan-3copy/inventory.py -b playbooks/dashboard.yaml
 
-###项目结构
-####主要框架
+### 项目结构
+#### 主要框架
 - [`vue 2.3.0`](https://vuejs.org/)
-- vue-router 
+- vue-router
 - vuex
 - [`axios`](https://github.com/mzabriskie/axios)
 - [`iview`](https://www.iviewui.com/components/grid)
 - [`aws-sdk`](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html)
 
 使用`npm`管理项目依赖以及`webpack`构建工作流
-####目录结构
+#### 目录结构
 - `src` 主要代码
 - `dist` 打包输出目录，可直接运行
 - `static` 样式文件及其他静态资源
