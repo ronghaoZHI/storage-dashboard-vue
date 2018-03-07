@@ -1,6 +1,6 @@
 <template>
     <div class="bsc-user">
-        <Button type="primary" v-show="!isAdmin" @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
+        <Button type="primary" v-show="!isAdmin && !isAdminSuper" @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
         <Button type="primary" v-show="isAdmin" @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
         <Button type="primary" v-show="isSuperHigh" @click="createUserModal = true">{{$t("USER.CREATE_SUPER_USER")}}</Button>
         <Button type="primary" v-show="isAdmin" @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
@@ -185,7 +185,7 @@ export default {
                     { type: 'string', message: 'Company format is incorrect', trigger: 'blur' }
                 ]
             },
-            userHeader: user.state && user.state.type === 'admin' || user.state.type === 'superadmin' ? [
+            userHeader: user.state && user.state.type === 'admin' && !isSuper() || user.state.type === 'superadmin' ? [
                 {
                     title: 'User name',
                     width: 150,
@@ -230,6 +230,46 @@ export default {
                                 }
                             }
                         }, 'Unbind')
+                    }
+                }
+            ] : (user.state && user.state.type === 'admin' && isSuper() ? [
+                {
+                    title: 'User name',
+                    width: 150,
+                    align: 'left',
+                    key: 'username'
+                },
+                {
+                    title: 'Type',
+                    width: 120,
+                    align: 'left',
+                    key: 'type'
+                },
+                {
+                    title: 'Email',
+                    width: 250,
+                    align: 'left',
+                    key: 'email'
+                },
+                {
+                    title: 'Acl',
+                    width: 400,
+                    align: 'left',
+                    key: 'acl',
+                    render: (h, params) => {
+                        return params.row.acl ? Array.map(params.row.acl, (acl) => {
+                            return h('Tag', {props: {type: 'border'}}, `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${acl.file_acl}`)
+                        }) : 'No acl'
+                    }
+                },
+                {
+                    title: 'Creation time',
+                    width: 200,
+                    align: 'left',
+                    render: (h, params) => {
+                        let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
+                        const formatTime = moment(creationTime).format('YYYY-MM-DD hh:mm:ss')
+                        return h('div', [formatTime])
                     }
                 }
             ] : [
@@ -301,7 +341,12 @@ export default {
                         ])
                     }
                 }
-            ]
+            ])
+        }
+    },
+    computed: {
+        isAdminSuper () {
+            return user.state && user.state.type === 'admin' && isSuper()
         }
     },
     created () {
@@ -551,11 +596,8 @@ const initSubUser = (acls) => {
 }
 
 const isSuper = () => {
-    if (user.state.subUser) {
-        const userInfo = user.state.subUserList.filter(item => item.username === user.state.subUser.username)
-        return userInfo && userInfo[0].info.type === 'super'
-    }
-    return true
+    const userInfo = user.state.subUser ? user.state.subUserList.filter(item => item.username === user.state.subUser.username) : undefined
+    return userInfo && userInfo[0].info.type === 'super'
 }
 
 const convertBucketList = (user, bucketList) => {
