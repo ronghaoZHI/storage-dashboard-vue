@@ -132,7 +132,7 @@ export default {
             spinShow: true,
             isEditSubUser: false,
             iconSize: 18,
-            isAdmin: user.state && user.state.type === 'admin' || user.state.type === 'superadmin',
+            isAdmin: user.state && user.state.type === 'admin' && !isSuper() || user.state.type === 'superadmin',
             isSuperHigh: user.state.type === 'super' && user.state.super_level === 'high',
             createUserForm: {
                 username: '',
@@ -548,6 +548,14 @@ const initSubUser = (acls) => {
             file_acl_obj: { READ: false }
         }]
     }
+}
+
+const isSuper = () => {
+    if (user.state.subUser) {
+        const userInfo = user.state.subUserList.filter(item => item.username === user.state.subUser.username)
+        return userInfo && userInfo[0].info.type === 'super'
+    }
+    return true
 }
 
 const convertBucketList = (user, bucketList) => {
