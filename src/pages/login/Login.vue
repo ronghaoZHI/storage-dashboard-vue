@@ -201,6 +201,8 @@ export default {
             localStorage.setItem('keepEmail', this.keepEmail)
         },
         async toUserMange () {
+            delete user.state.subUser
+            await this.$store.dispatch('setUserInfo', user.state)
             await this.refreshMenu()
             Vue.config.lang = this.lang
             this.$router.push('user')
