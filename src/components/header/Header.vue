@@ -100,7 +100,7 @@ export default {
                 let res = await this.$http.get(BOUND_USER)
                 await this.$store.dispatch('setUserInfo', _.extend(user.state, {subUserList: res}))
                 await clear()
-                this.$router.push('/login')
+                this.$router.push('/bridge')
             }
         },
         getCDNUrl () {
