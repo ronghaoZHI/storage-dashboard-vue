@@ -151,7 +151,7 @@ export default {
                 subUserList: this.subUserList
             })
         },
-        async toIndex (data, router = '/') {
+        async toIndex (data, router = '/overview') {
             await this.$store.dispatch('setUserInfo', data)
             await this.$store.dispatch('setToken', data.token)
             this.$http.defaults.headers.common['Authorization'] = data.token
@@ -161,7 +161,7 @@ export default {
             !!redirect ? this.$router.push(redirect) : this.$router.push(router)
             Vue.config.lang = this.lang
         },
-        async switchUser (data, router = '/') {
+        async switchUser (data, router = '/overview') {
             await this.$store.dispatch('setUserInfo', data)
             await this.refreshMenu()
 
