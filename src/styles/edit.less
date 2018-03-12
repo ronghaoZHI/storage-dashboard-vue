@@ -1,5 +1,6 @@
 @edit-styles-border-color: #d7dde4;
 @edit-styles-border-color-dark: #52626d;
+@edit-styles-border-blue: #20a0ff;
 @edit-output-item-span: 180px;
 @edit-output-item-margin: 185px;
 @edit-modal-item-span: 120px;
@@ -200,6 +201,25 @@
             color: #4bb2ff;
         }
     }
+    .gravity-selector {
+        input {
+            border-color: @edit-styles-border-color-dark;
+        }
+
+        input:nth-child(3n+1) {
+            border-left: 1px solid @edit-styles-border-color-dark;
+        }
+
+        input:nth-last-child(1),
+        input:nth-last-child(2),
+        input:nth-last-child(3) {
+            border-bottom: 1px solid @edit-styles-border-color-dark;
+        }
+
+        input:checked {
+            background-color: @edit-styles-border-blue;
+        }
+    }
 }
 
 .mar-b-0{
@@ -208,4 +228,66 @@
 
 .bsc-form .bsc-form-item-label {
     font-size: 14px;
+}
+
+.gravity-selector {
+    display: inline-block;
+    width: 182px;
+    border-radius: 4px;
+    vertical-align: text-top;
+    margin-right: 20px;
+
+    input {
+        -webkit-appearance: none;
+        .wh(60px,30px);
+        border-top: 1px solid @edit-styles-border-color;
+        border-right: 1px solid @edit-styles-border-color;
+        float: left;
+        outline: none;
+        cursor: pointer;
+    }
+
+    input:nth-child(1) {
+        border-top-left-radius: 4px;
+    }
+
+    input:nth-child(3) {
+        border-top-right-radius: 4px;
+    }
+
+    input:nth-child(7) {
+        border-bottom-left-radius: 4px;
+    }
+
+    input:nth-child(9) {
+        border-bottom-right-radius: 4px;
+    }
+
+    input:nth-child(3n+1) {
+        border-left: 1px solid @edit-styles-border-color;
+    }
+
+    input:nth-last-child(1),
+    input:nth-last-child(2),
+    input:nth-last-child(3) {
+        border-bottom: 1px solid @edit-styles-border-color;
+    }
+
+    input:checked {
+        background-color: @edit-styles-border-blue;
+    }
+}
+
+.input-text-box {
+    display: inline-block;
+
+    span {
+        line-height: 24px;
+        padding-left: 5px;
+    }
+}
+
+.padding-setting {
+    display: inline-block;
+    vertical-align: text-top;
 }

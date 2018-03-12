@@ -158,6 +158,60 @@
             </div>
         </div>
         <div class="separator-line"></div>
+         <div class="editBlock">
+            <div class="section-separator">
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">水印参数配置</span>
+                </div>
+            </div>
+            <p class="page-info">水印宽度或水印高度任意项为0都将使用图片本身大小</p>
+            <div class="form-item">
+                <span class="form-label">水印宽度 : </span>
+                <div class="input-text-box">
+                    <InputNumber v-model="template.WatermarkConfig.Width"></InputNumber>
+                    <span>px</span>
+                </div>
+            </div>
+            <div class="form-item">
+                <span class="form-label">水印高度 : </span>
+                <div class="input-text-box">
+                    <InputNumber v-model="template.WatermarkConfig.Height"></InputNumber>
+                    <span>px</span>
+                </div>
+            </div>
+            <div class="form-item">
+                <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
+                <div class="gravity-selector">
+                    <input type="radio" value="NorthWest" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="North" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="NorthEast" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="West" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="Center" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="East" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="SouthWest" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="South" name="location" v-model="template.WatermarkConfig.Location" />
+                    <input type="radio" value="SouthEast" name="location" v-model="template.WatermarkConfig.Location" />
+                </div>
+                <div class="padding-setting">
+                    <div class="form-item">
+                        <span class="form-label">水平偏移 : </span>
+                        <div class="input-text-box">
+                            <InputNumber v-model="template.WatermarkConfig.LocationHOffset"></InputNumber>
+                            <span>px</span>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <span class="form-label">垂直偏移 : </span>
+                        <div class="input-text-box">
+                            <InputNumber v-model="template.WatermarkConfig.LocationVOffset"></InputNumber>
+                            <span>px</span>
+                        </div>
+                    </div>
+                </div>
+            </div><!--location-->
+        </div>
+        <div class="separator-line"></div>
         <div class="editBlock">
             <Button type="primary" class="button-save" @click="beforeSubmit">{{$t('VIDEO.SAVE')}}</Button>
         </div>
@@ -250,6 +304,7 @@ export default {
                     this.template = res.Preset
                     this.template.Video.FixedGOP = res.Preset.Video.FixedGOP === 'true'
                     this.template.FastStart = res.Preset.FastStart === 'true'
+                    this.template.WatermarkConfig = !!res.Preset.WatermarkConfig ? res.Preset.WatermarkConfig : watermarkConfigDefault
                     this.auxiliary = convert2Front(res.Preset)
                     this.$Loading.finish()
                 } catch (error) {
@@ -372,6 +427,11 @@ const convert2Save = (template, auxiliary) => {
     saved.Video.FixedGOP = template.Video.FixedGOP.toString()
     saved.Video.KeyframesMaxDist = template.Video.KeyframesMaxDist.toString()
 
+    saved.WatermarkConfig.Height = template.WatermarkConfig.Height.toString()
+    saved.WatermarkConfig.Width = template.WatermarkConfig.Width.toString()
+    saved.WatermarkConfig.LocationHOffset = template.WatermarkConfig.LocationHOffset.toString()
+    saved.WatermarkConfig.LocationVOffset = template.WatermarkConfig.LocationVOffset.toString()
+
     return saved
 }
 
@@ -386,7 +446,13 @@ const auxiliaryDefult = {
     audioBitRate: 'auto',
     audioBitRateValue: 64
 }
-
+const watermarkConfigDefault = {
+    Height: '0',
+    Width: '0',
+    Location: 'NorthEast',
+    LocationHOffset: '0',
+    LocationVOffset: '0'
+}
 const templateDefult = {
     Name: '',
     Description: '',
@@ -413,9 +479,9 @@ const templateDefult = {
         FrameRate: 'auto',
         Resolution: 'auto',
         AspectRatio: 'auto'
-    }
+    },
+    WatermarkConfig: watermarkConfigDefault
 }
-
 const audioOnly = ['flac', 'mp3', 'wma', 'mp2']
 const container2codec = { mp3: 'mp3', wma: 'wmav2', mp2: 'mp2' }
 </script>

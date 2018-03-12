@@ -258,15 +258,15 @@
                             <div class="form-item">
                                 <span class="form-label">{{$t("STORAGE.WATERMARKER_POSITION")}} : </span>
                                 <div class="gravity-selector">
-                                    <input type="radio" value="north_west" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="north" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="north_east" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="west" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="center" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="east" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="south_west" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="south" v-model="mark.gravity"></Radio>
-                                    <input type="radio" value="south_east" v-model="mark.gravity"></Radio>
+                                    <input type="radio" value="north_west" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="north" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="north_east" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="west" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="center" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="east" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="south_west" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="south" name="gravity" v-model="mark.gravity" />
+                                    <input type="radio" value="south_east" name="gravity" v-model="mark.gravity" />
                                 </div>
                                 <div class="padding-setting">
                                     <div class="form-item">
@@ -1097,60 +1097,6 @@ const mark2Front = data => {
                 }
             }
 
-            .gravity-selector {
-                display: inline-block;
-                width: 182px;
-                border-radius: 4px;
-                vertical-align: text-top;
-                margin-right: 20px;
-
-                input {
-                    -webkit-appearance: none;
-                    .wh(60px,30px);
-                    border-top: 1px solid @edit-styles-border-color;
-                    border-right: 1px solid @edit-styles-border-color;
-                    float: left;
-                    outline: none;
-                    cursor: pointer;
-                }
-
-                input:nth-child(1) {
-                    border-top-left-radius: 4px;
-                }
-
-                input:nth-child(3) {
-                    border-top-right-radius: 4px;
-                }
-
-                input:nth-child(7) {
-                    border-bottom-left-radius: 4px;
-                }
-
-                input:nth-child(9) {
-                    border-bottom-right-radius: 4px;
-                }
-
-                input:nth-child(3n+1) {
-                    border-left: 1px solid @edit-styles-border-color;
-                }
-
-                input:nth-last-child(1),
-                input:nth-last-child(2),
-                input:nth-last-child(3) {
-                    border-bottom: 1px solid @edit-styles-border-color;
-                }
-
-                input:checked {
-                    background-color: @edit-styles-border-blue;
-                }
-            }
-
-            .padding-setting {
-                display: inline-block;
-                vertical-align: text-top;
-            }
-
-
             .input-text-box {
                 display: inline-block;
 
@@ -1158,12 +1104,6 @@ const mark2Front = data => {
                     line-height: 24px;
                     padding-left: 5px;
                 }
-            }
-
-            .input-box-label{
-                padding: 0 5px;
-                font-size: 14px;
-                line-height: 30px;
             }
 
             .dis-inline {

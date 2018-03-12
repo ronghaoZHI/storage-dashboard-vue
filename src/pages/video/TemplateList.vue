@@ -29,12 +29,14 @@ export default {
             }],
             videoNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_PROFILE'), Level: this.$t('VIDEO.CODING_LEVEL'), KeyframesMaxDist: this.$t('VIDEO.FIXED_KEY_FRAME_SPACING'), BitRate: this.$t('VIDEO.BIT_RATE'), FrameRate: this.$t('VIDEO.FRAME_RATE'), Resolution: this.$t('VIDEO.RESOLUTION'), AspectRatio: this.$t('VIDEO.ASPECT_RATIO')},
             audioNames: {Codec: this.$t('VIDEO.ENCODING'), Profile: this.$t('VIDEO.CODING_QUALITY'), SampleRate: this.$t('VIDEO.SAMPLE_RATE'), BitRate: this.$t('VIDEO.BIT_RATE'), Channels: this.$t('VIDEO.CHANNELS')},
+            WatermarkConfigNames: {Width: this.$t('VIDEO.WIDTH'), Height: this.$t('VIDEO.HEIGHT'), Location: this.$t('VIDEO.POSITION'), LocationHOffset: this.$t('VIDEO.OFFSET_X'), LocationVOffset: this.$t('VIDEO.OFFSET_Y')},
+            LocationNames: {NorthEast: '右上', North: '中上', NorthWest: '左上', East: '右中', Center: '中心', West: '左中', SouthEast: '右下', South: '中下', SouthWest: '左下'},
             listHeader: [{
                 title: 'ID',
+                width: '75px',
                 key: 'id'
             }, {
                 title: this.$t('VIDEO.TEMPLATE_NAME_TABLE'),
-                width: '10%',
                 render: (h, params) => {
                     if (!params.row.description) {
                         return params.row.name
@@ -59,11 +61,11 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.CONTAINER'),
-                width: '10%',
+                width: '90px',
                 key: 'container'
             }, {
                 title: this.$t('VIDEO.VIDEO'),
-                width: '32%',
+                width: '25%',
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
@@ -82,7 +84,7 @@ export default {
                 }
             }, {
                 title: this.$t('VIDEO.AUDIO'),
-                width: '32%',
+                width: '20%',
                 render: (h, params) => {
                     return h('Poptip', {
                         props: {
@@ -98,6 +100,16 @@ export default {
                         slot: 'content'
                     }, params.row.audioDetails.map(item => h('p', `${item.name}:${item.value}`)))]
                     )
+                }
+            }, {
+                title: this.$t('VIDEO.WATERMARK'),
+                width: '25%',
+                render: (h, params) => {
+                    return h('div', params.row.WatermarkConfig.map(item => h('Tag', {
+                        props: {
+                            type: 'border'
+                        }
+                    }, `${item.name}:${item.value}`)))
                 }
             }, {
                 title: this.$t('VIDEO.OPERATION'),
@@ -202,6 +214,13 @@ export default {
             data.forEach(item => {
                 const video = item.Video
                 const audio = item.Audio
+                let WatermarkConfig = item.WatermarkConfig ? {
+                    Width: !!item.WatermarkConfig.Width && item.WatermarkConfig.Width !== 0 && item.WatermarkConfig.Width !== '0' && item.WatermarkConfig.Height !== '0' && item.WatermarkConfig.Height !== 0 ? item.WatermarkConfig.Width : '图片宽度',
+                    Height: !!item.WatermarkConfig.Height && item.WatermarkConfig.Width !== 0 && item.WatermarkConfig.Width !== '0' && item.WatermarkConfig.Height !== '0' && item.WatermarkConfig.Height !== 0 ? item.WatermarkConfig.Height : '图片高度',
+                    Location: !!item.WatermarkConfig.Location ? this.LocationNames[item.WatermarkConfig.Location] : '右上',
+                    LocationHOffset: !!item.WatermarkConfig.LocationHOffset ? `${item.WatermarkConfig.LocationHOffset}px` : '0px',
+                    LocationVOffset: !!item.WatermarkConfig.LocationVOffset ? `${item.WatermarkConfig.LocationVOffset}px` : '0px'
+                } : watermarkDefault
                 const frontItem = {
                     id: item.Id,
                     description: item.Description,
@@ -210,7 +229,8 @@ export default {
                     video: [],
                     audio: [],
                     videoDetails: [],
-                    audioDetails: []
+                    audioDetails: [],
+                    WatermarkConfig: []
                 }
                 _.forEach(video, (value, key) => {
                     if (key === 'FixedGOP') {
@@ -237,6 +257,10 @@ export default {
                         frontItem.audioDetails.push({name: this.audioNames[key], value: value})
                     }
                 })
+
+                _.forEach(WatermarkConfig, (value, key) => {
+                    frontItem.WatermarkConfig.push({name: this.WatermarkConfigNames[key], value: value})
+                })
                 if (audio.CodecOptions && audio.CodecOptions.Profile) {
                     frontItem.audio.profile = {
                         name: this.$t('VIDEO.CODING_QUALITY'),
@@ -260,7 +284,13 @@ export default {
 }
 const videoMust = ['Codec', 'FrameRate', 'Resolution', 'BitRate', 'AspectRatio']
 const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
-
+const watermarkDefault = {
+    Height: '图片高度',
+    Width: '图片宽度',
+    Location: '右上',
+    LocationHOffset: '0px',
+    LocationVOffset: '0px'
+}
 </script>
 <style lang="less">
 
