@@ -172,6 +172,15 @@
                 <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH')" prop="segment_duration" v-if="HLSShow">
                     <Slider v-model="outputModal.segment_duration" :min='0' :max='50' class="my-slider" show-input></Slider>
                 </FormItem>
+                <FormItem label="水印">
+                    <i-switch v-model="auxiliary.isWaterMarkerOpen" style="margin-top:3px;">
+                    <span slot="open">{{$t('VIDEO.ON')}}</span>
+                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
+                </i-switch>
+                </FormItem>
+                <FormItem label="文件Key" prop="InputKey" v-if="auxiliary.isWaterMarkerOpen">
+                    <Input v-model="outputModal.InputKey" placeholder='水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png' class="line-width"></Input>
+                </FormItem>
             </Form>
             <div slot="footer" class="copy-modal-footer">
                 <Button type="primary" @click="beforeUpdateOutputs">{{$t('VIDEO.OK')}}</Button>
@@ -271,6 +280,9 @@ export default {
                 segment_duration: [
                     { validator: this.validateSegment, trigger: 'blur' }
                 ],
+                InputKey: [
+                    { required: true, message: '请填写水印文件key', trigger: 'change' }
+                ],
                 time: [
                     { type: 'number', min: 1, message: this.$t('PUBLIC.NOT_LESS', {num: '1'}), trigger: 'change' }
                 ],
@@ -284,19 +296,26 @@ export default {
             outputsHeader: [{
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX'),
                 key: 'key_suffix',
-                width: 120
+                width: 140
             }, {
                 title: this.$t('VIDEO.TRANSCODING_TEMPLATE'),
                 key: 'template',
                 width: 100
             }, {
                 title: this.$t('VIDEO.HLS_SLICE_LENGTH'),
-                width: 100,
+                width: 120,
                 key: 'segment_duration'
+            }, {
+                title: '水印文件Key',
+                width: 120,
+                key: 'watermarkers',
+                render: (h, params) => {
+                    return h('div', [params.row.watermarks ? params.row.watermarks[0].InputKey : '水印未启用'])
+                }
             }, {
                 title: 'Actions',
                 key: 'actions',
-                width: 100,
+                width: 120,
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
@@ -488,12 +507,15 @@ export default {
             this.outputModal = _.clone(outputsDefult)
             this.outputIndex = this.transcode.outputs.length
             this.showOutputsModal = true
+            this.auxiliary.isWaterMarkerOpen = false
             this.HLSError = false
         },
         editOutput (index) {
             this.outputIndex = index
             this.outputModal = _.clone(this.transcode.outputs[index])
             this.outputModal.segment_duration = parseInt(this.outputModal.segment_duration)
+            this.outputModal.InputKey = this.outputModal.watermarks ? this.outputModal.watermarks[0].InputKey : ''
+            this.auxiliary.isWaterMarkerOpen = !!this.outputModal.watermarks
             if (this.isTS(this.outputModal.preset_id)) {
                 this.HLSShow = true
             } else {
@@ -514,10 +536,12 @@ export default {
         updateOutputs () {
             const ln = this.transcode.outputs.length
             this.outputModal.template = `${this.outputModal.preset_id}+${this.templateName[this.outputModal.preset_id]}`
+            const outputSave = this.auxiliary.isWaterMarkerOpen ? Object.assign(this.outputModal, {watermarks: [{InputKey: this.outputModal.InputKey}]}) : this.outputModal
+            delete outputSave.InputKey
             if (this.outputIndex === ln) {
-                this.transcode.outputs.push(this.outputModal)
+                this.transcode.outputs.push(outputSave)
             } else {
-                this.transcode.outputs.splice(this.outputIndex, 1, this.outputModal)
+                this.transcode.outputs.splice(this.outputIndex, 1, outputSave)
             }
             this.showOutputsModal = false
         },
@@ -885,7 +909,8 @@ const auxiliaryDefult = {
     path: '',
     extension: '',
     regular: '',
-    MP: false
+    MP: false,
+    isWaterMarkerOpen: false
 }
 
 const outputsDefult = {

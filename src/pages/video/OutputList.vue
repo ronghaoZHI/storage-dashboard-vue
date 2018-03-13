@@ -58,14 +58,16 @@ export default {
                 width: '15%',
                 render: (h, params) => {
                     let outputs = params.row.outputs || []
+                    const firstInputKey = outputs[0] ? (outputs[0].watermarks ? outputs[0].watermarks[0].InputKey : '未启用') : ''
                     if (outputs.length > 1) {
                         const popContent = outputs.map(item => {
                             const sd = item.segment_duration || '-'
-                            return h('p', [`keySuffix:${item.key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${item.preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${sd},`, h('br')])
+                            const inputKey = item.watermarks ? item.watermarks[0].InputKey : '未启用'
+                            return h('p', [`keySuffix:${item.key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${item.preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${sd},`, h('br'), `水印文件key:${inputKey},`, h('br')])
                         })
                         return h('div', {
                             'class': 'output-wrap'
-                        }, [h('p', [`keySuffix:${outputs[0].key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${outputs[0].preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${outputs[0].segment_duration || '-'},`, h('br')]), h(
+                        }, [h('p', [`keySuffix:${outputs[0].key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${outputs[0].preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${outputs[0].segment_duration || '-'},`, h('br'), `水印文件key:${firstInputKey},`, h('br')]), h(
                             'Poptip', [h('i-button', {
                                 props: {
                                     type: 'ghost',
@@ -79,7 +81,7 @@ export default {
                     } else if (outputs.length > 0) {
                         return h('p', {
                             'class': 'output-wrap'
-                        }, [`keySuffix:${outputs[0].key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${outputs[0].preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${outputs[0].segment_duration || '-'},`, h('br')])
+                        }, [`keySuffix:${outputs[0].key_suffix},`, h('br'), `${this.$t('VIDEO.VIDEO_TRANSCODING_TEMPLATE_ID')}:${outputs[0].preset_id},`, h('br'), `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${outputs[0].segment_duration || '-'},`, h('br'), `水印文件key:${firstInputKey},`, h('br')])
                     }
                 }
             }, {

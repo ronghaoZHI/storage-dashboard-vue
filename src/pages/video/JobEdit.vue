@@ -131,6 +131,15 @@
                 <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH') + ' : '" prop="SegmentDuration" v-if="HLSShow">
                     <Slider v-model="outputModal.SegmentDuration" :min='0' :max='50' class="my-slider" show-input></Slider>
                 </FormItem>
+                <FormItem label="水印">
+                    <i-switch v-model="isWaterMarkerOpen" style="margin-top:3px;">
+                    <span slot="open">{{$t('VIDEO.ON')}}</span>
+                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
+                </i-switch>
+                </FormItem>
+                <FormItem label="文件Key" prop="InputKey" v-if="isWaterMarkerOpen">
+                    <Input v-model="outputModal.InputKey" placeholder='水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png' class="line-width"></Input>
+                </FormItem>
             </Form>
             <div slot="footer" class="copy-modal-footer">
                 <Button type="primary" @click="beforeUpdateOutputs">{{$t('VIDEO.OK')}}</Button>
@@ -213,6 +222,7 @@ export default {
             fileList: [],
             fileInfo: false,
             searchValue: '',
+            isWaterMarkerOpen: false,
             ruleValidate: {
                 'Playlists.Name': [
                     { validator: this.validateName, trigger: 'change' }
@@ -222,6 +232,9 @@ export default {
                 ],
                 SegmentDuration: [
                     { validator: this.validateSegment, trigger: 'blur' }
+                ],
+                InputKey: [
+                    { required: true, message: '请填写水印文件key', trigger: 'change' }
                 ],
                 PresetId: [
                     { required: true, message: this.$t('VIDEO.PERSET_REQUIRED'), trigger: 'change' }
@@ -243,19 +256,26 @@ export default {
             outputsHeader: [{
                 title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
                 key: 'Key',
-                width: 120
+                width: 140
             }, {
                 title: this.$t('VIDEO.TRANSCODING_TEMPLATE'),
                 key: 'template',
                 width: 100
             }, {
                 title: this.$t('VIDEO.HLS_SLICE_LENGTH'),
-                width: 100,
+                width: 120,
                 key: 'SegmentDuration'
+            }, {
+                title: '水印文件Key',
+                width: 120,
+                key: 'watermarkers',
+                render: (h, params) => {
+                    return h('div', [params.row.Watermarks ? params.row.Watermarks[0].InputKey : '水印未启用'])
+                }
             }, {
                 title: 'Actions',
                 key: 'actions',
-                width: 100,
+                width: 120,
                 render: (h, params) => {
                     return h('div', [h('Tooltip', {
                         props: {
@@ -502,12 +522,15 @@ export default {
             this.outputModal = _.clone(outputsDefult)
             this.outputIndex = this.job.Outputs.length
             this.showOutputsModal = true
+            this.isWaterMarkerOpen = false
             this.HLSError = false
         },
         editOutput (index) {
             this.outputIndex = index
             this.outputModal = _.clone(this.job.Outputs[index])
             this.outputModal.SegmentDuration = parseInt(this.outputModal.SegmentDuration)
+            this.outputModal.InputKey = this.outputModal.Watermarks ? this.outputModal.Watermarks[0].InputKey : ''
+            this.isWaterMarkerOpen = !!this.outputModal.Watermarks
             if (this.isTS(this.outputModal.PresetId)) {
                 this.HLSShow = true
             } else {
@@ -528,10 +551,12 @@ export default {
         updateOutputs () {
             const ln = this.job.Outputs.length
             this.outputModal.template = `${this.outputModal.PresetId}+${this.templateInfo.templateName[this.outputModal.PresetId]}`
+            const outputSave = this.isWaterMarkerOpen ? Object.assign(this.outputModal, {Watermarks: [{InputKey: this.outputModal.InputKey}]}) : this.outputModal
+            delete outputSave.InputKey
             if (this.outputIndex === ln) {
-                this.job.Outputs.push(this.outputModal)
+                this.job.Outputs.push(outputSave)
             } else {
-                this.job.Outputs.splice(this.outputIndex, 1, this.outputModal)
+                this.job.Outputs.splice(this.outputIndex, 1, outputSave)
             }
             this.showOutputsModal = false
             this.updateMPNames(this.job.Outputs)
