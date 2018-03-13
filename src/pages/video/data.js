@@ -55,14 +55,15 @@ const listPipelinePage = async (pageToken) => {
 const getTemplateInfo = async () => {
     templateList = []
     await getTemplatePage()
-    let [templateContainer, templateName] = [[], []]
+    let [templateContainer, templateName, templateVideoCodec] = [[], [], []]
     templateList.forEach(item => {
         templateContainer[item.Id] = item.Container
     })
     templateList.forEach(item => {
         templateName[item.Id] = item.Name
+        templateVideoCodec[item.Id] = item.Video.Codec
     })
-    return {templateList, templateContainer, templateName}
+    return {templateList, templateContainer, templateVideoCodec, templateName}
 }
 
 let templateList = []

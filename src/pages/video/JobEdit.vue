@@ -131,14 +131,15 @@
                 <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH') + ' : '" prop="SegmentDuration" v-if="HLSShow">
                     <Slider v-model="outputModal.SegmentDuration" :min='0' :max='50' class="my-slider" show-input></Slider>
                 </FormItem>
-                <FormItem label="水印">
-                    <i-switch v-model="isWaterMarkerOpen" style="margin-top:3px;">
+                <p class="page-info" v-if="isAutoCodec" style="padding-left:155px">转码模版的视频编码方式为“不变”时不能添加水印</p>
+                <FormItem label="水印 : ">
+                    <i-switch v-model="isWaterMarkerOpen" style="margin-top:3px;" :disabled="isAutoCodec">
                     <span slot="open">{{$t('VIDEO.ON')}}</span>
                     <span slot="close">{{$t('VIDEO.OFF')}}</span>
-                </i-switch>
+                    </i-switch>
                 </FormItem>
-                <FormItem label="文件Key" prop="InputKey" v-if="isWaterMarkerOpen">
-                    <Input v-model="outputModal.InputKey" placeholder='水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png' class="line-width"></Input>
+                <FormItem label="文件Key : " prop="InputKey" v-if="isWaterMarkerOpen">
+                    <Input v-model="outputModal.InputKey" placeholder='水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png' class="line-width" :disabled="isAutoCodec"></Input>
                 </FormItem>
             </Form>
             <div slot="footer" class="copy-modal-footer">
@@ -223,6 +224,7 @@ export default {
             fileInfo: false,
             searchValue: '',
             isWaterMarkerOpen: false,
+            isAutoCodec: false,
             ruleValidate: {
                 'Playlists.Name': [
                     { validator: this.validateName, trigger: 'change' }
@@ -234,7 +236,7 @@ export default {
                     { validator: this.validateSegment, trigger: 'blur' }
                 ],
                 InputKey: [
-                    { required: true, message: '请填写水印文件key', trigger: 'change' }
+                    { validator: this.validateInputKey, trigger: 'change' }
                 ],
                 PresetId: [
                     { required: true, message: this.$t('VIDEO.PERSET_REQUIRED'), trigger: 'change' }
@@ -536,6 +538,7 @@ export default {
             } else {
                 this.HLSShow = false
             }
+            this.isAutoCodec = this.isAC(this.outputModal.PresetId)
             this.showOutputsModal = true
             this.HLSError = false
         },
@@ -553,6 +556,7 @@ export default {
             this.outputModal.template = `${this.outputModal.PresetId}+${this.templateInfo.templateName[this.outputModal.PresetId]}`
             const outputSave = this.isWaterMarkerOpen ? Object.assign(this.outputModal, {Watermarks: [{InputKey: this.outputModal.InputKey}]}) : this.outputModal
             delete outputSave.InputKey
+            this.isAutoCodec && delete outputSave.Watermarks
             if (this.outputIndex === ln) {
                 this.job.Outputs.push(outputSave)
             } else {
@@ -612,6 +616,10 @@ export default {
             if (!this.HLSShow) {
                 this.outputModal.SegmentDuration = 0
             }
+            this.isAutoCodec = this.isAC(id)
+        },
+        isAC (id) {
+            return id ? this.templateInfo.templateVideoCodec[id] === 'auto' : false
         },
         isTS (id) {
             return id ? this.templateInfo.templateContainer[id] === 'ts' : false
@@ -674,6 +682,13 @@ export default {
                         callback()
                     }
                 }
+            } else {
+                callback()
+            }
+        },
+        validateInputKey (rule, value, callback) {
+            if (!this.isAutoCodec && this.isWaterMarkerOpen && !value) {
+                callback(new Error('请填写水印文件key'))
             } else {
                 callback()
             }
