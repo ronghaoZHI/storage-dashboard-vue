@@ -74,4 +74,12 @@ const getTemplatePage = async (pageToken) => {
         await getTemplatePage(res.NextPageToken)
     }
 }
-export { getBucketPolicy, putBucketPolicy, getTranscodes, listPipelines, getTemplateInfo }
+const formateSS = (SS) => {
+    let s = Math.floor(SS / 1000)
+    return [`${Math.floor(s / 3600)}:${Math.floor(s / 60) % 60}:${s % 60}`, `${SS % 1000}`]
+}
+const getSS = (time, SS) => {
+    let timeArray = time.split(':').map(item => Number(item))
+    return ((timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2]) * 1000 + Number(SS)).toString()
+}
+export { getBucketPolicy, putBucketPolicy, getTranscodes, listPipelines, getTemplateInfo, formateSS, getSS }

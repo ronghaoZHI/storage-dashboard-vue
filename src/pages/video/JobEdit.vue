@@ -131,6 +131,20 @@
                 <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH') + ' : '" prop="SegmentDuration" v-if="HLSShow">
                     <Slider v-model="outputModal.SegmentDuration" :min='0' :max='50' class="my-slider" show-input></Slider>
                 </FormItem>
+                <FormItem label="视频剪辑 : ">
+                    <i-switch v-model="isComposition" style="margin-top:3px;" v-if="HLSShow">
+                    <span slot="open">{{$t('VIDEO.ON')}}</span>
+                    <span slot="close">{{$t('VIDEO.OFF')}}</span>
+                    </i-switch>
+                </FormItem>
+                <FormItem label="剪辑开始时间 : " v-if="HLSShow && isComposition">
+                    <TimePicker type="time" placeholder="时分秒" :value="outputModal.StartTime" @on-change="value => timeChange(value, 'StartTime')" style="width: 168px"></TimePicker> .
+                    <InputNumber v-model="outputModal.StartTimeMS" :min="0"></InputNumber> ms
+                </FormItem>
+                <FormItem label="剪辑时长 : " v-if="HLSShow && isComposition">
+                    <TimePicker type="time" placeholder="时分秒" :value="outputModal.Duration" @on-change="value => timeChange(value, 'Duration')" style="width: 168px"></TimePicker> .
+                    <InputNumber v-model="outputModal.DurationMS" :min="0"></InputNumber> ms
+                </FormItem>
                 <p class="page-info" v-if="isAutoCodec" style="padding-left:155px">转码模版的视频编码方式为“不变”时不能添加水印</p>
                 <FormItem label="水印 : ">
                     <i-switch v-model="isWaterMarkerOpen" style="margin-top:3px;" :disabled="isAutoCodec">
@@ -198,7 +212,7 @@
     </div>
 </template>
 <script>
-import { listPipelines, getTemplateInfo } from '@/pages/video/data'
+import { listPipelines, getTemplateInfo, formateSS, getSS } from '@/pages/video/data'
 import { handler } from '@/service/Aws'
 import { getTranscoderUrl } from '@/service/API'
 export default {
@@ -225,6 +239,7 @@ export default {
             searchValue: '',
             isWaterMarkerOpen: false,
             isAutoCodec: false,
+            isComposition: false, // video Composition 视频剪辑
             ruleValidate: {
                 'Playlists.Name': [
                     { validator: this.validateName, trigger: 'change' }
@@ -525,6 +540,7 @@ export default {
             this.outputIndex = this.job.Outputs.length
             this.showOutputsModal = true
             this.isWaterMarkerOpen = false
+            this.isComposition = false
             this.HLSError = false
         },
         editOutput (index) {
@@ -539,6 +555,12 @@ export default {
                 this.HLSShow = false
             }
             this.isAutoCodec = this.isAC(this.outputModal.PresetId)
+
+            this.isComposition = !!this.outputModal.Composition
+            this.outputModal.StartTime = this.outputModal.Composition ? formateSS(this.outputModal.Composition[0].TimeSpan.StartTime)[0] : '0:0:0'
+            this.outputModal.StartTimeMS = this.outputModal.Composition ? formateSS(this.outputModal.Composition[0].TimeSpan.StartTime)[1] : '0'
+            this.outputModal.Duration = this.outputModal.Composition ? formateSS(this.outputModal.Composition[0].TimeSpan.Duration)[0] : '0:0:0'
+            this.outputModal.DurationMS = this.outputModal.Composition ? formateSS(this.outputModal.Composition[0].TimeSpan.Duration)[1] : '0'
             this.showOutputsModal = true
             this.HLSError = false
         },
@@ -557,6 +579,13 @@ export default {
             const outputSave = this.isWaterMarkerOpen ? Object.assign(this.outputModal, {Watermarks: [{InputKey: this.outputModal.InputKey}]}) : this.outputModal
             delete outputSave.InputKey
             this.isAutoCodec && delete outputSave.Watermarks
+            if (this.isComposition) {
+                outputSave.Composition = [{TimeSpan: {StartTime: getSS(this.outputModal.StartTime, this.outputModal.StartTimeMS), Duration: getSS(this.outputModal.Duration, this.outputModal.DurationMS)}}]
+            }
+            delete outputSave.StartTime
+            delete outputSave.StartTimeMS
+            delete outputSave.Duration
+            delete outputSave.DurationMS
             if (this.outputIndex === ln) {
                 this.job.Outputs.push(outputSave)
             } else {
@@ -617,6 +646,9 @@ export default {
                 this.outputModal.SegmentDuration = 0
             }
             this.isAutoCodec = this.isAC(id)
+        },
+        timeChange (value, name) {
+            this.outputModal[name] = value
         },
         isAC (id) {
             return id ? this.templateInfo.templateVideoCodec[id] === 'auto' : false
@@ -709,7 +741,11 @@ const jobDefult = {
 const outputsDefult = {
     Key: '',
     PresetId: '',
-    SegmentDuration: 0
+    SegmentDuration: 0,
+    StartTime: '0:0:0',
+    StartTimeMS: '0',
+    Duration: '0:0:0',
+    DurationMS: '0'
 }
 
 const shotDefult = {
