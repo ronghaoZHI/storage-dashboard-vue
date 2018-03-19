@@ -26,7 +26,7 @@ const thousands = numbers => `${numbers}`.replace(/\d{1,3}(?=(\d{3})+$)/g, funct
 })
 const bytes = (bytes, digit = 1) => {
     if (bytes === undefined) return '-'
-    let bytesArray = bytesSpliteUnits(bytes, digit = 1)
+    let bytesArray = bytesSpliteUnits(bytes, digit)
 
     return bytesArray[0] + ' ' + bytesArray[1]
 }
