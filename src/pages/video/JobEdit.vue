@@ -132,16 +132,16 @@
                     <Slider v-model="outputModal.SegmentDuration" :min='0' :max='50' class="my-slider" show-input></Slider>
                 </FormItem>
                 <FormItem label="视频剪辑 : ">
-                    <i-switch v-model="isComposition" style="margin-top:3px;" v-if="HLSShow">
+                    <i-switch v-model="isComposition" style="margin-top:3px;">
                     <span slot="open">{{$t('VIDEO.ON')}}</span>
                     <span slot="close">{{$t('VIDEO.OFF')}}</span>
                     </i-switch>
                 </FormItem>
-                <FormItem label="剪辑开始时间 : " v-if="HLSShow && isComposition">
+                <FormItem label="剪辑开始时间 : " v-if="isComposition">
                     <TimePicker type="time" placeholder="时分秒" :value="outputModal.StartTime" @on-change="value => timeChange(value, 'StartTime')" style="width: 168px"></TimePicker> .
                     <InputNumber v-model="outputModal.StartTimeMS" :min="0"></InputNumber> ms
                 </FormItem>
-                <FormItem label="剪辑时长 : " v-if="HLSShow && isComposition">
+                <FormItem label="剪辑时长 : " v-if="isComposition">
                     <TimePicker type="time" placeholder="时分秒" :value="outputModal.Duration" @on-change="value => timeChange(value, 'Duration')" style="width: 168px"></TimePicker> .
                     <InputNumber v-model="outputModal.DurationMS" :min="0"></InputNumber> ms
                 </FormItem>
