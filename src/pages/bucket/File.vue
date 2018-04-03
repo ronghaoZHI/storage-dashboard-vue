@@ -500,7 +500,7 @@ export default {
         async downloadFile (file) {
             let self = this
             if (file.Type === 'file') {
-                let url = await getURL(this.bucket, file, this.prefix)
+                let url = await getURL(this.bucket, file, this.prefix, true)
                 this.download(url)
             } else {
                 let res = await handler('listObjects', {
@@ -647,12 +647,13 @@ const repliceAllString = (str, oldStr, newStr) => {
 
 const isImage = (file) => !!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file.Key)
 
-const getURL = async (bucket, file, prefix) => {
+const getURL = async (bucket, file, prefix, isDownload = false) => {
     try {
-        let params = { Bucket: bucket, Key: prefix + file.Key }
+        let getURLparams = isDownload ? { Bucket: bucket, Key: prefix + file.Key, ResponseContentDisposition: 'attachment' } : { Bucket: bucket, Key: prefix + file.Key }
+        let getAclparams = { Bucket: bucket, Key: prefix + file.Key }
         let s3 = await getS3()
-        let url = await s3.getSignedUrl('getObject', params)
-        let acl = await handler('getObjectAcl', params)
+        let url = await s3.getSignedUrl('getObject', getURLparams)
+        let acl = await handler('getObjectAcl', getAclparams)
         let isAllUser = _.find(acl.Grants, (item) => item.Grantee.URI && item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers')
         return isAllUser ? url.split('?')[0] : url
     } catch (error) {
