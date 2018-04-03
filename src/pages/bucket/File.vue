@@ -13,7 +13,8 @@
                 <div>
                     <Button type="primary" v-show="canUpload" @click="openUploadModal">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
                     <Button type="primary" v-show="canUpload" @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
-                    <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
+                    <!-- <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button> -->
+                    <Tooltip content="功能维护，暂停使用" placement="bottom"><Button type="primary" disabled>{{$t("STORAGE.DOWNLOAD_FILES")}}</Button></Tooltip>
                     <Button @click="batchDeleteFileConfirm" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
                     <Button type="primary" v-if="!showSearch" @click="showSearch = true">查找文件</Button>
                     <transition name="slide-fade">
