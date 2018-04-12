@@ -373,7 +373,7 @@ const convert2Front = (data) => {
     if (data.Video.Resolution === 'auto') {
         auxiliary.resolution = 'auto'
     } else {
-        let values = data.Video.Resolution.split('*')
+        let values = data.Video.Resolution.split('x')
         if (values[0] === '-2') {
             auxiliary.resolution = 'only_height'
             auxiliary.only_height = parseInt(values[1])
@@ -407,11 +407,11 @@ const convert2Save = (template, auxiliary) => {
 
     if (auxiliary.resolution !== 'auto') {
         if (auxiliary.resolution === 'only_width') {
-            saved.Video.Resolution = `${auxiliary.only_width}*-2`
+            saved.Video.Resolution = `${auxiliary.only_width}x-2`
         } else if (auxiliary.resolution === 'only_height') {
-            saved.Video.Resolution = `-2*${auxiliary.only_height}`
+            saved.Video.Resolution = `-2x${auxiliary.only_height}`
         } else {
-            saved.Video.Resolution = `${auxiliary.width}*${auxiliary.height}`
+            saved.Video.Resolution = `${auxiliary.width}x${auxiliary.height}`
         }
     } else {
         saved.Video.Resolution = auxiliary.resolution
