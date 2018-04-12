@@ -71,3 +71,5 @@ export const getTranscoderUrl = (url) => groupTranscoder(url)
 export const getBillOldUrl = (url) => group(`bill/storage_old${url}`)
 
 export const getBillUrl = (url) => group(`bill/storage${url}`)
+
+export const getSuperSubUserUrl = (superName) => group(`superuser/list/sub_user?customer=${superName}`)

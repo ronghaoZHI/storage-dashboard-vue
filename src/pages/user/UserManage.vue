@@ -114,7 +114,7 @@
 import user from '@/store/modules/user'
 import { getBucketList } from '@/service/Data'
 import moment from 'moment'
-import { BOUND_USER, BOUND_USER_SUPERADMIN, ALL_USER, ALL_USER_SUPERADMIN, CREATE_USER, CREATE_USER_SUPERADMIN, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, BIND_USER_SUPERADMIN, UNBIND_USER, UNBIND_USER_SUPERADMIN } from '@/service/API'
+import { BOUND_USER, BOUND_USER_SUPERADMIN, ALL_USER, ALL_USER_SUPERADMIN, CREATE_USER, CREATE_USER_SUPERADMIN, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, BIND_USER_SUPERADMIN, UNBIND_USER, UNBIND_USER_SUPERADMIN, getSuperSubUserUrl } from '@/service/API'
 export default {
     data () {
         return {
@@ -367,7 +367,8 @@ export default {
                         subUserList: this.userList
                     })
                 } else {
-                    let [res, users] = await Promise.all([getBucketList(), this.$http.get(SUB_USER)])
+                    let getSubUserURL = this.isAdmin ? SUB_USER : getSuperSubUserUrl(user.state.subUser.username)
+                    let [res, users] = await Promise.all([getBucketList(), this.$http.get(getSubUserURL)])
                     let buckets = await Promise.all(Array.map(res.Buckets, (bucket) => {
                         this.bucketList = res.Buckets
                         return this.$http.get(SUB_USER_ACL, { params: { bucket: bucket.Name } }).then(acl => {
