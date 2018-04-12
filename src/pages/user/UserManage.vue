@@ -367,7 +367,7 @@ export default {
                         subUserList: this.userList
                     })
                 } else {
-                    let getSubUserURL = this.isAdmin ? SUB_USER : getSuperSubUserUrl(user.state.subUser.username)
+                    let getSubUserURL = isSuper() ? getSuperSubUserUrl(user.state.subUser.username) : SUB_USER
                     let [res, users] = await Promise.all([getBucketList(), this.$http.get(getSubUserURL)])
                     let buckets = await Promise.all(Array.map(res.Buckets, (bucket) => {
                         this.bucketList = res.Buckets
