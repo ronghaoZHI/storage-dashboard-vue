@@ -107,10 +107,11 @@
                     </FormItem>
                 </div>
                 <div class="form-item" v-if="MPOpen">
-                    <span class="form-label">{{$t('VIDEO.OUTPUT_FILE_NAME')}} : </span>
-                    <Select v-model="job.Playlists.OutputKeys" multiple class="line-width">
-                        <Option v-for="ots in MPNames" :value="ots" :key="ots">{{ ots }}</Option>
-                    </Select>
+                    <FormItem :label="`${$t('VIDEO.OUTPUT_FILE_NAME')} : `" prop="Playlists.OutputKeys" required>
+                        <Select v-model="job.Playlists.OutputKeys" multiple class="line-width">
+                            <Option v-for="ots in MPNames" :value="ots" :key="ots">{{ ots }}</Option>
+                        </Select>
+                    </FormItem>
                 </div>
             </div>
             <div class="separator-line"></div>
@@ -243,6 +244,9 @@ export default {
             ruleValidate: {
                 'Playlists.Name': [
                     { validator: this.validateName, trigger: 'change' }
+                ],
+                'Playlists.OutputKeys': [
+                    { validator: this.validateOutputKeys, trigger: 'change' }
                 ],
                 Inputs: [
                     { validator: this.validateInputs, trigger: 'change' }
@@ -689,6 +693,13 @@ export default {
                 callback()
             }
         },
+        validateOutputKeys (rule, value, callback) {
+            if (value.length === 0 && this.MPOpen) {
+                callback(new Error('请选择输出文件名'))
+            } else {
+                callback()
+            }
+        },
         validateInputs (rule, value, callback) {
             if (!value[0].Key) {
                 callback(new Error(this.$t('VIDEO.SRC_FILE_INFO')))
@@ -734,7 +745,7 @@ const jobDefult = {
     OutputKeyPrefix: '',
     Outputs: [],
     Snapshots: [],
-    Playlists: {Format: '', Name: '', OutputKeys: []},
+    Playlists: {Format: 'HLSv3', Name: '', OutputKeys: []},
     PipelineId: ''
 }
 
