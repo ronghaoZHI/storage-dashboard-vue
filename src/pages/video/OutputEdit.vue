@@ -817,6 +817,7 @@ export default {
             this.transcode = front
 
             this.auxiliary.regular = data.allowed_keys_regex[0]
+            this.auxiliary.MP = !!front.master_playlist
 
             data.output_acls.forEach(item => {
                 let acc = {
