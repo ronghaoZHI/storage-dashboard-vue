@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="94px" height="94px" viewBox="0 0 94 94" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>总请求数</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-15.0%" y="-15.0%" width="130.0%" height="130.0%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <path d="M3,0 L77,0 C78.7,0 80,1.3 80,3 L80,77 C80,78.7 78.7,80 77,80 L3,80 C1.3,80 0,78.7 0,77 L0,3 C0,1.3 1.3,0 3,0 Z" id="path-2"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon_黑" transform="translate(-482.000000, -23.000000)">
+            <g id="总请求数" transform="translate(489.000000, 30.000000)">
+                <path d="M3,0 L77,0 C78.7,0 80,1.3 80,3 L80,77 C80,78.7 78.7,80 77,80 L3,80 C1.3,80 0,78.7 0,77 L0,3 C0,1.3 1.3,0 3,0 Z" id="XMLID_216_" fill="#000000" opacity="0.240545743" filter="url(#filter-1)"></path>
+                <g id="XMLID_216_-Copy">
+                    <use fill="#414D56" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    <path stroke="#52626D" stroke-width="1" d="M3,0.5 C1.57614237,0.5 0.5,1.57614237 0.5,3 L0.5,77 C0.5,78.4238576 1.57614237,79.5 3,79.5 L77,79.5 C78.4238576,79.5 79.5,78.4238576 79.5,77 L79.5,3 C79.5,1.57614237 78.4238576,0.5 77,0.5 L3,0.5 Z"></path>
+                </g>
+                <path d="M23,46 L35,46 L35,44 L23,44 L23,46 Z M35,38 L23,38 L23,40 L35,40 L35,38 Z M37,50 L23,50 L23,52 L37,52 L37,50 Z M55,17 L22,17 C19.2,17 17,19.2 17,22 L17,55 C17,57.8 19.2,60 22,60 L42,60 L42,58 L22,58 C20.3,58 19,56.7 19,55 L19,22 C19,20.3 20.3,19 22,19 L55,19 C56.7,19 58,20.3 58,22 L58,43 L60,43 L60,22 C60,19.2 57.7,17 55,17 Z M54,26.3 L54,24 L43.7,29.7 L32.1,24 L23,29.7 L23,32 L32.1,26.3 L43.7,32 L54,26.3 Z M53.2,51 C54.3,49.6 54.9,47.9 54.9,46 C54.9,41.6 51.3,38 46.9,38 C42.5,38 38.9,41.6 38.9,46 C38.9,50.4 42.5,54 46.9,54 C48.6,54 50.1,53.5 51.4,52.6 L57.6,58.8 C58.1,59.3 58.8,59.3 59.3,58.8 C59.8,58.3 59.8,57.6 59.3,57.1 L53.2,51 Z M51.4,50.1 C51.2,50.2 51.1,50.2 51,50.4 C50.9,50.5 50.8,50.6 50.8,50.7 C49.8,51.5 48.5,52 47.1,52 C43.8,52 41.1,49.3 41.1,46 C41.1,42.7 43.8,40 47.1,40 C50.4,40 53.1,42.7 53.1,46 C53,47.6 52.4,49 51.4,50.1 Z" id="XMLID_233_" fill="#8492A6"></path>
+            </g>
+        </g>
+    </g>
+</svg>

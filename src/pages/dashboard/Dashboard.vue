@@ -1,6 +1,6 @@
 <template>
     <div class="bsc-dashboard">
-        <Spin size="bigger" fix v-if="spinShow"></Spin>
+        <Spin size="bigger" fix v-if="spinShow || spinBandwidthShow"></Spin>
         <div class="toolbar">
             <div class="button-datepicker">
                 <Tooltip class="redirect-info" v-if="isRedirect" :content='$t("DASHBOARD.IS_REDIRECT", {bucket: selectedBucket})' placement="bottom-start">
@@ -34,7 +34,22 @@
                 </div>
             </div>
             <div>
-                <img v-bind:src="imgSrc[1]" alt="inflows">
+                <img v-bind:src="imgSrc[1]" alt="capacity">
+                <Select class="selectBandwidth" v-model="selectedBandwidthLabel" @on-change="changeBandwidthOverview"  >
+                    <OptionGroup label="流出带宽">
+                        <Option v-for="item in Object.keys(outflowsBandwidthOverview)" :value="`out_band_${item}`" :key="`out_band_${item}`">{{item === 'pub' ? '公网' : `${item} cdn `}}流出带宽</Option>
+                    </OptionGroup>
+                    <OptionGroup label="流入带宽">
+                        <Option v-for="item in Object.keys(inflowsBandwidthOverview)" :value="`in_band_${item}`" :key="`in_band_${item}`">{{item === 'pub' ? '公网' : `${item} cdn `}}流入带宽</Option>
+                    </OptionGroup>
+                </Select>
+                <div class="content">
+                    <span>{{selectedBandwidthValue && selectedBandwidthValue[0]}}</span>
+                    <span>{{selectedBandwidthValue && selectedBandwidthValue[1]}}</span>
+                </div>
+            </div>
+            <div>
+                <img v-bind:src="imgSrc[2]" alt="inflows">
                 <Tooltip :content='$t("DASHBOARD.INFLOWS_ALL_INFO")' placement="top-end">
                     <p>{{ $t("DASHBOARD.INFLOWS_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
@@ -44,7 +59,7 @@
                 </div>
             </div>
             <div>
-                <img v-bind:src="imgSrc[2]" alt="outflows">
+                <img v-bind:src="imgSrc[3]" alt="outflows">
                 <Tooltip :content='$t("DASHBOARD.OUTFLOWS_ALL_INFO")' placement="top-end">
                     <p>{{ $t("DASHBOARD.OUTFLOWS_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
@@ -54,7 +69,7 @@
                 </div>
             </div>
             <div>
-                <img v-bind:src="imgSrc[3]" alt="requests">
+                <img v-bind:src="imgSrc[4]" alt="requests">
                 <Tooltip :content='$t("DASHBOARD.REQUESTS_ALL_INFO")' placement="top-end">
                     <p>{{ $t("DASHBOARD.REQUESTS_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
@@ -64,7 +79,7 @@
                 </div>
             </div>
             <div>
-                <img v-bind:src="imgSrc[4]" alt="files">
+                <img v-bind:src="imgSrc[5]" alt="files">
                 <Tooltip :content='$t("DASHBOARD.FILES_ALL_INFO")' placement="top-end">
                     <p>{{ $t("DASHBOARD.FILES_ALL")}}<Icon type="ios-help-outline"></Icon></p>
                 </Tooltip>
@@ -76,25 +91,29 @@
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">{{ $t("DASHBOARD.CAPACITY")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'inflowsLine')">{{ $t("DASHBOARD.INFLOWS")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'outflowsLine')">{{ $t("DASHBOARD.OUTFLOWS")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'requestsLine')">{{ $t("DASHBOARD.REQUESTS")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'filesLine')">{{ $t("DASHBOARD.FILES")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'bandwidthLine')">带宽</button>
+            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'inflowsLine')">{{ $t("DASHBOARD.INFLOWS")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'outflowsLine')">{{ $t("DASHBOARD.OUTFLOWS")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'requestsLine')">{{ $t("DASHBOARD.REQUESTS")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 5}" @click="tabToggle(5,'filesLine')">{{ $t("DASHBOARD.FILES")}}</button>
         </div>
         <div class="section-chart">
             <div class="card-chart" v-show="showChart === 0">
                 <chart :options="capacityOptions" auto-resize ref="capacityLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 1">
-                <chart :options="inflowsOptions" auto-resize ref="inflowsLine"></chart>
+                <chart :options="bandwidthOptions" auto-resize ref="bandwidthLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 2">
-                <chart :options="outflowsOptions" auto-resize ref="outflowsLine"></chart>
+                <chart :options="inflowsOptions" auto-resize ref="inflowsLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 3">
-                <chart :options="requestsOptions" auto-resize ref="requestsLine"></chart>
+                <chart :options="outflowsOptions" auto-resize ref="outflowsLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 4">
+                <chart :options="requestsOptions" auto-resize ref="requestsLine"></chart>
+            </div>
+            <div class="card-chart" v-show="showChart === 5">
                 <chart :options="filesOptions" auto-resize ref="filesLine"></chart>
             </div>
         </div>
@@ -107,18 +126,20 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
-import capacitySec from '../../assets/dashboard/capacity-sec.png'
-import capacitySecDark from '../../assets/dashboard/capacity-sec-dark.png'
-import inflows from '../../assets/dashboard/inflows.png'
-import inflowsDark from '../../assets/dashboard/inflows-dark.png'
-import outflows from '../../assets/dashboard/outflows.png'
-import outflowsDark from '../../assets/dashboard/outflows-dark.png'
-import requests from '../../assets/dashboard/requests.png'
-import requestsDark from '../../assets/dashboard/requests-dark.png'
-import files from '../../assets/dashboard/files.png'
-import filesDark from '../../assets/dashboard/files-dark.png'
+import capacity from '../../assets/dashboard/capacity.svg'
+import capacityDark from '../../assets/dashboard/capacity-dark.svg'
+import bandwidth from '../../assets/dashboard/bandwidth.svg'
+import bandwidthDark from '../../assets/dashboard/bandwidth-dark.svg'
+import inflows from '../../assets/dashboard/inflows.svg'
+import inflowsDark from '../../assets/dashboard/inflows-dark.svg'
+import outflows from '../../assets/dashboard/outflows.svg'
+import outflowsDark from '../../assets/dashboard/outflows-dark.svg'
+import requests from '../../assets/dashboard/requests.svg'
+import requestsDark from '../../assets/dashboard/requests-dark.svg'
+import files from '../../assets/dashboard/files.svg'
+import filesDark from '../../assets/dashboard/files-dark.svg'
 import { getBucketList } from '@/service/Data'
-import { getBillOldUrl, getBillUrl } from '@/service/API'
+import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from '@/service/API'
 import user from '@/store/modules/user'
 import { bytes, times, timesK, date, dateTime, dateTimeYear, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 import Csv from './csv'
@@ -140,6 +161,10 @@ export default {
             },
             dateSelect: [lastNDays(0), lastNDays(0)],
             originOverview: {},
+            outflowsBandwidthOverview: {},
+            inflowsBandwidthOverview: {},
+            selectedBandwidthLabel: 'out_band_pub',
+            selectedBandwidthValue: 0,
             dateOptions: {
                 disabledDate (date) {
                     return date && date.valueOf() > Date.now()
@@ -147,7 +172,10 @@ export default {
             },
             exportData: [],
             spinShow: true,
+            spinBandwidthShow: true,
+            bandwidthDataRes: {},
             capacityOptions: lineOptions,
+            bandwidthOptions: lineOptions,
             inflowsOptions: lineOptions,
             outflowsOptions: lineOptions,
             requestsOptions: lineOptions,
@@ -162,7 +190,7 @@ export default {
             return formatDate(this.dateSelect[0]) + '-' + formatDate(this.dateSelect[1])
         },
         imgSrc: function () {
-            return this.$store.state.theme === 'dark' ? [capacitySecDark, inflowsDark, outflowsDark, requestsDark, filesDark] : [capacitySec, inflows, outflows, requests, files]
+            return this.$store.state.theme === 'dark' ? [capacityDark, bandwidthDark, inflowsDark, outflowsDark, requestsDark, filesDark] : [capacity, bandwidth, inflows, outflows, requests, files]
         },
         theme: function () {
             return this.$store.state.theme
@@ -180,6 +208,13 @@ export default {
             } catch (error) {
                 console.log(error)
                 this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
+            }
+        },
+        changeBandwidthOverview (val) {
+            if (new RegExp(/^out_band_/).test(val)) {
+                this.selectedBandwidthValue = this.outflowsBandwidthOverview[val.slice(9)]
+            } else {
+                this.selectedBandwidthValue = this.inflowsBandwidthOverview[val.slice(8)]
             }
         },
         async getInitData () {
@@ -226,6 +261,30 @@ export default {
                     this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
                 }
             } else {
+                // bandwidth data
+                this.spinBandwidthShow = true
+                try {
+                    await this.$http.get(this.getApiURL('bandwidth', this.dateRange)).then(res => {
+                        this.isRedirect = res.is_redirect
+                        this.bandwidthDataRes = _.cloneDeep(res)
+
+                        Object.keys(res.down_bandwidth).forEach(item => this.outflowsBandwidthOverview[item] = this.convertData(res.down_bandwidth[item].sort((a, b) => { return b - a })[0], true))
+                        Object.keys(res.up_bandwidth).forEach(item => this.inflowsBandwidthOverview[item] = this.convertData(res.up_bandwidth[item].sort((a, b) => { return b - a })[0], true))
+
+                        this.selectedBandwidthLabel = 'out_band_pub'
+                        this.selectedBandwidthValue = this.outflowsBandwidthOverview.pub
+
+                        this.setBandwidthOptions()
+
+                        this.spinBandwidthShow = false
+                    })
+                } catch (error) {
+                    console.log(error)
+                    this.spinBandwidthShow = false
+                    this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
+                }
+
+                // other data
                 let resOld = {}
                 let resNew = {}
                 let oldTimeLength = 0
@@ -275,26 +334,37 @@ export default {
                     this.setOptions('oldAndNew')
                     // export data total
                     this.exportData = []
-                    _.each(echartData.time_nodes.map(time => time * 1000), (time, index) => {
+                    _.each(this.bandwidthDataRes.time_nodes.map(time => time * 1000), (time, index) => {
                         let exportData = {
-                            time: formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided ? dateTimeYear(time + 3600000) : date(time)
+                            time: echartData.time_nodes[index] ? (formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided ? dateTimeYear(echartData.time_nodes[index] * 1000 + 3600000) : date(echartData.time_nodes[index])) : ''
                         }
                         exportData[exportDic.capacity] = echartData.space_used[index]
                         exportData[exportDic.inflows] = echartData.flow_up[index]
                         exportData[exportDic.pubInflows] = index < oldTimeLength ? '' : echartData.flow_up_pub[index - oldTimeLength]
                         _.forEach(echartData.up_cdn, (value, key) => {
-                            exportData[`${key} cdn${exportDic.inflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
+                            exportData[`${key} cdn ${exportDic.inflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
                         })
                         exportData[exportDic.outflows] = echartData.flow_down[index]
                         exportData[exportDic.pubOutflows] = index < oldTimeLength ? '' : echartData.flow_down_pub[index - oldTimeLength]
                         _.forEach(echartData.down_cdn, (value, key) => {
-                            exportData[`${key} cdn${exportDic.outflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
+                            exportData[`${key} cdn ${exportDic.outflows}`] = index < oldTimeLength ? '' : value[index - oldTimeLength]
                         })
                         exportData[exportDic.readRequests] = echartData.read_count[index]
                         exportData[exportDic.writeRequests] = echartData.write_count[index]
                         exportData[exportDic.deleteRequests] = echartData.delete_count[index]
                         exportData[exportDic.listRequests] = index < oldTimeLength ? '' : echartData.list_count[index - oldTimeLength]
                         exportData[exportDic.files] = echartData.num_used[index]
+
+                        // bandwidth
+                        exportData['bandwidth_time'] = dateTimeYear(time + 3600000)
+                        exportData[exportDic.pubOutBand] = this.bandwidthDataRes.down_bandwidth.pub[index]
+                        _.forEach(_.omit(this.bandwidthDataRes.down_bandwidth, ['pub']), (value, key) => {
+                            exportData[`${key} ${exportDic.cdnOutBand}`] = value[index]
+                        })
+                        exportData[exportDic.pubInBand] = this.bandwidthDataRes.up_bandwidth.pub[index]
+                        _.forEach(_.omit(this.bandwidthDataRes.up_bandwidth, ['pub']), (value, key) => {
+                            exportData[`${key} ${exportDic.cdnInBand}`] = value[index]
+                        })
                         this.exportData.push(exportData)
                     })
                     this.spinShow = false
@@ -312,6 +382,15 @@ export default {
                 }
             }
         },
+        setBandwidthOptions () {
+            this.bandwidthOptions = initBandwidthOptions({
+                outBandPub: this.combineTimeDataUnitLabel(this.bandwidthDataRes.down_bandwidth.pub, '公网流出带宽', 'byte', this.bandwidthDataRes.time_nodes),
+                outBandCdn: this.combineTimeDataUnitLabelToObjectArray(_.omit(this.bandwidthDataRes.down_bandwidth, ['pub']), ' cdn 流出带宽', 'type', this.bandwidthDataRes.time_nodes),
+                inBandPub: this.combineTimeDataUnitLabel(this.bandwidthDataRes.up_bandwidth.pub, '公网流入带宽', 'byte', this.bandwidthDataRes.time_nodes),
+                inBandCdn: this.combineTimeDataUnitLabelToObjectArray(_.omit(this.bandwidthDataRes.up_bandwidth, ['pub']), ' cdn 流入带宽', 'type', this.bandwidthDataRes.time_nodes),
+                theme: this.theme
+            })
+        },
         setOptions (url) {
             let newOneDayFlag = formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided
             this.capacityOptions = initOptions({
@@ -322,14 +401,14 @@ export default {
             this.inflowsOptions = initOptions({
                 dataPart: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.flow_up : this.flow_up, '流入流量'),
                 dataPart1: url === 'old' ? '' : this.combineTimeDataUnitLabel(this.flow_up_pub, '公网流入流量'),
-                dataPart2: url === 'old' ? '' : this.combineTimeDataUnitLabelToObjectArray(this.up_cdn, 'up'),
+                dataPart2: url === 'old' ? '' : this.combineTimeDataUnitLabelToObjectArray(this.up_cdn, ' cdn 流入流量'),
                 theme: this.theme,
                 newOneDayFlag: newOneDayFlag
             })
             this.outflowsOptions = initOptions({
                 dataPart: this.combineTimeDataUnitLabel(url === 'old' ? this.distributed.flow_down : this.flow_down, '流出流量'),
                 dataPart1: url === 'old' ? '' : this.combineTimeDataUnitLabel(this.flow_down_pub, '公网流出流量'),
-                dataPart2: url === 'old' ? '' : this.combineTimeDataUnitLabelToObjectArray(this.down_cdn, 'down'),
+                dataPart2: url === 'old' ? '' : this.combineTimeDataUnitLabelToObjectArray(this.down_cdn, ' cdn 流出流量'),
                 theme: this.theme,
                 newOneDayFlag: newOneDayFlag
             })
@@ -367,7 +446,7 @@ export default {
             }
             return object
         },
-        combineTimeDataUnitLabelToObjectArray (data, upOrDown, unit = 'byte', time = this.time_nodes) {
+        combineTimeDataUnitLabelToObjectArray (data, label, unit = 'byte', time = this.time_nodes) {
             let objectArray = []
             _.forEach(data, (value, key) => {
                 let _time = time.length === value.length ? time : time.slice(time.length - value.length)
@@ -376,7 +455,7 @@ export default {
                     combinedData.push([value * 1000, data[key][index]])
                 })
                 let object = {
-                    label: key + (upOrDown === 'up' ? ' cdn流入流量' : ' cdn流出流量'),
+                    label: key + label,
                     unit: unit,
                     data: combinedData
                 }
@@ -399,7 +478,7 @@ export default {
             if (user.state.type === 'admin') {
                 path += '&customer=' + user.state.subUser.username
             }
-            return url === 'new' ? getBillUrl(path) : getBillOldUrl(path)
+            return url === 'new' ? getBillUrl(path) : (url === 'old' ? getBillOldUrl(path) : getBillBandwidthUrl(path))
         },
         tabToggle (index, ref) {
             let vm = this
@@ -417,6 +496,7 @@ export default {
             to[0] && this.getInitData()
         },
         'theme' (to, from) {
+            this.setBandwidthOptions()
             let url = formatDate(this.dateSelect[1]) < this.dateDivided ? 'old' : 'oldAndNew'
             this.setOptions(url)
         }
@@ -425,6 +505,12 @@ export default {
 
 const exportDic = {
     capacity: '存储容量（字节）',
+    pubOutBand: '公网流出带宽(字节/5分钟)',
+    pubInBand: '公网流入带宽(字节/5分钟)',
+    cdnOutBand: 'cdn 流出带宽(字节/5分钟)',
+    cdnInBand: 'cdn 流入带宽(字节/5分钟)',
+    outBandwidth: '流出带宽(字节)',
+    inBandwidth: '流入带宽(字节)',
     inflows: '流入流量（字节）',
     pubInflows: '公网流入流量（字节）',
     outflows: '流出流量（字节）',
@@ -528,6 +614,122 @@ const darkLineOptions = {
     }
 }
 
+const initBandwidthOptions = ({outBandPub, outBandCdn, inBandPub, inBandCdn, theme}) => {
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
+    themeLineOptions.xAxis.interval = null
+    themeLineOptions.xAxis.splitNumber = 7
+    themeLineOptions.grid.top = '60'
+
+    let legendData = []
+    let seriesArray = []
+
+    legendData = [outBandPub.label]
+    seriesArray = [{
+        type: 'line',
+        data: outBandPub.data,
+        name: outBandPub.label,
+        smooth: true,
+        symbol: 'none',
+        areaStyle: {
+            normal: {
+                color: '#20a0ff',
+                opacity: 0.5
+            }
+        }
+    }]
+
+    _.forEach(outBandCdn, (value, index) => {
+        legendData.push(outBandCdn[index].label)
+        let seriesItem = {
+            type: 'line',
+            data: outBandCdn[index].data,
+            name: outBandCdn[index].label,
+            smooth: true,
+            symbol: 'none',
+            areaStyle: {
+                normal: {
+                    color: '#20a0ff',
+                    opacity: 0.5
+                }
+            }
+        }
+        seriesArray.push(seriesItem)
+    })
+
+    legendData.push(inBandPub.label)
+    seriesArray.push({
+        type: 'line',
+        data: inBandPub.data,
+        name: inBandPub.label,
+        smooth: true,
+        symbol: 'none',
+        areaStyle: {
+            normal: {
+                color: '#20a0ff',
+                opacity: 0.5
+            }
+        }
+    })
+
+    _.forEach(inBandCdn, (value, index) => {
+        legendData.push(inBandCdn[index].label)
+        let seriesItem = {
+            type: 'line',
+            data: inBandCdn[index].data,
+            name: inBandCdn[index].label,
+            smooth: true,
+            symbol: 'none',
+            areaStyle: {
+                normal: {
+                    color: '#20a0ff',
+                    opacity: 0.5
+                }
+            }
+        }
+        seriesArray.push(seriesItem)
+    })
+
+    let newOptions = _.defaultsDeep({}, themeLineOptions, {
+        color: ['#1e9fff', '#9f61fc', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
+        legend: {
+            data: legendData,
+            top: '20px',
+            textStyle: {
+                color: '#1E9FFF',
+                fontSize: 14
+            },
+            icon: 'square',
+            itemGap: 40
+        },
+        series: seriesArray,
+        tooltip: {
+            formatter: function (params, ticket, callback) {
+                let res = '时间：' + dateTimeYear(params[0].value[0])
+                _.each(params, function (item) {
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
+                    res += bytes(item.value[1], 3)
+                })
+                return res
+            }
+        },
+        xAxis: {
+            axisLabel: {
+                formatter: function (value) {
+                    return dateTime(value)
+                }
+            }
+        },
+        yAxis: {
+            axisLabel: {
+                formatter: function (value) {
+                    return bytes(value)
+                }
+            }
+        }
+    })
+    return newOptions
+}
+
 const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDayFlag}) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
     let n = Math.floor((dataPart.data.length - 1) / 7) + 1
@@ -542,7 +744,6 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             data: dataPart.data,
             name: dataPart.label,
             smooth: true,
-            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -557,7 +758,6 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             data: dataPart.data,
             name: dataPart.label,
             smooth: true,
-            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -569,7 +769,6 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             data: dataPart1.data,
             name: dataPart1.label,
             smooth: true,
-            sampling: 'average',
             areaStyle: {
                 normal: {
                     color: '#20a0ff',
@@ -585,7 +784,6 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
                     data: dataPart2[index].data,
                     name: dataPart2[index].label,
                     smooth: true,
-                    sampling: 'average',
                     areaStyle: {
                         normal: {
                             color: '#20a0ff',
@@ -602,7 +800,6 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
                 data: dataPart2.data,
                 name: dataPart2.label,
                 smooth: true,
-                sampling: 'average',
                 areaStyle: {
                     normal: {
                         color: '#20a0ff',
@@ -614,7 +811,6 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
                 data: dataPart3.data,
                 name: dataPart3.label,
                 smooth: true,
-                sampling: 'average',
                 areaStyle: {
                     normal: {
                         color: '#20a0ff',
@@ -778,10 +974,10 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
         height: @overview-height;
 
         &>div {
-            border: 1px solid #d3dce6;
+            border: 1px solid hsl(212, 28%, 86%);
             margin-right: 20px;
             padding-top: 20px;
-            padding-right: 30px;
+            padding-right: 20px;
             position: relative;
             text-align: right;
             width: 100%;
@@ -791,7 +987,7 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             img {
                 position: absolute;
                 top: -32px;
-                left: 30px;
+                left: 20px;
             }
 
             p {
@@ -805,7 +1001,7 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             }
 
             .content {
-                margin-top: 40px;
+                margin-top: 50px;
 
                 span {
                     color: #475669;
@@ -822,6 +1018,11 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
         }
         &>div:last-child {
             margin-right: 0;
+        }
+
+        .selectBandwidth {
+            width: 120px;
+            text-align: left;
         }
     }
 
@@ -891,25 +1092,34 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
     }
 }
 
-@media (max-width:1775px) {
+@media (max-width:1780px) {
     .@{css-prefix}dashboard {
         .overview {
             &>div {
-                padding-top: 80px;
+                min-width: 190px;
+                padding-top: 75px;
 
                 .content {
-                    margin-top: -8px;
+                    margin-top: -3px;
+                    span:first-child {
+                        font: 34px bolder;
+                    }
+
+                    span:nth-child(2) {
+                        font: 22px bolder;
+                    }
                 }
             }
         }
     }
 }
 
-@media (max-width:1620px) {
+@media (max-width:1440px) {
     .@{css-prefix}dashboard {
         .overview {
             &>div {
-                padding-right: 20px;
+                min-width: 180px;
+                padding-right: 15px;
 
                 p {
                 font-size: 18px;
