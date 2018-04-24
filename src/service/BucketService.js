@@ -47,6 +47,29 @@ const bytesSpliteUnits = (bytes, digit = 1) => {
 
     return [number, units[exponent]]
 }
+const bps = (bytes, digit = 1) => {
+    if (bytes === undefined) return '-'
+    let bpsArray = bpsSpliteUnits(bytes, digit)
+
+    return bpsArray[0] + ' ' + bpsArray[1]
+}
+const bpsSpliteUnits = (bps, digit = 1) => {
+    if (typeof bps !== 'number') {
+        bps = parseFloat(bps)
+    }
+
+    if (bps < 1) {
+        return '0 bps'
+    } else if (isNaN(bps) || !isFinite(bps)) {
+        return '-'
+    }
+
+    const units = ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps']
+    const exponent = Math.min(Math.floor(Math.log(bps) / Math.log(1024)), units.length - 1)
+    const number = (bps / Math.pow(1024, Math.floor(exponent))).toFixed(digit)
+
+    return [number, units[exponent]]
+}
 const times = (times) => {
     if (times === undefined) return '-'
     times = typeof (times) === 'string' ? times : times.toString()
@@ -193,4 +216,4 @@ const Utf8ArrayToStr = array => {
     }
     return out
 }
-export { time, bytes, times, timesK, date, dateTime, dateTimeYear, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, timesSpliteUnits, thousands }
+export { time, bytes, bps, times, timesK, date, dateTime, dateTimeYear, convertPrefix2Router, keyFilter, removeItemFromArray, prefix, Utf8ArrayToStr, bytesSpliteUnits, bpsSpliteUnits, timesSpliteUnits, thousands }

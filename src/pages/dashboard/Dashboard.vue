@@ -34,15 +34,22 @@
                 </div>
             </div>
             <div>
-                <img v-bind:src="imgSrc[1]" alt="capacity">
-                <Select class="selectBandwidth" v-model="selectedBandwidthLabel" @on-change="changeBandwidthOverview"  >
-                    <OptionGroup label="流出带宽">
-                        <Option v-for="item in Object.keys(outflowsBandwidthOverview)" :value="`out_band_${item}`" :key="`out_band_${item}`">{{item === 'pub' ? '公网' : `${item} cdn `}}流出带宽</Option>
-                    </OptionGroup>
-                    <OptionGroup label="流入带宽">
-                        <Option v-for="item in Object.keys(inflowsBandwidthOverview)" :value="`in_band_${item}`" :key="`in_band_${item}`">{{item === 'pub' ? '公网' : `${item} cdn `}}流入带宽</Option>
-                    </OptionGroup>
-                </Select>
+                <img v-bind:src="imgSrc[1]" alt="bandwidth">
+                <Tooltip
+                    :content='$t("DASHBOARD.BANDWIDTH_ALL_INFO", {someBandwidth: cnEnBandwidthOverview(selectedBandwidthLabel)})'
+                    placement="top-end"
+                >
+                    <span class="selectBandwidthLabel">{{cnEnBandwidthOverview(selectedBandwidthLabel)}}</span>
+                </Tooltip>
+                <Dropdown trigger="click" placement="bottom-end" class="selectBandwidth" @on-click="changeBandwidthOverview">
+                    <p>
+                        <Icon class="arrowDown" type="arrow-down-b"></Icon>
+                    </p>
+                    <DropdownMenu class="dropdownMenu" slot="list">
+                        <DropdownItem v-for="item in Object.keys(outflowsBandwidthOverview)" :name="`out_band_${item}`" :key="`out_band_${item}`">{{item === 'pub' ? $t("DASHBOARD.PUB_OUTFLOW_BANDWIDTH") : `${item} ${$t("DASHBOARD.CDN_OUTFLOW_BANDWIDTH")}`}}</DropdownItem>
+                        <DropdownItem v-for="item in Object.keys(inflowsBandwidthOverview)" :name="`in_band_${item}`" :key="`in_band_${item}`">{{item === 'pub' ? $t("DASHBOARD.PUB_INFLOW_BANDWIDTH") : `${item} ${$t("DASHBOARD.CDN_INFLOW_BANDWIDTH")}`}}</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
                 <div class="content">
                     <span>{{selectedBandwidthValue && selectedBandwidthValue[0]}}</span>
                     <span>{{selectedBandwidthValue && selectedBandwidthValue[1]}}</span>
@@ -91,7 +98,7 @@
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'capacityLine')">{{ $t("DASHBOARD.CAPACITY")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'bandwidthLine')">带宽</button>
+            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'bandwidthLine')">{{ $t("DASHBOARD.BANDWIDTH")}}</button>
             <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'inflowsLine')">{{ $t("DASHBOARD.INFLOWS")}}</button>
             <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'outflowsLine')">{{ $t("DASHBOARD.OUTFLOWS")}}</button>
             <button v-bind:class="{buttonFocus: showChart === 4}" @click="tabToggle(4,'requestsLine')">{{ $t("DASHBOARD.REQUESTS")}}</button>
@@ -141,7 +148,7 @@ import filesDark from '../../assets/dashboard/files-dark.svg'
 import { getBucketList } from '@/service/Data'
 import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from '@/service/API'
 import user from '@/store/modules/user'
-import { bytes, times, timesK, date, dateTime, dateTimeYear, bytesSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
+import { bytes, bps, times, timesK, date, dateTime, dateTimeYear, bytesSpliteUnits, bpsSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
@@ -164,7 +171,7 @@ export default {
             outflowsBandwidthOverview: {},
             inflowsBandwidthOverview: {},
             selectedBandwidthLabel: 'out_band_pub',
-            selectedBandwidthValue: 0,
+            selectedBandwidthValue: '',
             dateOptions: {
                 disabledDate (date) {
                     return date && date.valueOf() > Date.now()
@@ -210,10 +217,19 @@ export default {
                 this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
             }
         },
+        cnEnBandwidthOverview (val) {
+            if (new RegExp(/^out_band_/).test(val)) {
+                return val.slice(9) === 'pub' ? this.$t('DASHBOARD.PUB_OUTFLOW_BANDWIDTH') : val.slice(9) + ' ' + this.$t('DASHBOARD.CDN_OUTFLOW_BANDWIDTH')
+            } else {
+                return val.slice(8) === 'pub' ? this.$t('DASHBOARD.PUB_INFLOW_BANDWIDTH') : val.slice(8) + ' ' + this.$t('DASHBOARD.CDN_INFLOW_BANDWIDTH')
+            }
+        },
         changeBandwidthOverview (val) {
             if (new RegExp(/^out_band_/).test(val)) {
+                this.selectedBandwidthLabel = val
                 this.selectedBandwidthValue = this.outflowsBandwidthOverview[val.slice(9)]
             } else {
+                this.selectedBandwidthLabel = val
                 this.selectedBandwidthValue = this.inflowsBandwidthOverview[val.slice(8)]
             }
         },
@@ -268,8 +284,11 @@ export default {
                         this.isRedirect = res.is_redirect
                         this.bandwidthDataRes = _.cloneDeep(res)
 
-                        Object.keys(res.down_bandwidth).forEach(item => this.outflowsBandwidthOverview[item] = this.convertData(res.down_bandwidth[item].sort((a, b) => { return b - a })[0], true))
-                        Object.keys(res.up_bandwidth).forEach(item => this.inflowsBandwidthOverview[item] = this.convertData(res.up_bandwidth[item].sort((a, b) => { return b - a })[0], true))
+                        this.outflowsBandwidthOverview = {}
+                        this.inflowsBandwidthOverview = {}
+
+                        Object.keys(res.down_bandwidth).forEach(item => this.outflowsBandwidthOverview[item] = this.convertData(res.down_bandwidth[item].sort((a, b) => { return b - a })[0], true, 'bps'))
+                        Object.keys(res.up_bandwidth).forEach(item => this.inflowsBandwidthOverview[item] = this.convertData(res.up_bandwidth[item].sort((a, b) => { return b - a })[0], true, 'bps'))
 
                         this.selectedBandwidthLabel = 'out_band_pub'
                         this.selectedBandwidthValue = this.outflowsBandwidthOverview.pub
@@ -467,7 +486,7 @@ export default {
             if (!value) {
                 return ['0']
             }
-            return splite ? unit === 'byte' ? bytesSpliteUnits(value, 3) : timesSpliteUnits(value, 3) : unit === 'byte' ? bytes(value) : times(value)
+            return splite ? (unit === 'byte' ? bytesSpliteUnits(value, 3) : (unit === 'bps' ? bpsSpliteUnits(value, 3) : timesSpliteUnits(value, 3))) : (unit === 'byte' ? bytes(value) : (unit === 'bps' ? bps(value) : times(value)))
         },
         getApiURL (url, range) {
             let path = ''
@@ -505,10 +524,10 @@ export default {
 
 const exportDic = {
     capacity: '存储容量（字节）',
-    pubOutBand: '公网流出带宽(字节/5分钟)',
-    pubInBand: '公网流入带宽(字节/5分钟)',
-    cdnOutBand: 'cdn 流出带宽(字节/5分钟)',
-    cdnInBand: 'cdn 流入带宽(字节/5分钟)',
+    pubOutBand: '公网流出带宽(bps)',
+    pubInBand: '公网流入带宽(bps)',
+    cdnOutBand: 'cdn 流出带宽(bps)',
+    cdnInBand: 'cdn 流入带宽(bps)',
     outBandwidth: '流出带宽(字节)',
     inBandwidth: '流入带宽(字节)',
     inflows: '流入流量（字节）',
@@ -707,7 +726,7 @@ const initBandwidthOptions = ({outBandPub, outBandCdn, inBandPub, inBandCdn, the
                 let res = '时间：' + dateTimeYear(params[0].value[0])
                 _.each(params, function (item) {
                     res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
-                    res += bytes(item.value[1], 3)
+                    res += bps(item.value[1], 3)
                 })
                 return res
             }
@@ -722,7 +741,7 @@ const initBandwidthOptions = ({outBandPub, outBandCdn, inBandPub, inBandCdn, the
         yAxis: {
             axisLabel: {
                 formatter: function (value) {
-                    return bytes(value)
+                    return bps(value)
                 }
             }
         }
@@ -863,6 +882,13 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
     return newOptions
 }
 </script>
+
+<style lang='less'>
+.bsc-tooltip-inner {
+    max-width: none;
+}
+</style>
+
 <style lang='less' scoped>
 @overview-height: 160px;
 
@@ -975,9 +1001,9 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
 
         &>div {
             border: 1px solid hsl(212, 28%, 86%);
-            margin-right: 20px;
-            padding-top: 20px;
-            padding-right: 20px;
+            margin-right: 16px;
+            padding-top: 16px;
+            padding-right: 16px;
             position: relative;
             text-align: right;
             width: 100%;
@@ -987,13 +1013,12 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             img {
                 position: absolute;
                 top: -32px;
-                left: 20px;
+                left: 16px;
             }
 
             p {
                 font-size: 18px;
                 color: #8492a6;
-                float: right;
 
                 i {
                     margin-left: 4px;
@@ -1001,7 +1026,9 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
             }
 
             .content {
-                margin-top: 50px;
+                position: absolute;
+                bottom: 14px;
+                right: 14px;
 
                 span {
                     color: #475669;
@@ -1021,8 +1048,23 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
         }
 
         .selectBandwidth {
-            width: 120px;
             text-align: left;
+
+            .arrowDown {
+                cursor: pointer;
+                position: relative;
+                top: -5px;
+            }
+        }
+
+        .selectBandwidthLabel {
+            font-size: 18px;
+            color: #8492a6;
+            display: inline-block;
+            width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 
@@ -1033,7 +1075,7 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
-        margin-top: 20px;
+        margin-top: 16px;
         border: 1px solid #d3dce6;
         border-bottom: 0;
         button {
@@ -1092,22 +1134,29 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
     }
 }
 
-@media (max-width:1780px) {
+@media (max-width:1840px) {
     .@{css-prefix}dashboard {
         .overview {
             &>div {
                 min-width: 190px;
                 padding-top: 75px;
 
+                p {
+                    font-size: 16px;
+                }
+
                 .content {
-                    margin-top: -3px;
                     span:first-child {
-                        font: 34px bolder;
+                        font: 30px bolder;
                     }
 
                     span:nth-child(2) {
-                        font: 22px bolder;
+                        font: 18px bolder;
                     }
+                }
+
+                .selectBandwidthLabel {
+                    width: 140px;
                 }
             }
         }
@@ -1118,22 +1167,8 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
     .@{css-prefix}dashboard {
         .overview {
             &>div {
-                min-width: 180px;
+                min-width: 185px;
                 padding-right: 15px;
-
-                p {
-                font-size: 18px;
-                }
-
-                .content {
-                    span:first-child {
-                        font: 32px bolder;
-                    }
-
-                    span:nth-child(2) {
-                        font: 20px bolder;
-                    }
-                }
             }
         }
     }
