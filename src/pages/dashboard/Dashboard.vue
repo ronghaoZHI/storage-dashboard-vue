@@ -238,6 +238,13 @@ export default {
             if (!this.dateSelect) return
 
             if (formatDate(this.dateSelect[1]) < this.dateDivided) {
+                // no bandwidth
+                this.setBandwidthOptions('old')
+                this.outflowsBandwidthOverview = {}
+                this.inflowsBandwidthOverview = {}
+                this.selectedBandwidthValue = ['', '无数据']
+                this.selectedBandwidthLabel = 'out_band_pub'
+
                 // old storage
                 try {
                     await Promise.all([this.$http.get(this.getApiURL('old', this.dateRange)).then(res => {
@@ -401,8 +408,8 @@ export default {
                 }
             }
         },
-        setBandwidthOptions () {
-            this.bandwidthOptions = initBandwidthOptions({
+        setBandwidthOptions (type) {
+            this.bandwidthOptions = type === 'old' ? {} : initBandwidthOptions({
                 outBandPub: this.combineTimeDataUnitLabel(this.bandwidthDataRes.down_bandwidth.pub, '公网流出带宽', 'byte', this.bandwidthDataRes.time_nodes),
                 outBandCdn: this.combineTimeDataUnitLabelToObjectArray(_.omit(this.bandwidthDataRes.down_bandwidth, ['pub']), ' cdn 流出带宽', 'type', this.bandwidthDataRes.time_nodes),
                 inBandPub: this.combineTimeDataUnitLabel(this.bandwidthDataRes.up_bandwidth.pub, '公网流入带宽', 'byte', this.bandwidthDataRes.time_nodes),
@@ -515,9 +522,9 @@ export default {
             to[0] && this.getInitData()
         },
         'theme' (to, from) {
-            this.setBandwidthOptions()
             let url = formatDate(this.dateSelect[1]) < this.dateDivided ? 'old' : 'oldAndNew'
             this.setOptions(url)
+            this.setBandwidthOptions(url)
         }
     }
 }
