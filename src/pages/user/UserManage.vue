@@ -370,8 +370,9 @@ export default {
                     let getSubUserURL = isSuper() ? getSuperSubUserUrl(user.state.subUser.username) : SUB_USER
                     let [res, users] = await Promise.all([getBucketList(), this.$http.get(getSubUserURL)])
                     let buckets = await Promise.all(Array.map(res.Buckets, (bucket) => {
+                        const params = isSuper() ? { bucket: bucket.Name, customer: user.state.subUser.username } : { bucket: bucket.Name }
                         this.bucketList = res.Buckets
-                        return this.$http.get(SUB_USER_ACL, { params: { bucket: bucket.Name } }).then(acl => {
+                        return this.$http.get(SUB_USER_ACL, { params }).then(acl => {
                             return { bucket: bucket.Name, acl: acl }
                         })
                     }))
