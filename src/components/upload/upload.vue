@@ -83,8 +83,9 @@
                     ContentType: file.type,
                     Body: file
                 }
+                let options = { partSize: 64 * 1024 * 1024, queueSize: 3 }
                 let aws = await getS3({timeout: 3600000})
-                let request = aws.upload(params)
+                let request = aws.upload(params, options)
                 request.on('httpUploadProgress', function (evt) {
                     item.progress = parseInt((evt.loaded * 100) / evt.total)
                     item.request = request
