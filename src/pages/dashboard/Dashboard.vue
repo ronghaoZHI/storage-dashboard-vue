@@ -362,7 +362,7 @@ export default {
                     this.exportData = []
                     _.each(this.bandwidthDataRes.time_nodes.map(time => time * 1000), (time, index) => {
                         let exportData = {
-                            time: echartData.time_nodes[index] ? (formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided ? dateTimeYear(echartData.time_nodes[index] * 1000 + 3600000) : date(echartData.time_nodes[index])) : ''
+                            time: echartData.time_nodes[index] ? (formatDate(this.dateSelect[0]) === formatDate(this.dateSelect[1]) && formatDate(this.dateSelect[0]) >= this.dateDivided ? dateTimeYear(echartData.time_nodes[index] * 1000 + 3600000) : date(echartData.time_nodes[index] * 1000)) : ''
                         }
                         exportData[exportDic.capacity] = echartData.space_used[index]
                         exportData[exportDic.inflows] = echartData.flow_up[index]
@@ -382,7 +382,7 @@ export default {
                         exportData[exportDic.files] = echartData.num_used[index]
 
                         // bandwidth
-                        exportData['bandwidth_time'] = dateTimeYear(time + 3600000)
+                        exportData['bandwidth_time'] = dateTimeYear(time)
                         exportData[exportDic.pubOutBand] = this.bandwidthDataRes.down_bandwidth.pub[index]
                         _.forEach(_.omit(this.bandwidthDataRes.down_bandwidth, ['pub']), (value, key) => {
                             exportData[`${key} ${exportDic.cdnOutBand}`] = value[index]
