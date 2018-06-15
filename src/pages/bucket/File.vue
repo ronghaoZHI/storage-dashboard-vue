@@ -656,7 +656,7 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
         let url = await s3.getSignedUrl('getObject', getURLparams)
         let acl = await handler('getObjectAcl', getAclparams)
         let isAllUser = _.find(acl.Grants, (item) => item.Grantee.URI && item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers')
-        return isAllUser ? url.split('?')[0] : url
+        return isDownload ? url : isAllUser ? url.split('?')[0] : url
     } catch (error) {
         console.log(error)
         this.$Loading.error()
