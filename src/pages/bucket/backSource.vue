@@ -45,7 +45,7 @@
                 </FormItem>
                 <FormItem :label='$t("STORAGE.SOURCE_DOMAIN")' prop="domain">
                     <Input v-model="formValidate404.domain" style="width:400px">
-                        <Select v-model="domainPrepend" slot="prepend" style="width: 80px">
+                        <Select v-model="domainPrepend" slot="prepend" style="width:100px;text-align:left">
                             <Option value="http">http://</Option>
                             <Option value="https">https://</Option>
                         </Select>
