@@ -132,6 +132,9 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
+import 'echarts/lib/component/legend/ScrollableLegendModel.js'
+import 'echarts/lib/component/legend/ScrollableLegendView.js'
+import 'echarts/lib/component/legend/scrollableLegendAction.js'
 import 'echarts/lib/component/title'
 import capacity from '../../assets/dashboard/capacity.svg'
 import capacityDark from '../../assets/dashboard/capacity-dark.svg'
@@ -619,6 +622,13 @@ const lineOptions = {
     }
 }
 const darkLineOptions = {
+    legend: {
+        pageIconColor: '#c0ccda',
+        pageIconInactiveColor: '#555',
+        pageTextStyle: {
+            color: '#c0ccda'
+        }
+    },
     grid: {
         show: true,
         backgroundColor: '#293137',
@@ -718,6 +728,7 @@ const initBandwidthOptions = ({outBandPub, outBandCdn, inBandPub, inBandCdn, the
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         color: ['#1e9fff', '#9f61fc', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
         legend: {
+            type: 'scroll',
             data: legendData,
             top: '20px',
             textStyle: {
@@ -850,6 +861,7 @@ const initOptions = ({dataPart, dataPart1, dataPart2, dataPart3, theme, newOneDa
     let newOptions = _.defaultsDeep({}, themeLineOptions, {
         color: ['#1e9fff', '#9f61fc', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#c4cfdf'],
         legend: {
+            type: 'scroll',
             data: legendData,
             top: '20px',
             textStyle: {
