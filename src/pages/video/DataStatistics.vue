@@ -5,11 +5,11 @@
             <div class="button-datepicker">
                 <Date-picker v-model="dateSelect" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select time" :options="dateOptions" style="width:100%;"></Date-picker>
             </div>
-            <div class="button-daterange">
+            <div class="button-group button-daterange">
                 <Button-group>
-                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.seven_days}" @click="dateSelect = dateDefault.seven_days">{{ $t("DASHBOARD.SEVEN_DAYS")}}</Button>
-                    <Button v-show="!isFristDay" v-bind:class="{buttonFocus: dateSelect === dateDefault.this_month}" @click="dateSelect = dateDefault.this_month" >{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
-                    <Button v-bind:class="{buttonFocus: dateSelect === dateDefault.thirty_days}" @click="dateSelect = dateDefault.thirty_days">{{ $t("DASHBOARD.THIRTY_DAYS")}}</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.seven_days[0].getTime()}" @click="dateSelect = dateDefault.seven_days">{{ $t("DASHBOARD.SEVEN_DAYS")}}</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.this_month[0].getTime()}" @click="dateSelect = dateDefault.this_month" v-show="!isFristDay">{{ $t("DASHBOARD.THIS_MONTH")}}</Button>
+                    <Button v-bind:class="{buttonFocus: dateSelect[0].getTime() === dateDefault.thirty_days[0].getTime()}" @click="dateSelect = dateDefault.thirty_days">{{ $t("DASHBOARD.THIRTY_DAYS")}}</Button>
                 </Button-group>
             </div>
             <div class="button-export-data">
@@ -18,7 +18,9 @@
         </div>
         <div class="section-chart-tab">
             <button v-bind:class="{buttonFocus: showChart === 0}" @click="tabToggle(0,'overviewLine')">{{ $t("DASHBOARD.TRANSCODER_OVERVIEW")}}</button>
-            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1,'distributionLine')">{{ $t("DASHBOARD.TRANSCODER_DISTRIBUTION")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 1}" @click="tabToggle(1);tabVideoToggle(showVideoChart,'videoH264LfrLine')">{{ $t("DASHBOARD.VIDEO_TRANSCODER")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 2}" @click="tabToggle(2,'audioLine')">{{ $t("DASHBOARD.AUDIO_TRANSCODER")}}</button>
+            <button v-bind:class="{buttonFocus: showChart === 3}" @click="tabToggle(3,'transferPackageLine')">{{ $t("DASHBOARD.TRANSFER_PACKAGE")}}</button>
             <button disabled></button>
         </div>
         <div class="section-chart">
@@ -26,11 +28,29 @@
                 <chart :options="overviewOptions" auto-resize ref="overviewLine"></chart>
             </div>
             <div class="card-chart" v-show="showChart === 1">
-                <chart :options="distributionOptions" auto-resize ref="distributionLine"></chart>
+                <div class="button-group video-button-group">
+                    <Button-group>
+                        <Button v-bind:class="{buttonFocus: showVideoChart === 0}" @click="tabVideoToggle(0,'videoH264LfrLine')">{{ $t("DASHBOARD.H264LFR")}}</Button>
+                        <Button v-bind:class="{buttonFocus: showVideoChart === 1}" @click="tabVideoToggle(1,'videoH264HfrLine')">{{ $t("DASHBOARD.H264HFR")}}</Button>
+                        <Button v-bind:class="{buttonFocus: showVideoChart === 2}" @click="tabVideoToggle(2,'videoH265LfrLine')">{{ $t("DASHBOARD.H265LFR")}}</Button>
+                        <Button v-bind:class="{buttonFocus: showVideoChart === 3}" @click="tabVideoToggle(3,'videoH265HfrLine')">{{ $t("DASHBOARD.H265HFR")}}</Button>
+                    </Button-group>
+                </div>
+                <chart v-show="showVideoChart === 0" :options="videoH264LfrOptions" auto-resize ref="videoH264LfrLine"></chart>
+                <chart v-show="showVideoChart === 1" :options="videoH264HfrOptions" auto-resize ref="videoH264HfrLine"></chart>
+                <chart v-show="showVideoChart === 2" :options="videoH265LfrOptions" auto-resize ref="videoH265LfrLine"></chart>
+                <chart v-show="showVideoChart === 3" :options="videoH265HfrOptions" auto-resize ref="videoH265HfrLine"></chart>
+            </div>
+            <div class="card-chart" v-show="showChart === 2">
+                <chart :options="audioOptions" auto-resize ref="audioLine"></chart>
+            </div>
+            <div class="card-chart" v-show="showChart === 3">
+                <chart :options="transferPackageOptions" auto-resize ref="transferPackageLine"></chart>
             </div>
         </div>
     </div>
 </template>
+
 <script>
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/chart/line'
@@ -47,6 +67,7 @@ export default {
     data () {
         return {
             showChart: 0,
+            showVideoChart: 0,
             dateDefault: {
                 seven_days: [lastNDays(7), lastNDays(1)],
                 this_month: [new Date(new Date().setDate(1)), lastNDays(1)],
@@ -61,7 +82,12 @@ export default {
             data: [],
             spinShow: true,
             overviewOptions: lineOptions,
-            distributionOptions: lineOptions
+            videoH264LfrOptions: lineOptions,
+            videoH264HfrOptions: lineOptions,
+            videoH265LfrOptions: lineOptions,
+            videoH265HfrOptions: lineOptions,
+            audioOptions: lineOptions,
+            transferPackageOptions: lineOptions
         }
     },
     components: {
@@ -86,14 +112,20 @@ export default {
         async getInitData () {
             this.spinShow = true
             if (!this.dateSelect) return
-            this.showChart = 0
 
             try {
                 await Promise.all([this.$http.get(this.getApiURL()).then(res => {
                     this.overviewData = res.overview
+                    this.videoData = res.distribution.video
+                    this.audioData = res.distribution.not_video.audio_transcoding
+                    this.transferPackageData = res.distribution.not_video.container_only
                     this.overviewOptions = initOverviewOptions(this.overviewData, this.theme)
-                    this.distributionData = res.distribution
-                    this.distributionOptions = initDistributionOptions(this.distributionData, this.theme)
+                    this.videoH264LfrOptions = initVideoOptions(this.videoData.lfr_low, this.theme)
+                    this.videoH264HfrOptions = initVideoOptions(this.videoData.hfr_low, this.theme)
+                    this.videoH265LfrOptions = initVideoOptions(this.videoData.lfr_h265, this.theme)
+                    this.videoH265HfrOptions = initVideoOptions(this.videoData.hfr_h265, this.theme)
+                    this.audioOptions = initNotVideoOptions(this.audioData, '音频转码', this.theme)
+                    this.transferPackageOptions = initNotVideoOptions(this.transferPackageData, '转封装', this.theme)
                 })]).then(res => {
                     this.data = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
@@ -104,14 +136,32 @@ export default {
                             '视频截图张数(个)': this.overviewData.snapshot[index][1],
                             '转封装任务数(个)': this.overviewData.container_only[index][1],
                             '音视频元信息接口调用次数(个)': this.overviewData.get_metadata[index][1],
-                            'SD240(s)': this.distributionData.SD240[index][1],
-                            'SD480(s)': this.distributionData.SD480[index][1],
-                            'SD(s)': this.distributionData.SD[index][1],
-                            'HD(s)': this.distributionData.HD[index][1],
-                            '2K(s)': this.distributionData['2K'][index][1],
-                            '4K(s)': this.distributionData['4K'][index][1],
-                            '音频转码(s)': this.distributionData.audio_transcoding[index][1],
-                            '转封装(s)': this.distributionData.container_only[index][1]
+                            'H264及其他普通帧率-SD240(s)': this.videoData.lfr_low.SD240[index][1],
+                            'H264及其他普通帧率-SD480(s)': this.videoData.lfr_low.SD480[index][1],
+                            'H264及其他普通帧率-SD(s)': this.videoData.lfr_low.SD[index][1],
+                            'H264及其他普通帧率-HD(s)': this.videoData.lfr_low.HD[index][1],
+                            'H264及其他普通帧率-2K(s)': this.videoData.lfr_low['2K'][index][1],
+                            'H264及其他普通帧率-4K(s)': this.videoData.lfr_low['4K'][index][1],
+                            'H264及其他高帧率-SD240(s)': this.videoData.hfr_low.SD240[index][1],
+                            'H264及其他高帧率-SD480(s)': this.videoData.hfr_low.SD480[index][1],
+                            'H264及其他高帧率-SD(s)': this.videoData.hfr_low.SD[index][1],
+                            'H264及其他高帧率-HD(s)': this.videoData.hfr_low.HD[index][1],
+                            'H264及其他高帧率-2K(s)': this.videoData.hfr_low['2K'][index][1],
+                            'H264及其他高帧率-4K(s)': this.videoData.hfr_low['4K'][index][1],
+                            'H265普通帧率-SD240(s)': this.videoData.lfr_h265.SD240[index][1],
+                            'H265普通帧率-SD480(s)': this.videoData.lfr_h265.SD480[index][1],
+                            'H265普通帧率-SD(s)': this.videoData.lfr_h265.SD[index][1],
+                            'H265普通帧率-HD(s)': this.videoData.lfr_h265.HD[index][1],
+                            'H265普通帧率-2K(s)': this.videoData.lfr_h265['2K'][index][1],
+                            'H265普通帧率-4K(s)': this.videoData.lfr_h265['4K'][index][1],
+                            'H265高帧率-SD240(s)': this.videoData.hfr_h265.SD240[index][1],
+                            'H265高帧率-SD480(s)': this.videoData.hfr_h265.SD480[index][1],
+                            'H265高帧率-SD(s)': this.videoData.hfr_h265.SD[index][1],
+                            'H265高帧率-HD(s)': this.videoData.hfr_h265.HD[index][1],
+                            'H265高帧率-2K(s)': this.videoData.hfr_h265['2K'][index][1],
+                            'H265高帧率-4K(s)': this.videoData.hfr_h265['4K'][index][1],
+                            '音频转码(s)': this.audioData[index][1],
+                            '转封装(s)': this.transferPackageData[index][1]
                         })
                     })
                     this.spinShow = false
@@ -133,6 +183,11 @@ export default {
         tabToggle (index, ref) {
             let vm = this
             vm.showChart = index
+            ref && setTimeout(() => { vm.$refs[ref].resize() }, 100)
+        },
+        tabVideoToggle (index, ref) {
+            let vm = this
+            vm.showVideoChart = index
             setTimeout(() => { vm.$refs[ref].resize() }, 100)
         },
         exportCsv () {
@@ -142,18 +197,17 @@ export default {
         },
         toggleTheme (theme) {
             this.overviewOptions = initOverviewOptions(this.overviewData, theme)
-            this.distributionOptions = initDistributionOptions(this.distributionData, theme)
+            this.videoH264LfrOptions = initVideoOptions(this.videoData.lfr_low, this.theme)
+            this.videoH264HfrOptions = initVideoOptions(this.videoData.hfr_low, this.theme)
+            this.videoH265LfrOptions = initVideoOptions(this.videoData.lfr_h265, this.theme)
+            this.videoH265HfrOptions = initVideoOptions(this.videoData.hfr_h265, this.theme)
+            this.audioOptions = initNotVideoOptions(this.audioData, '音频转码', theme)
+            this.transferPackageOptions = initNotVideoOptions(this.transferPackageData, '转封装', theme)
         }
     },
     watch: {
         'dateSelect' (to, from) {
             to[0] && this.getInitData()
-        },
-        'overviewData' (to, from) {
-            chartReload(to.data, this.$refs.overviewLine)
-        },
-        'distributionData' (to, from) {
-            chartReload(to.data, this.$refs.distributionLine)
         },
         'theme' (to, from) {
             this.toggleTheme(to)
@@ -165,6 +219,15 @@ const fixDate = n => n < 10 ? '0' + n : '' + n
 const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
 const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
 const lineOptions = {
+    legend: {
+        top: '20px',
+        textStyle: {
+            color: '#1E9FFF',
+            fontSize: 14
+        },
+        icon: 'square',
+        itemGap: 40
+    },
     tooltip: {
         trigger: 'axis',
         textStyle: {
@@ -256,6 +319,17 @@ const darkLineOptions = {
         }
     }
 }
+const seriesPart = {
+    type: 'line',
+    smooth: true,
+    sampling: 'average',
+    areaStyle: {
+        normal: {
+            color: '#20a0ff',
+            opacity: 0.5
+        }
+    }
+}
 const initOverviewOptions = (data, theme) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
     let n = Math.floor((data.video_transcoding.length - 1) / 7) + 1
@@ -272,7 +346,6 @@ const initOverviewOptions = (data, theme) => {
             }
         },
         yAxis: {
-            name: '单位：个',
             axisLabel: {
                 formatter: function (value) {
                     return timesK(value)
@@ -281,80 +354,33 @@ const initOverviewOptions = (data, theme) => {
         },
         color: ['#9f61fc', '#1e9fff', '#0cce66', '#ffac2a', '#8492a6'],
         legend: {
-            data: ['视频转码任务数', '音频转码任务数', '视频截图张数', '转封装任务数', '音视频元信息接口调用次数'],
-            top: '20px',
-            textStyle: {
-                color: '#1E9FFF',
-                fontSize: 14
-            },
-            icon: 'square',
-            itemGap: 40
+            data: ['视频转码任务数', '音频转码任务数', '视频截图张数', '转封装任务数', '音视频元信息接口调用次数']
         },
         series: [{
             name: '视频转码任务数',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.video_transcoding
         }, {
             name: '音频转码任务数',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.audio_transcoding
         }, {
             name: '视频截图张数',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.snapshot
         }, {
             name: '转封装任务数',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.container_only
         }, {
             name: '音视频元信息接口调用次数',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.get_metadata
         }]
     })
     return newOptions
 }
-const initDistributionOptions = (data, theme) => {
+const initVideoOptions = (data, theme) => {
     let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
     let n = Math.floor((data.SD240.length - 1) / 7) + 1
     themeLineOptions.xAxis.interval = 86400000 * n
@@ -378,134 +404,82 @@ const initDistributionOptions = (data, theme) => {
         },
         color: ['#9f61fc', '#1e9fff', '#0cce66', '#f85959', '#ffac2a', '#8492a6', '#aacc11', '#c4cfdf'],
         legend: {
-            data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', '音频转码', '转封装'],
-            top: '20px',
-            textStyle: {
-                color: '#1E9FFF',
-                fontSize: 14
-            },
-            icon: 'square',
-            itemGap: 40
+            data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', '音频转码', '转封装']
         },
         series: [{
             name: 'SD240',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.SD240
         }, {
             name: 'SD480',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.SD480
         }, {
             name: 'SD',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.SD
         }, {
             name: 'HD',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data.HD
         }, {
             name: '2K',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data['2K']
         }, {
             name: '4K',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
+            ...seriesPart,
             data: data['4K']
-        }, {
-            name: '音频转码',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
-            data: data.audio_transcoding
-        }, {
-            name: '转封装',
-            type: 'line',
-            smooth: true,
-            sampling: 'average',
-            areaStyle: {
-                normal: {
-                    color: '#20a0ff',
-                    opacity: 0.5
-                }
-            },
-            data: data.container_only
         }]
     })
     return newOptions
 }
-
-const chartReload = (data, chart) => {
-    chart && chart.mergeOptions({ series: [{ ...data }] })
+const initNotVideoOptions = (data, typeName, theme) => {
+    let themeLineOptions = theme === 'dark' ? _.defaultsDeep({}, lineOptions, darkLineOptions) : _.defaultsDeep({}, lineOptions)
+    let n = Math.floor((data.length - 1) / 7) + 1
+    themeLineOptions.xAxis.interval = 86400000 * n
+    let newOptions = _.defaultsDeep({}, themeLineOptions, {
+        tooltip: {
+            formatter: function (params, ticket, callback) {
+                let res = '时间：' + date(params[0].value[0])
+                _.each(params, function (item) {
+                    res += '<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + item.color + '"></span>' + item.seriesName + '：'
+                    res += time(item.value[1], 2)
+                })
+                return res
+            }
+        },
+        yAxis: {
+            axisLabel: {
+                formatter: function (value) {
+                    return time(value)
+                }
+            }
+        },
+        color: ['#9f61fc'],
+        legend: {
+            data: [typeName]
+        },
+        series: [{
+            name: typeName,
+            ...seriesPart,
+            data: data
+        }]
+    })
+    return newOptions
 }
 </script>
-<style lang='less' scoped>
 
+<style lang='less' scoped>
 .dark .@{css-prefix}data-statistics {
-    .toolbar {
-        .button-daterange {
-            button {
-                border: 1px solid #52626d;
-                border-left: none;
-                background: #414d56;
-                color: #fff;
-            }
-            button:first-child {
-                border-left: 1px solid #52626d;
-            }
+    .button-group {
+        button {
+            border: 1px solid #52626d;
+            background: #414d56;
+            color: #fff;
+        }
+        button:first-child {
+            border-left: 1px solid #52626d;
         }
     }
 
@@ -534,6 +508,29 @@ const chartReload = (data, chart) => {
 }
 
 .@{css-prefix}data-statistics {
+    .button-group {
+        button {
+            margin: 0;
+            font-size: 14px;
+            color: #475669;
+            height: 32px;
+            background: #fff;
+            line-height: 16px;
+            border: 1px solid #d3dce6;
+            border-left: none;
+        }
+        button:first-child {
+            border-left: 1px solid #d3dce6;
+        }
+        button:focus,
+        .buttonFocus {
+            outline: 0;
+            background: #20a0ff !important;
+            border-color: #20a0ff !important;
+            color: #fff !important;
+        }
+    }
+
     .toolbar {
         margin-bottom: 16px;
         height: 32px;
@@ -544,26 +541,6 @@ const chartReload = (data, chart) => {
         }
         .button-daterange {
             float: left;
-            button {
-                margin: 0;
-                font-size: 14px;
-                color: #475669;
-                height: 32px;
-                background: #fff;
-                line-height: 16px;
-                border: 1px solid #d3dce6;
-                border-left: none;
-            }
-            button:first-child {
-                border-left: 1px solid #d3dce6;
-            }
-        }
-        button:focus,
-        .buttonFocus {
-            outline: 0;
-            background: #20a0ff !important;
-            border-color: #20a0ff !important;
-            color: #fff !important;
         }
         .button-export-data {
             float: right;
@@ -579,7 +556,7 @@ const chartReload = (data, chart) => {
         button {
             float: left;
             border-radius: 0;
-            width: 20%;
+            width: 15%;
             height: 50px;
             text-align: center;
             -ms-touch-action: manipulation;
@@ -602,7 +579,7 @@ const chartReload = (data, chart) => {
         }
         &>button:nth-last-child(1) {
             border-right: 0;
-            width: 60%;
+            width: 40%;
             cursor: default;
         }
         button:focus,
@@ -630,6 +607,9 @@ const chartReload = (data, chart) => {
         .echarts {
             width: initial;
             margin-left: 8px;
+        }
+        .video-button-group {
+            margin-left: 40px;
         }
     }
 }
