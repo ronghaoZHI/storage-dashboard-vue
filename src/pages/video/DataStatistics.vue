@@ -79,7 +79,7 @@ export default {
                     return date && date.valueOf() > Date.now() - 86400000
                 }
             },
-            data: [],
+            exportData: [],
             spinShow: true,
             overviewOptions: lineOptions,
             videoH264LfrOptions: lineOptions,
@@ -127,42 +127,43 @@ export default {
                     this.audioOptions = initNotVideoOptions(this.audioData, '音频转码', this.theme)
                     this.transferPackageOptions = initNotVideoOptions(this.transferPackageData, '转封装', this.theme)
                 })]).then(res => {
-                    this.data = []
+                    this.exportData = []
                     _.each(this.overviewData.video_transcoding.map(data => data[0]), (time, index) => {
-                        this.data.push({
-                            time: date(time),
-                            '视频转码任务数(个)': this.overviewData.video_transcoding[index][1],
-                            '音频转码任务数(个)': this.overviewData.audio_transcoding[index][1],
-                            '视频截图张数(个)': this.overviewData.snapshot[index][1],
-                            '转封装任务数(个)': this.overviewData.container_only[index][1],
-                            '音视频元信息接口调用次数(个)': this.overviewData.get_metadata[index][1],
-                            'H264及其他普通帧率-SD240(s)': this.videoData.lfr_low.SD240[index][1],
-                            'H264及其他普通帧率-SD480(s)': this.videoData.lfr_low.SD480[index][1],
-                            'H264及其他普通帧率-SD(s)': this.videoData.lfr_low.SD[index][1],
-                            'H264及其他普通帧率-HD(s)': this.videoData.lfr_low.HD[index][1],
-                            'H264及其他普通帧率-2K(s)': this.videoData.lfr_low['2K'][index][1],
-                            'H264及其他普通帧率-4K(s)': this.videoData.lfr_low['4K'][index][1],
-                            'H264及其他高帧率-SD240(s)': this.videoData.hfr_low.SD240[index][1],
-                            'H264及其他高帧率-SD480(s)': this.videoData.hfr_low.SD480[index][1],
-                            'H264及其他高帧率-SD(s)': this.videoData.hfr_low.SD[index][1],
-                            'H264及其他高帧率-HD(s)': this.videoData.hfr_low.HD[index][1],
-                            'H264及其他高帧率-2K(s)': this.videoData.hfr_low['2K'][index][1],
-                            'H264及其他高帧率-4K(s)': this.videoData.hfr_low['4K'][index][1],
-                            'H265普通帧率-SD240(s)': this.videoData.lfr_h265.SD240[index][1],
-                            'H265普通帧率-SD480(s)': this.videoData.lfr_h265.SD480[index][1],
-                            'H265普通帧率-SD(s)': this.videoData.lfr_h265.SD[index][1],
-                            'H265普通帧率-HD(s)': this.videoData.lfr_h265.HD[index][1],
-                            'H265普通帧率-2K(s)': this.videoData.lfr_h265['2K'][index][1],
-                            'H265普通帧率-4K(s)': this.videoData.lfr_h265['4K'][index][1],
-                            'H265高帧率-SD240(s)': this.videoData.hfr_h265.SD240[index][1],
-                            'H265高帧率-SD480(s)': this.videoData.hfr_h265.SD480[index][1],
-                            'H265高帧率-SD(s)': this.videoData.hfr_h265.SD[index][1],
-                            'H265高帧率-HD(s)': this.videoData.hfr_h265.HD[index][1],
-                            'H265高帧率-2K(s)': this.videoData.hfr_h265['2K'][index][1],
-                            'H265高帧率-4K(s)': this.videoData.hfr_h265['4K'][index][1],
-                            '音频转码(s)': this.audioData[index][1],
-                            '转封装(s)': this.transferPackageData[index][1]
-                        })
+                        let exportDataItem = {
+                            time: date(time)
+                        }
+                        exportDataItem[exportDic.videoTranscodingCount] = this.overviewData.video_transcoding[index][1],
+                        exportDataItem[exportDic.audioTranscodingCount] = this.overviewData.audio_transcoding[index][1],
+                        exportDataItem[exportDic.snapshotCount] = this.overviewData.snapshot[index][1],
+                        exportDataItem[exportDic.transferPackageCount] = this.overviewData.container_only[index][1],
+                        exportDataItem[exportDic.metadataCount] = this.overviewData.get_metadata[index][1],
+                        exportDataItem[exportDic.H264LFR_SD240] = this.videoData.lfr_low.SD240[index][1],
+                        exportDataItem[exportDic.H264LFR_SD480] = this.videoData.lfr_low.SD480[index][1],
+                        exportDataItem[exportDic.H264LFR_SD] = this.videoData.lfr_low.SD[index][1],
+                        exportDataItem[exportDic.H264LFR_HD] = this.videoData.lfr_low.HD[index][1],
+                        exportDataItem[exportDic.H264LFR_2K] = this.videoData.lfr_low['2K'][index][1],
+                        exportDataItem[exportDic.H264LFR_4K] = this.videoData.lfr_low['4K'][index][1],
+                        exportDataItem[exportDic.H264HFR_SD240] = this.videoData.hfr_low.SD240[index][1],
+                        exportDataItem[exportDic.H264HFR_SD480] = this.videoData.hfr_low.SD480[index][1],
+                        exportDataItem[exportDic.H264HFR_SD] = this.videoData.hfr_low.SD[index][1],
+                        exportDataItem[exportDic.H264HFR_HD] = this.videoData.hfr_low.HD[index][1],
+                        exportDataItem[exportDic.H264HFR_2K] = this.videoData.hfr_low['2K'][index][1],
+                        exportDataItem[exportDic.H264HFR_4K] = this.videoData.hfr_low['4K'][index][1],
+                        exportDataItem[exportDic.H265LFR_SD240] = this.videoData.lfr_h265.SD240[index][1],
+                        exportDataItem[exportDic.H265LFR_SD480] = this.videoData.lfr_h265.SD480[index][1],
+                        exportDataItem[exportDic.H265LFR_SD] = this.videoData.lfr_h265.SD[index][1],
+                        exportDataItem[exportDic.H265LFR_HD] = this.videoData.lfr_h265.HD[index][1],
+                        exportDataItem[exportDic.H265LFR_2K] = this.videoData.lfr_h265['2K'][index][1],
+                        exportDataItem[exportDic.H265LFR_4K] = this.videoData.lfr_h265['4K'][index][1],
+                        exportDataItem[exportDic.H265HFR_SD240] = this.videoData.hfr_h265.SD240[index][1],
+                        exportDataItem[exportDic.H265HFR_SD480] = this.videoData.hfr_h265.SD480[index][1],
+                        exportDataItem[exportDic.H265HFR_SD] = this.videoData.hfr_h265.SD[index][1],
+                        exportDataItem[exportDic.H265HFR_HD] = this.videoData.hfr_h265.HD[index][1],
+                        exportDataItem[exportDic.H265HFR_2K] = this.videoData.hfr_h265['2K'][index][1],
+                        exportDataItem[exportDic.H265HFR_4K] = this.videoData.hfr_h265['4K'][index][1],
+                        exportDataItem[exportDic.videoTranscoding] = this.audioData[index][1],
+                        exportDataItem[exportDic.transferPackage] = this.transferPackageData[index][1]
+                        this.exportData.push(exportDataItem)
                     })
                     this.spinShow = false
                 })
@@ -191,7 +192,7 @@ export default {
             setTimeout(() => { vm.$refs[ref].resize() }, 100)
         },
         exportCsv () {
-            let content = Csv(_.keys(this.data[0]), this.data, ',')
+            let content = Csv(_.keys(this.exportData[0]), this.exportData, ',')
             let file = new File(Array.from(content), this.dateRange + '.csv', {type: 'text/csv;charset=utf-8'})
             fileSaver.saveAs(file)
         },
@@ -215,6 +216,39 @@ export default {
     }
 }
 
+const exportDic = {
+    videoTranscodingCount: '视频转码任务数(个)',
+    audioTranscodingCount: '音频转码任务数(个)',
+    snapshotCount: '视频截图张数(个)',
+    transferPackageCount: '转封装任务数(个)',
+    metadataCount: '音视频元信息接口调用次数(个)',
+    H264LFR_SD240: 'H264及其他普通帧率-SD240(s)',
+    H264LFR_SD480: 'H264及其他普通帧率-SD480(s)',
+    H264LFR_SD: 'H264及其他普通帧率-SD(s)',
+    H264LFR_HD: 'H264及其他普通帧率-HD(s)',
+    H264LFR_2K: 'H264及其他普通帧率-2K(s)',
+    H264LFR_4K: 'H264及其他普通帧率-4K(s)',
+    H264HFR_SD240: 'H264及其他高帧率-SD240(s)',
+    H264HFR_SD480: 'H264及其他高帧率-SD480(s)',
+    H264HFR_SD: 'H264及其他高帧率-SD(s)',
+    H264HFR_HD: 'H264及其他高帧率-HD(s)',
+    H264HFR_2K: 'H264及其他高帧率-2K(s)',
+    H264HFR_4K: 'H264及其他高帧率-4K(s)',
+    H265LFR_SD240: 'H265普通帧率-SD240(s)',
+    H265LFR_SD480: 'H265普通帧率-SD480(s)',
+    H265LFR_SD: 'H265普通帧率-SD(s)',
+    H265LFR_HD: 'H265普通帧率-HD(s)',
+    H265LFR_2K: 'H265普通帧率-2K(s)',
+    H265LFR_4K: 'H265普通帧率-4K(s)',
+    H265HFR_SD240: 'H265高帧率-SD240(s)',
+    H265HFR_SD480: 'H265高帧率-SD480(s)',
+    H265HFR_SD: 'H265高帧率-SD(s)',
+    H265HFR_HD: 'H265高帧率-HD(s)',
+    H265HFR_2K: 'H265高帧率-2K(s)',
+    H265HFR_4K: 'H265高帧率-4K(s)',
+    videoTranscoding: '音频转码(s)',
+    transferPackage: '转封装(s)'
+}
 const fixDate = n => n < 10 ? '0' + n : '' + n
 const formatDate = date => date && date.getFullYear() + fixDate(date.getMonth() + 1) + fixDate(date.getDate())
 const lastNDays = n => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
