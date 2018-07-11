@@ -414,7 +414,7 @@ export default {
                     boundUserEmailList.push(user.email)
                 })
                 _.each(allUser, user => {
-                    if (boundUserEmailList.indexOf(user.email) > 0) {
+                    if (boundUserEmailList.indexOf(user.email) >= 0) {
                         user.show = false
                     } else {
                         user.show = true
