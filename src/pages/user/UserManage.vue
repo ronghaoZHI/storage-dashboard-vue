@@ -246,7 +246,7 @@ export default {
                     key: 'type'
                 },
                 {
-                    title: 'company',
+                    title: 'Company',
                     width: 200,
                     align: 'left',
                     key: 'company'
