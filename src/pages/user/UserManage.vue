@@ -185,7 +185,7 @@ export default {
                     { type: 'string', message: 'Company format is incorrect', trigger: 'blur' }
                 ]
             },
-            userHeader: user.state && user.state.type === 'admin' && !isSuper() || user.state.type === 'superadmin' ? [
+            userHeader: user.satate && user.state.type === 'superadmin' ? [
                 {
                     title: 'User name',
                     width: 150,
@@ -200,13 +200,19 @@ export default {
                 },
                 {
                     title: 'Email',
-                    width: 250,
+                    width: 200,
                     align: 'left',
                     key: 'email'
                 },
                 {
+                    title: 'Company',
+                    width: 200,
+                    align: 'left',
+                    key: 'company'
+                },
+                {
                     title: 'Creation time',
-                    width: 100,
+                    width: 200,
                     align: 'left',
                     render: (h, params) => {
                         let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
@@ -217,7 +223,7 @@ export default {
                 {
                     title: 'Actions',
                     key: 'actions',
-                    width: 50,
+                    width: 120,
                     align: 'left',
                     render: (h, params) => {
                         return h('i-button', {
@@ -232,7 +238,60 @@ export default {
                         }, 'Unbind')
                     }
                 }
-            ] : (user.state && user.state.type === 'admin' && isSuper() ? [
+            ] : user.state && user.state.type === 'admin' ? [
+                {
+                    title: 'User name',
+                    width: 150,
+                    align: 'left',
+                    key: 'username'
+                },
+                {
+                    title: 'Type',
+                    width: 120,
+                    align: 'left',
+                    key: 'type'
+                },
+                {
+                    title: 'company',
+                    width: 200,
+                    align: 'left',
+                    key: 'company'
+                },
+                {
+                    title: 'Email',
+                    width: 200,
+                    align: 'left',
+                    key: 'email'
+                },
+                {
+                    title: 'Creation time',
+                    width: 200,
+                    align: 'left',
+                    render: (h, params) => {
+                        let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
+                        const formatTime = moment(creationTime).format('YYYY-MM-DD hh:mm:ss')
+                        return h('div', [formatTime])
+                    }
+                },
+                {
+                    title: 'Actions',
+                    key: 'actions',
+                    width: 120,
+                    align: 'left',
+                    render: (h, params) => {
+                        return h('i-button', {
+                            props: {
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.unbindUserConfirm(params.row, params.index)
+                                }
+                            }
+                        }, 'Unbind')
+                    }
+                }
+            ] : user.state && isSuper() ? [
                 {
                     title: 'User name',
                     width: 150,
@@ -247,7 +306,7 @@ export default {
                 },
                 {
                     title: 'Email',
-                    width: 250,
+                    width: 200,
                     align: 'left',
                     key: 'email'
                 },
@@ -287,7 +346,7 @@ export default {
                 },
                 {
                     title: 'Email',
-                    width: 250,
+                    width: 200,
                     align: 'left',
                     key: 'email'
                 },
@@ -341,7 +400,7 @@ export default {
                         ])
                     }
                 }
-            ])
+            ]
         }
     },
     computed: {
@@ -432,7 +491,7 @@ export default {
             }
             let searchArr = this.searchUserInput.split('')
             let reg = new RegExp(searchArr.join('.*'))
-            this.searchedUserList = this.userList.filter(item => reg.test(item.email) || reg.test(item.username))
+            this.searchedUserList = this.userList.filter(item => reg.test(item.email) || reg.test(item.username) || reg.test(item.company))
         },
         handleSearchBindUser () {
             if (!this.searchBindUserInput) {
