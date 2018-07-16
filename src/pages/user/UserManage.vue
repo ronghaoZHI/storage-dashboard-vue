@@ -232,7 +232,7 @@ export default {
                         }, 'Unbind')
                     }
                 }
-            ] : user.state && user.state.type === 'admin' ? [
+            ] : user.state && user.state.type === 'admin' && !isSuper() ? [
                 {
                     title: 'User name',
                     width: 150,
@@ -283,46 +283,6 @@ export default {
                                 }
                             }
                         }, 'Unbind')
-                    }
-                }
-            ] : user.state && isSuper() ? [
-                {
-                    title: 'User name',
-                    width: 150,
-                    align: 'left',
-                    key: 'username'
-                },
-                {
-                    title: 'Type',
-                    width: 120,
-                    align: 'left',
-                    key: 'type'
-                },
-                {
-                    title: 'Email',
-                    width: 200,
-                    align: 'left',
-                    key: 'email'
-                },
-                {
-                    title: 'Acl',
-                    width: 400,
-                    align: 'left',
-                    key: 'acl',
-                    render: (h, params) => {
-                        return params.row.acl ? Array.map(params.row.acl, (acl) => {
-                            return h('Tag', {props: {type: 'border'}}, `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${acl.file_acl}`)
-                        }) : 'No acl'
-                    }
-                },
-                {
-                    title: 'Creation time',
-                    width: 200,
-                    align: 'left',
-                    render: (h, params) => {
-                        let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
-                        const formatTime = moment(creationTime).format('YYYY-MM-DD hh:mm:ss')
-                        return h('div', [formatTime])
                     }
                 }
             ] : [
