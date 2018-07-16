@@ -205,12 +205,6 @@ export default {
                     key: 'email'
                 },
                 {
-                    title: 'Company',
-                    width: 200,
-                    align: 'left',
-                    key: 'company'
-                },
-                {
                     title: 'Creation time',
                     width: 200,
                     align: 'left',
