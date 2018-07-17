@@ -185,7 +185,7 @@ export default {
                     { type: 'string', message: 'Company format is incorrect', trigger: 'blur' }
                 ]
             },
-            userHeader: user.state.type === 'superadmin' ? [
+            userHeader: user.state && user.state.type === 'superadmin' ? [
                 {
                     title: 'User name',
                     width: 150,
