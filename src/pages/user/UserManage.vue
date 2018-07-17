@@ -185,7 +185,7 @@ export default {
                     { type: 'string', message: 'Company format is incorrect', trigger: 'blur' }
                 ]
             },
-            userHeader: user.satate && user.state.type === 'superadmin' ? [
+            userHeader: user.state.type === 'superadmin' ? [
                 {
                     title: 'User name',
                     width: 150,
@@ -217,7 +217,7 @@ export default {
                 {
                     title: 'Actions',
                     key: 'actions',
-                    width: 120,
+                    width: 100,
                     align: 'left',
                     render: (h, params) => {
                         return h('i-button', {
@@ -270,7 +270,7 @@ export default {
                 {
                     title: 'Actions',
                     key: 'actions',
-                    width: 120,
+                    width: 100,
                     align: 'left',
                     render: (h, params) => {
                         return h('i-button', {
@@ -283,6 +283,46 @@ export default {
                                 }
                             }
                         }, 'Unbind')
+                    }
+                }
+            ] : user.state && user.state.type === 'admin' && isSuper() ? [
+                {
+                    title: 'User name',
+                    width: 150,
+                    align: 'left',
+                    key: 'username'
+                },
+                {
+                    title: 'Type',
+                    width: 120,
+                    align: 'left',
+                    key: 'type'
+                },
+                {
+                    title: 'Email',
+                    width: 250,
+                    align: 'left',
+                    key: 'email'
+                },
+                {
+                    title: 'Acl',
+                    width: 380,
+                    align: 'left',
+                    key: 'acl',
+                    render: (h, params) => {
+                        return params.row.acl ? Array.map(params.row.acl, (acl) => {
+                            return h('Tag', {props: {type: 'border'}}, `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${acl.file_acl}`)
+                        }) : 'No acl'
+                    }
+                },
+                {
+                    title: 'Creation time',
+                    width: 200,
+                    align: 'left',
+                    render: (h, params) => {
+                        let creationTime = new Date(parseInt(params.row.ts.toString().substr(0, 13)))
+                        const formatTime = moment(creationTime).format('YYYY-MM-DD hh:mm:ss')
+                        return h('div', [formatTime])
                     }
                 }
             ] : [
@@ -306,7 +346,7 @@ export default {
                 },
                 {
                     title: 'Acl',
-                    width: 400,
+                    width: 380,
                     align: 'left',
                     key: 'acl',
                     render: (h, params) => {
@@ -328,7 +368,7 @@ export default {
                 {
                     title: 'Actions',
                     key: 'actions',
-                    width: 120,
+                    width: 100,
                     align: 'left',
                     render: (h, params) => {
                         return h('div', [
