@@ -306,7 +306,7 @@ export default {
                 },
                 {
                     title: 'Acl',
-                    width: 200,
+                    width: 400,
                     align: 'left',
                     key: 'acl',
                     render: (h, params) => {
