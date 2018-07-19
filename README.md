@@ -33,4 +33,4 @@
 我们非常欢迎你的建议和贡献，你可以通过以下方式和我们一起共建 :smiley:：
 
 - 通过 [Issue](http://github.com/bsc-s2/storage-dashboard-vue/issues) 报告 bug 或进行咨询。
-- 提交 [Pull Request](http://github.com/bsc-s2/storage-dashboard-vue/pulls) 改进 Pro 的代码。
+- 提交 [Pull Request](http://github.com/bsc-s2/storage-dashboard-vue/pulls) 改进代码。
