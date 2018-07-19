@@ -21,11 +21,13 @@ module.exports = {
       'no-new': 0,
       'semi': ['error', 'never'],
       'no-unexpected-multiline': 0,
+      'no-control-regex': 0,
       'no-multiple-empty-lines': 0,
       'no-sequences': 0,
       'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
       // allow paren-less arrow functions
       'arrow-parens': 0,
+      'comma-dangle': 0,
       // allow async-await
       'generator-star-spacing': 0,
       'prefer-promise-reject-errors': 0,

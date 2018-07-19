@@ -5,15 +5,15 @@
                 <img class="logo-big" :src="logoSrc" :width="logoWidth" />
             </div>
             <Menu-item v-for="item in menuList" :name="item.name" :key="item.index" v-if="!item.children">
-                <img v-bind:src="item.icon" class="icon-menu" height="15px" />
+                <img v-bind:src="item.meta.icon" class="icon-menu" height="15px" />
                 <span class="layout-text">{{$t("SIDEBAR."+ item.name.toUpperCase())}}</span>
             </Menu-item>
             <Submenu v-for="item in menuList" :name="item.name" :key="item.index" v-if="item.children">
                 <template slot="title">
-                    <img v-bind:src="item.icon" class="icon-menu" height="15px" />
+                    <img v-bind:src="item.meta.icon" class="icon-menu" height="15px" />
                     <span class="layout-text">{{$t("SIDEBAR."+ item.name.toUpperCase())}}</span>
                 </template>
-                <Menu-item v-for="child in item.children" :name="child.name" :key="child.index">
+                <Menu-item v-for="child in item.children" :name="child.name" :key="child.index" style="padding-left: 18px;">
                     <span class="layout-text">{{$t("SIDEBAR."+ child.name.toUpperCase())}}</span>
                 </Menu-item>
             </Submenu>
@@ -42,7 +42,7 @@ export default {
     },
     computed: {
         menuList: function () {
-            return _.filter(menuState.state.menuList, item => item.show)
+            return _.filter(menuState.state.menuList, item => item.meta.show)
         },
         logoSrc () {
             return this.isMini ? logoMini : logo
