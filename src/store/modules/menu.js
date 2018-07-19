@@ -44,86 +44,124 @@ const overview = {
     index: 1,
     name: 'overview',
     show: true,
-    icon: iconOverview
+    meta: {
+        show: true,
+        icon: iconOverview,
+        role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
+    },
 }
 
 const bucket = {
     index: 2,
     name: 'bucket',
-    show: true,
-    icon: iconBucket
+    meta: {
+        show: true,
+        icon: iconBucket,
+        role: ['ONLINE_SUB', 'ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
+    },
 }
 
 const dashboard = {
     index: 3,
     name: 'dashboard',
-    show: true,
-    icon: iconDashboard
+    meta: {
+        show: true,
+        icon: iconDashboard,
+        role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
+    },
 }
 
 const keychain = {
     index: 4,
     name: 'keychain',
-    show: true,
-    icon: iconKey
+    meta: {
+        show: true,
+        icon: iconKey,
+        role: ['ONLINE_SUB', 'ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
+    },
 }
 
 const system = {
     index: 6,
     name: 'system',
-    show: true,
-    icon: iconSystem,
+    meta: {
+        show: true,
+        icon: iconSystem,
+        role: ['SUPER_ADMIN'],
+    },
     children: systemChildren
 }
 
 const video = {
     index: 5,
     name: 'video',
-    show: window.dashboard_conf.appID === '6',
-    icon: iconVideo,
-    children: videoChildren
+    children: videoChildren,
+    meta: {
+        show: window.dashboard_conf.appID === '6',
+        icon: iconVideo,
+        role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
+    },
 }
 
 const userManage = {
     index: 7,
     name: 'user',
-    show: true,
-    icon: iconUser
+    meta: {
+        show: true,
+        icon: iconUser,
+        role: ['ONLINE_ADMIN_NO_SUBSUER', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
+    },
 }
 
-const ONLINE_SUB = [bucket, keychain]
-const ONLINE_ADMIN_NO_SUBSUER = [userManage]
-
-
-const ONLINE_NORMAL = [overview, bucket, dashboard, keychain, video]
-const ONLINE_SUPRER = [overview, bucket, dashboard, keychain, video, userManage]
-const ONLINE_ADMIN = [overview, bucket, dashboard, keychain, video, userManage]
-const SUPER_ADMIN = [overview, bucket, dashboard, keychain, video, system, userManage]
 const isSuper = () => {
     const userInfo = user.state.subUserList.filter(item => item.username === user.state.subUser.username)
     return userInfo && userInfo[0].info.type === 'super'
 }
-const getMenuList = () => {
+
+const getRole = () => {
     const userType = user.state.type
-    let menuList = []
     switch (userType) {
     case 'superadmin':
-        menuList = SUPER_ADMIN
-        break
+        return 'SUPER_ADMIN'
     case 'admin':
-        menuList = user.state.subUser ? (isSuper() ? ONLINE_ADMIN : ONLINE_NORMAL) : ONLINE_ADMIN_NO_SUBSUER
-        break
+        return user.state.subUser ? (isSuper() ? 'ONLINE_ADMIN' : 'ONLINE_NORMAL') : 'ONLINE_ADMIN_NO_SUBSUER'
     case 'super':
-        menuList = ONLINE_SUPRER
-        break
+        return 'ONLINE_SUPRER'
     case 'sub':
-        menuList = ONLINE_SUB
-        break
+        return 'ONLINE_SUB'
     default:
-        menuList = ONLINE_NORMAL
+        return 'ONLINE_NORMAL'
     }
-    return menuList
 }
+
+const hasPermission = (role, route) => {
+    if (route.meta && route.meta.role) {
+        return route.meta.role.indexOf(role) >= 0
+    } else {
+        return true
+    }
+}
+
+const getMenuList = () => {
+    const list = [overview, bucket, dashboard, keychain, system, video, userManage]
+    const role = getRole()
+    const accessMenu = list.filter(m => {
+        if (hasPermission(role, m)) {
+            if (m.children && m.children.length > 0) {
+                m.children = m.children.filter(child => {
+                    return hasPermission(role, child) ? child : false
+                })
+                return m
+            } else {
+                return m
+            }
+        }
+        return false
+    })
+    console.log(role, accessMenu)
+    return accessMenu
+}
+
 const state = {
     menuList: getMenuList()
 }
