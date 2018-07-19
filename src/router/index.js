@@ -11,10 +11,21 @@ const router = new Router({ routes })
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start()
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        store.state.token ? next() : next({
-            path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
-            ticket: { redirect: to.fullPath }
-        })
+        // check role
+        if (_.some(store.getters.menuList, { 'name': to.name, 'meta': { 'show': true } })) {
+            store.state.token ? next() : next({
+                path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
+                ticket: { redirect: to.fullPath }
+            })
+        } else {
+            iView.Message.error({
+                content: '当前账户没有访问此功能的权限',
+                duration: 5,
+                closable: true,
+            })
+            iView.LoadingBar.finish()
+            next(false)
+        }
     } else {
         next()
     }
