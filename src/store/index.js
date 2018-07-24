@@ -7,6 +7,7 @@ import * as types from './mutation-types'
 import bucket from './modules/bucket'
 import user from './modules/user'
 import menu from './modules/menu'
+import errorLog from './modules/errorLog'
 
 Vue.use(Vuex)
 
@@ -41,7 +42,8 @@ const store = new Vuex.Store({
     modules: {
         bucket,
         user,
-        menu
+        menu,
+        errorLog,
     }
 })
 

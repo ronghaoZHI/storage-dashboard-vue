@@ -12,7 +12,8 @@ router.beforeEach((to, from, next) => {
     iView.LoadingBar.start()
     if (to.matched.some(record => record.meta.requiresAuth)) {
         // check role
-        if (_.some(store.getters.menuList, { 'name': to.name, 'meta': { 'show': true } })) {
+        console.log('toname', to.name)
+        if (_.some(store.getters.menuList, { 'name': to.name || 'overview', 'meta': { 'show': true } })) {
             store.state.token ? next() : next({
                 path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
                 ticket: { redirect: to.fullPath }
@@ -24,7 +25,6 @@ router.beforeEach((to, from, next) => {
                 closable: true,
             })
             iView.LoadingBar.finish()
-            next(false)
         }
     } else {
         next()
