@@ -56,8 +56,12 @@
             </div>
             <div slot="footer"></div>
         </Modal>
-        <Modal v-model="uploadModal" :mask-closable="uploadModalMaskClosable" title='Upload file' @on-cancel="uploadModalClose"  width="700">
-             <upload ref="upload" :bucket="bucket" :prefix="prefix"></upload>
+        <Modal v-model="uploadModal" :mask-closable="uploadModalMaskClosable" :title='$t("STORAGE.UPLOAD_FLIE")'  @on-cancel="uploadModalClose"  width="700">
+            <RadioGroup v-model="aclType" type="button">
+            <Radio label="authenticated-read">{{$t("STORAGE.AUTHENTICATED_READ")}}</Radio>
+            <Radio label="public-read">{{$t("STORAGE.PUBULIC_READ")}}</Radio>
+            </RadioGroup>
+             <upload  style="margin-top:15px" ref="upload" :bucket="bucket" :prefix="prefix" :acl-type="aclType"></upload>
              <div slot="footer"></div>
         </Modal>
         <Modal v-model="showPermissonModal" :title='$t("STORAGE.FILE_PERMISSIONS")' width="700">
@@ -109,6 +113,7 @@ export default {
             renameModal: false,
             searchMode: false,
             uploadModal: false,
+            aclType: 'authenticated-read',
             uploadModalMaskClosable: false,
             createFolderValue: '',
             selectedFileKey: '',

@@ -46,6 +46,10 @@
                 type: String,
                 default: ''
             },
+            aclType: {
+                type: String,
+                default: 'authenticated-read'
+            },
             checkFileType: {
                 type: Boolean,
                 default: false
@@ -78,6 +82,7 @@
             async uploadFile (item) {
                 let file = item.file
                 let params = {
+                    ACL: this.aclType,
                     Bucket: this.bucket,
                     Key: this.prefix + item.name,
                     ContentType: file.type,
@@ -276,7 +281,7 @@
             .upload-span-status {
                 width: 80px;
             }
-            
+
             div {
                 flex: 6;
             }

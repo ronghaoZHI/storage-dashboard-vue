@@ -347,7 +347,10 @@ export const messages = {
             TITLE: 'My Storage',
             FILE_UPLOAD_LIM: 'Click or drag the file here to upload.',
             FOLDER_KEY: 'Folder name',
-            NEXT_PAGE: 'Next page'
+            NEXT_PAGE: 'Next page',
+            UPLOAD_FLIE: 'Upload File',
+            AUTHENTICATED_READ: 'Authenticated Read',
+            PUBULIC_READ: 'Public Read'
         },
         DASHBOARD: {
             THIS_MONTH: 'This month',
@@ -1192,7 +1195,10 @@ export const messages = {
             TITLE: '我的存储',
             FILE_UPLOAD_LIM: '点击或拖拽上传',
             FOLDER_KEY: 'Folder 名称',
-            NEXT_PAGE: '下一页'
+            NEXT_PAGE: '下一页',
+            UPLOAD_FLIE: '上传文件',
+            AUTHENTICATED_READ: '签名认证可访问',
+            PUBULIC_READ: '匿名可访问'
         },
         DASHBOARD: {
             THIS_MONTH: '本月',
