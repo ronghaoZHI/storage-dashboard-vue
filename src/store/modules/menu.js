@@ -1,5 +1,4 @@
 import user from './user'
-import * as types from '../mutation-types'
 
 import iconOverview from '../../assets/overview.png'
 import iconBucket from '../../assets/icon-bucket.png'
@@ -167,12 +166,24 @@ const state = {
 }
 
 const mutations = {
-    [types.REFRESH_MENU] (state) {
+    REFRESH_MENU (state) {
         state.menuList = getMenuList()
     }
 }
 
+const getters = {
+    menuList: state => state.menuList
+}
+
+const actions = {
+    refreshMenu ({ commit }) {
+        commit('REFRESH_MENU')
+    },
+}
+
 export default {
     state,
-    mutations
+    mutations,
+    actions,
+    getters,
 }

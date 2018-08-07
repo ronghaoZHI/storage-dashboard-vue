@@ -1,20 +1,28 @@
-import * as types from '../mutation-types'
-
 const state = {
     selectedBucket: {},
     bucketList: []
 }
 
 const mutations = {
-    [types.SELECTED_BUCKET] (state, bucket) {
+    SELECTED_BUCKET (state, bucket) {
         state.selectedBucket = bucket
     },
-    [types.BUCKET_LIST] (state, list) {
+    BUCKET_LIST (state, list) {
         state.bucketList = list
     }
 }
 
+const actions = {
+    selectedBucket ({ commit }, bucket) {
+        bucket.Name && commit('SELECTED_BUCKET', bucket)
+    },
+    setBucketList ({ commit }, list) {
+        commit('BUCKET_LIST', list)
+    },
+}
+
 export default {
     state,
-    mutations
+    mutations,
+    actions,
 }

@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as actions from './actions'
-import * as getters from './getters'
-import * as types from './mutation-types'
 
 import bucket from './modules/bucket'
 import user from './modules/user'
@@ -17,22 +14,34 @@ const store = new Vuex.Store({
         theme: sessionStorage.getItem('theme') || 'dark',
         miniMenu: false
     },
-    actions,
-    getters,
+    actions: {
+        setToken ({ commit }, token) {
+            token.length > 1 && commit('SET_TOKEN', token)
+        },
+        toggleTheme ({ commit }, theme) {
+            commit('TOGGLE_THEME', theme)
+        },
+        toggleMiniMenu ({ commit }, miniMenu) {
+            commit('TOGGLE_MINIMENU', miniMenu)
+        },
+        logout ({ commit }) {
+            commit('LOGOUT')
+        },
+    },
     mutations: {
-        [types.SET_TOKEN] (state, token) {
+        SET_TOKEN (state, token) {
             sessionStorage.setItem('token', token)
             state.token = token
         },
-        [types.TOGGLE_THEME] (state, theme) {
+        TOGGLE_THEME (state, theme) {
             state.theme = theme
             sessionStorage.setItem('theme', theme)
         },
-        [types.TOGGLE_MINIMENU] (state, miniMenu) {
+        TOGGLE_MINIMENU (state, miniMenu) {
             state.miniMenu = miniMenu
             sessionStorage.setItem('miniMenu', miniMenu)
         },
-        [types.LOGOUT] (state) {
+        LOGOUT (state) {
             sessionStorage.removeItem('user')
             sessionStorage.removeItem('token')
             state.token = ''
