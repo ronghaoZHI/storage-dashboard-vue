@@ -15,6 +15,7 @@ const redirectToLogin = (to, next) => next({
 
 const hasPermission = (to) => {
     const router = {
+        // check the type of this router
         name: to.meta && to.meta.parent ? to.meta.parent : to.name || 'overview',
         meta: { 'show': true }
     }
