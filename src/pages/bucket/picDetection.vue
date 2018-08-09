@@ -39,7 +39,7 @@
 
 <script>
     import { handler } from '@/service/Aws'
-    import { getBucketList } from '@/service/Data'
+    import { getBuckets } from '@/service/Data'
     export default {
         data () {
             return {
@@ -57,13 +57,13 @@
             }
         },
         created () {
-            this.getBucketList()
+            this.getBuckets()
             this.getBucketPolicy()
         },
         methods: {
-            async getBucketList () {
+            async getBuckets () {
                 try {
-                    let res = await getBucketList()
+                    let res = await getBuckets()
                     this.bucketList = [...res.Buckets]
                     _.remove(this.bucketList, n => n.Name === this.bucket)
                 } catch (error) {
@@ -105,7 +105,7 @@
                         Bucket: this.createBucketValue
                     }).then(() => {
                         self.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
-                        self.getBucketList()
+                        self.getBuckets()
                         self.createBucketValue = ''
                     }, error => {
                         self.$Message.error(error.message)

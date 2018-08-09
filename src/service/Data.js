@@ -1,7 +1,7 @@
 import { handler } from '@/service/Aws'
 
-const getBucketList = async () => {
+const getBuckets = async () => {
     return await handler('listBuckets')
 }
 
-export { getBucketList }
+export { getBuckets }

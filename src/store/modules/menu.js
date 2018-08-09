@@ -157,7 +157,6 @@ const getMenuList = () => {
         }
         return false
     })
-    console.log(role, accessMenu)
     return accessMenu
 }
 

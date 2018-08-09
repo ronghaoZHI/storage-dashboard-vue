@@ -24,7 +24,6 @@
 <script>
 import { handler } from '@/service/Aws'
 import { removeItemFromArray } from '@/service/bucketService'
-import { getBucketList } from '@/service/Data'
 import moment from 'moment'
 import userStore from '@/store/modules/user'
 import { SUB_USER, REDIRECT_BUCKET } from '@/service/API'
@@ -36,21 +35,44 @@ export default {
             isSubUser: userStore.state.type === 'sub',
             createBucketValue: '',
             createBucketModal: false,
-            selectedBucket: {},
             inputCheck: false,
-            bucketList: [],
+            selectedBucket: {},
             self: this,
             iconSize: 18,
-            spinShow: true
+            spinShow: false
         }
     },
     computed: {
         bucket: function () {
             return this.$route.params.bucket || ''
-        }
+        },
+        bucketList () {
+            let bucketList = []
+            if (this.isSubUser) {
+                this.$store.state.bucket.buckets.Buckets.forEach((item) => {
+                    this.getBucketAcl(item.Name).then(acl => {
+                        acl.Grants.forEach(grant => {
+                            if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
+                                item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                                bucketList.push(item)
+                            }
+                        })
+                    })
+                })
+            } else {
+                bucketList = _.forEach(this.$store.state.bucket.buckets.Buckets, (item, index) => {
+                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                })
+            }
+            bucketList = _.forEach(bucketList, (item, index) => {
+                item.selected = this.bucket ? item.Name === this.bucket : index === 0
+            })
+            this.selectedBucket = bucketList && bucketList.length > 0 ? bucketList[0] : {}
+            return bucketList
+        },
     },
     created () {
-        this.convertBucketList()
+        this.$store.dispatch('getBuckets')
     },
     directives: {
         cbutton: {
@@ -65,39 +87,6 @@ export default {
         }
     },
     methods: {
-        async convertBucketList () {
-            try {
-                this.$Loading.start()
-                this.spinShow = true
-                let res = await getBucketList()
-
-                if (this.isSubUser) {
-                    res.Buckets.forEach((item) => {
-                        this.getBucketAcl(item.Name).then(acl => {
-                            acl.Grants.forEach(grant => {
-                                if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
-                                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-                                    this.bucketList.push(item)
-                                }
-                            })
-                        })
-                    })
-                } else {
-                    this.bucketList = _.forEach(res.Buckets, (item, index) => {
-                        item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-                    })
-                }
-                this.bucketList = _.forEach(this.bucketList, (item, index) => {
-                    item.selected = this.bucket ? item.Name === this.bucket : index === 0
-                })
-                this.selectedBucket = this.bucketList.length > 0 ? this.bucketList[0] : {}
-                this.$Loading.finish()
-                this.spinShow = false
-            } catch (error) {
-                this.$Loading.error()
-                this.spinShow = false
-            }
-        },
         deleteBucketConfirm () {
             const item = this.selectedBucket
             this.$Modal.confirm({
@@ -131,12 +120,10 @@ export default {
         },
         goBucketSettings () {
             const bucket = this.selectedBucket
-            this.$store.dispatch('selectBucket', bucket)
             this.$router.push({ name: 'bucketSettings', params: { bucket: bucket.Name, tabName: 'permission' } })
         },
         goPictureStyles () {
             const bucket = this.selectedBucket
-            this.$store.dispatch('selectBucket', bucket)
             this.$router.push({ name: 'pictureStyles', params: { bucket: bucket.Name } })
         },
         rowClick (item) {
@@ -147,7 +134,7 @@ export default {
             if (this.createBucketValue.length > 2) {
                 await handler('createBucket', { Bucket: this.createBucketValue })
                 this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
-                await this.$store.dispatch('setBucketList', await handler('listBuckets'))
+                await this.$store.dispatch('setBuckets', await handler('listBuckets'))
                 this.convertBucketList()
                 userStore.state.type === 'super' && this.createRedirectBucket(this.createBucketValue)
                 this.createBucketValue = ''
@@ -183,7 +170,7 @@ export default {
     watch: {
         'createBucketValue' (to, from) {
             this.inputCheck = !(to.length >= 3)
-        }
+        },
     }
 }
 
@@ -207,7 +194,7 @@ const batchDeletion = (list, bucket) => {
 .dark .@{css-prefix}bucket{
 
     .layout-bsc-toolbar {
-        border-bottom: 1px solid #52626d; 
+        border-bottom: 1px solid #52626d;
     }
 
     .bsc-flex-section {

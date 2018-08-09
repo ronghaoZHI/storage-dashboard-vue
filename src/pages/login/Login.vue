@@ -155,7 +155,7 @@ export default {
             await this.$store.dispatch('setUserInfo', data)
             await this.$store.dispatch('setToken', data.token)
             this.$http.defaults.headers.common['Authorization'] = data.token
-            await this.refreshMenu()
+            await this.$store.dispatch('cleanState')
 
             let redirect = this.$route.query.redirect // get redirect path
             !!redirect ? this.$router.push(redirect) : this.$router.push(router)
@@ -163,7 +163,7 @@ export default {
         },
         async switchUser (data, router = '/overview') {
             await this.$store.dispatch('setUserInfo', data)
-            await this.refreshMenu()
+            await this.$store.dispatch('cleanState')
 
             let redirect = this.$route.query.redirect // get redirect path
             !!redirect ? this.$router.push(redirect) : this.$router.push(router)
@@ -203,7 +203,7 @@ export default {
         async toUserMange () {
             delete user.state.subUser
             await this.$store.dispatch('setUserInfo', user.state)
-            await this.refreshMenu()
+            await this.$store.dispatch('cleanState')
             Vue.config.lang = this.lang
             this.$router.push('user')
         }
@@ -263,8 +263,8 @@ export default {
                     position: relative;
                     left: @login-card-width - 2 * @login-card-padding - 100;
                     top: 40px;
-                    width: 100px; 
-                    height: 60px; 
+                    width: 100px;
+                    height: 60px;
                     border: 1px solid @login-card-login-text-color;
                     border-radius: 5px;
                     background-color: @login-card-language-select-background;
@@ -345,7 +345,7 @@ export default {
                             .sc(18px,@login-card-login-text-color);
                             background: @login-card-bg;
                             border: 0;
-                            
+
                             &:focus {
                                 outline-offset: 0;
                                 outline: -webkit-focus-ring-color auto 0;
@@ -465,13 +465,13 @@ export default {
                 border-bottom: 1px solid #52626d;
 
                 & > img {
-                    position: absolute; 
+                    position: absolute;
                     left: @login-card-padding;
                 }
 
                 & > a {
                     .sc(18px,@primary-color);
-                    position: absolute; 
+                    position: absolute;
                     top: @login-card-padding + 3px;
                     right: @login-card-padding;
                     cursor: pointer;
@@ -528,7 +528,7 @@ export default {
                                 padding-right: 4px;
                             }
                         }
-                        
+
                         .icon {
                             position: absolute;
                             color: #fff;
@@ -547,7 +547,7 @@ export default {
                     }
                 }
             }
-            
+
         }
     }
 }

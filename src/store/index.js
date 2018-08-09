@@ -27,6 +27,10 @@ const store = new Vuex.Store({
         logout ({ commit }) {
             commit('LOGOUT')
         },
+        cleanState ({ commit }) {
+            commit('SET_BUCKETS', {})
+            commit('REFRESH_MENU')
+        }
     },
     mutations: {
         SET_TOKEN (state, token) {

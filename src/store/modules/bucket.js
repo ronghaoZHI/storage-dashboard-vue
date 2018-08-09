@@ -1,23 +1,24 @@
+import { getBuckets } from '@/service/Data'
+
 const state = {
-    selectedBucket: {},
-    bucketList: []
+    buckets: {}
 }
 
 const mutations = {
-    SELECTED_BUCKET (state, bucket) {
-        state.selectedBucket = bucket
-    },
-    BUCKET_LIST (state, list) {
-        state.bucketList = list
+    SET_BUCKETS (state, bukcets) {
+        state.buckets = bukcets
     }
 }
 
 const actions = {
-    selectedBucket ({ commit }, bucket) {
-        bucket.Name && commit('SELECTED_BUCKET', bucket)
+    setBuckets ({ commit }, bukcets) {
+        commit('SET_BUCKETS', bukcets)
     },
-    setBucketList ({ commit }, list) {
-        commit('BUCKET_LIST', list)
+    async getBuckets ({ commit, state }) {
+        if (Object.keys(state.buckets).length === 0) {
+            let buckets = await getBuckets()
+            commit('SET_BUCKETS', buckets)
+        }
     },
 }
 

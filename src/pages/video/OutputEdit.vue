@@ -241,7 +241,7 @@
 <script>
 import { putBucketPolicy, getTranscodes, getTemplateInfo } from '@/pages/video/data'
 import user from '@/store/modules/user'
-import { getBucketList } from '@/service/Data'
+import { getBuckets } from '@/service/Data'
 import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
     data () {
@@ -481,7 +481,7 @@ export default {
     },
     methods: {
         async getBucketNames () {
-            let res = await getBucketList()
+            let res = await getBuckets()
             this.bucketList = _.map(res.Buckets, bucket => bucket.Name)
         },
         async getTranscode () {

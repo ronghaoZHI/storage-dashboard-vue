@@ -108,7 +108,7 @@ export default {
         async toIndex (user, router = '/') {
             router = user.type === 'admin' && !user.subUser ? '/user' : user.type === 'sub' ? 'bucket' : '/overview'
             await this.$store.dispatch('setUserInfo', user)
-            await this.refreshMenu()
+            await this.$store.dispatch('cleanState')
 
             let redirect = this.$route.query.callback // get redirect path
             !!redirect ? this.$router.push(redirect) : this.$router.push(router)
@@ -136,7 +136,7 @@ export default {
         async toUserMange () {
             delete user.state.subUser
             await this.$store.dispatch('setUserInfo', user.state)
-            await this.refreshMenu()
+            await this.$store.dispatch('cleanState')
             Vue.config.lang = this.lang
             this.$router.push('user')
         }

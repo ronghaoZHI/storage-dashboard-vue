@@ -148,7 +148,7 @@ import requests from '../../assets/dashboard/requests.svg'
 import requestsDark from '../../assets/dashboard/requests-dark.svg'
 import files from '../../assets/dashboard/files.svg'
 import filesDark from '../../assets/dashboard/files-dark.svg'
-import { getBucketList } from '@/service/Data'
+import { getBuckets } from '@/service/Data'
 import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from '@/service/API'
 import user from '@/store/modules/user'
 import { bytes, bps, times, timesK, date, dateTime, dateTimeYear, bytesSpliteUnits, bpsSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
@@ -213,7 +213,7 @@ export default {
     methods: {
         async convertBucketList () {
             try {
-                let res = await getBucketList()
+                let res = await getBuckets()
                 this.bucketList = [{ Name: 'All Buckets' }, ...res.Buckets]
             } catch (error) {
                 console.log(error)
