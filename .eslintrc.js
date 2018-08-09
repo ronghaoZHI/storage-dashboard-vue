@@ -23,6 +23,7 @@ module.exports = {
       'no-unexpected-multiline': 0,
       'no-multiple-empty-lines': 0,
       'no-sequences': 0,
+      'no-control-regex': 0,
       'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
       // allow paren-less arrow functions
       'arrow-parens': 0,
