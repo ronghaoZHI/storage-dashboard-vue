@@ -57,7 +57,7 @@
             <div slot="footer"></div>
         </Modal>
         <Modal v-model="uploadModal" :mask-closable="uploadModalMaskClosable" :title='$t("STORAGE.UPLOAD_FLIE")'  @on-cancel="uploadModalClose"  width="700">
-            <RadioGroup v-model="aclType" type="button">
+            <RadioGroup v-model="aclType">
             <Radio label="authenticated-read">{{$t("STORAGE.AUTHENTICATED_READ")}}</Radio>
             <Radio label="public-read">{{$t("STORAGE.PUBULIC_READ")}}</Radio>
             </RadioGroup>
