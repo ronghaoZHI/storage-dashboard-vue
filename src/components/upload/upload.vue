@@ -48,7 +48,7 @@
             },
             aclType: {
                 type: String,
-                default: 'authenticated-read'
+                default: 'public-read'
             },
             checkFileType: {
                 type: Boolean,

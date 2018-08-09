@@ -1198,7 +1198,7 @@ export const messages = {
             NEXT_PAGE: '下一页',
             UPLOAD_FLIE: '上传文件',
             AUTHENTICATED_READ: '签名认证可访问',
-            PUBULIC_READ: '匿名可访问'
+            PUBULIC_READ: '所有人可访问'
         },
         DASHBOARD: {
             THIS_MONTH: '本月',
