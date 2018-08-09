@@ -795,9 +795,7 @@ const general2Save = data => {
         saved.height = data.dataType === 'pixel' ? parseInt(data.height) : parseFloat(data.height / 100)
     }
 
-    if (data.format === 'original' || data.format === 'png' || data.format === 'webp') {
-        saved.quality = data.quality
-    }
+    saved.quality = data.quality
     if (data.format !== 'original') {
         saved.format = data.format
     }
@@ -1296,7 +1294,7 @@ const mark2Front = data => {
                 .west {
                     .bgi('west.png')
                 }
-                
+
                 .center {
                     .bgi('center.png')
                 }
@@ -1322,7 +1320,7 @@ const mark2Front = data => {
                 .xy_center {
                     .bgi('xy_center.png')
                 }
-                
+
                 .face {
                     .bgi('face.png')
                 }
