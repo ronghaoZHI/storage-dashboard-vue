@@ -248,7 +248,6 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
-import { getBuckets } from '@/service/Data'
 import { getBillUrl, FETCH_404, ACCESS_LIST } from '@/service/API'
 import { handler } from '@/service/Aws'
 import user from '@/store/modules/user'
@@ -486,7 +485,7 @@ export default {
     methods: {
         async convertBucketList () {
             try {
-                let res = await getBuckets()
+                let res = await this.$store.dispatch('getBuckets')
                 res.Buckets.forEach((item) => {
                     this.getBucketAcl(item.Name).then(acl => {
                         acl.Grants.length > 0 && this.permissionsList.push({

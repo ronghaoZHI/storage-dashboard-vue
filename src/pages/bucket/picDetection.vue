@@ -39,7 +39,6 @@
 
 <script>
     import { handler } from '@/service/Aws'
-    import { getBuckets } from '@/service/Data'
     export default {
         data () {
             return {
@@ -63,7 +62,7 @@
         methods: {
             async getBuckets () {
                 try {
-                    let res = await getBuckets()
+                    let res = await this.$store.dispatch('getBuckets')
                     this.bucketList = [...res.Buckets]
                     _.remove(this.bucketList, n => n.Name === this.bucket)
                 } catch (error) {
@@ -149,7 +148,7 @@
             }
         }
     }
-    
+
     const defultAdultPolify = {
         'enabled': false,
         'delete': 'F',

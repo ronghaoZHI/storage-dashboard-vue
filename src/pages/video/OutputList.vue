@@ -9,7 +9,6 @@
 </template>
 <script>
 import { handler } from '@/service/Aws'
-import { getBuckets } from '@/service/Data'
 import { getBucketPolicy, putBucketPolicy, getTranscodes } from '@/pages/video/data'
 import legendList from '@/components/legend/legend'
 export default {
@@ -184,7 +183,7 @@ export default {
         async getBucketNames () {
             this.$Loading.start()
             try {
-                let res = await getBuckets()
+                let res = await this.$store.dispatch('getBuckets')
                 return _.map(res.Buckets, bucket => bucket.Name)
             } catch (error) {
                 this.$Loading.error()

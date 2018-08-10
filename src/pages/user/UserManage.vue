@@ -112,7 +112,6 @@
 </template>
 <script>
 import user from '@/store/modules/user'
-import { getBuckets } from '@/service/Data'
 import moment from 'moment'
 import { BOUND_USER, BOUND_USER_SUPERADMIN, ALL_USER, ALL_USER_SUPERADMIN, CREATE_USER, CREATE_USER_SUPERADMIN, REDIRECT_BUCKET, SUB_USER, SUB_USER_ACL, UPDATE_SUB_USER_ACL, CREATE_SUB_USER, BIND_USER, BIND_USER_SUPERADMIN, UNBIND_USER, UNBIND_USER_SUPERADMIN, getSuperSubUserUrl } from '@/service/API'
 export default {
@@ -421,7 +420,7 @@ export default {
                     })
                 } else {
                     let getSubUserURL = isSuper() ? getSuperSubUserUrl(user.state.subUser.username) : SUB_USER
-                    let [res, users] = await Promise.all([getBuckets(), this.$http.get(getSubUserURL)])
+                    let [res, users] = await Promise.all([this.$store.dispatch('getBuckets'), this.$http.get(getSubUserURL)])
                     let buckets = await Promise.all(Array.map(res.Buckets, (bucket) => {
                         const params = isSuper() ? { bucket: bucket.Name, customer: user.state.subUser.username } : { bucket: bucket.Name }
                         this.bucketList = res.Buckets

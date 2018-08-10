@@ -75,7 +75,6 @@
 
 <script>
 import user from '@/store/modules/user'
-import { getBuckets } from '@/service/Data'
 import { getTranscoderUrl } from '@/service/API'
 import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
@@ -125,7 +124,7 @@ export default {
     },
     methods: {
         async readPipeline () {
-            let res = await getBuckets()
+            let res = await this.$store.dispatch('getBuckets')
             this.bucketList = _.map(res.Buckets, bucket => bucket.Name)
             if (this.pipelineId !== 'none') {
                 try {

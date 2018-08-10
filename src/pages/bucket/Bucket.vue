@@ -48,8 +48,9 @@ export default {
         },
         bucketList () {
             let bucketList = []
+            const buckets = this.$store.state.bucket.buckets.Buckets
             if (this.isSubUser) {
-                this.$store.state.bucket.buckets.Buckets.forEach((item) => {
+                buckets.forEach((item) => {
                     this.getBucketAcl(item.Name).then(acl => {
                         acl.Grants.forEach(grant => {
                             if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
@@ -60,7 +61,7 @@ export default {
                     })
                 })
             } else {
-                bucketList = _.forEach(this.$store.state.bucket.buckets.Buckets, (item, index) => {
+                bucketList = _.forEach(buckets, (item, index) => {
                     item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
                 })
             }

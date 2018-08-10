@@ -1,4 +1,4 @@
-import { getBuckets } from '@/service/Data'
+import { handler } from '@/service/Aws'
 
 const state = {
     buckets: {}
@@ -16,8 +16,11 @@ const actions = {
     },
     async getBuckets ({ commit, state }) {
         if (Object.keys(state.buckets).length === 0) {
-            let buckets = await getBuckets()
+            let buckets = await handler('listBuckets')
             commit('SET_BUCKETS', buckets)
+            return buckets
+        } else {
+            return state.buckets
         }
     },
 }

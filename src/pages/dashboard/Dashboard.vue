@@ -148,7 +148,6 @@ import requests from '../../assets/dashboard/requests.svg'
 import requestsDark from '../../assets/dashboard/requests-dark.svg'
 import files from '../../assets/dashboard/files.svg'
 import filesDark from '../../assets/dashboard/files-dark.svg'
-import { getBuckets } from '@/service/Data'
 import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from '@/service/API'
 import user from '@/store/modules/user'
 import { bytes, bps, times, timesK, date, dateTime, dateTimeYear, bytesSpliteUnits, bpsSpliteUnits, timesSpliteUnits } from '@/service/bucketService'
@@ -161,7 +160,6 @@ export default {
             isRedirect: false,
             dateDividedBefore: '20171130',
             dateDivided: '20171201',
-            bucketList: [],
             selectedBucket: 'All Buckets',
             dateDefault: {
                 today: [lastNDays(0), lastNDays(0)],
@@ -204,22 +202,16 @@ export default {
         },
         theme: function () {
             return this.$store.state.theme
-        }
+        },
+        bucketList () {
+            return this.$store.state.bucket.buckets.Buckets ? [{ Name: 'All Buckets' }, ...this.$store.state.bucket.buckets.Buckets] : [{ Name: 'All Buckets' }]
+        },
     },
     created () {
-        this.convertBucketList()
+        this.$store.dispatch('getBuckets')
         this.getInitData()
     },
     methods: {
-        async convertBucketList () {
-            try {
-                let res = await getBuckets()
-                this.bucketList = [{ Name: 'All Buckets' }, ...res.Buckets]
-            } catch (error) {
-                console.log(error)
-                this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
-            }
-        },
         cnEnBandwidthOverview (val) {
             if (new RegExp(/^out_band_/).test(val)) {
                 return val.slice(9) === 'pub' ? this.$t('DASHBOARD.PUB_OUTFLOW_BANDWIDTH') : val.slice(9) + ' ' + this.$t('DASHBOARD.CDN_OUTFLOW_BANDWIDTH')
