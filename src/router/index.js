@@ -11,7 +11,9 @@ const router = new Router({ routes })
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start()
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        store.state.token ? next() : next({
+        store.state.token ? next(!from.name && !to.name ? {
+            path: store.state.user.type === 'sub' ? '/bucket' : '/overview'
+        } : {}) : next({
             path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
             ticket: { redirect: to.fullPath }
         })
