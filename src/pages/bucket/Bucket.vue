@@ -12,7 +12,6 @@
             <div class="bucket" v-bind:class="{'bucket-selected': bucket.selected}" v-cbutton v-for="bucket in bucketList" @click="rowClick(bucket)" v-on:dblclick="dbClick(bucket)">
                 <span class="span-filename">{{bucket.Name}}</span>
             </div>
-            <Spin size="bigger" fix v-if="spinShow"></Spin>
         </div>
         <Modal v-model="createBucketModal" :title='$t("STORAGE.ADD_BUCKET")' @on-ok="addBucket" @on-cancel="inputCheck=false;createBucketValue = ''">
             <Input v-model="createBucketValue" autofocus @on-enter="addBucket" :placeholder='$t("STORAGE.ADD_BUCKET_PLACEHOLDER")' pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/">
@@ -31,14 +30,11 @@ import { SUB_USER, REDIRECT_BUCKET } from '@/service/API'
 export default {
     data () {
         return {
-            adminMode: false,
             createBucketValue: '',
             createBucketModal: false,
             inputCheck: false,
             selectedBucket: {},
-            self: this,
             iconSize: 18,
-            spinShow: false
         }
     },
     computed: {
@@ -50,7 +46,7 @@ export default {
         },
         bucketList () {
             let bucketList = []
-            const buckets = this.$store.state.bucket.buckets.Buckets
+            const buckets = this.$store.getters.buckets
             if (this.isSubUser) {
                 buckets.forEach((item) => {
                     this.getBucketAcl(item.Name).then(acl => {
@@ -134,6 +130,7 @@ export default {
         },
         async addBucket () {
             this.createBucketModal = false
+            this.createBucketValue = this.createBucketValue.trim()
             if (this.createBucketValue.length > 2) {
                 await handler('createBucket', { Bucket: this.createBucketValue })
                 this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))

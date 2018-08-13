@@ -93,9 +93,6 @@ export default {
         },
     },
     props: ['username'],
-    mounted () {
-        console.log(this.lang)
-    },
     methods: {
         async menuClick (name) {
             if (name === 'logout') {

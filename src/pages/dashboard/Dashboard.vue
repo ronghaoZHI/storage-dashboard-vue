@@ -204,7 +204,7 @@ export default {
             return this.$store.state.theme
         },
         bucketList () {
-            return this.$store.state.bucket.buckets.Buckets ? [{ Name: 'All Buckets' }, ...this.$store.state.bucket.buckets.Buckets] : [{ Name: 'All Buckets' }]
+            return this.$store.getters.buckets ? [{ Name: 'All Buckets' }, ...this.$store.getters.buckets] : [{ Name: 'All Buckets' }]
         },
     },
     created () {

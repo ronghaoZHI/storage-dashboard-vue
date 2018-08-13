@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-import { ACCESSKEY } from '@/service/API'
+import { getAccesskey } from '@/service/API'
 import { clear } from '@/service/Aws'
 import keychainCard from './KeychainCard'
 import user from '@/store/modules/user'
@@ -38,7 +38,7 @@ export default {
             this.spinShow = true
             this.$Loading.start()
             try {
-                let keys = this.isAdmin ? user.state.subUser.keys : await this.$http.get(ACCESSKEY)
+                let keys = this.isAdmin ? user.state.subUser.keys : await this.$http.get(getAccesskey())
                 this.data = await _.forEach(keys, (item) => {
                     item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
                 })
@@ -53,7 +53,7 @@ export default {
         async addKeychain () {
             this.$Loading.start()
             try {
-                await this.$http.post(ACCESSKEY)
+                await this.$http.post(getAccesskey())
                 this.getKeychainList()
                 this.$Loading.finish()
             } catch (error) {
@@ -64,7 +64,7 @@ export default {
         async deleteKeychain (accesskey) {
             this.$Loading.start()
             try {
-                await this.$http.delete(ACCESSKEY, {params: {accesskey: accesskey}})
+                await this.$http.delete(getAccesskey(), {params: {accesskey: accesskey}})
                 await clear()
                 this.getKeychainList()
                 this.$Loading.finish()

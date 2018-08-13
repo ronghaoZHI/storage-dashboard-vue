@@ -67,7 +67,7 @@
     </div>
 </template>
 <script>
-import { LOGIN, BOUND_USER } from '@/service/API'
+import { LOGIN, BOUND_USER, getAccesskey } from '@/service/API'
 import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
@@ -145,10 +145,17 @@ export default {
             this.searchedSubUserList = this.subUserList.filter(item => reg.test(item.username) || reg.test(item.company))
         },
         selectSubUser (user) {
-            this.switchUser({
-                ...this.userInfo,
-                subUser: user,
-                subUserList: this.subUserList
+            this.$http.get(getAccesskey(user.username)).then(keys => {
+                console.log(keys, {
+                    ...this.userInfo,
+                    subUser: Object.assign(user, { keys }),
+                    subUserList: this.subUserList
+                })
+                this.switchUser({
+                    ...this.userInfo,
+                    subUser: Object.assign(user, { keys }),
+                    subUserList: this.subUserList
+                })
             })
         },
         async toIndex (data, router = '/overview') {

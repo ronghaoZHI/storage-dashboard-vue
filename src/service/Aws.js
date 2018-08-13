@@ -1,7 +1,7 @@
 import iView from 'iview-bsc'
 import { HOST } from './HOST'
 import AWS from 'aws-sdk'
-import { ACCESSKEY } from './API'
+import { getAccesskey } from './API'
 import axios from './axios-bsc'
 import user from '@/store/modules/user'
 import { logout, isSSOLogin } from '@/service/Helper'
@@ -11,7 +11,7 @@ let awsKey = {}
 export const clear = () => awsKey = {}
 
 export const getKey = async () => {
-    return !isSSOLogin ? logout('Login status is invalid') : awsKey = user.state.type === 'admin' ? awsKey = user.state.subUser.keys[0] : awsKey.accesskey ? awsKey : axios.get(ACCESSKEY).then(res => awsKey = res[0])
+    return !isSSOLogin ? logout('Login status is invalid') : awsKey = user.state.type === 'admin' ? awsKey = user.state.subUser.keys[0] : awsKey.accesskey ? awsKey : axios.get(getAccesskey()).then(res => awsKey = res[0])
 }
 
 export const config = async ({key, timeout = 10000, host = HOST.awsHost, s3ForcePathStyle, region = 'us-west-1'}) => {
