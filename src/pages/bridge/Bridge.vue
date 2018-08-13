@@ -28,7 +28,7 @@
     </div>
 </template>
 <script>
-import { USERINFO, BOUND_USER, SSO_CHECK_LOGIN } from '@/service/API'
+import { USERINFO, BOUND_USER, getSSOLoginUrl } from '@/service/API'
 import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
@@ -61,7 +61,7 @@ export default {
                     console.log(error)
                 }
             } else {
-                window.location = SSO_CHECK_LOGIN(_router)
+                window.location = getSSOLoginUrl(_router)
             }
         },
         async getUserInfo () {
