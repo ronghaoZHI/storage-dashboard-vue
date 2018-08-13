@@ -20,7 +20,6 @@ export default {
         return {
             data: [],
             spinShow: true,
-            isAdmin: user.state.type === 'admin'
         }
     },
     created () {
@@ -29,12 +28,17 @@ export default {
     components: {
         keychainCard
     },
+    computed: {
+        isAdmin () {
+            return user.state.type === 'admin'
+        },
+    },
     methods: {
         async getKeychainList () {
             this.spinShow = true
             this.$Loading.start()
             try {
-                let keys = user.state.type === 'admin' ? user.state.subUser.keys : await this.$http.get(ACCESSKEY)
+                let keys = this.isAdmin ? user.state.subUser.keys : await this.$http.get(ACCESSKEY)
                 this.data = await _.forEach(keys, (item) => {
                     item.ts = item.LastModified = moment(item.ts).format('YYYY-MM-DD HH:mm')
                 })
@@ -90,7 +94,7 @@ export default {
         padding-bottom: 20px;
         margin-bottom: 14px;
     }
-    
+
     .section-card-list {
         .fb(flex-start, flex-start);
         flex-wrap: wrap;

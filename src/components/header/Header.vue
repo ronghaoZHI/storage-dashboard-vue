@@ -66,7 +66,6 @@ export default {
         return {
             rePasswordModal: false,
             lang: getCookie('uc_lang') !== 'en',
-            isAdminMode: user.state.type === 'admin',
             cdnUrl: getCookie('uc_cdn_auth') === '1',
             rePasswordForm: {
                 password: ''
@@ -87,7 +86,10 @@ export default {
         },
         miniMenu () {
             return this.$store.state.miniMenu
-        }
+        },
+        isAdminMode () {
+            return user.state.type === 'admin'
+        },
     },
     props: ['username'],
     methods: {

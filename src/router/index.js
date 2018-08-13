@@ -30,6 +30,8 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         // check role
         if (hasPermission) {
+            // !from.name && !to.name => url === 'cwn.xxxxxx/#/'
+            // check this router is trigger from other website or not
             store.state.token ? next(!from.name && !to.name ? {
                 path: store.state.user.type === 'sub' ? '/bucket' : '/overview'
             } : {}) : redirectToLogin(to, next)

@@ -32,7 +32,6 @@ export default {
     data () {
         return {
             adminMode: false,
-            isSubUser: userStore.state.type === 'sub',
             createBucketValue: '',
             createBucketModal: false,
             inputCheck: false,
@@ -43,8 +42,11 @@ export default {
         }
     },
     computed: {
-        bucket: function () {
+        bucket () {
             return this.$route.params.bucket || ''
+        },
+        isSubUser () {
+            return userStore.state.type === 'sub'
         },
         bucketList () {
             let bucketList = []
