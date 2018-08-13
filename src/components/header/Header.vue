@@ -61,11 +61,12 @@ import { REPASSWORD, BOUND_USER } from '@/service/API'
 import { clear } from '@/service/Aws'
 import { logout, getCookie, createCookie } from '@/service/Helper'
 import user from '@/store/modules/user'
+import store from '@/store'
 export default {
     data () {
         return {
             rePasswordModal: false,
-            lang: getCookie('uc_lang') !== 'en',
+            lang: store.state.lang === 'cn',
             cdnUrl: getCookie('uc_cdn_auth') === '1',
             rePasswordForm: {
                 password: ''
@@ -92,6 +93,9 @@ export default {
         },
     },
     props: ['username'],
+    mounted () {
+        console.log(this.lang)
+    },
     methods: {
         async menuClick (name) {
             if (name === 'logout') {

@@ -29,13 +29,13 @@
 </template>
 <script>
 import { USERINFO, BOUND_USER, SSO_CHECK_LOGIN } from '@/service/API'
-import { getCookie } from '@/service/Helper'
 import user from '@/store/modules/user'
+import store from '@/store'
 import Vue from 'vue'
 export default {
     data () {
         return {
-            lang: getCookie('uc_lang') || 'cn',
+            lang: store.state.lang,
             searchSubUserInput: '',
             searchedSubUserList: user.state.subUserList || [],
             selectedCustomer: '',

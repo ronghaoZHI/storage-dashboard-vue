@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { getCookie } from '@/service/Helper'
 
 import bucket from './modules/bucket'
 import user from './modules/user'
@@ -12,6 +13,7 @@ const store = new Vuex.Store({
     state: {
         token: sessionStorage.getItem('token'),
         theme: sessionStorage.getItem('theme') || 'dark',
+        lang: getCookie('uc_lang') || 'cn',
         miniMenu: false
     },
     actions: {
