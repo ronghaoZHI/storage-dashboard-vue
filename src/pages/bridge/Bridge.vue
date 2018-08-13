@@ -28,7 +28,7 @@
     </div>
 </template>
 <script>
-import { USERINFO, BOUND_USER, getSSOLoginUrl } from '@/service/API'
+import { USERINFO, BOUND_USER, getSSOLoginUrl, getAccesskey } from '@/service/API'
 import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
@@ -99,10 +99,12 @@ export default {
             this.searchedSubUserList = this.subUserList.filter(item => reg.test(item.username) || reg.test(item.company))
         },
         selectSubUser (user) {
-            this.toIndex({
-                ...this.userInfo,
-                subUser: user,
-                subUserList: this.subUserList
+            this.$http.get(getAccesskey(user.username)).then(keys => {
+                this.switchUser({
+                    ...this.userInfo,
+                    subUser: Object.assign(user, { keys }),
+                    subUserList: this.subUserList
+                })
             })
         },
         async toIndex (user, router = '/') {
