@@ -228,7 +228,7 @@ export default {
             template: _.cloneDeep(templateDefult),
             auxiliary: _.cloneDeep(auxiliaryDefult),
             containerList: ['flv', 'gif', 'mp3', 'mp4', 'mpg', 'ts', 'wmv', 'wma', 'mp2'],
-            videoCodecList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto', container: ['flac', 'flv', 'mp3', 'mp4', 'mpg', 'ts', 'wmv', 'wma', 'mp2']}, {name: 'gif', value: 'gif', container: ['gif']}, {name: 'H.264', value: 'H.264', container: ['flv', 'mp4', 'ts']}, {name: 'H.265', value: 'H.265', container: ['flv', 'mp4', 'ts']}, {name: 'mpeg2', value: 'mpeg2', container: ['mpg']}, {name: 'msmpeg4', value: 'msmpeg4', container: ['wmv']}],
+            videoCodecList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto', container: ['flac', 'flv', 'mp3', 'mp4', 'mpg', 'ts', 'wmv', 'wma', 'mp2']}, {name: 'gif', value: 'gif', container: ['gif']}, {name: 'H.264', value: 'H.264', container: ['flv', 'mp4', 'ts']}, {name: 'H.265', value: 'H.265', container: ['mp4', 'ts']}, {name: 'mpeg2', value: 'mpeg2', container: ['mpg']}, {name: 'msmpeg4', value: 'msmpeg4', container: ['wmv']}],
             videoProfileList: ['baseline', 'main', 'high'],
             videoLevelList: ['1', '1b', '1.1', '1.2', '1.3', '2', '2.1', '2.2', '3', '3.1', '3.2', '4', '4.1'],
             videoFrameRateList: [{name: this.$t('VIDEO.UNALTERED'), value: 'auto'}, {name: '10', value: '10'}, {name: '15', value: '15'}, {name: '23.97', value: '23.97'}, {name: '24', value: '24'}, {name: '25', value: '25'}, {name: '29.97', value: '29.97'}, {name: '30', value: '30'}, {name: '50', value: '50'}, {name: '60', value: '60'}],
