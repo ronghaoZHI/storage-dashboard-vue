@@ -9,7 +9,7 @@ Vue.use(Router)
 const router = new Router({ routes })
 
 const redirectToLogin = async (to, next) => {
-    await this.$store.dispatch('cleanState')
+    await store.dispatch('cleanState')
     next({
         path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
         ticket: { redirect: to.fullPath }
