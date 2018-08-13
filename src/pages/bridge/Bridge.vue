@@ -100,7 +100,7 @@ export default {
         },
         selectSubUser (user) {
             this.$http.get(getAccesskey(user.username)).then(keys => {
-                this.switchUser({
+                this.toIndex({
                     ...this.userInfo,
                     subUser: Object.assign(user, { keys }),
                     subUserList: this.subUserList
