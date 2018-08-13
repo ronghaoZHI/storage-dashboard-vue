@@ -53,7 +53,7 @@
                 </Input>
                 <div class="bsc-user-box">
                     <div class="user-card" v-show="user.show" :class="{'user-card-selected': user.selected}" @click="user.selected = !user.selected" v-for="user in searchBindUserList" :key="user.username">
-                        {{user.email}}
+                        {{user.username}}
                     </div>
                 </div>
             </div>
