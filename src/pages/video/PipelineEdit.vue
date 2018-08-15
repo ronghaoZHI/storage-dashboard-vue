@@ -23,7 +23,7 @@
                   :label="$t('VIDEO.PIPELINE_NAME')+' :'">
           <Input v-model="pipeline.Name"
                  :placeholder="$t('VIDEO.PIPELINE_NAME_INFO')"
-                 class="line-width">/>
+                 class="line-width" />
         </FormItem>
         <FormItem class="form-item"
                   prop="InputBucket"
@@ -79,18 +79,16 @@
           <Input v-model="pipeline.SuccessCallbackUrl"
                  :placeholder="$t('VIDEO.ACCEPT_JOB_SUCCESS_CALLBACK_URL_INFO')"
                  class="line-width"
-                 style="display:inline-table;">
+                 style="display:inline-table;" />
           <span slot="prepend">http://</span>
-          />
         </div>
         <div class="form-item">
           <span class="form-label">{{$t('VIDEO.ACCEPT_JOB_FAILURE_CALLBACK_URL')}} : </span>
           <Input v-model="pipeline.FailureCallbackUrl"
                  :placeholder="$t('VIDEO.ACCEPT_JOB_FAILURE_CALLBACK_URL_INFO')"
                  class="line-width"
-                 style="display:inline-table;">
+                 style="display:inline-table;" />
           <span slot="prepend">http://</span>
-          />
         </div>
       </div>
       <div class="separator-line"></div>

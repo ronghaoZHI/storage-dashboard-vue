@@ -16,7 +16,7 @@
         </Select>
         <Input v-model="searchValue"
                :placeholder="$t('SYSTEM.PLEASE_ENTER') + searchType"
-               style="width:260px">/>
+               style="width:260px" />
         <Button type="primary"
                 @click="getFilterTrafficList(true)">{{$t('SYSTEM.SEARCH')}}</Button>
       </div>

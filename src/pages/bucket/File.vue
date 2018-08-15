@@ -55,11 +55,11 @@
           </div>
         </transition>
       </div>
-      />
+      </Col>
       <Col span="14"
            style="text-align:right">
       <legend-list :data="legendList"></legend-list>
-      />
+      </Col>
     </Row>
     <Spin size="bigger"
           fix
@@ -86,7 +86,7 @@
            @on-cancel="createFolderValue = ''">
       <Input v-model="createFolderValue"
              @on-enter="addFolder"
-             :placeholder="$t('STORAGE.FOLDER_PLACEHOLDER')">/>
+             :placeholder="$t('STORAGE.FOLDER_PLACEHOLDER')" />
     </Modal>
     <Modal v-model="renameModal"
            :title="$t('STORAGE.RENAME')"
@@ -94,7 +94,7 @@
            @on-cancel="renameKey = ''">
       <Input v-model="renameKey"
              @on-enter="rename"
-             :placeholder="$t('STORAGE.RENAME_PLACEHOLDER')">/>
+             :placeholder="$t('STORAGE.RENAME_PLACEHOLDER')" />
     </Modal>
     <Modal v-model="showImageModal"
            :title="imageModalTitle"

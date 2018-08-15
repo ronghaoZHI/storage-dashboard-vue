@@ -11,7 +11,7 @@
                  v-model="searchSubUserInput"
                  @on-change="handleSearchSubUser"
                  placeholder="search here"
-                 style="width:300px"> />
+                 style="width:300px" />
           <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
         </div>
         <div class="wrap">

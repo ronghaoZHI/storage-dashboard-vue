@@ -16,7 +16,7 @@
              autofocus
              @on-enter="addDomain"
              :placeholder="$t('SETTINGS.BIND_DOMAIN_PLACEHOLDER')"
-             @on-change="newDomainTest"> />
+             @on-change="newDomainTest" />
       <span class="info-input-error">{{inputCheck ? '' : $t("SETTINGS.INVALID_DOMAIN")}}</span>
     </Modal>
   </div>

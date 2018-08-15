@@ -16,7 +16,7 @@
            v-model="searchUserInput"
            @on-change="handleSearchUser"
            placeholder="search here"
-           style="width:300px"> />
+           style="width:300px" />
     <Table class="table"
            :show-header="true"
            :stripe="true"
@@ -35,22 +35,22 @@
         <Form-item :label="$t('USER.USER_NAME')"
                    prop="username">
           <Input v-model="createUserForm.username"
-                 placeholder="User name">/>
+                 placeholder="User name" />
         </Form-item>
         <Form-item :label="$t('USER.EMAILL')"
                    prop="email">
           <Input v-model="createUserForm.email"
-                 placeholder="Email">/>
+                 placeholder="Email" />
         </Form-item>
         <Form-item :label="$t('USER.PASSWORD')"
                    prop="password">
           <Input v-model="createUserForm.password"
-                 placeholder="Password">/>
+                 placeholder="Password" />
         </Form-item>
         <Form-item :label="$t('USER.COMPANY')"
                    prop="company">
           <Input v-model="createUserForm.company"
-                 placeholder="Company">/>
+                 placeholder="Company" />
           <span style="position: absolute;right: 10px;">*{{$t("USER.BUSNISS_LICENSE")}}</span>
         </Form-item>
         <Form-item :label="$t('USER.USER_TYPE')"
@@ -81,7 +81,7 @@
                v-model="searchBindUserInput"
                @on-change="handleSearchBindUser"
                placeholder="search here"
-               style="width:300px"> />
+               style="width:300px" />
         <div class="bsc-user-box">
           <div class="user-card"
                v-show="user.show"
@@ -113,22 +113,22 @@
         <Form-item :label="$t('USER.USER_NAME')"
                    prop="username">
           <Input v-model="createSubUserForm.username"
-                 :placeholder="$t('USER.REQUIRE_USER_NAME')">/>
+                 :placeholder="$t('USER.REQUIRE_USER_NAME')" />
         </Form-item>
         <Form-item :label="$t('USER.EMAILL')"
                    prop="email">
           <Input v-model="createSubUserForm.email"
-                 :placeholder="$t('LOGIN.EMAILL_ALERT')">/>
+                 :placeholder="$t('LOGIN.EMAILL_ALERT')" />
         </Form-item>
         <Form-item :label="$t('USER.PASSWORD')"
                    prop="password">
           <Input v-model="createSubUserForm.password"
-                 :placeholder="$t('LOGIN.KEY_ALERT')">/>
+                 :placeholder="$t('LOGIN.KEY_ALERT')" />
         </Form-item>
         <Form-item :label="$t('USER.COMPANY')"
                    prop="company">
           <Input v-model="createSubUserForm.company"
-                 :placeholder="$t('USER.REQUIRE_COMPANY')">/>
+                 :placeholder="$t('USER.REQUIRE_COMPANY')" />
         </Form-item>
       </Form>
       <div class="section-separator">

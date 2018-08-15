@@ -12,7 +12,7 @@
                  class="new-ip"
                  :placeholder="$t('SETTINGS.NEW_IP_PLACEHOLDER')"
                  :autosize="true"
-                 style="width: 330px">/>
+                 style="width: 330px" />
         </FormItem>
       </Form>
       <Checkbox v-model="newItem.upload">{{$t('SETTINGS.UPLOAD')}}</Checkbox>

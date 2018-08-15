@@ -24,7 +24,7 @@
                     required>
             <Input v-model="template.Name"
                    :placeholder="$t('VIDEO.TEMPLATE_NAME')"
-                   class="line-width">/>
+                   class="line-width" />
           </FormItem>
         </div>
         <div class="form-item">
@@ -34,7 +34,7 @@
                    :placeholder="$t('VIDEO.ENTER_THE_TEMPLATE_DESCRIPTION_TEXT')"
                    type="textarea"
                    :autosize="true"
-                   class="line-width">/>
+                   class="line-width" />
           </FormItem>
         </div>
         <div class="form-item">

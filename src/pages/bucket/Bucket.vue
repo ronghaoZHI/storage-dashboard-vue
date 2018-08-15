@@ -51,7 +51,7 @@
              autofocus
              @on-enter="addBucket"
              :placeholder="$t('STORAGE.ADD_BUCKET_PLACEHOLDER')"
-             pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/"> />
+             pattern="/^([a-z0-9][a-z0-9\-]*[.])*([a-z0-9][a-z0-9\-]*)*$/" />
       <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
     </Modal>
   </div>

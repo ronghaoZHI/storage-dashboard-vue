@@ -1,6 +1,6 @@
 {
   "presets": [
-      ["env", { "modules": false }],
+      ["env", { "modules": "umd" }],
       "stage-3"
   ],
   "plugins": ["transform-runtime"],

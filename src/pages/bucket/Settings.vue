@@ -242,7 +242,7 @@
         <Input v-model="AllowedOrigins"
                placeholder="http://www.example.com"
                class="line-width"
-               @on-enter="addCorsModalTag('AllowedOrigins')">/>
+               @on-enter="addCorsModalTag('AllowedOrigins')" />
         <p class="style-error-info redFont"
            v-if="originsEmptyError">{{$t('STORAGE.FILL_IN_ONE_AT_LEAST')}}</p>
         <p class="style-error-info redFont"
@@ -280,7 +280,7 @@
         <span class="form-label">Allowed Headers : </span>
         <Input v-model="AllowedHeaders"
                class="line-width"
-               @on-enter="addCorsModalTag('AllowedHeaders')">/>
+               @on-enter="addCorsModalTag('AllowedHeaders')" />
         <p class="style-error-info redFont"
            v-if="AllowedHeaders">{{$t('STORAGE.PRESS_ENTER_KEY')}}</p>
         <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
@@ -298,7 +298,7 @@
         <span class="form-label">Expose Headers : </span>
         <Input v-model="ExposeHeaders"
                class="line-width"
-               @on-enter="addCorsModalTag('ExposeHeaders')">/>
+               @on-enter="addCorsModalTag('ExposeHeaders')" />
         <p class="style-error-info redFont"
            v-if="ExposeHeaders">{{$t('STORAGE.PRESS_ENTER_KEY')}}</p>
         <p class="info">{{$t('STORAGE.ENTER_KEY')}}</p>
@@ -316,7 +316,7 @@
         <span class="form-label">Max Age Seconds : </span>
         <Input style="width:100px"
                v-model="corsModal.MaxAgeSeconds"
-               class="line-width">/>
+               class="line-width" />
         <span>s</span>
         <p class="style-error-info redFont"
            v-if="secondsError">{{$t('STORAGE.CACHE_TIME_BE_NUMBER')}}</p>

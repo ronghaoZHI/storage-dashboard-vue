@@ -1,72 +1,59 @@
 <template>
-  <div class="bsc-header">
-    <div class="layout-header"
-         :class="{'layout-header-mini': miniMenu}">
-      <div class="layout-header-left">
-        <a @click="getCDNUrl()">{{$t('NAV.CDN')}}</a>
-        <a disabled
-           class="active">{{$t('NAV.CWN')}}</a>
-        <Tooltip :content="$t('OVERVIEW.COMING_SOON')"
-                 placement="bottom">
-          <a disabled>{{$t('NAV.CLN')}}</a>
-        </Tooltip>
-      </div>
-      <div class="layout-header-right">
-        <div class="button-document"
-             @click="openDoc">
-          <Tooltip :content="$t('STORAGE.DOCUMENTATION')"
-                   placement="bottom">
-            <Icon type="help-circled"
-                  :size="24"></Icon>
-          </Tooltip>
+    <div class="bsc-header">
+        <div class="layout-header" :class="{'layout-header-mini': miniMenu}">
+            <div class="layout-header-left">
+                <a @click="getCDNUrl()">{{$t('NAV.CDN')}}</a>
+                <a disabled class="active">{{$t('NAV.CWN')}}</a>
+                <Tooltip :content="$t('OVERVIEW.COMING_SOON')" placement="bottom"><a disabled>{{$t('NAV.CLN')}}</a></Tooltip>
+            </div>
+            <div class="layout-header-right">
+                <div class="button-document" @click="openDoc">
+                    <Tooltip :content="$t('STORAGE.DOCUMENTATION')" placement="bottom">
+                        <Icon type="help-circled" :size="24"></Icon>
+                    </Tooltip>
+                </div>
+                <div class="button-document">
+                    <i-switch v-model="lang" @on-change="toggleLanguage" >
+                        <span slot="open">中</span>
+                        <span slot="close">EN</span>
+                    </i-switch>
+                </div>
+                <div class="button-document" @click="toggleTheme">
+                    <Tooltip :content="$t('STORAGE.TOGGLE_THEME')" placement="bottom">
+                        <Icon type="android-color-palette" :size="24"></Icon>
+                    </Tooltip>
+                </div>
+                <Dropdown style="margin-left:20px"
+                          @on-click="menuClick"
+                          placement="bottom-end">
+                    <a class="dropdown-link"
+                       href="javascript:void(0)">{{uname}}</a>
+                    <Icon type="chevron-down"
+                          class="icon-top-down"></Icon>
+                    <Dropdown-menu slot="list">
+                        <Dropdown-item v-show="isAdminMode" name="selectSubUser">{{$t("NAV.RESELECT_USER")}}</Dropdown-item>
+                        <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
+                        <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
+                    </Dropdown-menu>
+                </Dropdown>
+            </div>
         </div>
-        <div class="button-document">
-          <i-switch v-model="lang"
-                    @on-change="toggleLanguage">
-            <span slot="open">中</span>
-            <span slot="close">EN</span>
-          </i-switch>
-        </div>
-        <div class="button-document"
-             @click="toggleTheme">
-          <Tooltip :content="$t('STORAGE.TOGGLE_THEME')"
-                   placement="bottom">
-            <Icon type="android-color-palette"
-                  :size="24"></Icon>
-          </Tooltip>
-        </div>
-        <Dropdown style="margin-left:20px"
-                  @on-click="menuClick"
-                  placement="bottom-end">
-          <a class="dropdown-link"
-             href="javascript:void(0)">{{uname}}</a>
-          <Icon type="chevron-down"
-                class="icon-top-down"></Icon>
-          <Dropdown-menu slot="list">
-            <Dropdown-item v-show="isAdminMode"
-                           name="selectSubUser">{{$t("NAV.RESELECT_USER")}}</Dropdown-item>
-            <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
-            <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
-          </Dropdown-menu>
-        </Dropdown>
-      </div>
+        <Modal v-model="rePasswordModal"
+               :title="$t('NAV.CHANGE_PASSWORD')"
+               @on-ok="changePassword"
+               @on-cancel="rePasswordModal = false">
+            <Form ref="rePasswordForm"
+                  :model="rePasswordForm"
+                  :rules="ruleValidate"
+                  :label-width="90">
+                <Form-item :label="$t('LOGIN.KEY')"
+                           prop="password">
+                    <Input v-model="rePasswordForm.password"
+                           :placeholder="$t('NAV.NEW_PASSWORD')" />
+                </Form-item>
+            </Form>
+        </Modal>
     </div>
-    <Modal v-model="rePasswordModal"
-           :title="$t('NAV.CHANGE_PASSWORD')"
-           @on-ok="changePassword"
-           @on-cancel="rePasswordModal = false">
-      <Form ref="rePasswordForm"
-            :model="rePasswordForm"
-            :rules="ruleValidate"
-            :label-width="90">
-        <Form-item :label="$t('LOGIN.KEY')"
-                   prop="password">
-          <Input v-model="rePasswordForm.password"
-                 :placeholder="$t('NAV.NEW_PASSWORD')">/>
-        </Form-item>
-      </Form>
-    </Modal>
-  </div>
 </template>
 <script>
 import Vue from 'vue'

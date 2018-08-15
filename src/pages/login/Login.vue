@@ -84,24 +84,25 @@
                  v-model="searchSubUserInput"
                  @on-change="handleSearchSubUser"
                  placeholder="search here"
-                 style="width:300px"> />
+                 style="width:300px" />
           <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
         </div>
         <div class="wrap">
           <div class="body">
-            <div v-if="subUserList.length > 0"
-                 class="card-user"
-                 v-for="user in searchedSubUserList"
-                 :key="user.ts"
-                 @click="selectSubUser(user)">
-              <span class="info">
-                <Icon type="person"></Icon> {{user.username}}</span>
-              <span class="info">
-                <Icon type="briefcase"></Icon> {{user.company}}</span>
-              <span class="icon"
-                    v-show="user.info.type === 'super'">
-                <Icon type="star"></Icon>
-              </span>
+            <div v-if="subUserList.length > 0" class="card-wrap">
+              <div class="card-user"
+                   v-for="user in searchedSubUserList"
+                   :key="user.ts"
+                   @click="selectSubUser(user)">
+                <span class="info">
+                  <Icon type="person"></Icon> {{user.username}}</span>
+                <span class="info">
+                  <Icon type="briefcase"></Icon> {{user.company}}</span>
+                <span class="icon"
+                      v-show="user.info.type === 'super'">
+                  <Icon type="star"></Icon>
+                </span>
+              </div>
             </div>
             <div v-if="subUserList.length <= 0"
                  class="warning"
@@ -120,23 +121,6 @@ import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
 export default {
-  data() {
-    return {
-      lang: store.state.lang,
-      selectedCustomer: '',
-      isLogin: !(!!user.state && user.state.type === 'admin'),
-      keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
-      loginForm: {
-        email: localStorage.getItem('loginEmail'),
-        password: ''
-      },
-      showPassword: false,
-      userInfo: user.state || {},
-      searchSubUserInput: '',
-      searchedSubUserList: user.state.subUserList || [],
-      subUserList: user.state.subUserList || []
-    }
-  },
   directives: {
     bfocus: {
       inserted: function(el) {
@@ -156,6 +140,23 @@ export default {
             .addClass('input-focus')
         })
       }
+    }
+  },
+  data() {
+    return {
+      lang: store.state.lang,
+      selectedCustomer: '',
+      isLogin: !(!!user.state && user.state.type === 'admin'),
+      keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
+      loginForm: {
+        email: localStorage.getItem('loginEmail'),
+        password: ''
+      },
+      showPassword: false,
+      userInfo: user.state || {},
+      searchSubUserInput: '',
+      searchedSubUserList: user.state.subUserList || [],
+      subUserList: user.state.subUserList || []
     }
   },
   methods: {
@@ -558,14 +559,18 @@ export default {
 
         .body {
           width: 100%;
-          display: inline-flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: flex-start;
-          align-items: flex-start;
           padding: 10px 0 0 12px;
 
-          & > .card-user {
+          .card-wrap {
+            display: inline-flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+          }
+
+          .card-user {
             position: relative;
             .wh(
               @login-card-register-item-width,

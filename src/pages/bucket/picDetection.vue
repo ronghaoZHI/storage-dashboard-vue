@@ -45,7 +45,7 @@
            @on-cancel="createBucketValue = ''">
       <Input v-model="createBucketValue"
              @on-change="check"
-             :placeholder="$t('STORAGE.ADD_BUCKET_PLACEHOLDER')"> />
+             :placeholder="$t('STORAGE.ADD_BUCKET_PLACEHOLDER')" />
       <span class="info-input-error">{{inputCheck ? $t("STORAGE.ADD_BUCKET_CHECK") : ''}}</span>
     </Modal>
   </div>

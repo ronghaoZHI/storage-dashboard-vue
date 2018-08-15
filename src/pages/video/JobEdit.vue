@@ -80,7 +80,7 @@
           <span class="form-label">{{$t('VIDEO.OUTPUT_KEY_PREFIX')}} : </span>
           <Input v-model="job.OutputKeyPrefix"
                  :placeholder="$t('VIDEO.OUTPUT_KEY_PREFIX')"
-                 class="line-width">/>
+                 class="line-width" />
         </div>
         <div class="form-item">
           <span class="form-label">{{$t('VIDEO.OUTPUT_RULES')}} : </span>
@@ -152,7 +152,7 @@
                     required>
             <Input v-model="job.Playlists.Name"
                    placeholder="MasterPlaylist"
-                   class="line-width">/>
+                   class="line-width" />
           </FormItem>
         </div>
         <div class="form-item"
@@ -202,7 +202,7 @@
                   required>
           <Input v-model="outputModal.Key"
                  :placeholder="$t('VIDEO.OUTPUT_FILE_NAME')"
-                 class="line-width">/>
+                 class="line-width" />
         </FormItem>
         <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH') + ' : '"
                   prop="SegmentDuration"
@@ -257,7 +257,7 @@
           <Input v-model="outputModal.InputKey"
                  placeholder="水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png"
                  class="line-width"
-                 :disabled="isAutoCodec">/>
+                 :disabled="isAutoCodec" />
         </FormItem>
       </Form>
       <div slot="footer"
@@ -281,7 +281,7 @@
                     required>
             <Input v-model="shotModal.Key"
                    :placeholder="$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')"
-                   style="width:160px;">/>
+                   style="width:160px;" />
           </FormItem>
           <Select v-model="shotModal.Format"
                   style="width:100px;display:inline-block">

@@ -40,7 +40,7 @@
               <FormItem prop="transformation">
                 <Input v-model="transformation"
                        :placeholder="$t('STORAGE.STYLE_NAME')"
-                       class="line-width">/>
+                       class="line-width" />
               </FormItem>
             </div>
             <div class="form-item">
@@ -156,7 +156,7 @@
                       v-model="general.quality"></Slider>
               <Input v-model="general.quality"
                      class="slider-input"
-                     number>/>
+                     number />
             </div>
             <!--quality-->
             <div class="form-item">
@@ -226,7 +226,7 @@
                         v-model="general.brightnessValue"></Slider>
                 <Input v-model="general.brightnessValue"
                        class="slider-input"
-                       number>/>
+                       number />
               </div>
               <!--brightnessValue-->
               <div class="form-item"
@@ -238,7 +238,7 @@
                         v-model="general.blurValue"></Slider>
                 <Input v-model="general.blurValue"
                        class="slider-input"
-                       number>/>
+                       number />
               </div>
               <!--blurValue-->
               <div class="form-item"
@@ -250,7 +250,7 @@
                         v-model="general.sharpenValue"></Slider>
                 <Input v-model="general.sharpenValue"
                        class="slider-input"
-                       number>/>
+                       number />
               </div>
               <!--sharpenValue-->
               <div class="form-item"
@@ -262,7 +262,7 @@
                         v-model="general.oilValue"></Slider>
                 <Input v-model="general.oilValue"
                        class="slider-input"
-                       number>/>
+                       number />
               </div>
               <!--oilValue-->
               <div class="form-item"
@@ -293,7 +293,7 @@
                         v-model="general.colorValue"></Slider>
                 <Input v-model="general.colorValue"
                        class="slider-input"
-                       number>/>
+                       number />
               </div>
               <!--colorValue-->
               <div class="form-item"
@@ -304,7 +304,7 @@
                         :max="400"
                         v-model="general.pixelateValue"></Slider>
                 <Input v-model="general.pixelateValue"
-                       class="slider-input">/>
+                       class="slider-input" />
               </div>
               <!--pixelateValue-->
               <div class="form-item">
@@ -335,7 +335,7 @@
                         :tip-format="radiusFormater"></Slider>
                 <Input v-model="radiusValue"
                        class="slider-input"
-                       @on-change="radiusChange">/>
+                       @on-change="radiusChange" />
               </div>
               <!--radius-->
               <div class="form-item">
@@ -345,7 +345,7 @@
                         :disabled="!isOpacity"></Slider>
                 <Input v-model="general.opacity"
                        class="slider-input"
-                       number>/>
+                       number />
               </div>
               <!--opacity-->
             </div>
@@ -374,7 +374,7 @@
                   <FormItem prop="mark.text">
                     <Input v-model="mark.text"
                            :placeholder="$t('STORAGE.TEXT_CONTENT')"
-                           class="line-width">/>
+                           class="line-width" />
                   </FormItem>
                 </div>
                 <!--text-->
@@ -484,7 +484,7 @@
                         v-model="mark.opacity"></Slider>
                 <Input v-model="mark.opacity"
                        class="slider-input"
-                       number>/>
+                       number />
               </div>
               <!--opacity-->
             </div>
@@ -521,7 +521,7 @@
               <FormItem prop="transformation">
                 <Input v-model="transformation"
                        :placeholder="$t('STORAGE.STYLE_NAME')"
-                       style="width: 475px">/>
+                       style="width: 475px" />
               </FormItem>
             </div>
             <div class="form-item">
@@ -532,7 +532,7 @@
                        :rows="6"
                        :placeholder="$t('STORAGE.SENIOR_INFO')"
                        style="width: 475px"
-                       :autosize="textareaMinrows">/>
+                       :autosize="textareaMinrows" />
               </FormItem>
               <p class="style-name-info">{{$t("STORAGE.PIC_EXAMPLE")}}</p>
               <p class="style-name-info">c_fit,w_300,f_png--l_bs_logo,g_north_west,w_120,o_35,x_43,y_20,a_-10</p>

@@ -63,7 +63,7 @@
         </Select>
         <Input v-model="search.ip"
                :placeholder="$t('SYSTEM.SERVER_IP')"
-               style="width:200px">/>
+               style="width:200px" />
         <Button type="primary"
                 @click="searchList"
                 v-if="tabName === 'used'">{{$t('SYSTEM.SEARCH')}}</Button>

@@ -73,7 +73,7 @@
         </Select>
         <Input v-model="searchValue"
                :placeholder="$t('SYSTEM.PLEASE_ENTER')"
-               style="width:260px">/>
+               style="width:260px" />
         <Button type="primary"
                 @click="getGroupList(false)">{{$t('SYSTEM.SEARCH')}}</Button>
         <Button type="primary"

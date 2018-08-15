@@ -55,7 +55,7 @@
           <Input v-model="requestHeader"
                  style="width:400px"
                  placeholder="Host:www.example.com"
-                 @on-enter="addHeaderTag()">/>
+                 @on-enter="addHeaderTag()" />
           <p class="style-error-info redFont"
              v-if="requestHeader && requestHeaderFormatError">{{$t('STORAGE.CORRECT_FORMAT_HEADER')}}</p>
           <p class="style-error-info redFont"
@@ -74,7 +74,7 @@
         <FormItem :label="$t('STORAGE.SOURCE_DOMAIN')"
                   prop="domain">
           <Input v-model="formValidate404.domain"
-                 style="width:400px">
+                 style="width:400px" />
           <Select v-model="domainPrepend"
                   slot="prepend"
                   style="width:100px;text-align:left">
@@ -87,7 +87,7 @@
                   prop="uri_pattern">
           <Input v-model="formValidate404.uri_pattern"
                  style="width:400px"
-                 placeholder="/(.*)">/>
+                 placeholder="/(.*)" />
           <Tooltip placement="bottom-end">
             <Icon type="ios-help-outline"
                   style="width:30px;padding-left:4px;"></Icon>

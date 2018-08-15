@@ -30,11 +30,11 @@
         <Input v-if="auxiliary.reg === 'extension'"
                v-model="auxiliary.path"
                :placeholder="$t('VIDEO.PATH')"
-               class="sub-setting-input">/>
+               class="sub-setting-input" />
         <Input v-if="auxiliary.reg === 'extension'"
                v-model="auxiliary.extension"
                :placeholder="$t('VIDEO.EXTENSION_NAME')"
-               class="sub-setting-input">/>
+               class="sub-setting-input" />
         <span v-if="auxiliary.reg === 'extension'">{{$t('VIDEO.SEPARATE_EXTENSION_NAMES')}}</span>
         <Form ref="auxiliaryForm"
               :model="auxiliary"
@@ -44,7 +44,7 @@
                     v-if="auxiliary.reg === 'regular'">
             <Input v-model="auxiliary.regular"
                    :placeholder="$t('VIDEO.REGULAR_EXPRESSION')"
-                   class="sub-setting-input">/>
+                   class="sub-setting-input" />
           </FormItem>
         </Form>
       </div>
@@ -70,7 +70,7 @@
         <span class="form-label">{{$t('VIDEO.OUTPUT_KEY_PREFIX')}} : </span>
         <Input v-model="transcode.output_key_prefix"
                :placeholder="$t('VIDEO.OUTPUT_KEY_PREFIX')"
-               class="line-width">/>
+               class="line-width" />
       </div>
       <div class="form-item">
         <span class="form-label">{{$t('VIDEO.OUTPUT_BUCKET')}} : </span>
@@ -153,18 +153,16 @@
         <Input v-model="transcode.success_callback_url"
                :placeholder="$t('VIDEO.TRANSCODING_SUCCESSFUL_CALLBACK_URL')"
                class="line-width"
-               style="display:inline-table;">
+               style="display:inline-table;" />
         <span slot="prepend">http://</span>
-        />
       </div>
       <div class="form-item">
         <span class="form-label">{{$t('VIDEO.TRANSCODING_FAILED_CALLBACK_URL')}} : </span>
         <Input v-model="transcode.failure_callback_url"
                :placeholder="$t('VIDEO.TRANSCODING_FAILED_CALLBACK_URL')"
                class="line-width"
-               style="display:inline-table;">
+               style="display:inline-table;" />
         <span slot="prepend">http://</span>
-        />
       </div>
     </div>
     <div class="separator-line"></div>
@@ -202,7 +200,7 @@
                     prop="name">
             <Input v-model="transcode.master_playlist.name"
                    placeholder="MasterPlaylist"
-                   class="line-width">/>
+                   class="line-width" />
           </FormItem>
         </Form>
       </div>
@@ -255,7 +253,7 @@
                   prop="key_suffix">
           <Input v-model="outputModal.key_suffix"
                  :placeholder="$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')"
-                 class="line-width">/>
+                 class="line-width" />
         </FormItem>
         <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH')"
                   prop="segment_duration"
@@ -283,7 +281,7 @@
           <Input v-model="outputModal.InputKey"
                  placeholder="水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png"
                  class="line-width"
-                 :disabled="isAutoCodec">/>
+                 :disabled="isAutoCodec" />
         </FormItem>
       </Form>
       <div slot="footer"
@@ -307,7 +305,7 @@
                     required>
             <Input v-model="shotModal.key_suffix"
                    :placeholder="$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX')"
-                   style="width:160px;">/>
+                   style="width:160px;" />
           </FormItem>
           <Select v-model="shotModal.format"
                   style="width:100px;display:inline-block">
