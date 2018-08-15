@@ -603,7 +603,7 @@ export default {
       return `/bucket/${this.$route.params.bucket}`
     },
     imageModalTitle() {
-      return this.selectedFileKey || $t('STORAGE.NO_TITLE')
+      return this.selectedFileKey || this.$t('STORAGE.NO_TITLE')
     }
   },
   watch: {
