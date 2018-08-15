@@ -5,16 +5,23 @@ const VERSION = '/v1/'
 const VERSION_TRANSCODER = '/2012-09-25/'
 
 const group = (url) => HTTP_VERSION + HOST.apiHost + VERSION + url
-const groupTranscoder = (url) => HTTP_VERSION + HOST.transcoderHOST + VERSION_TRANSCODER + url
+const groupTranscoder = (url) =>
+  HTTP_VERSION + HOST.transcoderHOST + VERSION_TRANSCODER + url
 const groupImgx = (url) => HTTP_VERSION + HOST.imgxHOST + url
 
 export const LOGIN = group('auth/login')
 export const LOGOUT = group('auth/logout')
 export const REPASSWORD = group('user/update/password')
 export const USERINFO = group('profile')
-export const getAccesskey = (username = '') => group(username ? `accesskey?customer=${username}` : 'accesskey')
-export const getSSOLoginUrl = (callback = '') => `https://uc.baishancloud.com/web/user/checkLogin?language=1&appId=${window.dashboard_conf.appID}`
-export const SSO_LOGOUT = `https://uc.portal.baishancloud.com/web/user/logout?language=1&appId=${window.dashboard_conf.appID}`
+export const getAccesskey = (username = '') =>
+  group(username ? `accesskey?customer=${username}` : 'accesskey')
+export const getSSOLoginUrl = (callback = '') =>
+  `https://uc.baishancloud.com/web/user/checkLogin?language=1&appId=${
+    window.dashboard_conf.appID
+  }`
+export const SSO_LOGOUT = `https://uc.portal.baishancloud.com/web/user/logout?language=1&appId=${
+  window.dashboard_conf.appID
+}`
 
 export const REDIRECT_BUCKET = group('superuser/redirect/bucket')
 export const NODE = group('node/list')
@@ -62,7 +69,8 @@ export const CUSTOM_DOMAIN = group('custom_domain')
 
 export const getAnalysisUrl = (url) => group(`analysis/${url}`)
 
-export const getTranscoderAnalysisUrl = (url) => group(`transcoder/analysis/${url}`)
+export const getTranscoderAnalysisUrl = (url) =>
+  group(`transcoder/analysis/${url}`)
 
 export const getBillTranscoderUrl = (url) => group(`bill/transcode${url}`)
 
@@ -72,6 +80,8 @@ export const getBillOldUrl = (url) => group(`bill/storage_old${url}`)
 
 export const getBillUrl = (url) => group(`bill/storage${url}`)
 
-export const getBillBandwidthUrl = (url) => group(`bill/storage_bandwidth${url}`)
+export const getBillBandwidthUrl = (url) =>
+  group(`bill/storage_bandwidth${url}`)
 
-export const getSuperSubUserUrl = (superName) => group(`superuser/list/sub_user?customer=${superName}`)
+export const getSuperSubUserUrl = (superName) =>
+  group(`superuser/list/sub_user?customer=${superName}`)

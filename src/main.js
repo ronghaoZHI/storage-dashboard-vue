@@ -29,20 +29,20 @@ Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
 iView.LoadingBar.config({
-    color: '#fff',
-    failedColor: '#f0ad4e',
-    height: 3
+  color: '#fff',
+  failedColor: '#f0ad4e',
+  height: 3
 })
 
-Object.keys(messages).forEach(function (lang) {
-    Vue.locale(lang, messages[lang])
+Object.keys(messages).forEach(function(lang) {
+  Vue.locale(lang, messages[lang])
 })
 Vue.config.lang = getCookie('uc_lang') || 'cn'
 
 new Vue({
-    el: '#app',
-    store,
-    router,
-    template: '<App/>',
-    components: { App }
+  components: { App },
+  el: '#app',
+  store,
+  router,
+  template: '<App/>',
 })

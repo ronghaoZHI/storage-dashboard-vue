@@ -8,181 +8,223 @@ import iconSystem from '../../assets/system.png'
 import iconUser from '../../assets/icon-user.png'
 import iconVideo from '../../assets/icon-video.png'
 
-const systemChildren = [ {
+const systemChildren = [
+  {
     index: 1,
     name: 'group'
-}, {
+  },
+  {
     index: 2,
     name: 'partition'
-}, {
+  },
+  {
     index: 3,
     name: 'traffic'
-}, {
+  },
+  {
     index: 4,
     name: 'machine'
-}]
+  }
+]
 
-const videoChildren = [{
+const videoChildren = [
+  {
     index: 1,
     name: 'template'
-}, {
+  },
+  {
     index: 2,
     name: 'pipeline'
-}, {
+  },
+  {
     index: 3,
     name: 'output'
-}, {
+  },
+  {
     index: 4,
     name: 'job'
-}, {
+  },
+  {
     index: 5,
     name: 'statistics'
-}]
+  }
+]
 
 const overview = {
-    index: 1,
-    name: 'overview',
+  index: 1,
+  name: 'overview',
+  show: true,
+  meta: {
     show: true,
-    meta: {
-        show: true,
-        icon: iconOverview,
-        role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
-    },
+    icon: iconOverview,
+    role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN']
+  }
 }
 
 const bucket = {
-    index: 2,
-    name: 'bucket',
-    meta: {
-        show: true,
-        icon: iconBucket,
-        role: ['ONLINE_SUB', 'ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
-    },
+  index: 2,
+  name: 'bucket',
+  meta: {
+    show: true,
+    icon: iconBucket,
+    role: [
+      'ONLINE_SUB',
+      'ONLINE_NORMAL',
+      'ONLINE_SUPRER',
+      'ONLINE_ADMIN',
+      'SUPER_ADMIN'
+    ]
+  }
 }
 
 const dashboard = {
-    index: 3,
-    name: 'dashboard',
-    meta: {
-        show: true,
-        icon: iconDashboard,
-        role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
-    },
+  index: 3,
+  name: 'dashboard',
+  meta: {
+    show: true,
+    icon: iconDashboard,
+    role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN']
+  }
 }
 
 const keychain = {
-    index: 4,
-    name: 'keychain',
-    meta: {
-        show: true,
-        icon: iconKey,
-        role: ['ONLINE_SUB', 'ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
-    },
+  index: 4,
+  name: 'keychain',
+  meta: {
+    show: true,
+    icon: iconKey,
+    role: [
+      'ONLINE_SUB',
+      'ONLINE_NORMAL',
+      'ONLINE_SUPRER',
+      'ONLINE_ADMIN',
+      'SUPER_ADMIN'
+    ]
+  }
 }
 
 const system = {
-    index: 6,
-    name: 'system',
-    meta: {
-        show: true,
-        icon: iconSystem,
-        role: ['SUPER_ADMIN'],
-    },
-    children: systemChildren
+  index: 6,
+  name: 'system',
+  meta: {
+    show: true,
+    icon: iconSystem,
+    role: ['SUPER_ADMIN']
+  },
+  children: systemChildren
 }
 
 const video = {
-    index: 5,
-    name: 'video',
-    children: videoChildren,
-    meta: {
-        show: window.dashboard_conf.appID === '6',
-        icon: iconVideo,
-        role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
-    },
+  index: 5,
+  name: 'video',
+  children: videoChildren,
+  meta: {
+    show: window.dashboard_conf.appID === '6',
+    icon: iconVideo,
+    role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN']
+  }
 }
 
 const userManage = {
-    index: 7,
-    name: 'user',
-    meta: {
-        show: true,
-        icon: iconUser,
-        role: ['ONLINE_ADMIN_NO_SUBSUER', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN'],
-    },
+  index: 7,
+  name: 'user',
+  meta: {
+    show: true,
+    icon: iconUser,
+    role: [
+      'ONLINE_ADMIN_NO_SUBSUER',
+      'ONLINE_SUPRER',
+      'ONLINE_ADMIN',
+      'SUPER_ADMIN'
+    ]
+  }
 }
 
 const isSuper = () => {
-    const userInfo = user.state.subUserList.filter(item => item.username === user.state.subUser.username)
-    return userInfo && userInfo[0].info.type === 'super'
+  const userInfo = user.state.subUserList.filter(
+    (item) => item.username === user.state.subUser.username
+  )
+  return userInfo && userInfo[0].info.type === 'super'
 }
 
 const getRole = () => {
-    const userType = user.state.type
-    switch (userType) {
+  const userType = user.state.type
+  switch (userType) {
     case 'superadmin':
-        return 'SUPER_ADMIN'
+      return 'SUPER_ADMIN'
     case 'admin':
-        return user.state.subUser ? (isSuper() ? 'ONLINE_ADMIN' : 'ONLINE_NORMAL') : 'ONLINE_ADMIN_NO_SUBSUER'
+      return user.state.subUser
+        ? isSuper()
+          ? 'ONLINE_ADMIN'
+          : 'ONLINE_NORMAL'
+        : 'ONLINE_ADMIN_NO_SUBSUER'
     case 'super':
-        return 'ONLINE_SUPRER'
+      return 'ONLINE_SUPRER'
     case 'sub':
-        return 'ONLINE_SUB'
+      return 'ONLINE_SUB'
     default:
-        return 'ONLINE_NORMAL'
-    }
+      return 'ONLINE_NORMAL'
+  }
 }
 
 const hasPermission = (role, route) => {
-    if (route.meta && route.meta.role) {
-        return route.meta.role.indexOf(role) >= 0
-    } else {
-        return true
-    }
+  if (route.meta && route.meta.role) {
+    return route.meta.role.indexOf(role) >= 0
+  } else {
+    return true
+  }
 }
 
 const getMenuList = () => {
-    const list = [overview, bucket, dashboard, keychain, system, video, userManage]
-    const role = getRole()
-    const accessMenu = list.filter(m => {
-        if (hasPermission(role, m)) {
-            if (m.children && m.children.length > 0) {
-                m.children = m.children.filter(child => {
-                    return hasPermission(role, child) ? child : false
-                })
-                return m
-            } else {
-                return m
-            }
-        }
-        return false
-    })
-    return accessMenu
+  const list = [
+    overview,
+    bucket,
+    dashboard,
+    keychain,
+    system,
+    video,
+    userManage
+  ]
+  const role = getRole()
+  const accessMenu = list.filter((m) => {
+    if (hasPermission(role, m)) {
+      if (m.children && m.children.length > 0) {
+        m.children = m.children.filter((child) => {
+          return hasPermission(role, child) ? child : false
+        })
+        return m
+      } else {
+        return m
+      }
+    }
+    return false
+  })
+  return accessMenu
 }
 
 const state = {
-    menuList: getMenuList()
+  menuList: getMenuList()
 }
 
 const mutations = {
-    REFRESH_MENU (state) {
-        state.menuList = getMenuList()
-    }
+  REFRESH_MENU(state) {
+    state.menuList = getMenuList()
+  }
 }
 
 const getters = {
-    menuList: state => state.menuList
+  menuList: (state) => state.menuList
 }
 
 const actions = {
-    refreshMenu ({ commit }) {
-        commit('REFRESH_MENU')
-    },
+  refreshMenu({ commit }) {
+    commit('REFRESH_MENU')
+  }
 }
 
 export default {
-    state,
-    mutations,
-    actions,
-    getters,
+  state,
+  mutations,
+  actions,
+  getters
 }

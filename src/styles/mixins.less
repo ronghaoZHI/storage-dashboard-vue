@@ -1,42 +1,42 @@
 .wh(@width, @height) {
-    width: @width;
-    height: @height;
+  width: @width;
+  height: @height;
 }
 
 .sc(@size, @color) {
-    font-size: @size;
-    color: @color;
+  font-size: @size;
+  color: @color;
 }
 
 .fb(@justify-content, @align-items, @display: inline-flex, @flex-direction: row) {
-    display: @display;
-    flex-direction: @flex-direction;
-    justify-content: @justify-content;
-    align-items: @align-items;
+  display: @display;
+  flex-direction: @flex-direction;
+  justify-content: @justify-content;
+  align-items: @align-items;
 }
 
 .ff(@display: inline-flex, @flex-direction: column) {
-    display: @display;
-    flex-direction: @flex-direction;
+  display: @display;
+  flex-direction: @flex-direction;
 }
 
 .overflow {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .scrollDark {
-    &::-webkit-scrollbar {
-        background: #313a41;
-        width: 10px;
-        height: 10px;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #39434b;
-        border-radius:4px;
-    }
-    &::-webkit-scrollbar-corner {
-        background: #313a41;
-    }
+  &::-webkit-scrollbar {
+    background: #313a41;
+    width: 10px;
+    height: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #39434b;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-corner {
+    background: #313a41;
+  }
 }
