@@ -383,7 +383,7 @@
                   <Select v-model="fontStyle.font_family"
                           style="width:135px;margin-right:10px;">
                     <Option v-for="item in fontList"
-                            :value="item.value"
+                            :value="item.label"
                             :key="item.value">{{ item.label }}</Option>
                   </Select>
                   <!--font_family-->

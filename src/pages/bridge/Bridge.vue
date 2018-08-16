@@ -16,7 +16,7 @@
         </div>
         <div class="wrap">
           <div class="body">
-            <div v-if="subUserList.length > 0">
+            <div v-if="subUserList.length > 0" class="card-wrap">
               <div class="card-user"
                    v-for="user in searchedSubUserList"
                    :key="user.ts"
@@ -224,14 +224,18 @@ export default {
 
         .body {
           width: 100%;
-          display: inline-flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: flex-start;
-          align-items: flex-start;
           padding: 10px 0 0 12px;
 
-          & > .card-user {
+          .card-wrap {
+            display: inline-flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+          }
+
+          .card-user {
             position: relative;
             .wh(
               @login-card-register-item-width,
