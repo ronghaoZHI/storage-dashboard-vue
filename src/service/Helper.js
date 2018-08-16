@@ -19,20 +19,20 @@ export const isSSOLogin = () => {
   return getCookie('uc_baishan').length > 0
 }
 
-function dataClearAndLocation() {
-  store
-    .dispatch('logout')
-    .then(() => clear())
-    .then(() => {
-      if (window.dashboard_conf.onlineMode === 'True') {
-        window.location = SSO_LOGOUT
-      } else {
-        router.push({
-          path: '/login',
-          query: { redirect: router.fullPath }
-        })
-      }
+async function dataClearAndLocation() {
+  const _store = store.default || store
+  await _store.dispatch('logout')
+  await clear()
+
+  if (window.dashboard_conf.onlineMode === 'True') {
+    window.location = SSO_LOGOUT
+  } else {
+    const _router = router.default || router
+    _router.push({
+      path: '/login',
+      query: { redirect: router.fullPath }
     })
+  }
 }
 
 export function createCookie(name, value) {
