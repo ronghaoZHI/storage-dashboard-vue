@@ -33,6 +33,7 @@ export default {
             createBucketValue: '',
             createBucketModal: false,
             inputCheck: false,
+            bucketList: [],
             selectedBucket: {},
             iconSize: 18,
         }
@@ -44,34 +45,9 @@ export default {
         isSubUser () {
             return userStore.state.type === 'sub'
         },
-        bucketList () {
-            let bucketList = []
-            const buckets = this.$store.getters.buckets
-            if (this.isSubUser) {
-                buckets.forEach((item) => {
-                    this.getBucketAcl(item.Name).then(acl => {
-                        acl.Grants.forEach(grant => {
-                            if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
-                                item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-                                bucketList.push(item)
-                            }
-                        })
-                    })
-                })
-            } else {
-                bucketList = _.forEach(buckets, (item, index) => {
-                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-                })
-            }
-            bucketList = _.forEach(bucketList, (item, index) => {
-                item.selected = this.bucket ? item.Name === this.bucket : index === 0
-            })
-            this.selectedBucket = bucketList && bucketList.length > 0 ? bucketList[0] : {}
-            return bucketList
-        },
     },
     created () {
-        this.$store.dispatch('getBuckets')
+        this.getBucketList()
     },
     directives: {
         cbutton: {
@@ -86,6 +62,29 @@ export default {
         }
     },
     methods: {
+        async getBucketList () {
+            const buckets = await this.$store.dispatch('getBuckets')
+            if (this.isSubUser) {
+                buckets.Buckets.forEach((item) => {
+                    this.getBucketAcl(item.Name).then(acl => {
+                        acl.Grants.forEach(grant => {
+                            if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
+                                item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                                this.bucketList.push(item)
+                            }
+                        })
+                    })
+                })
+            } else {
+                this.bucketList = _.forEach(buckets.Buckets, (item, index) => {
+                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
+                })
+            }
+            this.bucketList = _.forEach(this.bucketList, (item, index) => {
+                item.selected = this.bucket ? item.Name === this.bucket : index === 0
+            })
+            this.selectedBucket = this.bucketList && this.bucketList.length > 0 ? this.bucketList[0] : {}
+        },
         deleteBucketConfirm () {
             const item = this.selectedBucket
             this.$Modal.confirm({
