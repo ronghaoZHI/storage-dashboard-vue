@@ -888,7 +888,9 @@ export default {
             : timesSpliteUnits(value, 3)
         : unit === 'byte'
           ? bytes(value)
-          : unit === 'bps' ? bps(value) : times(value)
+          : unit === 'bps'
+            ? bps(value)
+            : times(value)
     },
     getApiURL(url, range) {
       let path = ''
@@ -901,7 +903,9 @@ export default {
       }
       return url === 'new'
         ? getBillUrl(path)
-        : url === 'old' ? getBillOldUrl(path) : getBillBandwidthUrl(path)
+        : url === 'old'
+          ? getBillOldUrl(path)
+          : getBillBandwidthUrl(path)
     },
     tabToggle(index, ref) {
       let vm = this
@@ -1197,7 +1201,9 @@ const initOptions = ({
       : _.defaultsDeep({}, lineOptions)
   let n = Math.floor((dataPart.data.length - 1) / 7) + 1
   themeLineOptions.xAxis.interval = newOneDayFlag
-    ? dataPart.data.length === 1 ? 86400000 : 3600000 * n
+    ? dataPart.data.length === 1
+      ? 86400000
+      : 3600000 * n
     : 86400000 * n
   themeLineOptions.grid.top = '60'
   let legendData = []
@@ -1349,7 +1355,9 @@ const initOptions = ({
       name:
         dataPart.unit === 'byte'
           ? ''
-          : dataPart.unit === 'times' ? '单位：次' : '单位：个',
+          : dataPart.unit === 'times'
+            ? '单位：次'
+            : '单位：个',
       axisLabel: {
         formatter: function(value) {
           return dataPart.unit === 'byte' ? bytes(value) : timesK(value)

@@ -109,8 +109,16 @@ export default {
           sortable: true,
           sortMethod: (a, b, type) =>
             a.length !== b.length
-              ? type === 'asc' ? a.length - b.length : b.length - a.length
-              : type === 'asc' ? (a > b ? 1 : -1) : a < b ? 1 : -1
+              ? type === 'asc'
+                ? a.length - b.length
+                : b.length - a.length
+              : type === 'asc'
+                ? a > b
+                  ? 1
+                  : -1
+                : a < b
+                  ? 1
+                  : -1
         },
         {
           title: this.$t('SYSTEM.GROUP_STATUS'),

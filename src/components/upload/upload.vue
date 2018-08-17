@@ -209,7 +209,7 @@ export default {
       let aws = await getS3({ timeout: 3600000 })
       let request = aws.upload(params, options)
       request.on('httpUploadProgress', function(evt) {
-        item.progress = parseInt(evt.loaded * 100 / evt.total)
+        item.progress = parseInt((evt.loaded * 100) / evt.total)
         item.request = request
       })
       return request.promise()

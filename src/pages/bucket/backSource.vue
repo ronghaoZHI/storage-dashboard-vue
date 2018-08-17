@@ -194,7 +194,9 @@ export default {
               'div',
               params.row.fetch_mode === 'fetch_200'
                 ? 200
-                : params.row.fetch_mode === 'fetch_302' ? 302 : 404
+                : params.row.fetch_mode === 'fetch_302'
+                  ? 302
+                  : 404
             )
           }
         },

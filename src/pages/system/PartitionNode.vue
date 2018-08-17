@@ -11,7 +11,7 @@ export default {
     pinter: {
       inserted: function(el, binding) {
         const data = binding.value
-        const nodeWidth = Math.floor(data.space / data.capacity * 30)
+        const nodeWidth = Math.floor((data.space / data.capacity) * 30)
         if (data.ioutil !== undefined) {
           const colorList = [
             '#76d0a3',
@@ -39,7 +39,7 @@ export default {
       ioutil: this.data.ioutil,
       spacePercent:
         this.data.space && this.data.capacity
-          ? Math.floor(this.data.space / this.data.capacity * 100)
+          ? Math.floor((this.data.space / this.data.capacity) * 100)
           : ''
     }
   },

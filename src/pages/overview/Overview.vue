@@ -884,7 +884,9 @@ export default {
         ? item.unit === 'byte'
           ? bytesSpliteUnits(item.value, 3)
           : timesSpliteUnits(item.value, 3)
-        : item.unit === 'byte' ? bytes(item.value) : times(item.value)
+        : item.unit === 'byte'
+          ? bytes(item.value)
+          : times(item.value)
     },
     getApiURL() {
       let path = '?custom_range=' + this.dateRange
