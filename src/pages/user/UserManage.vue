@@ -97,6 +97,7 @@
     <Modal v-model="createSubUserModal"
            :title="$t('USER.CREATE_SUB_USER')"
            width="600"
+           ok-text="确定(此请求耗时较长，请勿多次尝试)"
            @on-ok="createSubUser">
       <div class="section-separator"
            v-show="!isEditSubUser">
