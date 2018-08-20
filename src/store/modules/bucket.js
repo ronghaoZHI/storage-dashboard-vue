@@ -1,28 +1,28 @@
 import { handler } from '@/service/Aws'
 
 const state = {
-  buckets: {}
+  buckets: {},
 }
 
 const mutations = {
   SET_BUCKETS(state, bukcets) {
     state.buckets = bukcets
-  }
+  },
 }
 
 const actions = {
-  setBuckets({ commit }, bukcets) {
-    commit('SET_BUCKETS', bukcets)
+  async setBuckets({ commit }, bukcets) {
+    await commit('SET_BUCKETS', bukcets)
   },
-  async getBuckets({ commit, state }) {
-    if (Object.keys(state.buckets).length === 0) {
+  async getBuckets({ commit, state }, forceUpdate) {
+    if (Object.keys(state.buckets).length === 0 || forceUpdate === true) {
       let buckets = await handler('listBuckets')
       commit('SET_BUCKETS', buckets)
       return buckets
     } else {
       return state.buckets
     }
-  }
+  },
 }
 
 const getters = {

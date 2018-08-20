@@ -64,26 +64,76 @@ import userStore from '@/store/modules/user'
 import { SUB_USER, REDIRECT_BUCKET } from '@/service/API'
 
 export default {
-    data () {
-        return {
-            createBucketValue: '',
-            createBucketModal: false,
-            inputCheck: false,
-            bucketList: [],
-            selectedBucket: {},
-            iconSize: 18,
-        }
+  directives: {
+    cbutton: {
+      bind: function(el) {
+        $(el).click(() => {
+          $(el).toggleClass('bucket-selected')
+          Array.from($(el).siblings()).forEach((node) => {
+            node !== el && $(node).removeClass('bucket-selected')
+          })
+        })
+      }
+    }
+  },
+  data() {
+    return {
+      createBucketValue: '',
+      createBucketModal: false,
+      inputCheck: false,
+      bucketList: [],
+      selectedBucket: {},
+      iconSize: 18
+    }
+  },
+  computed: {
+    bucket() {
+      return this.$route.params.bucket || ''
     },
-    computed: {
-        bucket () {
-            return this.$route.params.bucket || ''
-        },
-        isSubUser () {
-            return userStore.state.type === 'sub'
-        },
-    },
-    created () {
-        this.getBucketList()
+    isSubUser() {
+      return userStore.state.type === 'sub'
+    }
+  },
+  watch: {
+    createBucketValue(to, from) {
+      this.inputCheck = !(to.length >= 3)
+    }
+  },
+  created() {
+    this.getBucketList()
+  },
+  methods: {
+    async getBucketList(forceUpdate = false) {
+      const buckets = await this.$store.dispatch('getBuckets', forceUpdate)
+      if (this.isSubUser) {
+        buckets.Buckets.forEach((item) => {
+          this.getBucketAcl(item.Name).then((acl) => {
+            acl.Grants.forEach((grant) => {
+              if (
+                grant.Grantee.ID === userStore.state.username &&
+                (grant.Permission === 'FULL_CONTROL' ||
+                  grant.Permission === 'READ')
+              ) {
+                item.CreationDate = moment(item.CreationDate).format(
+                  'YYYY-MM-DD HH:mm'
+                )
+                this.bucketList.push(item)
+              }
+            })
+          })
+        })
+      } else {
+        this.bucketList = _.forEach(buckets.Buckets, (item, index) => {
+          item.CreationDate = moment(item.CreationDate).format(
+            'YYYY-MM-DD HH:mm'
+          )
+        })
+      }
+      this.bucketList = _.forEach(this.bucketList, (item, index) => {
+        item.selected = this.bucket ? item.Name === this.bucket : index === 0
+      })
+      this.selectedBucket =
+        this.bucketList && this.bucketList.length > 0 ? this.bucketList[0] : {}
     },
     deleteBucketConfirm() {
       const item = this.selectedBucket
@@ -95,51 +145,21 @@ export default {
         onOk: () => this.deleteBucket(item)
       })
     },
-    methods: {
-        async getBucketList () {
-            const buckets = await this.$store.dispatch('getBuckets')
-            if (this.isSubUser) {
-                buckets.Buckets.forEach((item) => {
-                    this.getBucketAcl(item.Name).then(acl => {
-                        acl.Grants.forEach(grant => {
-                            if (grant.Grantee.ID === userStore.state.username && (grant.Permission === 'FULL_CONTROL' || grant.Permission === 'READ')) {
-                                item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-                                this.bucketList.push(item)
-                            }
-                        })
-                    })
-                })
-            } else {
-                this.bucketList = _.forEach(buckets.Buckets, (item, index) => {
-                    item.CreationDate = moment(item.CreationDate).format('YYYY-MM-DD HH:mm')
-                })
-            }
-            this.bucketList = _.forEach(this.bucketList, (item, index) => {
-                item.selected = this.bucket ? item.Name === this.bucket : index === 0
-            })
-            this.selectedBucket = this.bucketList && this.bucketList.length > 0 ? this.bucketList[0] : {}
-        },
-        deleteBucketConfirm () {
-            const item = this.selectedBucket
-            this.$Modal.confirm({
-                content: this.$t('STORAGE.DELETE_CONFIRMED', { fileName: item.Name }),
-                okText: this.$t('PUBLIC.CONFIRMED'),
-                cancelText: this.$t('PUBLIC.CANCLE'),
-                title: this.$t('PUBLIC.DELETE'),
-                onOk: () => this.deleteBucket(item)
-            })
-        },
-        async deleteBucket (bucket) {
-            try {
-                this.$Loading.start()
-                let buckets = await handler('listObjects', { Bucket: bucket.Name })
-                let response = await buckets.Contents.length ? batchDeletion(buckets.Contents, bucket.Name) : Promise.resolve()
-                // the bucket has cache when the objects just deleted
-                response.then(res => {
-                    setTimeout(() => { handler('deleteBucket', { Bucket: bucket.Name }) }, 1000)
-                })
-                // the bucket list also has cache ...
-                removeItemFromArray(this.bucketList, bucket)
+    async deleteBucket(bucket) {
+      try {
+        this.$Loading.start()
+        let buckets = await handler('listObjects', { Bucket: bucket.Name })
+        let response = (await buckets.Contents.length)
+          ? batchDeletion(buckets.Contents, bucket.Name)
+          : Promise.resolve()
+        // the bucket has cache when the objects just deleted
+        response.then((res) => {
+          setTimeout(() => {
+            handler('deleteBucket', { Bucket: bucket.Name })
+          }, 1000)
+        })
+        // the bucket list also has cache ...
+        removeItemFromArray(this.bucketList, bucket)
 
         this.selectedBucket = {}
         _.each(
@@ -176,8 +196,7 @@ export default {
       if (this.createBucketValue.length > 2) {
         await handler('createBucket', { Bucket: this.createBucketValue })
         this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
-        await this.$store.dispatch('setBuckets', await handler('listBuckets'))
-        this.convertBucketList()
+        await this.getBucketList(true)
         userStore.state.type === 'super' &&
           this.createRedirectBucket(this.createBucketValue)
         this.createBucketValue = ''
