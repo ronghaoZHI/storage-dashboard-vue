@@ -2,7 +2,7 @@ import iView from 'iview-bsc'
 import { HOST } from './HOST'
 import AWS from 'aws-sdk'
 import { getAccesskey } from './API'
-import axios from './axios-bsc'
+import axios from './request'
 import user from '@/store/modules/user'
 import { logout, isSSOLogin } from '@/service/Helper'
 

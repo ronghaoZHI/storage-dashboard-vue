@@ -11,6 +11,7 @@
             </div>
           </div>
           <div class="storage-card-wrap">
+            <Spin size="large" fix v-if="spinShow"></Spin>
             <div class="storage-card">
               <div class="title">
                 <div class="images"></div>
@@ -348,6 +349,7 @@ export default {
       requestOptions: lineOptions,
       permissionsList: [],
       bucketList: [],
+      spinShow: true,
       sourceList: [],
       accessList: [],
       showPermissionModal: false,
@@ -707,6 +709,7 @@ export default {
           _.extend(this, res)
           this.setOptions()
         })
+        this.spinShow = false
       } catch (error) {
         console.log(error)
         if (
