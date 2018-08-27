@@ -3,268 +3,270 @@
     <Row>
       <Col span="19"
            class="left-section">
-        <div class="storage">
-          <div class="section-separator">
-            <div class="separator-body">
-              <span class="separator-icon"></span>
-              <span class="separator-info">{{$t('OVERVIEW.DASHBOARD_MONTH')}}</span>
+      <div class="storage">
+        <div class="section-separator">
+          <div class="separator-body">
+            <span class="separator-icon"></span>
+            <span class="separator-info">{{$t('OVERVIEW.DASHBOARD_MONTH')}}</span>
+          </div>
+        </div>
+        <div class="storage-card-wrap">
+          <Spin size="large"
+                fix
+                v-if="spinShow"></Spin>
+          <div class="storage-card">
+            <div class="title">
+              <div class="images"></div>
+              <div class="texts">
+                <p class="label">
+                  {{$t('OVERVIEW.CAPACITY_MONTH')}}
+                </p>
+                <p class="numbers">
+                  {{originOverview.capacity[0]}}
+                  <span>{{originOverview.capacity[1]}}</span>
+                </p>
+              </div>
+            </div>
+            <div class="charts">
+              <chart :options="capacityOptions"
+                     auto-resize
+                     ref="capacityLine"></chart>
             </div>
           </div>
-          <div class="storage-card-wrap">
-            <Spin size="large" fix v-if="spinShow"></Spin>
-            <div class="storage-card">
-              <div class="title">
-                <div class="images"></div>
-                <div class="texts">
-                  <p class="label">
-                    {{$t('OVERVIEW.CAPACITY_MONTH')}}
-                  </p>
-                  <p class="numbers">
-                    {{originOverview.capacity[0]}}
-                    <span>{{originOverview.capacity[1]}}</span>
-                  </p>
-                </div>
-              </div>
-              <div class="charts">
-                <chart :options="capacityOptions"
-                      auto-resize
-                      ref="capacityLine"></chart>
+          <div class="storage-card">
+            <div class="title">
+              <div class="images"></div>
+              <div class="texts">
+                <p class="label">
+                  {{$t('OVERVIEW.OUTER_NET_MONTH')}}
+                </p>
+                <p class="numbers">
+                  {{originOverview.traffic[0]}}
+                  <span>{{originOverview.traffic[1]}}</span>
+                </p>
               </div>
             </div>
-            <div class="storage-card">
-              <div class="title">
-                <div class="images"></div>
-                <div class="texts">
-                  <p class="label">
-                    {{$t('OVERVIEW.OUTER_NET_MONTH')}}
-                  </p>
-                  <p class="numbers">
-                    {{originOverview.traffic[0]}}
-                    <span>{{originOverview.traffic[1]}}</span>
-                  </p>
-                </div>
-              </div>
-              <div class="charts">
-                <chart :options="trafficOptions"
-                      auto-resize
-                      ref="trafficLine"></chart>
+            <div class="charts">
+              <chart :options="trafficOptions"
+                     auto-resize
+                     ref="trafficLine"></chart>
+            </div>
+          </div>
+          <div class="storage-card">
+            <div class="title">
+              <div class="images"></div>
+              <div class="texts">
+                <p class="label">
+                  {{$t('OVERVIEW.REQUEST_MONTH')}}
+                </p>
+                <p class="numbers">
+                  {{originOverview.request[0]}}
+                  <span>{{originOverview.request[1]}}</span>
+                </p>
               </div>
             </div>
-            <div class="storage-card">
-              <div class="title">
-                <div class="images"></div>
-                <div class="texts">
-                  <p class="label">
-                    {{$t('OVERVIEW.REQUEST_MONTH')}}
-                  </p>
-                  <p class="numbers">
-                    {{originOverview.request[0]}}
-                    <span>{{originOverview.request[1]}}</span>
-                  </p>
-                </div>
-              </div>
-              <div class="charts">
-                <chart :options="requestOptions"
-                      auto-resize
-                      ref="requestLine"></chart>
-              </div>
+            <div class="charts">
+              <chart :options="requestOptions"
+                     auto-resize
+                     ref="requestLine"></chart>
             </div>
           </div>
         </div>
-        <div class="file-ruler">
-          <div class="section-separator">
-            <div class="separator-body">
-              <span class="separator-icon"></span>
-              <span class="separator-info">{{$t('OVERVIEW.FILE_RULES')}}</span>
+      </div>
+      <div class="file-ruler">
+        <div class="section-separator">
+          <div class="separator-body">
+            <span class="separator-icon"></span>
+            <span class="separator-info">{{$t('OVERVIEW.FILE_RULES')}}</span>
+          </div>
+        </div>
+        <div class="card-section">
+          <div class="file-ruler-card">
+            <p class="file-ruler-card-title">{{$t('STORAGE.FILE_PERMISSIONS')}}</p>
+            <div class="file-ruler-card-body">
+              <p>
+                <span>{{permissionsList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
+            </div>
+            <div class="file-ruler-card-hover">
+              <Button v-if="permissionsList.length === 0"
+                      type="primary"
+                      @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
+              <Button v-else
+                      type="primary"
+                      @click="showPermissionModal = true">{{$t('OVERVIEW.MORE')}}</Button>
             </div>
           </div>
-          <div class="card-section">
-            <div class="file-ruler-card">
-              <p class="file-ruler-card-title">{{$t('STORAGE.FILE_PERMISSIONS')}}</p>
-              <div class="file-ruler-card-body">
-                <p>
-                  <span>{{permissionsList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
-              </div>
-              <div class="file-ruler-card-hover">
-                <Button v-if="permissionsList.length === 0"
-                        type="primary"
-                        @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
-                <Button v-else
-                        type="primary"
-                        @click="showPermissionModal = true">{{$t('OVERVIEW.MORE')}}</Button>
-              </div>
+          <div class="file-ruler-card">
+            <p class="file-ruler-card-title">{{$t('OVERVIEW.CUSTOM_DOMAIN')}}</p>
+            <div class="file-ruler-card-body">
+              <p>
+                <span>0</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
             </div>
-            <div class="file-ruler-card">
-              <p class="file-ruler-card-title">{{$t('OVERVIEW.CUSTOM_DOMAIN')}}</p>
-              <div class="file-ruler-card-body">
-                <p>
-                  <span>0</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
-              </div>
-              <div class="file-ruler-card-hover waiting">
-                <p class="waiting">{{$t('OVERVIEW.COMING_SOON')}}</p>
-              </div>
+            <div class="file-ruler-card-hover waiting">
+              <p class="waiting">{{$t('OVERVIEW.COMING_SOON')}}</p>
             </div>
-            <div class="file-ruler-card">
-              <p class="file-ruler-card-title">{{$t('STORAGE.MIRROR')}}</p>
-              <div class="file-ruler-card-body">
-                <p>
-                  <span>{{sourceList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
-              </div>
-              <div class="file-ruler-card-hover">
-                <Button v-if="sourceList.length === 0"
-                        type="primary"
-                        @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
-                <Button v-else
-                        type="primary"
-                        @click="showSourceModal = true">{{$t('OVERVIEW.MORE')}}</Button>
-              </div>
+          </div>
+          <div class="file-ruler-card">
+            <p class="file-ruler-card-title">{{$t('STORAGE.MIRROR')}}</p>
+            <div class="file-ruler-card-body">
+              <p>
+                <span>{{sourceList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
             </div>
-            <div class="file-ruler-card">
-              <p class="file-ruler-card-title">{{$t('SETTINGS.SECURITY_CHAIN')}}</p>
-              <div class="file-ruler-card-body">
-                <p>
-                  <span>{{accessList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
-              </div>
-              <div class="file-ruler-card-hover">
-                <Button v-if="accessList.length === 0"
-                        type="primary"
-                        @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
-                <Button v-else
-                        type="primary"
-                        @click="showAccessModal = true">{{$t('OVERVIEW.MORE')}}</Button>
-              </div>
+            <div class="file-ruler-card-hover">
+              <Button v-if="sourceList.length === 0"
+                      type="primary"
+                      @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
+              <Button v-else
+                      type="primary"
+                      @click="showSourceModal = true">{{$t('OVERVIEW.MORE')}}</Button>
+            </div>
+          </div>
+          <div class="file-ruler-card">
+            <p class="file-ruler-card-title">{{$t('SETTINGS.SECURITY_CHAIN')}}</p>
+            <div class="file-ruler-card-body">
+              <p>
+                <span>{{accessList.length}}</span>{{$t('OVERVIEW.BUCKET_SETED_NUM')}}</p>
+            </div>
+            <div class="file-ruler-card-hover">
+              <Button v-if="accessList.length === 0"
+                      type="primary"
+                      @click="gotoBucket">{{$t('OVERVIEW.GO_SETTING')}}</Button>
+              <Button v-else
+                      type="primary"
+                      @click="showAccessModal = true">{{$t('OVERVIEW.MORE')}}</Button>
             </div>
           </div>
         </div>
-        <div class="file-handle">
-          <div class="section-separator">
-            <div class="separator-body">
-              <span class="separator-icon"></span>
-              <span class="separator-info">{{$t('OVERVIEW.FILE_HANDLER')}}</span>
+      </div>
+      <div class="file-handle">
+        <div class="section-separator">
+          <div class="separator-body">
+            <span class="separator-icon"></span>
+            <span class="separator-info">{{$t('OVERVIEW.FILE_HANDLER')}}</span>
+          </div>
+        </div>
+        <div class="card-section">
+          <div class="file-ruler-card">
+            <p class="file-ruler-card-title">{{$t('OVERVIEW.PIC_SERVICE')}}</p>
+            <div class="file-ruler-card-body">
+              <p>{{$t('OVERVIEW.PIC_SERVICE_INFO')}}</p>
+            </div>
+            <div class="file-ruler-card-hover">
+              <Button type="primary"
+                      @click="showPictureModal = true">{{$t('OVERVIEW.MORE')}}</Button>
             </div>
           </div>
-          <div class="card-section">
-            <div class="file-ruler-card">
-              <p class="file-ruler-card-title">{{$t('OVERVIEW.PIC_SERVICE')}}</p>
-              <div class="file-ruler-card-body">
-                <p>{{$t('OVERVIEW.PIC_SERVICE_INFO')}}</p>
-              </div>
-              <div class="file-ruler-card-hover">
-                <Button type="primary"
-                        @click="showPictureModal = true">{{$t('OVERVIEW.MORE')}}</Button>
-              </div>
+          <div class="file-ruler-card">
+            <p class="file-ruler-card-title">{{$t('STORAGE.PIC_IDEN')}}</p>
+            <div class="file-ruler-card-body">
+              <p>{{$t('OVERVIEW.PIC_ADULT_INFO')}}</p>
             </div>
-            <div class="file-ruler-card">
-              <p class="file-ruler-card-title">{{$t('STORAGE.PIC_IDEN')}}</p>
-              <div class="file-ruler-card-body">
-                <p>{{$t('OVERVIEW.PIC_ADULT_INFO')}}</p>
-              </div>
-              <div class="file-ruler-card-hover phone">
-                <p class="waiting">{{$t('OVERVIEW.CONTACT_BUSINESS')}}</p>
-              </div>
+            <div class="file-ruler-card-hover phone">
+              <p class="waiting">{{$t('OVERVIEW.CONTACT_BUSINESS')}}</p>
             </div>
-            <div class="file-ruler-card">
-              <p class="file-ruler-card-title">{{$t('OVERVIEW.VIDEO_SERICE')}}</p>
-              <div class="file-ruler-card-body">
-                <p>{{$t('OVERVIEW.VIDEO_SERICE_INFO')}}</p>
-              </div>
-              <div class="file-ruler-card-hover">
-                <Button type="primary"
-                        @click="gotoVideoTemplate">{{$t('OVERVIEW.MORE')}}</Button>
-              </div>
+          </div>
+          <div class="file-ruler-card">
+            <p class="file-ruler-card-title">{{$t('OVERVIEW.VIDEO_SERICE')}}</p>
+            <div class="file-ruler-card-body">
+              <p>{{$t('OVERVIEW.VIDEO_SERICE_INFO')}}</p>
+            </div>
+            <div class="file-ruler-card-hover">
+              <Button type="primary"
+                      @click="gotoVideoTemplate">{{$t('OVERVIEW.MORE')}}</Button>
             </div>
           </div>
         </div>
+      </div>
       </Col>
       <Col span="5"
            class="right-section">
-        <div class="button-section">
-          <a href="http://doc.bscstorage.com/faq-pub.html"
-            target="_blank">
-            <Button type="primary">FAQ</Button>
-          </a>
-          <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"
-            target="_blank">
-            <Button type="primary">SDK</Button>
-          </a>
-          <a href="http://doc.bscstorage.com/console-use/console-use.html"
-            target="_blank">
-            <Button type="primary">{{$t('OVERVIEW.DOC')}}</Button>
-          </a>
-        </div>
-        <div class="bucket-section">
-          <div class="section-separator">
-            <div class="separator-body">
-              <span class="separator-icon"></span>
-              <span class="separator-info">{{$t('SIDEBAR.BUCKET')}}</span>
-            </div>
-          </div>
-          <div class="bucket"
-              @click="gotoBucket">
-            <p>{{bucketNum}}</p>
-            <p>Bucket</p>
-          </div>
-          <div class="buttons">
-            <Button size="small"
-                    type="primary"
-                    @click="createBucketModal = true">{{$t('STORAGE.ADD_BUCKET')}}</Button>
-            <Button size="small"
-                    type="ghost"
-                    @click="gotoKeychain">{{$t('OVERVIEW.MY_KEYCHAIN')}}</Button>
+      <div class="button-section">
+        <a href="http://doc.bscstorage.com/faq-pub.html"
+           target="_blank">
+          <Button type="primary">FAQ</Button>
+        </a>
+        <a href="http://doc.bscstorage.com/doc/s2/demo/python.html"
+           target="_blank">
+          <Button type="primary">SDK</Button>
+        </a>
+        <a href="http://doc.bscstorage.com/console-use/console-use.html"
+           target="_blank">
+          <Button type="primary">{{$t('OVERVIEW.DOC')}}</Button>
+        </a>
+      </div>
+      <div class="bucket-section">
+        <div class="section-separator">
+          <div class="separator-body">
+            <span class="separator-icon"></span>
+            <span class="separator-info">{{$t('SIDEBAR.BUCKET')}}</span>
           </div>
         </div>
-        <div class="update-history">
-          <div class="section-separator">
-            <div class="separator-body">
-              <span class="separator-icon"></span>
-              <span class="separator-info">{{$t('OVERVIEW.PRODUCT_UPDATE')}}</span>
-            </div>
-          </div>
-          <Timeline>
-            <TimelineItem>
-              <span slot="before">2017.12.20</span>
-              <div slot="dot"
-                  class="timeline-dot"></div>
-              <span>全新概览页上线</span>
-            </TimelineItem>
-            <TimelineItem>
-              <span slot="before">2017.11.20</span>
-              <span>新版"统计分析"上线</span>
-            </TimelineItem>
-            <TimelineItem color="green">
-              <span slot="before">2017.10.12</span>
-              <span>{{$t('OVERVIEW.PRODUCT_UPDATE_1012')}}</span>
-            </TimelineItem>
-            <TimelineItem>
-              <span slot="before">2017.09.11</span>
-              <span>图片处理支持同步预处理</span>
-            </TimelineItem>
-            <TimelineItem>
-              <span slot="before">2017.07.22</span>
-              <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0722')}}</span>
-            </TimelineItem>
-            <TimelineItem>
-              <span slot="before">2017.05.08</span>
-              <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0508')}}</span>
-            </TimelineItem>
-            <TimelineItem>
-              <span slot="before">2017.04.10</span>
-              <span>主动转码上线</span>
-            </TimelineItem>
-            <TimelineItem>
-              <span slot="before">2017.03.05</span>
-              <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0305')}}</span>
-            </TimelineItem>
-            <TimelineItem>
-              <span slot="before">2017.01.11</span>
-              <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0111')}}</span>
-            </TimelineItem>
-            <TimelineItem style="padding-bottom:0;">
-              <span slot="before">2016.12.10</span>
-              <span>图片处理支持图片瘦身</span>
-            </TimelineItem>
-          </Timeline>
+        <div class="bucket"
+             @click="gotoBucket">
+          <p>{{bucketNum}}</p>
+          <p>Bucket</p>
         </div>
+        <div class="buttons">
+          <Button size="small"
+                  type="primary"
+                  @click="createBucketModal = true">{{$t('STORAGE.ADD_BUCKET')}}</Button>
+          <Button size="small"
+                  type="ghost"
+                  @click="gotoKeychain">{{$t('OVERVIEW.MY_KEYCHAIN')}}</Button>
+        </div>
+      </div>
+      <div class="update-history">
+        <div class="section-separator">
+          <div class="separator-body">
+            <span class="separator-icon"></span>
+            <span class="separator-info">{{$t('OVERVIEW.PRODUCT_UPDATE')}}</span>
+          </div>
+        </div>
+        <Timeline>
+          <TimelineItem>
+            <span slot="before">2017.12.20</span>
+            <div slot="dot"
+                 class="timeline-dot"></div>
+            <span>全新概览页上线</span>
+          </TimelineItem>
+          <TimelineItem>
+            <span slot="before">2017.11.20</span>
+            <span>新版"统计分析"上线</span>
+          </TimelineItem>
+          <TimelineItem color="green">
+            <span slot="before">2017.10.12</span>
+            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_1012')}}</span>
+          </TimelineItem>
+          <TimelineItem>
+            <span slot="before">2017.09.11</span>
+            <span>图片处理支持同步预处理</span>
+          </TimelineItem>
+          <TimelineItem>
+            <span slot="before">2017.07.22</span>
+            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0722')}}</span>
+          </TimelineItem>
+          <TimelineItem>
+            <span slot="before">2017.05.08</span>
+            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0508')}}</span>
+          </TimelineItem>
+          <TimelineItem>
+            <span slot="before">2017.04.10</span>
+            <span>主动转码上线</span>
+          </TimelineItem>
+          <TimelineItem>
+            <span slot="before">2017.03.05</span>
+            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0305')}}</span>
+          </TimelineItem>
+          <TimelineItem>
+            <span slot="before">2017.01.11</span>
+            <span>{{$t('OVERVIEW.PRODUCT_UPDATE_0111')}}</span>
+          </TimelineItem>
+          <TimelineItem style="padding-bottom:0;">
+            <span slot="before">2016.12.10</span>
+            <span>图片处理支持图片瘦身</span>
+          </TimelineItem>
+        </Timeline>
+      </div>
       </Col>
     </Row>
     <Modal v-model="showPermissionModal"
@@ -863,9 +865,10 @@ export default {
             )
           }
         } else if (
-          grant.Grantee.URI &&
-          grant.Grantee.URI ===
-            'http://acs.amazonaws.com/groups/global/AuthenticatedUsers'
+          grant.Grantee.Type === 'CanonicalUser' ||
+          (grant.Grantee.URI &&
+            grant.Grantee.URI ===
+              'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
         ) {
           if (grant.Permission === 'READ') {
             permissions.AuthUser.push(this.$t('STORAGE.READ'))
@@ -887,9 +890,7 @@ export default {
         ? item.unit === 'byte'
           ? bytesSpliteUnits(item.value, 3)
           : timesSpliteUnits(item.value, 3)
-        : item.unit === 'byte'
-          ? bytes(item.value)
-          : times(item.value)
+        : item.unit === 'byte' ? bytes(item.value) : times(item.value)
     },
     getApiURL() {
       let path = '?custom_range=' + this.dateRange

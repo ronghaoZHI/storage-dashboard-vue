@@ -797,9 +797,10 @@ const convertGrants = (grants) => {
       ) {
         convertPermission(gropItemsDefault[0], grant.Permission)
       } else if (
-        grant.Grantee.URI &&
-        grant.Grantee.URI ===
-          'http://acs.amazonaws.com/groups/global/AuthenticatedUsers'
+        grant.Grantee.Type === 'CanonicalUser' ||
+        (grant.Grantee.URI &&
+          grant.Grantee.URI ===
+            'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
       ) {
         convertPermission(gropItemsDefault[1], grant.Permission)
       } else if (grant.Grantee.ID) {
