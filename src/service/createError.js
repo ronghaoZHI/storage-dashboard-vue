@@ -1,5 +1,6 @@
 import iView from 'iview-bsc'
 import xml2js from 'xml2js'
+import { sentMessage } from './Helper'
 
 const codeMessage = {
   OFF_LINE: '抱歉，您貌似还没连接到网络，请检查网络连接',
@@ -28,7 +29,6 @@ const xml2json = (data) => {
   })
   return jsonData
 }
-
 
 export default function createError(responseError) {
   let [code, errorMsg, response] = ['', '', {}]
@@ -101,6 +101,8 @@ export default function createError(responseError) {
   if (!errorMsg) {
     errorMsg = codeMessage[code] || response.statusText || `抱歉，当前请求异常(${code})`
   }
+
+  sentMessage(errorMsg, responseError)
   iView.Notice.error({
     title: `请求错误 ${code}`,
     desc: errorMsg,

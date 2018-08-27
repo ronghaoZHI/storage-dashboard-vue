@@ -5,6 +5,7 @@ import { aws4 } from '@/service/aws4/aws4'
 import { getKey } from '@/service/Aws'
 import { logout, isSSOLogin } from '@/service/Helper'
 import createError from './createError'
+import { sentMessage } from './Helper'
 
 const STATUS_CODE = {
   401: '抱歉，您貌似还没有登录',
@@ -69,10 +70,12 @@ http.interceptors.request.use(
 // storage-api convert error to success
 function errorHandle(data) {
   if (data.error && data.error.status_code >= 400) {
-    iView.Message.error(
-      `${STATUS_CODE[data.error.status_code] || ''} ${data.error.show_msg ||
+    const [code, msg] = [STATUS_CODE[data.error.status_code] || '', data.error.show_msg ||
         data.error.msg.message ||
-        data.error.msg}`,
+        data.error.msg]
+    sentMessage(msg, data)
+    iView.Message.error(
+      `${code} ${msg}`,
       1000
     )
     return Promise.reject(data.error)
