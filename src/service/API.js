@@ -1,7 +1,7 @@
 import { HOST } from './HOST'
 
 const HTTP_VERSION = `${location.protocol}//`
-const VERSION = '/v1/'
+const VERSION = '/v2/'
 const VERSION_TRANSCODER = '/2012-09-25/'
 
 const group = (url) => HTTP_VERSION + HOST.apiHost + VERSION + url
@@ -11,7 +11,7 @@ const groupImgx = (url) => HTTP_VERSION + HOST.imgxHOST + url
 
 export const LOGIN = group('auth/login')
 export const LOGOUT = group('auth/logout')
-export const REPASSWORD = group('user/update/password')
+export const REPASSWORD = group('user/update/user')
 export const USERINFO = group('profile')
 export const getAccesskey = (username = '') =>
   group(username ? `accesskey?customer=${username}` : 'accesskey')
@@ -23,24 +23,20 @@ export const SSO_LOGOUT = `https://uc.portal.baishancloud.com/web/user/logout?la
   window.dashboard_conf.appID
 }`
 
+export const SSO_UPDATE_USER = group('sso/sso_update/user')
+
 export const REDIRECT_BUCKET = group('superuser/redirect/bucket')
 export const NODE = group('node/list')
-export const PARTITION = group('administrator/list/partition')
-export const SUB_USER = group('superuser/list/sub_user')
-export const CREATE_SUB_USER = group('superuser/create/sub_user')
-export const SUB_USER_ACL = group('superuser/list/sub_user_acl')
-export const UPDATE_SUB_USER_ACL = group('superuser/update/sub_user_acl')
-export const CREATE_USER = group('administrator/create/user')
-export const BOUND_USER = group('administrator/list/bound_user')
-export const ALL_USER = group('administrator/list/user')
-export const BIND_USER = group('administrator/bind/user')
-export const UNBIND_USER = group('administrator/unbind/user')
-
-export const CREATE_USER_SUPERADMIN = group('superadmin/create/user')
-export const BOUND_USER_SUPERADMIN = group('superadmin/list/bound_user')
-export const ALL_USER_SUPERADMIN = group('superadmin/list/user')
-export const BIND_USER_SUPERADMIN = group('superadmin/bind/user')
-export const UNBIND_USER_SUPERADMIN = group('superadmin/unbind/user')
+export const PARTITION = group('list/partition')
+export const SUB_USER = group('user/list/sub')
+export const CREATE_SUB_USER = group('user/create/sub_user')
+export const SUB_USER_ACL = group('user/list/sub_acl')
+export const UPDATE_SUB_USER_ACL = group('user/update/sub_acl')
+export const CREATE_USER = group('user/create/user')
+export const BOUND_USER = group('user/list/bound_user')
+export const ALL_USER = group('user/list/user')
+export const BIND_USER = group('user/bind/user')
+export const UNBIND_USER = group('user/unbind/user')
 
 export const GROUP_LIST = group('group/list')
 export const GROUP_MOVE = group('group/move')

@@ -26,13 +26,11 @@
                       :size="18"></Icon>
               </span>
               <input v-bfocus
-                     type="email"
-                     oninvalid="setCustomValidity('Requires your correct email')"
-                     onchange="try{setCustomValidity('')}catch(e){}"
-                     v-model="loginForm.email"
+                     type="text"
+                     v-model="loginForm.username"
                      required
                      autofocus
-                     placeholder="email" />
+                     placeholder="email / username" />
             </div>
             <div class="password">
               <span>
@@ -89,7 +87,8 @@
         </div>
         <div class="wrap">
           <div class="body">
-            <div v-if="subUserList.length > 0" class="card-wrap">
+            <div v-if="subUserList.length > 0"
+                 class="card-wrap">
               <div class="card-user"
                    v-for="user in searchedSubUserList"
                    :key="user.ts"
@@ -149,7 +148,7 @@ export default {
       isLogin: !(!!user.state && user.state.type === 'admin'),
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
       loginForm: {
-        email: localStorage.getItem('loginEmail'),
+        username: localStorage.getItem('loginEmail'),
         password: ''
       },
       showPassword: false,
@@ -165,7 +164,7 @@ export default {
         this.$Loading.start()
         // save user email
         this.keepEmail
-          ? localStorage.setItem('loginEmail', this.loginForm.email)
+          ? localStorage.setItem('loginEmail', this.loginForm.username)
           : localStorage.setItem('loginEmail', '')
         this.$http.post(LOGIN, { ...this.loginForm }).then(
           (res) => {

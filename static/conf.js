@@ -1,10 +1,10 @@
 // shit
 window.domain = 'baishancloud.com'
 window.dashboard_conf = {
-    apiHost: 'dashboardapi-ss.cwn.baishancloud.com:9090',
-    awsHost: 's2.i.qingcdn.com',
+    apiHost: '47.93.3.45:9090',
+    awsHost: '47.93.3.45',
     transcoderHOST: 'transcoder-ss.bscstorage.com',
-    onlineMode: 'True',
+    onlineMode: 'False',
     upgradeMode: 'False',
     appID: '6'
 }
