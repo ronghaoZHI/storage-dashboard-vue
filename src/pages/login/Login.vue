@@ -115,7 +115,8 @@
   </div>
 </template>
 <script>
-import { LOGIN, BOUND_USER, getAccesskey } from '@/service/API'
+import { loginByUsername } from 'api/login'
+import { BOUND_USER, getAccesskey } from '@/service/API'
 import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
@@ -166,7 +167,7 @@ export default {
         this.keepEmail
           ? localStorage.setItem('loginEmail', this.loginForm.username)
           : localStorage.setItem('loginEmail', '')
-        this.$http.post(LOGIN, { ...this.loginForm }).then(
+        loginByUsername({ ...this.loginForm }).then(
           (res) => {
             res.type === 'admin'
               ? this.adminMode(res)
