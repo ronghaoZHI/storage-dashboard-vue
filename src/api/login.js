@@ -32,3 +32,10 @@ export function deleteAccesskey(params, customer) {
     params,
   })
 }
+
+export function repassword(parmas, customer) {
+  return request(group('user/update/user', customer), {
+    method: 'post',
+    parmas,
+  })
+}

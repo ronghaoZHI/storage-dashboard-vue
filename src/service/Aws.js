@@ -1,8 +1,7 @@
 import iView from 'iview-bsc'
 import { HOST } from './HOST'
 import AWS from 'aws-sdk'
-import { getAccesskey } from './API'
-import axios from './request'
+import { getAccesskey } from 'api/login'
 import user from '@/store/modules/user'
 import { logout, isSSOLogin } from '@/service/Helper'
 
@@ -18,7 +17,7 @@ export const getKey = async () => {
           ? (awsKey = user.state.subUser.keys[0])
           : awsKey.accesskey
             ? awsKey
-            : axios.get(getAccesskey()).then((res) => (awsKey = res[0])))
+            : getAccesskey().then((res) => (awsKey = res[0])))
 }
 
 export const config = async ({

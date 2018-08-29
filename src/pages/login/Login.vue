@@ -115,8 +115,9 @@
   </div>
 </template>
 <script>
-import { loginByUsername } from 'api/login'
-import { BOUND_USER, getAccesskey } from '@/service/API'
+import { loginByUsername, getAccesskey } from 'api/login'
+import { BOUND_USER } from '@/service/API'
+import { checkRole } from 'helper'
 import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
@@ -146,7 +147,7 @@ export default {
     return {
       lang: store.state.lang,
       selectedCustomer: '',
-      isLogin: !(!!user.state && user.state.type === 'admin'),
+      isLogin: !checkRole('LIST_USERS'), // show selectSubuser Tab or not
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
       loginForm: {
         username: localStorage.getItem('loginEmail'),
@@ -214,7 +215,7 @@ export default {
       )
     },
     selectSubUser(user) {
-      this.$http.get(getAccesskey(user.username)).then((keys) => {
+      getAccesskey(user.username).then((keys) => {
         this.switchUser({
           ...this.userInfo,
           subUser: Object.assign(user, { keys }),

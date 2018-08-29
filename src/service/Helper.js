@@ -2,7 +2,8 @@ import store from '@/store'
 import iView from 'iview-bsc'
 import { clear } from '@/service/Aws'
 import router from '@/router'
-import { SSO_LOGOUT } from '@/service/API'
+import { SSO_LOGOUT } from 'api/sso'
+import createAlert from './createAlert'
 
 export const logout = async (message) => {
   message
@@ -53,6 +54,16 @@ export function getCookie(name) {
     }
   }
   return ''
+}
+
+export function checkRole(role, checkSub = false) {
+  const _store = store.default || store
+  const perm = checkSub ? _store.state.subUser.info.perm.flat() : _store.state.user.perm
+  if (Array.isArray(perm) && typeof role === 'string') {
+    return perm.includes(role)
+  } else {
+    createAlert('权限字段错误')
+  }
 }
 
 export function sentMessage(message, stak = '') {

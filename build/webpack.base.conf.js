@@ -25,6 +25,7 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'api': resolve('src/api'),
+      'helper': resolve('src/service/Helper'),
       querystring: 'querystring-browser'
     },
     symlinks: false

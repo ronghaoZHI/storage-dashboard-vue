@@ -46,9 +46,9 @@
 import {
   USERINFO,
   BOUND_USER,
-  getSSOLoginUrl,
 } from '@/service/API'
 import { getAccesskey } from 'api/login'
+import { getSSOLoginUrl } from 'api/sso'
 import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
@@ -70,7 +70,6 @@ export default {
   methods: {
     async saveToken() {
       let _token = this.$route.query.ticket || this.$store.token
-      let _router = this.$route.query.callback || '/bucket'
 
       if (_token) {
         try {
@@ -81,7 +80,7 @@ export default {
           console.log(error)
         }
       } else {
-        window.location = getSSOLoginUrl(_router)
+        window.location = getSSOLoginUrl()
       }
     },
     async getUserInfo() {

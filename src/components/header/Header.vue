@@ -57,9 +57,10 @@
 </template>
 <script>
 import Vue from 'vue'
-import { REPASSWORD, BOUND_USER } from '@/service/API'
+import { BOUND_USER } from '@/service/API'
+import { repassword } from 'api/login'
 import { clear } from '@/service/Aws'
-import { logout, getCookie, createCookie } from '@/service/Helper'
+import { logout, getCookie, createCookie, checkRole } from 'helper'
 import user from '@/store/modules/user'
 import store from '@/store'
 export default {
@@ -86,7 +87,7 @@ export default {
   },
   computed: {
     uname: function() {
-      return user.state.type === 'admin' && user.state.subUser
+      return checkRole('LIST_USERS') && user.state.subUser
         ? `${this.username} -- ${user.state.subUser.username}`
         : this.username
     },
@@ -97,7 +98,7 @@ export default {
       return this.$store.state.miniMenu
     },
     isAdminMode() {
-      return user.state.type === 'admin'
+      return checkRole('LIST_USERS')
     }
   },
   methods: {
@@ -129,7 +130,7 @@ export default {
         return false
       }
       try {
-        await this.$http.post(REPASSWORD, {
+        await repassword({
           email: user.state.email,
           password: this.rePasswordForm.password
         })

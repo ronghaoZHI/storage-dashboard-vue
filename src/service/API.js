@@ -9,23 +9,7 @@ const groupTranscoder = (url) =>
   HTTP_VERSION + HOST.transcoderHOST + VERSION_TRANSCODER + url
 const groupImgx = (url) => HTTP_VERSION + HOST.imgxHOST + url
 
-export const LOGIN = group('auth/login')
-export const LOGOUT = group('auth/logout')
-export const REPASSWORD = group('user/update/user')
-export const USERINFO = group('profile')
-export const getAccesskey = (username = '') =>
-  group(username ? `accesskey?customer=${username}` : 'accesskey')
-export const getSSOLoginUrl = (callback = '') =>
-  `https://uc.baishancloud.com/web/user/checkLogin?language=1&appId=${
-    window.dashboard_conf.appID
-  }`
-export const SSO_LOGOUT = `https://uc.portal.baishancloud.com/web/user/logout?language=1&appId=${
-  window.dashboard_conf.appID
-}`
-
-export const SSO_UPDATE_USER = group('sso/sso_update/user')
-
-export const REDIRECT_BUCKET = group('user/redirect/bucket')
+export const REDIRECT_BUCKET = group('superuser/redirect/bucket')
 export const NODE = group('node/list')
 export const PARTITION = group('list/partition')
 export const SUB_USER = group('user/list/sub')

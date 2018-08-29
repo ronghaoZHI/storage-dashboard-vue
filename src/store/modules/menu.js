@@ -1,4 +1,5 @@
 import user from './user'
+import createAlert from '@/service/createAlert'
 
 import iconOverview from '../../assets/overview.png'
 import iconBucket from '../../assets/icon-bucket.png'
@@ -11,43 +12,43 @@ import iconVideo from '../../assets/icon-video.png'
 const systemChildren = [
   {
     index: 1,
-    name: 'group'
+    name: 'group',
   },
   {
     index: 2,
-    name: 'partition'
+    name: 'partition',
   },
   {
     index: 3,
-    name: 'traffic'
+    name: 'traffic',
   },
   {
     index: 4,
-    name: 'machine'
-  }
+    name: 'machine',
+  },
 ]
 
 const videoChildren = [
   {
     index: 1,
-    name: 'template'
+    name: 'template',
   },
   {
     index: 2,
-    name: 'pipeline'
+    name: 'pipeline',
   },
   {
     index: 3,
-    name: 'output'
+    name: 'output',
   },
   {
     index: 4,
-    name: 'job'
+    name: 'job',
   },
   {
     index: 5,
-    name: 'statistics'
-  }
+    name: 'statistics',
+  },
 ]
 
 const overview = {
@@ -57,8 +58,8 @@ const overview = {
   meta: {
     show: true,
     icon: iconOverview,
-    role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN']
-  }
+    role: ['BASE'],
+  },
 }
 
 const bucket = {
@@ -67,14 +68,8 @@ const bucket = {
   meta: {
     show: true,
     icon: iconBucket,
-    role: [
-      'ONLINE_SUB',
-      'ONLINE_NORMAL',
-      'ONLINE_SUPRER',
-      'ONLINE_ADMIN',
-      'SUPER_ADMIN'
-    ]
-  }
+    role: ['BASE', 'SUBUSER'],
+  },
 }
 
 const dashboard = {
@@ -83,8 +78,8 @@ const dashboard = {
   meta: {
     show: true,
     icon: iconDashboard,
-    role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN']
-  }
+    role: ['BASE'],
+  },
 }
 
 const keychain = {
@@ -93,14 +88,8 @@ const keychain = {
   meta: {
     show: true,
     icon: iconKey,
-    role: [
-      'ONLINE_SUB',
-      'ONLINE_NORMAL',
-      'ONLINE_SUPRER',
-      'ONLINE_ADMIN',
-      'SUPER_ADMIN'
-    ]
-  }
+    role: ['BASE', 'SUBUSER'],
+  },
 }
 
 const system = {
@@ -109,9 +98,9 @@ const system = {
   meta: {
     show: true,
     icon: iconSystem,
-    role: ['SUPER_ADMIN']
+    role: ['OPS'],
   },
-  children: systemChildren
+  children: systemChildren,
 }
 
 const video = {
@@ -121,8 +110,8 @@ const video = {
   meta: {
     show: window.dashboard_conf.appID === '6',
     icon: iconVideo,
-    role: ['ONLINE_NORMAL', 'ONLINE_SUPRER', 'ONLINE_ADMIN', 'SUPER_ADMIN']
-  }
+    role: ['TRANSCODE'],
+  },
 }
 
 const userManage = {
@@ -131,47 +120,29 @@ const userManage = {
   meta: {
     show: true,
     icon: iconUser,
-    role: [
-      'ONLINE_ADMIN_NO_SUBSUER',
-      'ONLINE_SUPRER',
-      'ONLINE_ADMIN',
-      'SUPER_ADMIN'
-    ]
-  }
-}
-
-const isSuper = () => {
-  const userInfo = user.state.subUserList.filter(
-    (item) => item.username === user.state.subUser.username
-  )
-  return userInfo && userInfo[0].info.type === 'super'
-}
-
-const getRole = () => {
-  const userType = user.state.type
-  switch (userType) {
-    case 'superadmin':
-      return 'SUPER_ADMIN'
-    case 'admin':
-      return user.state.subUser
-        ? isSuper()
-          ? 'ONLINE_ADMIN'
-          : 'ONLINE_NORMAL'
-        : 'ONLINE_ADMIN_NO_SUBSUER'
-    case 'super':
-      return 'ONLINE_SUPRER'
-    case 'sub':
-      return 'ONLINE_SUB'
-    default:
-      return 'ONLINE_NORMAL'
-  }
+    role: ['CREATE_USER', 'BIND_USER', 'LIST_USERS', 'WRITE_USER', 'SUB'],
+  },
 }
 
 const hasPermission = (role, route) => {
   if (route.meta && route.meta.role) {
-    return route.meta.role.indexOf(role) >= 0
+    return (new Set(route.meta.role.concat(role))).size < (route.meta.role.length + role.length)
   } else {
     return true
+  }
+}
+
+const getRole = () => {
+  // if user's type is subuser, 'user.state.perm'.length === 0
+  console.log(user.state.subUser.info.perm)
+  const perm = user.state.subUser ? user.state.subUser.info.perm[1] : user.state.perm
+
+  if(Array.isArray(perm)) {
+    return perm.length > 0
+    ? perm
+    : ['SUBUSER']
+  } else {
+    createAlert('权限字段错误')
   }
 }
 
@@ -183,7 +154,7 @@ const getMenuList = () => {
     keychain,
     system,
     video,
-    userManage
+    userManage,
   ]
   const role = getRole()
   const accessMenu = list.filter((m) => {
@@ -203,28 +174,28 @@ const getMenuList = () => {
 }
 
 const state = {
-  menuList: getMenuList()
+  menuList: getMenuList(),
 }
 
 const mutations = {
   REFRESH_MENU(state) {
     state.menuList = getMenuList()
-  }
+  },
 }
 
 const getters = {
-  menuList: (state) => state.menuList
+  menuList: (state) => state.menuList,
 }
 
 const actions = {
   refreshMenu({ commit }) {
     commit('REFRESH_MENU')
-  }
+  },
 }
 
 export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 }
