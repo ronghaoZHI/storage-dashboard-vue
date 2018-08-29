@@ -47,8 +47,8 @@ import {
   USERINFO,
   BOUND_USER,
   getSSOLoginUrl,
-  getAccesskey
 } from '@/service/API'
+import { getAccesskey } from 'api/login'
 import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
@@ -124,7 +124,7 @@ export default {
       )
     },
     selectSubUser(user) {
-      this.$http.get(getAccesskey(user.username)).then((keys) => {
+      getAccesskey(user.username).then((keys) => {
         this.toIndex({
           ...this.userInfo,
           subUser: Object.assign(user, { keys }),
