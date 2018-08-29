@@ -63,6 +63,7 @@ export function checkRole(role, checkSub = false) {
     return perm.includes(role)
   } else {
     createAlert('权限字段错误')
+    return false
   }
 }
 
