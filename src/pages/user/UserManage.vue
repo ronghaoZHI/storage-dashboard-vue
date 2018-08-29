@@ -182,10 +182,7 @@ import {
   ALL_USER_SUPERADMIN,
   CREATE_USER,
   CREATE_USER_SUPERADMIN,
-  REDIRECT_BUCKET,
   SUB_USER,
-  SUB_USER_ACL,
-  UPDATE_SUB_USER_ACL,
   CREATE_SUB_USER,
   BIND_USER,
   BIND_USER_SUPERADMIN,
@@ -193,6 +190,7 @@ import {
   UNBIND_USER_SUPERADMIN,
   getSuperSubUserUrl
 } from '@/service/API'
+import { listSubAcl, createSub, redirectBucket, updateSubAcl } from 'api/user'
 export default {
   data() {
     return {
@@ -608,7 +606,7 @@ export default {
                 ? { bucket: bucket.Name, customer: user.state.subUser.username }
                 : { bucket: bucket.Name }
               this.bucketList = res.Buckets
-              return this.$http.get(SUB_USER_ACL, { params }).then((acl) => {
+              return listSubAcl({ params }).then((acl) => {
                 return { bucket: bucket.Name, acl: acl }
               })
             })
@@ -805,7 +803,7 @@ export default {
       } else {
         try {
           this.$Loading.start()
-          let user = await this.$http.post(CREATE_SUB_USER, {
+          let user = await createSub({
             ...this.createSubUserForm,
             type: 'sub'
           })
@@ -815,7 +813,7 @@ export default {
                 convertObject2Array(bucket.bucket_acl_obj).length > 0 ||
                 convertObject2Array(bucket.file_acl_obj).length > 0
               ) {
-                return this.$http.post(REDIRECT_BUCKET, {
+                return redirectBucket({
                   original: bucket.bucket,
                   email: user.email,
                   redirect:
@@ -862,13 +860,13 @@ export default {
         await Promise.all(
           Array.map(this.createSubUserForm.acl, (acl) => {
             return acl.redirect
-              ? this.$http.post(UPDATE_SUB_USER_ACL, {
+              ? updateSubAcl({
                   email: this.createSubUserForm.email,
                   bucket: acl.bucket,
                   bucket_acl: convertObject2Array(acl.bucket_acl_obj),
                   file_acl: convertObject2Array(acl.file_acl_obj)
                 })
-              : this.$http.post(REDIRECT_BUCKET, {
+              : redirectBucket({
                   email: this.createSubUserForm.email,
                   original: acl.bucket,
                   redirect:

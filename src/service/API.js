@@ -25,7 +25,7 @@ export const SSO_LOGOUT = `https://uc.portal.baishancloud.com/web/user/logout?la
 
 export const SSO_UPDATE_USER = group('sso/sso_update/user')
 
-export const REDIRECT_BUCKET = group('superuser/redirect/bucket')
+export const REDIRECT_BUCKET = group('user/redirect/bucket')
 export const NODE = group('node/list')
 export const PARTITION = group('list/partition')
 export const SUB_USER = group('user/list/sub')
