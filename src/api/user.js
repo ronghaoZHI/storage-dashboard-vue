@@ -1,7 +1,6 @@
 import group from './util'
 import request from '@/service/request'
 
-
 export function updateUser(data, customer) {
   return request(group('/user/update/user', customer), {
     method: 'post',
@@ -95,7 +94,7 @@ export function addService(data, customer) {
     data
   })
 }
-export function removeService(data) {
+export function removeService(data, customer) {
   return request(group('user/remove/service', customer), {
     method: 'post',
     data
