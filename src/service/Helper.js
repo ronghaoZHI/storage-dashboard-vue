@@ -58,7 +58,7 @@ export function getCookie(name) {
 
 export function checkRole(role, checkSub = false) {
   const _store = store.default || store
-  const perm = checkSub ? _store.state.subUser.info.perm.flat() : _store.state.user.perm
+  const perm = checkSub ? _store.state.subUser.info.perm.flat() : _store.state.user.perms
   if (Array.isArray(perm) && typeof role === 'string') {
     return perm.includes(role)
   } else {

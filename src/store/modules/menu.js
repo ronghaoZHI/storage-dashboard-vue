@@ -134,15 +134,14 @@ const hasPermission = (role, route) => {
 
 const getRole = () => {
   // if user's type is subuser, 'user.state.perm'.length === 0
-  console.log(user.state.subUser.info.perm)
-  const perm = user.state.subUser ? user.state.subUser.info.perm[1] : user.state.perm
-
+  const perm = user.state && user.state.subUser ? user.state.subUser.info.perm[1] : user.state.perms
   if(Array.isArray(perm)) {
     return perm.length > 0
     ? perm
     : ['SUBUSER']
   } else {
     createAlert('权限字段错误')
+    return []
   }
 }
 
