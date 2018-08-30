@@ -188,7 +188,7 @@ import {
   BIND_USER_SUPERADMIN,
   UNBIND_USER,
   UNBIND_USER_SUPERADMIN,
-  getSuperSubUserUrl
+  getSuperSubUserUrl,
 } from '@/service/API'
 import { listSubAcl, createSub, redirectBucket, updateSubAcl } from 'api/user'
 export default {
@@ -222,19 +222,19 @@ export default {
           user.state.type === 'super' && user.state.super_level === 'high'
             ? 'super'
             : 'normal',
-        super_level: 'low'
+        super_level: 'low',
       },
       userRuleValidate: {
         username: [
-          { required: true, message: 'Requires user name', trigger: 'blur' }
+          { required: true, message: 'Requires user name', trigger: 'blur' },
         ],
         email: [
           { required: true, message: 'Requires email', trigger: 'blur' },
           {
             type: 'email',
             message: 'Email format is incorrect',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         password: [
           { required: true, message: 'Requires password', trigger: 'blur' },
@@ -242,17 +242,17 @@ export default {
             type: 'string',
             min: 6,
             message: 'Requires 6 characters',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         company: [
           { required: true, message: 'Requires company', trigger: 'blur' },
           {
             type: 'string',
             message: 'Company format is incorrect',
-            trigger: 'blur'
-          }
-        ]
+            trigger: 'blur',
+          },
+        ],
       },
       createSubUserForm: initSubUser(),
       subUserRuleValidate: {
@@ -263,23 +263,23 @@ export default {
               if (!/^[a-zA-Z0-9_]+$/.test(value)) {
                 callback(
                   new Error(
-                    'Username can only contain letters , numbers and underlines'
-                  )
+                    'Username can only contain letters , numbers and underlines',
+                  ),
                 )
               } else {
                 callback()
               }
             },
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         email: [
           { required: true, message: 'Requires email', trigger: 'blur' },
           {
             type: 'email',
             message: 'Email format is incorrect',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         password: [
           { required: true, message: 'Requires password', trigger: 'blur' },
@@ -287,17 +287,17 @@ export default {
             type: 'string',
             min: 6,
             message: 'Requires 6 characters',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         company: [
           { required: true, message: 'Requires company', trigger: 'blur' },
           {
             type: 'string',
             message: 'Company format is incorrect',
-            trigger: 'blur'
-          }
-        ]
+            trigger: 'blur',
+          },
+        ],
       },
       userHeader:
         user.state && user.state.type === 'superadmin'
@@ -306,19 +306,19 @@ export default {
                 title: 'User name',
                 width: 150,
                 align: 'left',
-                key: 'username'
+                key: 'username',
               },
               {
                 title: 'Type',
                 width: 120,
                 align: 'left',
-                key: 'type'
+                key: 'type',
               },
               {
                 title: 'Email',
                 width: 200,
                 align: 'left',
-                key: 'email'
+                key: 'email',
               },
               {
                 title: 'Creation time',
@@ -326,13 +326,13 @@ export default {
                 align: 'left',
                 render: (h, params) => {
                   let creationTime = new Date(
-                    parseInt(params.row.ts.toString().substr(0, 13))
+                    parseInt(params.row.ts.toString().substr(0, 13)),
                   )
                   const formatTime = moment(creationTime).format(
-                    'YYYY-MM-DD hh:mm:ss'
+                    'YYYY-MM-DD hh:mm:ss',
                   )
                   return h('div', [formatTime])
-                }
+                },
               },
               {
                 title: 'Actions',
@@ -344,18 +344,18 @@ export default {
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.unbindUserConfirm(params.row, params.index)
-                        }
-                      }
+                        },
+                      },
                     },
-                    'Unbind'
+                    'Unbind',
                   )
-                }
-              }
+                },
+              },
             ]
           : user.state && user.state.type === 'admin' && !isSuper()
             ? [
@@ -363,25 +363,25 @@ export default {
                   title: 'User name',
                   width: 150,
                   align: 'left',
-                  key: 'username'
+                  key: 'username',
                 },
                 {
                   title: 'Type',
                   width: 120,
                   align: 'left',
-                  key: 'type'
+                  key: 'type',
                 },
                 {
                   title: 'Company',
                   width: 200,
                   align: 'left',
-                  key: 'company'
+                  key: 'company',
                 },
                 {
                   title: 'Email',
                   width: 200,
                   align: 'left',
-                  key: 'email'
+                  key: 'email',
                 },
                 {
                   title: 'Creation time',
@@ -389,13 +389,13 @@ export default {
                   align: 'left',
                   render: (h, params) => {
                     let creationTime = new Date(
-                      parseInt(params.row.ts.toString().substr(0, 13))
+                      parseInt(params.row.ts.toString().substr(0, 13)),
                     )
                     const formatTime = moment(creationTime).format(
-                      'YYYY-MM-DD hh:mm:ss'
+                      'YYYY-MM-DD hh:mm:ss',
                     )
                     return h('div', [formatTime])
-                  }
+                  },
                 },
                 {
                   title: 'Actions',
@@ -407,18 +407,18 @@ export default {
                       'i-button',
                       {
                         props: {
-                          size: 'small'
+                          size: 'small',
                         },
                         on: {
                           click: () => {
                             this.unbindUserConfirm(params.row, params.index)
-                          }
-                        }
+                          },
+                        },
                       },
-                      'Unbind'
+                      'Unbind',
                     )
-                  }
-                }
+                  },
+                },
               ]
             : user.state && user.state.type === 'admin' && isSuper()
               ? [
@@ -426,19 +426,19 @@ export default {
                     title: 'User name',
                     width: 150,
                     align: 'left',
-                    key: 'username'
+                    key: 'username',
                   },
                   {
                     title: 'Type',
                     width: 120,
                     align: 'left',
-                    key: 'type'
+                    key: 'type',
                   },
                   {
                     title: 'Email',
                     width: 250,
                     align: 'left',
-                    key: 'email'
+                    key: 'email',
                   },
                   {
                     title: 'Acl',
@@ -453,11 +453,11 @@ export default {
                               { props: { type: 'border' } },
                               `${acl.bucket} - bucket: ${
                                 acl.bucket_acl
-                              } - file: ${acl.file_acl}`
+                              } - file: ${acl.file_acl}`,
                             )
                           })
                         : 'No acl'
-                    }
+                    },
                   },
                   {
                     title: 'Creation time',
@@ -465,33 +465,33 @@ export default {
                     align: 'left',
                     render: (h, params) => {
                       let creationTime = new Date(
-                        parseInt(params.row.ts.toString().substr(0, 13))
+                        parseInt(params.row.ts.toString().substr(0, 13)),
                       )
                       const formatTime = moment(creationTime).format(
-                        'YYYY-MM-DD hh:mm:ss'
+                        'YYYY-MM-DD hh:mm:ss',
                       )
                       return h('div', [formatTime])
-                    }
-                  }
+                    },
+                  },
                 ]
               : [
                   {
                     title: 'User name',
                     width: 150,
                     align: 'left',
-                    key: 'username'
+                    key: 'username',
                   },
                   {
                     title: 'Type',
                     width: 120,
                     align: 'left',
-                    key: 'type'
+                    key: 'type',
                   },
                   {
                     title: 'Email',
                     width: 200,
                     align: 'left',
-                    key: 'email'
+                    key: 'email',
                   },
                   {
                     title: 'Acl',
@@ -506,11 +506,11 @@ export default {
                               { props: { type: 'border' } },
                               `${acl.bucket} - bucket: ${
                                 acl.bucket_acl
-                              } - file: ${acl.file_acl}`
+                              } - file: ${acl.file_acl}`,
                             )
                           })
                         : 'No acl'
-                    }
+                    },
                   },
                   {
                     title: 'Creation time',
@@ -518,13 +518,13 @@ export default {
                     align: 'left',
                     render: (h, params) => {
                       let creationTime = new Date(
-                        parseInt(params.row.ts.toString().substr(0, 13))
+                        parseInt(params.row.ts.toString().substr(0, 13)),
                       )
                       const formatTime = moment(creationTime).format(
-                        'YYYY-MM-DD hh:mm:ss'
+                        'YYYY-MM-DD hh:mm:ss',
                       )
                       return h('div', [formatTime])
-                    }
+                    },
                   },
                   {
                     title: 'Actions',
@@ -537,36 +537,36 @@ export default {
                           'i-button',
                           {
                             props: {
-                              size: 'small'
+                              size: 'small',
                             },
                             class: {
-                              'mar-r-5': true
+                              'mar-r-5': true,
                             },
                             on: {
                               click: () => {
                                 this.editSubUserModal(params.row, params.index)
-                              }
-                            }
+                              },
+                            },
                           },
                           [
                             h('Icon', {
                               props: {
                                 type: 'compose',
-                                size: this.iconSize
-                              }
-                            })
-                          ]
-                        )
+                                size: this.iconSize,
+                              },
+                            }),
+                          ],
+                        ),
                       ])
-                    }
-                  }
-                ]
+                    },
+                  },
+                ],
     }
   },
   computed: {
     isAdminSuper() {
       return user.state && user.state.type === 'admin' && isSuper()
-    }
+    },
   },
   created() {
     this.getUserList()
@@ -581,16 +581,16 @@ export default {
             await this.$http.get(
               user.state.type === 'superadmin'
                 ? BOUND_USER_SUPERADMIN
-                : BOUND_USER
+                : BOUND_USER,
             ),
             (user) => {
               user.type = this.userType(user)
-            }
+            },
           )
           await this.$Loading.finish()
           await this.$store.dispatch('setUserInfo', {
             ...user.state,
-            subUserList: this.userList
+            subUserList: this.userList,
           })
         } else {
           let getSubUserURL = isSuper()
@@ -598,7 +598,7 @@ export default {
             : SUB_USER
           let [res, users] = await Promise.all([
             this.$store.dispatch('getBuckets'),
-            this.$http.get(getSubUserURL)
+            this.$http.get(getSubUserURL),
           ])
           let buckets = await Promise.all(
             Array.map(res.Buckets, (bucket) => {
@@ -609,7 +609,7 @@ export default {
               return listSubAcl({ params }).then((acl) => {
                 return { bucket: bucket.Name, acl: acl }
               })
-            })
+            }),
           )
           this.userList = _.each(users, (user) => {
             user.acl = []
@@ -626,7 +626,7 @@ export default {
                     bucket_acl_obj: convertArray2Object(acl.bucket_acl),
                     file_acl: acl.file_acl,
                     file_acl_obj: convertArray2Object(acl.file_acl),
-                    redirect: true
+                    redirect: true,
                   })
                 }
               })
@@ -648,13 +648,13 @@ export default {
         this.spinShow = true
         let [allUser, boundUser] = await Promise.all([
           this.$http.get(
-            user.state.type === 'superadmin' ? ALL_USER_SUPERADMIN : ALL_USER
+            user.state.type === 'superadmin' ? ALL_USER_SUPERADMIN : ALL_USER,
           ),
           this.$http.get(
             user.state.type === 'superadmin'
               ? BOUND_USER_SUPERADMIN
-              : BOUND_USER
-          )
+              : BOUND_USER,
+          ),
         ])
         let boundUserEmailList = []
         _.each(boundUser, (user) => {
@@ -683,7 +683,7 @@ export default {
         (item) =>
           reg.test(item.email) ||
           reg.test(item.username) ||
-          reg.test(item.company)
+          reg.test(item.company),
       )
     },
     handleSearchBindUser() {
@@ -694,7 +694,7 @@ export default {
       let searchArr = this.searchBindUserInput.split('')
       let reg = new RegExp(searchArr.join('.*'))
       this.searchBindUserList = this.boundUserList.filter(
-        (item) => reg.test(item.email) || reg.test(item.username)
+        (item) => reg.test(item.email) || reg.test(item.username),
       )
     },
     async bindUser() {
@@ -707,14 +707,14 @@ export default {
                 user.state.type === 'superadmin'
                   ? BIND_USER_SUPERADMIN
                   : BIND_USER,
-                { email: userinfo.email }
+                { email: userinfo.email },
               )
               this.searchBindUserInput = ''
               this.boundUserList = []
               this.searchUserInput = ''
               this.getUserList()
             }
-          })
+          }),
         ).then((res) => console.log(res), (err) => console.error(err))
         this.$Loading.finish()
       } catch (error) {
@@ -727,7 +727,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: 'Unbind',
-        onOk: () => this.unbindUser(user, index)
+        onOk: () => this.unbindUser(user, index),
       })
     },
     unbindUser(userinfo, index) {
@@ -736,7 +736,7 @@ export default {
           user.state.type === 'superadmin'
             ? UNBIND_USER_SUPERADMIN
             : UNBIND_USER,
-          { email: userinfo.email }
+          { email: userinfo.email },
         )
         .then((res) => {
           this.searchBindUserInput = ''
@@ -757,7 +757,7 @@ export default {
                 : user.state.type === 'superadmin'
                   ? CREATE_USER_SUPERADMIN
                   : CREATE_USER,
-              { ...self.createUserForm }
+              { ...self.createUserForm },
             )
             .then(
               (res) => {
@@ -766,7 +766,7 @@ export default {
                   email: '',
                   password: '',
                   company: '',
-                  type: 'normal'
+                  type: 'normal',
                 }
                 this.searchUserInput = ''
                 this.getUserList()
@@ -775,7 +775,7 @@ export default {
               },
               (e) => {
                 this.$Loading.error()
-              }
+              },
             )
         } else {
           this.$Message.error(this.$t('USER.CREATE_INFO'))
@@ -791,10 +791,10 @@ export default {
             return {
               bucket: bucket.Name,
               bucket_acl_obj: { READ: false, WRITE: false },
-              file_acl_obj: { READ: false }
+              file_acl_obj: { READ: false },
             }
-          })
-        )
+          }),
+        ),
       })
     },
     async createSubUser() {
@@ -805,7 +805,7 @@ export default {
           this.$Loading.start()
           let user = await createSub({
             ...this.createSubUserForm,
-            type: 'sub'
+            type: 'sub',
           })
           await Promise.all(
             Array.map(this.createSubUserForm.acl, (bucket) => {
@@ -821,10 +821,10 @@ export default {
                     '-' +
                     user.username.replace(/\W|_/g, '').toLowerCase(),
                   bucket_acl: convertObject2Array(bucket.bucket_acl_obj),
-                  file_acl: convertObject2Array(bucket.file_acl_obj)
+                  file_acl: convertObject2Array(bucket.file_acl_obj),
                 })
               }
-            })
+            }),
           )
           this.searchUserInput = ''
           this.getUserList()
@@ -848,10 +848,10 @@ export default {
                     bucket: bucket.Name,
                     bucket_acl_obj: { READ: false, WRITE: false },
                     file_acl_obj: { READ: false },
-                    redirect: false
+                    redirect: false,
                   }
-                })
-              })
+                }),
+              }),
       })
     },
     async editSubUser() {
@@ -864,7 +864,7 @@ export default {
                   email: this.createSubUserForm.email,
                   bucket: acl.bucket,
                   bucket_acl: convertObject2Array(acl.bucket_acl_obj),
-                  file_acl: convertObject2Array(acl.file_acl_obj)
+                  file_acl: convertObject2Array(acl.file_acl_obj),
                 })
               : redirectBucket({
                   email: this.createSubUserForm.email,
@@ -876,9 +876,9 @@ export default {
                       .replace(/\W|_/g, '')
                       .toLowerCase(),
                   bucket_acl: convertObject2Array(acl.bucket_acl_obj),
-                  file_acl: convertObject2Array(acl.file_acl_obj)
+                  file_acl: convertObject2Array(acl.file_acl_obj),
                 })
-          })
+          }),
         )
         this.searchUserInput = ''
         this.getUserList()
@@ -898,8 +898,8 @@ export default {
           : type === 'admin'
             ? this.$t('USER.ADMIN')
             : this.$t('USER.SUPER_USER')
-    }
-  }
+    },
+  },
 }
 
 const initSubUser = (acls) => {
@@ -912,16 +912,16 @@ const initSubUser = (acls) => {
       {
         bucket: '',
         bucket_acl_obj: { READ: false, WRITE: false },
-        file_acl_obj: { READ: false }
-      }
-    ]
+        file_acl_obj: { READ: false },
+      },
+    ],
   }
 }
 
 const isSuper = () => {
   const userInfo = user.state.subUser
     ? user.state.subUserList.filter(
-        (item) => item.username === user.state.subUser.username
+        (item) => item.username === user.state.subUser.username,
       )
     : undefined
   return userInfo && userInfo[0].info.type === 'super'
@@ -938,7 +938,7 @@ const convertBucketList = (user, bucketList) => {
           bucket: bucket.Name,
           bucket_acl_obj: { READ: false, WRITE: false },
           file_acl_obj: { READ: false },
-          redirect: false
+          redirect: false,
         })
       }
     })
@@ -964,7 +964,7 @@ const convertObject2Array = (object) => {
 const convertArray2Object = (array) => {
   let aclObj = {
     READ: false,
-    WRITE: false
+    WRITE: false,
   }
   if (array.length) {
     _.each(array, (item) => {

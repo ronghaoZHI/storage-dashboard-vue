@@ -35,23 +35,23 @@ import { transcoder } from '@/service/Aws'
 import legendList from '@/components/legend/legend'
 export default {
   components: {
-    legendList
+    legendList,
   },
   data() {
     return {
       legendList: [
         {
           icon: 'ios-toggle',
-          text: 'VIDEO.STATUS'
+          text: 'VIDEO.STATUS',
         },
         {
           icon: 'compose',
-          text: 'PUBLIC.EDIT'
+          text: 'PUBLIC.EDIT',
         },
         {
           icon: 'ios-trash',
-          text: 'PUBLIC.DELETE'
-        }
+          text: 'PUBLIC.DELETE',
+        },
       ],
       iconSize: 18,
       self: this,
@@ -62,22 +62,22 @@ export default {
         {
           title: this.$t('VIDEO.PIPELINE_ID'),
           key: 'id',
-          width: '18%'
+          width: '18%',
         },
         {
           title: this.$t('VIDEO.PIPELINE_NAME'),
           key: 'name',
-          width: '12%'
+          width: '12%',
         },
         {
           title: this.$t('VIDEO.INPUT_BUCKET'),
           key: 'input_bucket',
-          width: '12%'
+          width: '12%',
         },
         {
           title: this.$t('VIDEO.OUTPUT_BUCKET'),
           key: 'output_bucket',
-          width: '12%'
+          width: '12%',
         },
         {
           title: this.$t('VIDEO.PERMISSION_SETTINGS'),
@@ -86,12 +86,12 @@ export default {
               'Poptip',
               {
                 style: {
-                  padding: '6px 0'
+                  padding: '6px 0',
                 },
                 props: {
                   placement: 'right',
-                  trigger: 'hover'
-                }
+                  trigger: 'hover',
+                },
               },
               [
                 h(
@@ -101,25 +101,25 @@ export default {
                       'Tag',
                       {
                         props: {
-                          type: 'border'
-                        }
+                          type: 'border',
+                        },
                       },
-                      `${item.name}:${item.value}`
-                    )
-                  )
+                      `${item.name}:${item.value}`,
+                    ),
+                  ),
                 ),
                 h(
                   'div',
                   {
-                    slot: 'content'
+                    slot: 'content',
                   },
                   params.row.permissionDetails.map((item) =>
-                    h('p', `${item.name}:${item.value}`)
-                  )
-                )
-              ]
+                    h('p', `${item.name}:${item.value}`),
+                  ),
+                ),
+              ],
             )
-          }
+          },
         },
         {
           title: this.$t('VIDEO.ACTIONS'),
@@ -134,11 +134,11 @@ export default {
                   props: {
                     content: this.$t('VIDEO.STATUS'),
                     delay: 500,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-8': true
-                  }
+                    'mar-r-8': true,
+                  },
                 },
                 [
                   h(
@@ -146,32 +146,32 @@ export default {
                     {
                       props: {
                         value: params.row.is_enabled === 'true',
-                        size: 'large'
+                        size: 'large',
                       },
                       on: {
                         input: () => {
                           this.changeStatus(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h(
                         'span',
                         {
-                          slot: 'open'
+                          slot: 'open',
                         },
-                        this.$t('VIDEO.OPEN')
+                        this.$t('VIDEO.OPEN'),
                       ),
                       h(
                         'span',
                         {
-                          slot: 'close'
+                          slot: 'close',
                         },
-                        this.$t('VIDEO.CLOSE')
-                      )
-                    ]
-                  )
-                ]
+                        this.$t('VIDEO.CLOSE'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -179,35 +179,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 500,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-8': true
-                  }
+                    'mar-r-8': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.goPipelineEdit(params.row.id)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -215,37 +215,37 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 500,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deletePipelineConfirm(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
@@ -253,7 +253,7 @@ export default {
       return user.state.type === 'admin' && user.state.subUser
         ? user.state.subUser.username
         : user.state.username
-    }
+    },
   },
   created() {
     this.listPipelines()
@@ -271,7 +271,7 @@ export default {
           this.pageTokenArray.push(pageToken)
         if (res.NextPageToken) {
           let nextRes = await transcoder('listPipelines', {
-            PageToken: res.NextPageToken
+            PageToken: res.NextPageToken,
           })
           this.pageToken = !nextRes.Pipelines.length ? null : res.NextPageToken
         } else {
@@ -291,8 +291,8 @@ export default {
               {
                 Grantee: this.username,
                 GranteeType: 'Canonical',
-                Access: ['FullControl']
-              }
+                Access: ['FullControl'],
+              },
             ]
         const frontItem = {
           id: item.Id,
@@ -301,38 +301,38 @@ export default {
           output_bucket: item.OutputBucket,
           is_enabled: item.Status === 'Active' ? 'true' : 'false',
           permission: [],
-          permissionDetails: []
+          permissionDetails: [],
         }
         frontItem.permission[0] = { name: 'AllUsers', value: '--' }
         frontItem.permission[1] = { name: 'AuthenticatedUsers', value: '--' }
         frontItem.permissionDetails[0] = { name: 'AllUsers', value: '--' }
         frontItem.permissionDetails[1] = {
           name: 'AuthenticatedUsers',
-          value: '--'
+          value: '--',
         }
         _.forEach(permissions, (value) => {
           if (value.Grantee === 'AllUsers') {
             frontItem.permission[0] = {
               name: value.Grantee,
-              value: value.Access.join()
+              value: value.Access.join(),
             }
             frontItem.permissionDetails[0] = {
               name: value.Grantee,
-              value: value.Access.join()
+              value: value.Access.join(),
             }
           } else if (value.Grantee === 'AuthenticatedUsers') {
             frontItem.permission[1] = {
               name: value.Grantee,
-              value: value.Access.join()
+              value: value.Access.join(),
             }
             frontItem.permissionDetails[1] = {
               name: value.Grantee,
-              value: value.Access.join()
+              value: value.Access.join(),
             }
           } else {
             frontItem.permissionDetails.push({
               name: value.Grantee,
-              value: value.Access.join()
+              value: value.Access.join(),
             })
           }
         })
@@ -357,7 +357,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.deletePipeline(pipeline)
+        onOk: () => this.deletePipeline(pipeline),
       })
     },
     async deletePipeline(pipeline) {
@@ -366,7 +366,7 @@ export default {
         await transcoder(
           'deletePipeline',
           { Id: pipeline.id },
-          this.$t('VIDEO.PIPELINE_DELETE_ERROR')
+          this.$t('VIDEO.PIPELINE_DELETE_ERROR'),
         )
         this.pipelineList.splice(pipeline._index, 1)
         this.$Loading.finish()
@@ -380,7 +380,7 @@ export default {
         this.$Loading.start()
         await transcoder('updatePipelineStatus', {
           Id: data.id,
-          Status: data.is_enabled === 'true' ? 'Paused' : 'Active'
+          Status: data.is_enabled === 'true' ? 'Paused' : 'Active',
         })
         const enable = this.pipelineList[data._index].is_enabled
         this.pipelineList[data._index].is_enabled =
@@ -391,8 +391,8 @@ export default {
         this.$Loading.error()
         this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

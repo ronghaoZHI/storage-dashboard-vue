@@ -26,7 +26,7 @@ export const messages = {
       OPTIONS_FAIL: 'operation failed!',
       GET_LIST_FAIL: 'Get list failed!',
       DOMAIN_ALERT:
-        'Baishan cloud storage Dashborad domain name has been switched to the current domain name, the original domain name will be offline in the near future processing, please save'
+        'Baishan cloud storage Dashborad domain name has been switched to the current domain name, the original domain name will be offline in the near future processing, please save',
     },
     LOGIN: {
       TITLE: 'LOGIN',
@@ -41,7 +41,7 @@ export const messages = {
       VALIDATE_FAILED: 'Input validate failed',
       LOGIN_AGAIN: 'Need to login again',
       KEEP_EMAIL: 'Remember my email',
-      USER_MANAGE: 'User management'
+      USER_MANAGE: 'User management',
     },
     NAV: {
       DOC: 'Documentation',
@@ -53,7 +53,7 @@ export const messages = {
       CDN: 'CDN-X',
       CLN: 'CLN-X',
       CHANGE_PASSWORD_FAILED: 'Change password failed',
-      PASSWORD_CHECK: 'The password requires 6 charactors'
+      PASSWORD_CHECK: 'The password requires 6 charactors',
     },
     SIDEBAR: {
       OVERVIEW: 'Overview',
@@ -71,14 +71,14 @@ export const messages = {
       OUTPUT: 'Output',
       PIPELINE: 'Pipeline',
       STATISTICS: 'Statistics',
-      JOB: 'Job'
+      JOB: 'Job',
     },
     KEYCHAIN: {
       ADD_KEY: 'Add accesskey',
       COPY_ACCESSKEY: 'Click to copy accesskey',
       COPY_SECRETKEY: 'Click to copy secretkey',
       DELETE_KEY: 'Delete keychain',
-      DELETE_KEY_COM: 'Are you sure you want to delete [{accesskey}] ？'
+      DELETE_KEY_COM: 'Are you sure you want to delete [{accesskey}] ？',
     },
     STORAGE: {
       TABLE_BUCKET_NAME: 'Bucket name',
@@ -369,7 +369,7 @@ export const messages = {
       NEXT_PAGE: 'Next page',
       UPLOAD_FLIE: 'Upload File',
       AUTHENTICATED_READ: 'Authenticated Read',
-      PUBULIC_READ: 'Public Read'
+      PUBULIC_READ: 'Public Read',
     },
     DASHBOARD: {
       THIS_MONTH: 'This month',
@@ -448,7 +448,7 @@ export const messages = {
         'The number of upload and delete requests within a day',
       UNIT: 'unit',
       GET_BUCKET_FAILED: 'Get bucket list fail',
-      EXPORT_DATA: 'Export'
+      EXPORT_DATA: 'Export',
     },
     USER: {
       CREATE_SUB_USER: 'Create sub user',
@@ -483,7 +483,7 @@ export const messages = {
       CREATE_SUB_ERROR: 'Create sub user error',
       UPDATE_SUB_SUCCESS: 'Update sub user success',
       UPDATE_SUB_ERROR: 'Update sub user error',
-      USER_TYPE: 'User type'
+      USER_TYPE: 'User type',
     },
     VIDEO: {
       TEMPLATE_NAME_REQUIRED: 'Please enter a template name',
@@ -651,7 +651,7 @@ export const messages = {
       JOB_CANCEL_ERROR: 'The job is progressing',
       PIPELINE_DELETE_ERROR: 'Delete failed: the pipeline is being used',
       BASE_INFO: 'Basic information',
-      HLS_REQUIRED: 'HLS file name is required'
+      HLS_REQUIRED: 'HLS file name is required',
     },
     SYSTEM: {
       PLEASE_ENTER: 'Please enter the value of the query',
@@ -727,7 +727,7 @@ export const messages = {
       WRITABLE_CONFIRM: 'Do you want to set the disk to be [{state}]？',
       WRITABLE_CONFIRM_TITLE: 'Set the disk read-write state',
       DESCENDINHG_ORDER: 'descending order',
-      IMPLEMENTATION: 'implementation'
+      IMPLEMENTATION: 'implementation',
     },
     SETTINGS: {
       IP_WHITE_LIST: 'IP white list',
@@ -769,7 +769,7 @@ export const messages = {
       BOUND_DOMAIN: 'Domain',
       INVALID_DOMAIN: 'Invalid domain',
       DOMAIN_DELETE_CONFIRM: 'Are you sure to unbind this domain [{domain}] ?',
-      WHITE_BLACK: 'IP black-and-white list'
+      WHITE_BLACK: 'IP black-and-white list',
     },
     OVERVIEW: {
       DASHBOARD_MONTH: 'Store usage statistics in this month',
@@ -803,20 +803,20 @@ export const messages = {
       CONTACT_BUSINESS: 'Contact business',
       CUSTOM_DOMAIN: 'Custom domain name',
       GO_SETTING: 'Config',
-      COMING_SOON: 'Coming soon'
+      COMING_SOON: 'Coming soon',
     },
     i: {
       select: {
         placeholder: 'Select',
         noMatch: 'No matching data',
-        loading: 'loading'
+        loading: 'loading',
       },
       table: {
         noDataText: 'No Data',
         noFilteredDataText: 'No filter data',
         confirmFilter: 'Confirm',
         resetFilter: 'Reset',
-        clearFilter: 'All'
+        clearFilter: 'All',
       },
       datepicker: {
         selectDate: 'Select date',
@@ -846,7 +846,7 @@ export const messages = {
           wed: 'Wed',
           thu: 'Thu',
           fri: 'Fri',
-          sat: 'Sat'
+          sat: 'Sat',
         },
         months: {
           m1: 'Jan',
@@ -860,24 +860,24 @@ export const messages = {
           m9: 'Sep',
           m10: 'Oct',
           m11: 'Nov',
-          m12: 'Dec'
-        }
+          m12: 'Dec',
+        },
       },
       transfer: {
         titles: {
           source: 'Source',
-          target: 'Target'
+          target: 'Target',
         },
         filterPlaceholder: 'Search here',
-        notFoundText: 'Not Found'
+        notFoundText: 'Not Found',
       },
       modal: {
         okText: 'OK',
-        cancelText: 'Cancel'
+        cancelText: 'Cancel',
       },
       poptip: {
         okText: 'OK',
-        cancelText: 'Cancel'
+        cancelText: 'Cancel',
       },
       page: {
         prev: 'Previous Page',
@@ -889,16 +889,16 @@ export const messages = {
         next5: 'Next 5 Pages',
         page: '/page',
         goto: 'Goto',
-        p: ''
+        p: '',
       },
       rate: {
         star: 'Star',
-        stars: 'Stars'
+        stars: 'Stars',
       },
       tree: {
-        emptyText: 'No Data'
-      }
-    }
+        emptyText: 'No Data',
+      },
+    },
   },
   cn: {
     PUBLIC: {
@@ -927,7 +927,7 @@ export const messages = {
       OPTIONS_FAIL: '操作失败!',
       GET_LIST_FAIL: '获取列表失败!',
       DOMAIN_ALERT:
-        '白山云存储 Dashborad 域名已经切换至当前域名,原域名将在不久后做下线处理,请您及时保存'
+        '白山云存储 Dashborad 域名已经切换至当前域名,原域名将在不久后做下线处理,请您及时保存',
     },
     LOGIN: {
       TITLE: '登 录',
@@ -942,7 +942,7 @@ export const messages = {
       VALIDATE_FAILED: '验证失败',
       LOGIN_AGAIN: '请重新登录',
       KEEP_EMAIL: '记住邮箱',
-      USER_MANAGE: '用户管理'
+      USER_MANAGE: '用户管理',
     },
     NAV: {
       DOC: '帮助文档',
@@ -954,14 +954,14 @@ export const messages = {
       CDN: '云分发',
       CLN: '云聚合',
       CHANGE_PASSWORD_FAILED: '修改密码失败',
-      PASSWORD_CHECK: '密码不能少于6个字符'
+      PASSWORD_CHECK: '密码不能少于6个字符',
     },
     KEYCHAIN: {
       ADD_KEY: '新增密钥',
       COPY_ACCESSKEY: '点击复制 accesskey',
       COPY_SECRETKEY: '点击复制 secretkey',
       DELETE_KEY: '删除密钥',
-      DELETE_KEY_COM: '确定删除 [{accesskey}] ？'
+      DELETE_KEY_COM: '确定删除 [{accesskey}] ？',
     },
     SIDEBAR: {
       OVERVIEW: '概览',
@@ -979,7 +979,7 @@ export const messages = {
       OUTPUT: '自动转码配置',
       PIPELINE: '管道管理',
       STATISTICS: '数据统计',
-      JOB: '任务管理'
+      JOB: '任务管理',
     },
     STORAGE: {
       TABLE_BUCKET_NAME: '空间名',
@@ -1260,7 +1260,7 @@ export const messages = {
       NEXT_PAGE: '下一页',
       UPLOAD_FLIE: '上传文件',
       AUTHENTICATED_READ: '签名认证可访问',
-      PUBULIC_READ: '所有人可访问'
+      PUBULIC_READ: '所有人可访问',
     },
     DASHBOARD: {
       THIS_MONTH: '本月',
@@ -1336,7 +1336,7 @@ export const messages = {
       DOWNLOAD_COUNT_INFO: '某天的读请求数',
       UPLOAD_COUNT_INFO: '某天的写请求数',
       GET_BUCKET_FAILED: '获取Bucket列表失败',
-      EXPORT_DATA: '导出数据'
+      EXPORT_DATA: '导出数据',
     },
     USER: {
       CREATE_SUB_USER: '新建子账号',
@@ -1371,7 +1371,7 @@ export const messages = {
       CREATE_SUB_ERROR: '子账号创建失败',
       UPDATE_SUB_SUCCESS: '子账号更新成功',
       UPDATE_SUB_ERROR: '子账号更新失败',
-      USER_TYPE: '账号类型'
+      USER_TYPE: '账号类型',
     },
     VIDEO: {
       TEMPLATE_NAME_REQUIRED: '请输入模版名名称',
@@ -1532,7 +1532,7 @@ export const messages = {
       JOB_CANCEL_ERROR: '不能删除正在运行的任务',
       PIPELINE_DELETE_ERROR: '删除失败：该管道正被占用',
       BASE_INFO: '基本信息',
-      HLS_REQUIRED: '请填写自适应HLS文件名'
+      HLS_REQUIRED: '请填写自适应HLS文件名',
     },
     SYSTEM: {
       PLEASE_ENTER: '请输入要查询的值',
@@ -1607,7 +1607,7 @@ export const messages = {
       WRITABLE_CONFIRM_TITLE: '设置磁盘读写状态',
       DESCENDINHG_ORDER: '降序',
       PARTITION: '磁盘',
-      IMPLEMENTATION: '上线'
+      IMPLEMENTATION: '上线',
     },
     SETTINGS: {
       IP_WHITE_LIST: 'IP白名单',
@@ -1646,7 +1646,7 @@ export const messages = {
       BOUND_DOMAIN: '绑定域名',
       DOMAIN_DELETE_CONFIRM: '确定要解除该域名的绑定么 [{domain}] ？',
       INVALID_DOMAIN: '域名不合法!',
-      WHITE_BLACK: 'IP黑白名单'
+      WHITE_BLACK: 'IP黑白名单',
     },
     OVERVIEW: {
       DASHBOARD_MONTH: '本月存储使用统计',
@@ -1678,20 +1678,20 @@ export const messages = {
       CONTACT_BUSINESS: '联系商务',
       CUSTOM_DOMAIN: '自定义域名',
       GO_SETTING: '去配置',
-      COMING_SOON: '敬请期待'
+      COMING_SOON: '敬请期待',
     },
     i: {
       select: {
         placeholder: '请选择',
         noMatch: '无匹配数据',
-        loading: '加载中'
+        loading: '加载中',
       },
       table: {
         noDataText: '暂无数据',
         noFilteredDataText: '暂无筛选结果',
         confirmFilter: '筛选',
         resetFilter: '重置',
-        clearFilter: '全部'
+        clearFilter: '全部',
       },
       datepicker: {
         selectDate: '选择日期',
@@ -1721,7 +1721,7 @@ export const messages = {
           wed: '三',
           thu: '四',
           fri: '五',
-          sat: '六'
+          sat: '六',
         },
         months: {
           m1: '1月',
@@ -1735,24 +1735,24 @@ export const messages = {
           m9: '9月',
           m10: '10月',
           m11: '11月',
-          m12: '12月'
-        }
+          m12: '12月',
+        },
       },
       transfer: {
         titles: {
           source: '源列表',
-          target: '目的列表'
+          target: '目的列表',
         },
         filterPlaceholder: '请输入搜索内容',
-        notFoundText: '列表为空'
+        notFoundText: '列表为空',
       },
       modal: {
         okText: '确定',
-        cancelText: '取消'
+        cancelText: '取消',
       },
       poptip: {
         okText: '确定',
-        cancelText: '取消'
+        cancelText: '取消',
       },
       page: {
         prev: '上一页',
@@ -1764,15 +1764,15 @@ export const messages = {
         next5: '向后 5 页',
         page: '条/页',
         goto: '跳至',
-        p: '页'
+        p: '页',
       },
       rate: {
         star: '星',
-        stars: '星'
+        stars: '星',
       },
       tree: {
-        emptyText: '暂无数据'
-      }
-    }
-  }
+        emptyText: '暂无数据',
+      },
+    },
+  },
 }

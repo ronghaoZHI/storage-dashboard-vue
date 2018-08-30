@@ -56,8 +56,8 @@ export default {
         (name === 'space' && num > 99) ||
         (name === 'cpu' && num > 20)
       )
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

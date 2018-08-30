@@ -332,11 +332,11 @@ import {
   dateTime,
   dateTimeYear,
   bytesSpliteUnits,
-  timesSpliteUnits
+  timesSpliteUnits,
 } from '@/service/bucketService'
 export default {
   components: {
-    chart: ECharts
+    chart: ECharts,
   },
   data() {
     return {
@@ -344,7 +344,7 @@ export default {
       originOverview: {
         capacity: [],
         traffic: [],
-        request: []
+        request: [],
       },
       capacityOptions: lineOptions,
       trafficOptions: lineOptions,
@@ -364,7 +364,7 @@ export default {
         {
           title: 'Name',
           width: 120,
-          key: 'name'
+          key: 'name',
         },
         {
           title: this.$t('STORAGE.OBJECT_PERMISSIONS'),
@@ -374,9 +374,9 @@ export default {
             return h('div', [
               `allUser:${
                 allUser.length > 0 ? allUser.join(',') : '--'
-              };AuthUser:${authUser.length > 0 ? authUser.join(',') : '--'}`
+              };AuthUser:${authUser.length > 0 ? authUser.join(',') : '--'}`,
             ])
-          }
+          },
         },
         {
           title: 'Actions',
@@ -390,57 +390,57 @@ export default {
                 props: {
                   content: this.$t('OVERVIEW.GO_SETTING'),
                   delay: 1000,
-                  placement: 'top'
+                  placement: 'top',
                 },
                 class: {
-                  'mar-r-5': true
-                }
+                  'mar-r-5': true,
+                },
               },
               [
                 h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         this.gotoBucketPermissionsSetting(params.row)
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'ios-cog',
-                        size: 18
-                      }
-                    })
-                  ]
-                )
-              ]
+                        size: 18,
+                      },
+                    }),
+                  ],
+                ),
+              ],
             )
-          }
-        }
+          },
+        },
       ],
       sourceHeader: [
         {
           title: 'Name',
           width: 120,
-          key: 'name'
+          key: 'name',
         },
         {
           title: this.$t('STORAGE.SOURCE_DOMAIN'),
           render: (h, params) => {
             return h('div', [`${params.row.source.domain}`])
-          }
+          },
         },
         {
           title: this.$t('STORAGE.SOURCE_MODE'),
           width: 200,
           render: (h, params) => {
             return h('div', [`${params.row.source.fetch_mode.split('_')[1]}`])
-          }
+          },
         },
         {
           title: 'Actions',
@@ -454,43 +454,43 @@ export default {
                 props: {
                   content: this.$t('OVERVIEW.GO_SETTING'),
                   delay: 1000,
-                  placement: 'top'
+                  placement: 'top',
                 },
                 class: {
-                  'mar-r-5': true
-                }
+                  'mar-r-5': true,
+                },
               },
               [
                 h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         this.gotoBucketSourceSetting(params.row)
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'ios-cog',
-                        size: 18
-                      }
-                    })
-                  ]
-                )
-              ]
+                        size: 18,
+                      },
+                    }),
+                  ],
+                ),
+              ],
             )
-          }
-        }
+          },
+        },
       ],
       accessHeader: [
         {
           title: 'Name',
-          key: 'name'
+          key: 'name',
         },
         {
           title: this.$t('SETTINGS.IP_BLACK_LIST'),
@@ -499,10 +499,10 @@ export default {
             return h(
               'div',
               params.row.blackList.map((item) =>
-                h('div', [`${item.ip}:${item.access}`])
-              )
+                h('div', [`${item.ip}:${item.access}`]),
+              ),
             )
-          }
+          },
         },
         {
           title: this.$t('SETTINGS.IP_WHITE_LIST'),
@@ -511,10 +511,10 @@ export default {
             return h(
               'div',
               params.row.whiteList.map((item) =>
-                h('div', [`${item.ip}:${item.access}`])
-              )
+                h('div', [`${item.ip}:${item.access}`]),
+              ),
             )
-          }
+          },
         },
         {
           title: 'Actions',
@@ -528,44 +528,44 @@ export default {
                 props: {
                   content: this.$t('OVERVIEW.GO_SETTING'),
                   delay: 1000,
-                  placement: 'top'
+                  placement: 'top',
                 },
                 class: {
-                  'mar-r-5': true
-                }
+                  'mar-r-5': true,
+                },
               },
               [
                 h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         this.gotoBucketAccessSetting(params.row)
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'ios-cog',
-                        size: 18
-                      }
-                    })
-                  ]
-                )
-              ]
+                        size: 18,
+                      },
+                    }),
+                  ],
+                ),
+              ],
             )
-          }
-        }
+          },
+        },
       ],
       pictureHeader: [
         {
           title: 'Name',
           width: 90,
-          key: 'Name'
+          key: 'Name',
         },
         {
           title: 'Actions',
@@ -579,39 +579,39 @@ export default {
                 props: {
                   content: this.$t('OVERVIEW.GO_SETTING'),
                   delay: 1000,
-                  placement: 'top'
+                  placement: 'top',
                 },
                 class: {
-                  'mar-r-5': true
-                }
+                  'mar-r-5': true,
+                },
               },
               [
                 h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         this.gotoBucketPictureStyle(params.row)
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'ios-cog',
-                        size: 18
-                      }
-                    })
-                  ]
-                )
-              ]
+                        size: 18,
+                      },
+                    }),
+                  ],
+                ),
+              ],
             )
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
@@ -626,7 +626,7 @@ export default {
     },
     theme() {
       return this.$store.state.theme
-    }
+    },
   },
   watch: {
     theme(to, from) {
@@ -634,7 +634,7 @@ export default {
       this.$refs['trafficLine'].chart.resize()
       this.$refs['requestLine'].chart.resize()
       this.setOptions()
-    }
+    },
   },
   created() {
     this.convertBucketList()
@@ -649,7 +649,7 @@ export default {
             acl.Grants.length > 0 &&
               this.permissionsList.push({
                 name: item.Name,
-                permissions: this.convertGrants(acl.Grants)
+                permissions: this.convertGrants(acl.Grants),
               })
           })
           this.getBucketSource(item.Name).then((source) => {
@@ -658,7 +658,7 @@ export default {
                 !!sourceItem.is_active &&
                   this.sourceList.push({
                     name: item.Name,
-                    source: sourceItem
+                    source: sourceItem,
                   })
               })
           })
@@ -679,9 +679,9 @@ export default {
             capacity: this.convertData(
               {
                 value: res.total.space_used,
-                unit: 'byte'
+                unit: 'byte',
               },
-              true
+              true,
             ),
             traffic: this.convertData(
               {
@@ -690,9 +690,9 @@ export default {
                   res.sum.flow_up_pub +
                   res.sum.flow_down_cdn +
                   res.sum.flow_down_pub,
-                unit: 'byte'
+                unit: 'byte',
               },
-              true
+              true,
             ),
             request: this.convertData(
               {
@@ -703,10 +703,10 @@ export default {
                   res.sum.put_count +
                   res.sum.delete_count +
                   res.sum.list_count,
-                unit: 'times'
+                unit: 'times',
               },
-              true
-            )
+              true,
+            ),
           }
           _.extend(this, res)
           this.setOptions()
@@ -721,7 +721,7 @@ export default {
         ) {
           this.$Modal.warning({
             title: this.$t('OVERVIEW.PROMPT'),
-            content: this.$t('OVERVIEW.PROMPT_CONTENT')
+            content: this.$t('OVERVIEW.PROMPT_CONTENT'),
           })
           return
         }
@@ -733,50 +733,50 @@ export default {
       this.capacityOptions = initOptions({
         dataPart1: this.combineTimeDataUnitLabel(
           this.distributed.space_used,
-          '容量'
+          '容量',
         ),
         theme: this.theme,
-        oneDayFlag
+        oneDayFlag,
       })
       this.trafficOptions = initOptions({
         dataPart1: this.combineTimeDataUnitLabel(
           this.combineTwoArray(
             this.distributed.flow_up_cdn,
-            this.distributed.flow_up_pub
+            this.distributed.flow_up_pub,
           ),
-          '流入'
+          '流入',
         ),
         dataPart2: this.combineTimeDataUnitLabel(
           this.combineTwoArray(
             this.distributed.flow_down_cdn,
-            this.distributed.flow_down_pub
+            this.distributed.flow_down_pub,
           ),
-          '流出'
+          '流出',
         ),
         theme: this.theme,
-        oneDayFlag
+        oneDayFlag,
       })
       this.requestOptions = initOptions({
         dataPart1: this.combineTimeDataUnitLabel(
           this.combineTwoArray(
             this.distributed.post_count,
-            this.distributed.put_count
+            this.distributed.put_count,
           ),
           '写',
-          'times'
+          'times',
         ),
         dataPart2: this.combineTimeDataUnitLabel(
           this.combineFourArray(
             this.distributed.get_count,
             this.distributed.head_count,
             this.distributed.delete_count,
-            this.distributed.list_count
+            this.distributed.list_count,
           ),
           '读',
-          'times'
+          'times',
         ),
         theme: this.theme,
-        oneDayFlag
+        oneDayFlag,
       })
     },
     combineTwoArray(array1, array2) {
@@ -797,7 +797,7 @@ export default {
       data,
       label,
       unit = 'byte',
-      time = this.time_nodes
+      time = this.time_nodes,
     ) {
       let combinedData = []
       _.forEach(time, (value, key) => {
@@ -806,32 +806,32 @@ export default {
       let object = {
         label: label,
         unit: unit,
-        data: combinedData
+        data: combinedData,
       }
       return object
     },
     gotoBucketPermissionsSetting(data) {
       this.$router.push({
         name: 'bucketSettings',
-        params: { bucket: data.name, tabName: 'permission' }
+        params: { bucket: data.name, tabName: 'permission' },
       })
     },
     gotoBucketSourceSetting(data) {
       this.$router.push({
         name: 'bucketSettings',
-        params: { bucket: data.name, tabName: 'backSource' }
+        params: { bucket: data.name, tabName: 'backSource' },
       })
     },
     gotoBucketAccessSetting(data) {
       this.$router.push({
         name: 'bucketSettings',
-        params: { bucket: data.name, tabName: 'whiteList' }
+        params: { bucket: data.name, tabName: 'whiteList' },
       })
     },
     gotoBucketPictureStyle(data) {
       this.$router.push({
         name: 'pictureStyles',
-        params: { bucket: data.Name }
+        params: { bucket: data.Name },
       })
     },
     gotoVideoTemplate(data) {
@@ -846,7 +846,7 @@ export default {
     convertGrants(grants) {
       let permissions = {
         allUser: [],
-        AuthUser: []
+        AuthUser: [],
       }
       _.each(grants, (grant) => {
         if (
@@ -861,7 +861,7 @@ export default {
           } else if (grant.Permission === 'FULL_CONTROL') {
             permissions.allUser.push(
               this.$t('STORAGE.READ'),
-              this.$t('STORAGE.WRITE')
+              this.$t('STORAGE.WRITE'),
             )
           }
         } else if (
@@ -877,7 +877,7 @@ export default {
           } else if (grant.Permission === 'FULL_CONTROL') {
             permissions.AuthUser.push(
               this.$t('STORAGE.READ'),
-              this.$t('STORAGE.WRITE')
+              this.$t('STORAGE.WRITE'),
             )
           }
         }
@@ -890,7 +890,9 @@ export default {
         ? item.unit === 'byte'
           ? bytesSpliteUnits(item.value, 3)
           : timesSpliteUnits(item.value, 3)
-        : item.unit === 'byte' ? bytes(item.value) : times(item.value)
+        : item.unit === 'byte'
+          ? bytes(item.value)
+          : times(item.value)
     },
     getApiURL() {
       let path = '?custom_range=' + this.dateRange
@@ -902,7 +904,7 @@ export default {
     async getBucketAcl(name) {
       try {
         return await handler('getBucketAcl', {
-          Bucket: name
+          Bucket: name,
         })
       } catch (error) {
         console.log(error)
@@ -911,7 +913,7 @@ export default {
     async getBucketSource(name) {
       let rule = {
         action: 'list',
-        bucket: name
+        bucket: name,
       }
       try {
         return await this.$http.post(FETCH_404, rule)
@@ -922,7 +924,7 @@ export default {
     async getAccessList(name) {
       const params = {
         action: 'get',
-        bucket: name
+        bucket: name,
       }
       try {
         return await this.$http.post(ACCESS_LIST, params)
@@ -934,40 +936,40 @@ export default {
       let blackIPs = [
         ...access.delete_file.black_list,
         ...access.download_file.black_list,
-        ...access.upload_file.black_list
+        ...access.upload_file.black_list,
       ]
       let whiteIPs = [
         ...access.delete_file.white_list,
         ...access.download_file.white_list,
-        ...access.upload_file.white_list
+        ...access.upload_file.white_list,
       ]
       let blackList = []
       let whiteList = []
       blackIPs[0] &&
         blackList.push({
           ip: blackIPs[0],
-          access: this.accessValue(blackIPs[0], access)
+          access: this.accessValue(blackIPs[0], access),
         })
       blackIPs[1] &&
         blackList.push({
           ip: blackIPs[1],
-          access: this.accessValue(blackIPs[1], access)
+          access: this.accessValue(blackIPs[1], access),
         })
       whiteIPs[0] &&
         whiteList.push({
           ip: whiteIPs[0],
-          access: this.accessValue(whiteIPs[0], access, 'white_list')
+          access: this.accessValue(whiteIPs[0], access, 'white_list'),
         })
       whiteIPs[1] &&
         whiteList.push({
           ip: whiteIPs[1],
-          access: this.accessValue(whiteIPs[1], access, 'white_list')
+          access: this.accessValue(whiteIPs[1], access, 'white_list'),
         })
       if (blackList.length > 0 || whiteList.length > 0) {
         this.accessList.push({
           name: bucket,
           blackList,
-          whiteList
+          whiteList,
         })
       }
     },
@@ -991,8 +993,8 @@ export default {
       } else {
         this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
       }
-    }
-  }
+    },
+  },
 }
 const fixDate = (n) => (n < 10 ? '0' + n : String(n))
 const lastNDays = (n) => new Date(new Date().getTime() - 3600 * 1000 * 24 * n)
@@ -1004,16 +1006,16 @@ const lineOptions = {
     trigger: 'axis',
     textStyle: {
       color: '#fff',
-      fontSize: 12
+      fontSize: 12,
     },
     axisPointer: {
       lineStyle: {
-        color: '#1e9fff'
+        color: '#1e9fff',
       },
-      z: 0
+      z: 0,
     },
     backgroundColor: 'rgba(71, 86, 105, 0.8)',
-    padding: 10
+    padding: 10,
   },
   grid: {
     top: '25',
@@ -1022,37 +1024,37 @@ const lineOptions = {
     bottom: '20',
     containLabel: true,
     show: true,
-    borderColor: 'none'
+    borderColor: 'none',
   },
   color: ['#20a0ff', '#8ecfff'],
   legend: {
     textStyle: {
-      color: '#475669'
+      color: '#475669',
     },
     icon: 'reac',
-    right: 34
+    right: 34,
   },
   xAxis: {
     type: 'time',
     offset: 5,
     axisLine: {
-      show: false
+      show: false,
     },
     interval: 30 * 86400000,
     axisTick: {
-      show: false
+      show: false,
     },
     axisLabel: {
       textStyle: {
         color: '#475669',
-        fontSize: 12
-      }
+        fontSize: 12,
+      },
     },
     splitLine: {
       lineStyle: {
-        color: '#fff'
-      }
-    }
+        color: '#fff',
+      },
+    },
   },
   yAxis: {
     type: 'value',
@@ -1060,23 +1062,23 @@ const lineOptions = {
     minInterval: 1,
     offset: 5,
     axisLine: {
-      show: false
+      show: false,
     },
     axisTick: {
-      show: false
+      show: false,
     },
     axisLabel: {
       textStyle: {
         color: '#475669',
-        fontSize: 12
-      }
+        fontSize: 12,
+      },
     },
     splitLine: {
       lineStyle: {
-        color: 'rgba(0, 0, 0, 0.06)'
-      }
-    }
-  }
+        color: 'rgba(0, 0, 0, 0.06)',
+      },
+    },
+  },
 }
 const initOptions = ({ dataPart1, dataPart2, theme, oneDayFlag }) => {
   let themeLineOptions = _.defaultsDeep({}, lineOptions)
@@ -1104,10 +1106,10 @@ const initOptions = ({ dataPart1, dataPart2, theme, oneDayFlag }) => {
       areaStyle: {
         normal: {
           color: '#20a0ff',
-          opacity: 0.8
-        }
-      }
-    }
+          opacity: 0.8,
+        },
+      },
+    },
   ]
   if (dataPart2) {
     legendData = [dataPart1.label, dataPart2.label]
@@ -1121,15 +1123,15 @@ const initOptions = ({ dataPart1, dataPart2, theme, oneDayFlag }) => {
       areaStyle: {
         normal: {
           color: '#8ecfff',
-          opacity: 0.8
-        }
-      }
+          opacity: 0.8,
+        },
+      },
     }
     seriesArray.push(seriesItem)
   }
   let newOptions = _.defaultsDeep({}, themeLineOptions, {
     legend: {
-      data: legendData
+      data: legendData,
     },
     series: seriesArray,
     tooltip: {
@@ -1152,22 +1154,22 @@ const initOptions = ({ dataPart1, dataPart2, theme, oneDayFlag }) => {
               : times(item.value[1])
         })
         return res
-      }
+      },
     },
     xAxis: {
       axisLabel: {
         formatter: function(value) {
           return oneDayFlag ? dateTime(value + 3600000) : date(value, 'MD')
-        }
-      }
+        },
+      },
     },
     yAxis: {
       axisLabel: {
         formatter: function(value) {
           return dataPart1.unit === 'byte' ? bytes(value) : timesK(value)
-        }
-      }
-    }
+        },
+      },
+    },
   })
   return newOptions
 }

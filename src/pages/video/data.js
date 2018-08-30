@@ -9,20 +9,20 @@ const getBucketPolicy = async (bucket) => {
       return error && error.code !== 'PolicyNotFound'
         ? reject(error)
         : resolve({ bucket, data: data })
-    })
+    }),
   )
 }
 
 const putBucketPolicy = async (bucket, data) => {
   const policy = {
     name: 'post_upload_transcoding',
-    value: data
+    value: data,
   }
   try {
     return handler(
       'putBucketPolicy',
       { Bucket: bucket, Policy: JSON.stringify(policy) },
-      HOST.policyHOST
+      HOST.policyHOST,
     )
   } catch (error) {
     return Promise.reject(error)
@@ -95,7 +95,7 @@ const formateSS = (SS) => {
   let s = Math.floor(SS / 1000)
   return [
     `${Math.floor(s / 3600)}:${Math.floor(s / 60) % 60}:${s % 60}`,
-    `${SS % 1000}`
+    `${SS % 1000}`,
   ]
 }
 const getSS = (time, SS) => {
@@ -112,5 +112,5 @@ export {
   listPipelines,
   getTemplateInfo,
   formateSS,
-  getSS
+  getSS,
 }

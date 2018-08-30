@@ -50,13 +50,13 @@ export default {
       blackList: [],
       iconSize: 18,
       spinGroup: false,
-      enabled: false
+      enabled: false,
     }
   },
   computed: {
     bucket() {
       return this.$route.params.bucket
-    }
+    },
   },
   created() {
     this.getList()
@@ -67,7 +67,7 @@ export default {
       this.spinGroup = true
       const params = {
         action: 'get',
-        bucket: this.bucket
+        bucket: this.bucket,
       }
       try {
         let listData = await this.$http.post(ACCESS_LIST, params)
@@ -77,12 +77,12 @@ export default {
         let whiteIP = new Set(
           listData.download_file.white_list
             .concat(listData.delete_file.white_list)
-            .concat(listData.upload_file.white_list)
+            .concat(listData.upload_file.white_list),
         )
         let blackIP = new Set(
           listData.download_file.black_list
             .concat(listData.delete_file.black_list)
-            .concat(listData.upload_file.black_list)
+            .concat(listData.upload_file.black_list),
         )
         this.whiteList = list2Front(whiteIP, listData, 'white_list')
         this.blackList = list2Front(blackIP, listData, 'black_list')
@@ -100,7 +100,7 @@ export default {
       }
       const params = {
         action: this.enabled ? 'enable' : 'disable',
-        bucket: this.bucket
+        bucket: this.bucket,
       }
       await this.$http.post(ACCESS_LIST, params)
     },
@@ -112,7 +112,7 @@ export default {
       let params = {
         action: 'set',
         ips: saved,
-        bucket: this.bucket
+        bucket: this.bucket,
       }
       try {
         await this.$http.post(ACCESS_LIST, params)
@@ -122,8 +122,8 @@ export default {
         this.$Loading.error()
         this.getList()
       }
-    }
-  }
+    },
+  },
 }
 const list2Front = (ipList, listData, api) => {
   let front = []
@@ -137,8 +137,8 @@ const list2Front = (ipList, listData, api) => {
       before: {
         upload: listData.upload_file[api].includes(key),
         delete: listData.delete_file[api].includes(key),
-        download: listData.download_file[api].includes(key)
-      }
+        download: listData.download_file[api].includes(key),
+      },
     }
     front.push(item)
   })
@@ -225,8 +225,8 @@ const convertGroup = (array) => {
             before: {
               upload: testItem.upload,
               delete: testItem.delete,
-              download: testItem.download
-            }
+              download: testItem.download,
+            },
           })
         }
       }
@@ -237,16 +237,16 @@ const convertGroup = (array) => {
 const savedDefult = {
   download_file: {
     white_list: [],
-    black_list: []
+    black_list: [],
   },
   delete_file: {
     white_list: [],
-    black_list: []
+    black_list: [],
   },
   upload_file: {
     white_list: [],
-    black_list: []
-  }
+    black_list: [],
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -43,16 +43,16 @@ export default {
         ip: '',
         upload: true,
         download: true,
-        delete: true
+        delete: true,
       },
       rules: {
-        ip: [{ validator: this.validateIP, trigger: 'change' }]
+        ip: [{ validator: this.validateIP, trigger: 'change' }],
       },
       listHeader: [
         {
           title: 'IP',
           width: '40%',
-          key: 'ip'
+          key: 'ip',
         },
         {
           title: this.$t('SETTINGS.ACCESS'),
@@ -63,32 +63,32 @@ export default {
                   'div',
                   {
                     style: {
-                      display: 'inline-block'
-                    }
+                      display: 'inline-block',
+                    },
                   },
                   [
                     h('i-button', {
                       style: {
-                        margin: '0 6px'
+                        margin: '0 6px',
                       },
                       props: {
                         size: 'small',
-                        icon: 'checkmark-round'
+                        icon: 'checkmark-round',
                       },
                       on: {
                         click: async () => {
                           await this.$parent.accessSet()
                           itemData.edit = false
-                        }
-                      }
+                        },
+                      },
                     }),
                     h('i-button', {
                       style: {
-                        margin: '0 6px'
+                        margin: '0 6px',
                       },
                       props: {
                         size: 'small',
-                        icon: 'close-round'
+                        icon: 'close-round',
                       },
                       on: {
                         click: () => {
@@ -96,36 +96,36 @@ export default {
                           itemData.delete = itemData.before.delete
                           itemData.download = itemData.before.download
                           itemData.edit = false
-                        }
-                      }
-                    })
-                  ]
+                        },
+                      },
+                    }),
+                  ],
                 )
               : h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         itemData.before = {
                           upload: itemData.upload,
                           delete: itemData.delete,
-                          download: itemData.download
+                          download: itemData.download,
                         }
                         itemData.edit = true
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'compose',
-                        size: this.iconSize
-                      }
-                    })
-                  ]
+                        size: this.iconSize,
+                      },
+                    }),
+                  ],
                 )
             return h('div', [
               h(
@@ -133,49 +133,49 @@ export default {
                 {
                   props: {
                     value: itemData.upload,
-                    disabled: !itemData.edit
+                    disabled: !itemData.edit,
                   },
                   on: {
                     input: (value) => {
                       itemData.upload = value
-                    }
-                  }
+                    },
+                  },
                 },
-                [this.$t('SETTINGS.UPLOAD')]
+                [this.$t('SETTINGS.UPLOAD')],
               ),
               h(
                 'Checkbox',
                 {
                   props: {
                     value: itemData.download,
-                    disabled: !itemData.edit
+                    disabled: !itemData.edit,
                   },
                   on: {
                     input: (value) => {
                       itemData.download = value
-                    }
-                  }
+                    },
+                  },
                 },
-                [this.$t('SETTINGS.DOWNLOAD')]
+                [this.$t('SETTINGS.DOWNLOAD')],
               ),
               h(
                 'Checkbox',
                 {
                   props: {
                     value: itemData.delete,
-                    disabled: !itemData.edit
+                    disabled: !itemData.edit,
                   },
                   on: {
                     input: (value) => {
                       itemData.delete = value
-                    }
-                  }
+                    },
+                  },
                 },
-                [this.$t('SETTINGS.DELETE')]
+                [this.$t('SETTINGS.DELETE')],
               ),
-              buttons
+              buttons,
             ])
-          }
+          },
         },
         {
           title: this.$t('VIDEO.OPERATION'),
@@ -188,42 +188,42 @@ export default {
                 props: {
                   content: this.$t('PUBLIC.DELETE'),
                   delay: 1000,
-                  placement: 'top'
-                }
+                  placement: 'top',
+                },
               },
               [
                 h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         this.listDeleteConfirm(params.row._index)
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'ios-trash',
-                        size: this.iconSize
-                      }
-                    })
-                  ]
-                )
-              ]
+                        size: this.iconSize,
+                      },
+                    }),
+                  ],
+                ),
+              ],
             )
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
     bucket() {
       return this.$route.params.bucket
-    }
+    },
   },
   methods: {
     addIPVertify() {
@@ -246,8 +246,8 @@ export default {
           before: {
             upload: this.newItem.upload,
             delete: this.newItem.delete,
-            download: this.newItem.download
-          }
+            download: this.newItem.download,
+          },
         })
       })
       this.$parent.accessSet()
@@ -273,13 +273,13 @@ export default {
                 if (itemIp.join('.') === testIp.join('.')) return true
               }
             } else return false
-          })
+          }),
       )
       if (
         !this.newIps.every(
           (ip) =>
             ipReg.test(ip) &&
-            ip.split('.').indexOf('*') === ip.split('.').lastIndexOf('*')
+            ip.split('.').indexOf('*') === ip.split('.').lastIndexOf('*'),
         )
       ) {
         callback(new Error(this.$t('SETTINGS.IP_INVALID')))
@@ -294,7 +294,7 @@ export default {
     listDeleteConfirm(index) {
       this.$Modal.confirm({
         content: this.$t('SETTINGS.COMFIRM_DELETE_HOTLINK', {
-          ip: this.listData[index].ip
+          ip: this.listData[index].ip,
         }),
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
@@ -302,10 +302,10 @@ export default {
         onOk: () => {
           this.listData.splice(index, 1)
           this.$parent.accessSet()
-        }
+        },
       })
-    }
-  }
+    },
+  },
 }
 
 const ipReg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\*)$/

@@ -192,14 +192,14 @@ export default {
     bscBreadcrumbItem: bscBreadcrumb.Item,
     upload,
     legendList,
-    picturePreview
+    picturePreview,
   },
   directives: {
     clip: {
       bind: function(el) {
         new Clipboard(el)
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -226,28 +226,28 @@ export default {
       legendList: [
         {
           icon: 'compose',
-          text: 'STORAGE.RENAME'
+          text: 'STORAGE.RENAME',
         },
         {
           icon: 'gear-a',
-          text: 'STORAGE.FILE_PERMISSIONS'
+          text: 'STORAGE.FILE_PERMISSIONS',
         },
         {
           icon: 'ios-cloud-download',
-          text: 'SETTINGS.DOWNLOAD'
+          text: 'SETTINGS.DOWNLOAD',
         },
         {
           icon: 'eye',
-          text: 'STORAGE.IMG_PREVIEW'
+          text: 'STORAGE.IMG_PREVIEW',
         },
         {
           icon: 'link',
-          text: 'PUBLIC.COPY'
+          text: 'PUBLIC.COPY',
         },
         {
           icon: 'ios-trash',
-          text: 'PUBLIC.DELETE'
-        }
+          text: 'PUBLIC.DELETE',
+        },
       ],
       inputCheck: false,
       fileList: [],
@@ -259,7 +259,7 @@ export default {
         {
           type: 'selection',
           width: '58px',
-          align: 'center'
+          align: 'center',
         },
         {
           title: 'Key',
@@ -273,49 +273,49 @@ export default {
                 on: {
                   click: () => {
                     params.row.Type !== 'file' && this.openFolder(params.row)
-                  }
+                  },
                 },
                 style: {
-                  cursor: params.row.Type === 'file' ? 'default' : 'pointer'
-                }
+                  cursor: params.row.Type === 'file' ? 'default' : 'pointer',
+                },
               },
               [
                 h('Icon', {
                   props: {
                     type: params.row.Type === 'file' ? 'document' : 'folder',
-                    size: 16
+                    size: 16,
                   },
                   style: {
                     position: 'relative',
                     top: '1px',
-                    paddingRight: '4px'
-                  }
+                    paddingRight: '4px',
+                  },
                 }),
                 h(
                   'strong',
                   {
                     class: {
-                      'link-folder': params.row.Type !== 'file'
-                    }
+                      'link-folder': params.row.Type !== 'file',
+                    },
                   },
-                  params.row.Key
-                )
-              ]
+                  params.row.Key,
+                ),
+              ],
             )
-          }
+          },
         },
         {
           title: 'Size',
           width: '15%',
           align: 'right',
-          key: 'convertSize'
+          key: 'convertSize',
         },
         {
           title: 'Create time',
           key: 'LastModified',
           align: 'right',
           width: '25%',
-          sortable: true
+          sortable: true,
         },
         {
           title: 'Actions',
@@ -330,35 +330,35 @@ export default {
                     props: {
                       content: this.$t('STORAGE.DELETE_FOLDER'),
                       delay: 1000,
-                      placement: 'top-end'
+                      placement: 'top-end',
                     },
                     class: {
-                      'mar-r-5': true
-                    }
+                      'mar-r-5': true,
+                    },
                   },
                   [
                     h(
                       'i-button',
                       {
                         props: {
-                          size: 'small'
+                          size: 'small',
                         },
                         on: {
                           click: () => {
                             this.deleteFileConfirm(params.row)
-                          }
-                        }
+                          },
+                        },
                       },
                       [
                         h('Icon', {
                           props: {
                             type: 'ios-trash',
-                            size: this.iconSize
-                          }
-                        })
-                      ]
-                    )
-                  ]
+                            size: this.iconSize,
+                          },
+                        }),
+                      ],
+                    ),
+                  ],
                 )
               : h('div', [
                   h(
@@ -367,37 +367,37 @@ export default {
                       props: {
                         content: this.$t('STORAGE.RENAME'),
                         delay: 1000,
-                        placement: 'top'
+                        placement: 'top',
                       },
                       class: {
-                        'mar-r-5': true
-                      }
+                        'mar-r-5': true,
+                      },
                     },
                     [
                       h(
                         'i-button',
                         {
                           props: {
-                            size: 'small'
+                            size: 'small',
                           },
                           on: {
                             click: () => {
                               this.selectedFileKey = params.row.Key
                               this.renameKey = params.row.Key
                               this.renameModal = true
-                            }
-                          }
+                            },
+                          },
                         },
                         [
                           h('Icon', {
                             props: {
                               type: 'compose',
-                              size: this.iconSize
-                            }
-                          })
-                        ]
-                      )
-                    ]
+                              size: this.iconSize,
+                            },
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
                   h(
                     'Tooltip',
@@ -405,35 +405,35 @@ export default {
                       props: {
                         content: this.$t('STORAGE.FILE_PERMISSIONS'),
                         delay: 1000,
-                        placement: 'top'
+                        placement: 'top',
                       },
                       class: {
-                        'mar-r-5': true
-                      }
+                        'mar-r-5': true,
+                      },
                     },
                     [
                       h(
                         'i-button',
                         {
                           props: {
-                            size: 'small'
+                            size: 'small',
                           },
                           on: {
                             click: () => {
                               this.permissionModal(params.row)
-                            }
-                          }
+                            },
+                          },
                         },
                         [
                           h('Icon', {
                             props: {
                               type: 'gear-a',
-                              size: this.iconSize
-                            }
-                          })
-                        ]
-                      )
-                    ]
+                              size: this.iconSize,
+                            },
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
                   h(
                     'Tooltip',
@@ -441,35 +441,35 @@ export default {
                       props: {
                         content: this.$t('STORAGE.DOWNLOAD_FILE'),
                         delay: 1000,
-                        placement: 'top'
+                        placement: 'top',
                       },
                       class: {
-                        'mar-r-5': true
-                      }
+                        'mar-r-5': true,
+                      },
                     },
                     [
                       h(
                         'i-button',
                         {
                           props: {
-                            size: 'small'
+                            size: 'small',
                           },
                           on: {
                             click: () => {
                               this.downloadFile(params.row)
-                            }
-                          }
+                            },
+                          },
                         },
                         [
                           h('Icon', {
                             props: {
                               type: 'ios-cloud-download',
-                              size: this.iconSize
-                            }
-                          })
-                        ]
-                      )
-                    ]
+                              size: this.iconSize,
+                            },
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
                   h(
                     'Tooltip',
@@ -477,11 +477,11 @@ export default {
                       props: {
                         content: this.$t('STORAGE.IMG_PREVIEW'),
                         delay: 1000,
-                        placement: 'top'
+                        placement: 'top',
                       },
                       class: {
-                        'mar-r-5': true
-                      }
+                        'mar-r-5': true,
+                      },
                     },
                     [
                       h(
@@ -489,25 +489,25 @@ export default {
                         {
                           props: {
                             disabled: params.row && !params.row.isImage,
-                            size: 'small'
+                            size: 'small',
                           },
                           on: {
                             click: () => {
                               this.showPicturePreview = true
                               this.selectedIndex = params.row._index
-                            }
-                          }
+                            },
+                          },
                         },
                         [
                           h('Icon', {
                             props: {
                               type: 'eye',
-                              size: this.iconSize
-                            }
-                          })
-                        ]
-                      )
-                    ]
+                              size: this.iconSize,
+                            },
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
                   h(
                     'Tooltip',
@@ -515,35 +515,35 @@ export default {
                       props: {
                         content: this.$t('STORAGE.COPY_FILE_LINK'),
                         delay: 1000,
-                        placement: 'top'
+                        placement: 'top',
                       },
                       class: {
-                        'mar-r-5': true
-                      }
+                        'mar-r-5': true,
+                      },
                     },
                     [
                       h(
                         'i-button',
                         {
                           props: {
-                            size: 'small'
+                            size: 'small',
                           },
                           on: {
                             click: () => {
                               this.clipModal(params.row)
-                            }
-                          }
+                            },
+                          },
                         },
                         [
                           h('Icon', {
                             props: {
                               type: 'link',
-                              size: this.iconSize
-                            }
-                          })
-                        ]
-                      )
-                    ]
+                              size: this.iconSize,
+                            },
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
                   h(
                     'Tooltip',
@@ -551,40 +551,40 @@ export default {
                       props: {
                         content: this.$t('STORAGE.DELETE_FILE'),
                         delay: 1000,
-                        placement: 'top'
-                      }
+                        placement: 'top',
+                      },
                     },
                     [
                       h(
                         'i-button',
                         {
                           props: {
-                            size: 'small'
+                            size: 'small',
                           },
                           on: {
                             click: () => {
                               this.deleteFileConfirm(params.row)
-                            }
-                          }
+                            },
+                          },
                         },
                         [
                           h('Icon', {
                             props: {
                               type: 'ios-trash',
-                              size: this.iconSize
-                            }
-                          })
-                        ]
-                      )
-                    ]
-                  )
+                              size: this.iconSize,
+                            },
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
                 ])
-          }
-        }
+          },
+        },
       ],
       permissionKey: '',
       searchInputFocus: false,
-      canUpload: false
+      canUpload: false,
     }
   },
   computed: {
@@ -604,13 +604,13 @@ export default {
     },
     imageModalTitle() {
       return this.selectedFileKey || this.$t('STORAGE.NO_TITLE')
-    }
+    },
   },
   watch: {
     // the fileList array need refresh when the $route value changed
     $route(to, from) {
       to.path !== from.path && this.getData()
-    }
+    },
   },
   created() {
     this.getData()
@@ -627,7 +627,7 @@ export default {
           Delimiter: '/',
           MaxKeys: 100,
           Marker: nextMarker || this.prefix,
-          Prefix: this.prefix + searchValue
+          Prefix: this.prefix + searchValue,
         })
         this.nextMarker = res.NextMarker
         this.fileList = await _.forEach(res.CommonPrefixes, (foler) => {
@@ -642,9 +642,9 @@ export default {
             item.Type = 'file'
             item.isImage = isImage(item)
             item.LastModified = moment(item.LastModified).format(
-              'YYYY-MM-DD HH:mm'
+              'YYYY-MM-DD HH:mm',
             )
-          })
+          }),
         )
         document.querySelector('#app').scrollTop = 0
         this.spinShow = false
@@ -665,13 +665,13 @@ export default {
           await handler('copyObject', {
             Bucket: this.bucket,
             CopySource: encodeURIComponent(
-              this.bucket + '/' + this.prefix + this.selectedFileKey
+              this.bucket + '/' + this.prefix + this.selectedFileKey,
             ),
-            Key: this.prefix + this.renameKey
+            Key: this.prefix + this.renameKey,
           })
           await handler('deleteObject', {
             Bucket: this.bucket,
-            Key: this.prefix + this.selectedFileKey
+            Key: this.prefix + this.selectedFileKey,
           })
           this.renameKey = ''
           this.getData()
@@ -705,7 +705,7 @@ export default {
         await handler('putObject', {
           Bucket: this.bucket,
           Key: this.prefix + this.createFolderValue + '/',
-          Body: ''
+          Body: '',
         })
         this.$Message.success(this.$t('STORAGE.ADD_FOLDER_SUCCESS'))
         this.getData()
@@ -737,7 +737,7 @@ export default {
           Bucket: this.bucket,
           Prefix: this.prefix + file.Prefix,
           Delimiter: '/',
-          Marker: this.prefix + file.Prefix
+          Marker: this.prefix + file.Prefix,
         })
         _.each(res.Contents, async (file) => {
           let url = await getURL(self.bucket, file, self.prefix)
@@ -762,7 +762,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.batchDelete()
+        onOk: () => this.batchDelete(),
       })
     },
     deleteFileConfirm(file) {
@@ -771,7 +771,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.deleteFile(file)
+        onOk: () => this.deleteFile(file),
       })
     },
     async deleteFile(file) {
@@ -779,19 +779,19 @@ export default {
         if (file.Type === 'file') {
           await handler('deleteObject', {
             Bucket: this.bucket,
-            Key: this.prefix + file.Key
+            Key: this.prefix + file.Key,
           })
         } else {
           this.deleteFolders(file)
         }
         this.getData()
         this.$Message.success(
-          this.$t('STORAGE.DELETE_FILES_SUCCESS', { fileName: file.Key })
+          this.$t('STORAGE.DELETE_FILES_SUCCESS', { fileName: file.Key }),
         )
       } catch (error) {
         this.spinShow = false
         this.$Message.error(
-          this.$t('STORAGE.DELETE_FILES_FAILED', { fileName: file.Key })
+          this.$t('STORAGE.DELETE_FILES_FAILED', { fileName: file.Key }),
         )
       }
     },
@@ -802,20 +802,20 @@ export default {
           Bucket: this.bucket,
           Prefix: folder.Prefix,
           MaxKeys: 1000,
-          Marker: marker
+          Marker: marker,
         })
         await handler('deleteObjects', {
           Bucket: this.bucket,
           Delete: {
-            Objects: res.Contents.map((file) => _.pick(file, 'Key'))
-          }
+            Objects: res.Contents.map((file) => _.pick(file, 'Key')),
+          },
         })
         if (res.Contents.length === 1000) {
           this.deleteFolders(folder, res.Contents[100].Key)
         } else {
           await handler('deleteObject', {
             Bucket: this.bucket,
-            Key: this.prefix + folder.Key
+            Key: this.prefix + folder.Key,
           })
           this.spinShow = false
         }
@@ -828,20 +828,20 @@ export default {
     async batchDelete() {
       let self = this
       await Promise.all(
-        Array.map(self.selectedFileList, (file) => self.deleteFile(file))
+        Array.map(self.selectedFileList, (file) => self.deleteFile(file)),
       )
     },
     async batchDownload() {
       let self = this
       await Promise.all(
-        Array.map(self.selectedFileList, (file) => self.downloadFile(file))
+        Array.map(self.selectedFileList, (file) => self.downloadFile(file)),
       )
     },
     openFolder(item) {
       this.searchValue = ''
       this.$router.push({
         name: 'file',
-        params: { bucket: this.bucket, prefix: item.Prefix }
+        params: { bucket: this.bucket, prefix: item.Prefix },
       })
     },
     getUrl(prefix) {
@@ -881,8 +881,8 @@ export default {
     copyAction() {
       this.copyModal = false
       this.$Message.success($t('STORAGE.COPIED'))
-    }
-  }
+    },
+  },
 }
 
 const repliceAllString = (strings, oldStr, newStr) => {
@@ -901,7 +901,7 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
       ? {
           Bucket: bucket,
           Key: prefix + file.Key,
-          ResponseContentDisposition: 'attachment'
+          ResponseContentDisposition: 'attachment',
         }
       : { Bucket: bucket, Key: prefix + file.Key }
     let getAclparams = { Bucket: bucket, Key: prefix + file.Key }
@@ -912,7 +912,7 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
       acl.Grants,
       (item) =>
         item.Grantee.URI &&
-        item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers'
+        item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers',
     )
     return isDownload ? url : isAllUser ? url.split('?')[0] : url
   } catch (error) {

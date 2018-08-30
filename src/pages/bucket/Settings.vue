@@ -345,7 +345,7 @@ export default {
     whiteList,
     customDomain,
     bscBreadcrumb,
-    bscBreadcrumbItem: bscBreadcrumb.Item
+    bscBreadcrumbItem: bscBreadcrumb.Item,
   },
   data() {
     return {
@@ -353,12 +353,12 @@ export default {
       legendList: [
         {
           icon: 'compose',
-          text: 'PUBLIC.EDIT'
+          text: 'PUBLIC.EDIT',
         },
         {
           icon: 'ios-trash',
-          text: 'PUBLIC.DELETE'
-        }
+          text: 'PUBLIC.DELETE',
+        },
       ],
       GroupACLList: this.GroupACLList,
       UserACLList: this.UserACLList,
@@ -370,8 +370,8 @@ export default {
           READ: false,
           WRITE: false,
           READ_ACP: false,
-          WRITE_ACP: false
-        }
+          WRITE_ACP: false,
+        },
       },
       rulesNumber: 0,
       indexToEditCorsRule: '',
@@ -383,7 +383,7 @@ export default {
         AllowedMethods: ['GET'],
         AllowedHeaders: [],
         ExposeHeaders: [],
-        MaxAgeSeconds: ''
+        MaxAgeSeconds: '',
       },
       corsRulesList: [],
       showCorsModal: false,
@@ -394,9 +394,9 @@ export default {
           render: (h, params) => {
             return h(
               'div',
-              params.row.AllowedOrigins.map((item) => h('p', item))
+              params.row.AllowedOrigins.map((item) => h('p', item)),
             )
-          }
+          },
         },
         {
           title: 'Allowed Methods',
@@ -405,9 +405,9 @@ export default {
             return h(
               'div',
               { style: { padding: '6px 0' } },
-              params.row.AllowedMethods.map((item) => h('Tag', item))
+              params.row.AllowedMethods.map((item) => h('Tag', item)),
             )
-          }
+          },
         },
         {
           title: 'Allowed Headers',
@@ -416,9 +416,9 @@ export default {
             return h(
               'div',
               { style: { padding: '6px 0' } },
-              params.row.AllowedHeaders.map((item) => h('Tag', item))
+              params.row.AllowedHeaders.map((item) => h('Tag', item)),
             )
-          }
+          },
         },
         {
           title: 'Expose Headers',
@@ -427,14 +427,14 @@ export default {
             return h(
               'div',
               { style: { padding: '6px 0' } },
-              params.row.ExposeHeaders.map((item) => h('Tag', item))
+              params.row.ExposeHeaders.map((item) => h('Tag', item)),
             )
-          }
+          },
         },
         {
           title: 'Max Age Seconds',
           key: 'MaxAgeSeconds',
-          width: 120
+          width: 120,
         },
         {
           title: this.$t('STORAGE.TABLE_ACTION'),
@@ -448,35 +448,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 500,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-8': true
-                  }
+                    'mar-r-8': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.addCorsRule(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -484,39 +484,39 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 500,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deleteCorsRuleConfirm(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
+          },
+        },
       ],
       iconSize: 16,
-      deleteList: []
+      deleteList: [],
     }
   },
   computed: {
@@ -526,7 +526,7 @@ export default {
     tabName: {
       get() {
         return this.$route.params.tabName || 'permission'
-      }
+      },
     },
     originsEmptyError() {
       return this.corsModal.AllowedOrigins.length === 0 && !this.AllowedOrigins
@@ -544,7 +544,7 @@ export default {
     },
     bucketPath() {
       return `/bucket/${this.$route.params.bucket}`
-    }
+    },
   },
   created() {
     this.getACLList()
@@ -555,14 +555,14 @@ export default {
       this.$Loading.start()
       try {
         let res = await handler('getBucketAcl', {
-          Bucket: this.bucket
+          Bucket: this.bucket,
         })
         this.GroupACLList = convertGrants(res.Grants)[0]
         this.UserACLList = convertGrants(res.Grants)[1]
         this.Data = {
           bucket: this.bucket,
           grants: res.Grants,
-          owner: res.Owner
+          owner: res.Owner,
         }
         this.owner = res.Owner.ID
       } catch (error) {
@@ -575,7 +575,7 @@ export default {
       let originItems = [
         ...this.GroupACLList,
         ...this.UserACLList,
-        ...this.deleteList
+        ...this.deleteList,
       ]
       let items = _.cloneDeep(originItems)
       if (this.isAdd) {
@@ -594,8 +594,8 @@ export default {
         Bucket: this.Data.bucket,
         AccessControlPolicy: {
           Grants: items,
-          Owner: this.Data.owner
-        }
+          Owner: this.Data.owner,
+        },
       }
       try {
         await handler('putBucketAcl', params)
@@ -603,7 +603,7 @@ export default {
         this.deleteList = []
         if (this.isAdd) {
           this.UserACLList = this.UserACLList.concat(
-            convertNewUserItem(this.newUserItem)
+            convertNewUserItem(this.newUserItem),
           )
           this.isAdd = false
         }
@@ -650,8 +650,8 @@ export default {
       let putParams = {
         Bucket: this.bucket,
         CORSConfiguration: {
-          CORSRules: this.corsRulesList
-        }
+          CORSRules: this.corsRulesList,
+        },
       }
       try {
         this.$Loading.start()
@@ -699,7 +699,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.deleteCorsRule(index)
+        onOk: () => this.deleteCorsRule(index),
       })
     },
     async deleteCorsRule(index) {
@@ -707,8 +707,8 @@ export default {
       let putParams = {
         Bucket: this.bucket,
         CORSConfiguration: {
-          CORSRules: this.corsRulesList
-        }
+          CORSRules: this.corsRulesList,
+        },
       }
       try {
         this.$Loading.start()
@@ -728,7 +728,7 @@ export default {
         READ: false,
         WRITE: false,
         READ_ACP: false,
-        WRITE_ACP: false
+        WRITE_ACP: false,
       }
       this.deleteList.push(item)
       this.UserACLList = this.UserACLList.filter((val) => val !== item)
@@ -736,7 +736,7 @@ export default {
     newUserItemInit() {
       this.newUserItem = {
         Permission: { ...permissionFalse },
-        name: ''
+        name: '',
       }
     },
     back() {
@@ -745,17 +745,17 @@ export default {
     tabChange(name) {
       this.$router.push({
         name: 'bucketSettings',
-        params: { bucket: this.bucket, tabName: name }
+        params: { bucket: this.bucket, tabName: name },
       })
-    }
-  }
+    },
+  },
 }
 
 const permissionFalse = {
   READ: false,
   WRITE: false,
   READ_ACP: false,
-  WRITE_ACP: false
+  WRITE_ACP: false,
 }
 const gropItemsDefaultInit = () => {
   const gropItemsDefault = [
@@ -763,16 +763,16 @@ const gropItemsDefaultInit = () => {
       Permission: { ...permissionFalse },
       Grantee: {
         URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
-        Type: 'Group'
-      }
+        Type: 'Group',
+      },
     },
     {
       Permission: { ...permissionFalse },
       Grantee: {
         URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
-        Type: 'Group'
-      }
-    }
+        Type: 'Group',
+      },
+    },
   ]
   return gropItemsDefault
 }
@@ -780,7 +780,7 @@ const gropItemsDefaultInit = () => {
 const userItemsDefaultInit = () => {
   let userACLItemsDefault = {
     Permission: { ...permissionFalse },
-    Grantee: {}
+    Grantee: {},
   }
   return userACLItemsDefault
 }
@@ -826,7 +826,7 @@ const convertPermission = (grant, permission) => {
       READ: true,
       WRITE: true,
       READ_ACP: true,
-      WRITE_ACP: true
+      WRITE_ACP: true,
     }
   } else {
     grant.Permission[permission] = true

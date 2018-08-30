@@ -40,13 +40,13 @@ export default {
     clip: {
       bind: function(el) {
         new Clipboard(el)
-      }
-    }
+      },
+    },
   },
   props: ['keychain', 'work'],
   data() {
     return {
-      isAdmin: user.state.type === 'admin'
+      isAdmin: user.state.type === 'admin',
     }
   },
   methods: {
@@ -59,10 +59,10 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.$emit('deleteKey', accesskey)
+        onOk: () => this.$emit('deleteKey', accesskey),
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

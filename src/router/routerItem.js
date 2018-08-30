@@ -32,151 +32,151 @@ const layoutChild = [
     path: '/overview',
     name: 'overview',
     meta: { title: 'Overview', ali: 'overview' }, // 'ali' => Menu.vue
-    component: Overview
+    component: Overview,
   },
   {
     path: '/bucket',
     name: 'bucket',
     meta: { title: 'My storage', ali: 'bucket' },
-    component: Bucket
+    component: Bucket,
   },
   {
     path: '/bucket/:bucket',
     name: 'bucket',
     meta: { title: 'My storage', ali: 'bucket' }, // 'ali' => Menu.vue
-    component: Bucket
+    component: Bucket,
   },
   {
     path: '/bucket/:bucket/prefix/:prefix',
     name: 'file',
     meta: { title: 'My storage', ali: 'bucket' },
-    component: File
+    component: File,
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     meta: { title: 'Dashboard', ali: 'dashboard' },
-    component: Dashboard
+    component: Dashboard,
   },
   {
     path: '/keychain',
     name: 'keychain',
     meta: { title: 'Keychain', ali: 'keychain' },
-    component: Keychain
+    component: Keychain,
   },
   {
     path: '/bucket/:bucket/bucketSettings/tabName/:tabName',
     name: 'bucketSettings',
     meta: { title: 'Bucket Settings', ali: 'bucket' },
-    component: Settings
+    component: Settings,
   },
   {
     path: '/bucket/:bucket/pictureStyles',
     name: 'pictureStyles',
     meta: { title: 'Picture Styles', ali: 'bucket' },
-    component: PictureStyles
+    component: PictureStyles,
   },
   {
     path: '/bucket/:bucket/pictureStyles/editStyles/ruleName/:ruleName/IS/:IS',
     name: 'editStyles',
     meta: { title: 'Edit Styles', ali: 'bucket' },
-    component: EditStyles
+    component: EditStyles,
   },
   {
     path: '/bucket/:bucket/prefix/:prefix/key/:key/FilePermissions',
     name: 'FilePermissions',
     meta: { title: 'File Permissions', ali: 'bucket' },
-    component: FilePermissions
+    component: FilePermissions,
   },
   {
     path: '/video/template',
     name: 'template',
     meta: { title: 'Video', ali: 'template', parent: 'video' },
-    component: TemplateList
+    component: TemplateList,
   },
   {
     path: '/video/templateEdit/id/:id',
     name: 'TemplateEdit',
     meta: { title: 'Video', ali: 'template', parent: 'video' },
-    component: TemplateEdit
+    component: TemplateEdit,
   },
   {
     path: '/video/pipeline',
     name: 'pipeline',
     meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
-    component: PipelineList
+    component: PipelineList,
   },
   {
     path: '/video/pipelineEdit/id/:id',
     name: 'pipelineEdit',
     meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
-    component: PipelineEdit
+    component: PipelineEdit,
   },
   {
     path: '/video/output',
     name: 'output',
     meta: { title: 'Video', ali: 'output', parent: 'video' },
-    component: OutputList
+    component: OutputList,
   },
   {
     path: '/video/outputEdit/bucket/:bucket/id/:id',
     name: 'outputEdit',
     meta: { title: 'Video', ali: 'output', parent: 'video' },
-    component: OutputEdit
+    component: OutputEdit,
   },
   {
     path: '/video/JobList',
     name: 'job',
     meta: { title: 'Video', ali: 'job', parent: 'video' },
-    component: JobList
+    component: JobList,
   },
   {
     path: '/video/JobEdit/id/:id',
     name: 'jobEdit',
     meta: { title: 'Video', ali: 'job', parent: 'video' },
-    component: JobEdit
+    component: JobEdit,
   },
   {
     path: '/video/statistics',
     name: 'statistics',
     meta: { title: 'Video', ali: 'statistics', parent: 'video' },
-    component: DataStatistics
+    component: DataStatistics,
   },
   {
     path: '/system/machine',
     name: 'machine',
     meta: { title: 'Machine', ali: 'machine', parent: 'system' },
-    component: Machine
+    component: Machine,
   },
   {
     path: '/system/group',
     name: 'group',
     meta: { title: 'Group', ali: 'group', parent: 'system' },
-    component: Group
+    component: Group,
   },
   {
     path: '/system/partition',
     name: 'partition',
     meta: { title: 'Partition', ali: 'partition', parent: 'system' },
-    component: Partition
+    component: Partition,
   },
   {
     path: '/system/traffic',
     name: 'traffic',
     meta: { title: 'Traffic', ali: 'Traffic', parent: 'system' },
-    component: Traffic
+    component: Traffic,
   },
   {
     path: '/user',
     name: 'user',
     meta: { title: 'User', ali: 'user' },
-    component: UserManage
-  }
+    component: UserManage,
+  },
 ]
 
 let upgradeMode = {
   path: '*',
-  component: Upgrade
+  component: Upgrade,
 }
 
 const routes =
@@ -187,24 +187,24 @@ const routes =
           path: '/',
           component: Layout,
           meta: { requiresAuth: true },
-          children: layoutChild
+          children: layoutChild,
         },
         {
           path: '/login',
-          component: Login
+          component: Login,
         },
         {
           path: '',
-          component: Bridge
+          component: Bridge,
         },
         {
           path: '/bridge',
-          component: Bridge
+          component: Bridge,
         },
         {
           path: '*',
-          component: Notfound
-        }
+          component: Notfound,
+        },
       ]
 
 export default routes

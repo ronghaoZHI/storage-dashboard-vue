@@ -108,7 +108,7 @@ export default {
           : this.$t('SYSTEM.READ_ONLY'),
       modalTitles: {
         groupTitle: this.$t('SYSTEM.GROUP_INFO_TITLE'),
-        partitionTitle: this.$t('SYSTEM.PARTITION_INFO')
+        partitionTitle: this.$t('SYSTEM.PARTITION_INFO'),
       },
       detailHead: [
         { name: 'Partition ID', value: 'partition_id' },
@@ -119,8 +119,8 @@ export default {
         { name: this.$t('SYSTEM.CAPACITY'), value: 'space' },
         { name: 'CPU', value: 'cpu' },
         { name: this.$t('SYSTEM.RW_STATUS'), value: 'status' },
-        { name: this.$t('SYSTEM.IS_DEL'), value: 'isUse' }
-      ]
+        { name: this.$t('SYSTEM.IS_DEL'), value: 'isUse' },
+      ],
     }
   },
   computed: {
@@ -151,15 +151,15 @@ export default {
           value:
             this.data.readonly === 0
               ? this.$t('SYSTEM.WRITEABLE')
-              : this.$t('SYSTEM.READ_ONLY')
+              : this.$t('SYSTEM.READ_ONLY'),
         },
         {
           name: this.$t('SYSTEM.FILE_NUMBERS'),
-          value: thousands(this.data.num_used)
+          value: thousands(this.data.num_used),
         },
         {
           name: this.$t('SYSTEM.USED_CAPACITY'),
-          value: bytes(this.data.space_used)
+          value: bytes(this.data.space_used),
         },
         { name: this.$t('SYSTEM.CREATE_TIME'), value: this.data.ts },
         {
@@ -167,15 +167,15 @@ export default {
           value:
             this.data.close_ts === 0
               ? this.$t('SYSTEM.NOT_CLOSED')
-              : this.data.close_ts
-        }
+              : this.data.close_ts,
+        },
       ]
       return {
         tableData,
         basicInfo,
-        detailHead: this.detailHead
+        detailHead: this.detailHead,
       }
-    }
+    },
   },
   methods: {
     async migrate(partition) {
@@ -183,7 +183,7 @@ export default {
         this.$Loading.start()
         await this.$http.post(GROUP_MOVE, {
           group_id: this.data.group_id,
-          src_partition_id: partition.partition_id
+          src_partition_id: partition.partition_id,
         })
         partition.readonly = 1
         this.$Loading.finish()
@@ -195,7 +195,7 @@ export default {
       try {
         this.$Loading.start()
         await this.$http.post(GROUP_READ_ONLY, {
-          group_id: this.data.group_id
+          group_id: this.data.group_id,
         })
         this.data.readonly = 1
         this.status = this.$t('SYSTEM.READ_ONLY')
@@ -205,8 +205,8 @@ export default {
       }
     },
     bytes: bytes,
-    thousands: thousands
-  }
+    thousands: thousands,
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -8,11 +8,11 @@ import createAlert from './createAlert'
 export const logout = async (message) => {
   message
     ? iView.Modal.error({
-      title: 'Need login',
-      content: `${message},need to login again`,
-      onOk: () => dataClearAndLocation(),
-      okText: 'OK'
-    })
+        title: 'Need login',
+        content: `${message},need to login again`,
+        onOk: () => dataClearAndLocation(),
+        okText: 'OK',
+      })
     : dataClearAndLocation()
 }
 
@@ -31,7 +31,7 @@ async function dataClearAndLocation() {
     const _router = router.default || router
     _router.push({
       path: '/login',
-      query: { redirect: router.fullPath }
+      query: { redirect: router.fullPath },
     })
   }
 }
@@ -58,7 +58,9 @@ export function getCookie(name) {
 
 export function checkRole(role, checkSub = false) {
   const _store = store.default || store
-  const perm = checkSub ? _store.state.subUser.info.perm.flat() : _store.state.user.perms
+  const perm = checkSub
+    ? _store.state.subUser.info.perm.flat()
+    : _store.state.user.perms
   if (Array.isArray(perm) && typeof role === 'string') {
     return perm.includes(role)
   } else {
@@ -72,45 +74,49 @@ export function sentMessage(message, stak = '') {
     const msg = {
       attachments: [
         {
-          "fallback": "Required plain-text summary of the attachment.",
-          "color": "#36a64f",
-          "pretext": "出错了",
-          "author_name": "CWN-Alert",
-          "author_link": "http://flickr.com/bobby/",
-          "author_icon": "http://flickr.com/icons/bobby.jpg",
-          "title": "错误",
-          "text": message,
-          "fields": [
+          fallback: 'Required plain-text summary of the attachment.',
+          color: '#36a64f',
+          pretext: '出错了',
+          author_name: 'CWN-Alert',
+          author_link: 'http://flickr.com/bobby/',
+          author_icon: 'http://flickr.com/icons/bobby.jpg',
+          title: '错误',
+          text: message,
+          fields: [
             {
-              "title": "Url",
-              "value": window.location.href,
-              "short": false
+              title: 'Url',
+              value: window.location.href,
+              short: false,
             },
             {
-              "title": "store",
-              "value": JSON.stringify({
+              title: 'store',
+              value: JSON.stringify({
                 token: store.default.state.token,
-                user: store.default.state.user
+                user: store.default.state.user,
               }),
-              "short": false
+              short: false,
             },
             {
-              "title": "stack",
-              "value": JSON.stringify(stak),
-              "short": false
-            }
+              title: 'stack',
+              value: JSON.stringify(stak),
+              short: false,
+            },
           ],
-          "image_url": "http://my-website.com/path/to/image.jpg",
-          "thumb_url": "http://example.com/path/to/thumb.png",
-          "footer": "CWN-dashboard",
-          "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-          "ts": 123456789
-        }
-      ]
+          image_url: 'http://my-website.com/path/to/image.jpg',
+          thumb_url: 'http://example.com/path/to/thumb.png',
+          footer: 'CWN-dashboard',
+          footer_icon:
+            'https://platform.slack-edge.com/img/default_application_icon.png',
+          ts: 123456789,
+        },
+      ],
     }
-    fetch('https://hooks.slack.com/services/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', {
-      method: 'post',
-      body: JSON.stringify(msg)
-    })
+    fetch(
+      'https://hooks.slack.com/services/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',
+      {
+        method: 'post',
+        body: JSON.stringify(msg),
+      },
+    )
   }
 }

@@ -134,14 +134,14 @@ export default {
             (node) => {
               $(node).hasClass('input-focus') &&
                 $(node).removeClass('input-focus')
-            }
+            },
           )
           $(el)
             .parent()
             .addClass('input-focus')
         })
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -151,13 +151,13 @@ export default {
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
       loginForm: {
         username: localStorage.getItem('loginEmail'),
-        password: ''
+        password: '',
       },
       showPassword: false,
       userInfo: user.state || {},
       searchSubUserInput: '',
       searchedSubUserList: user.state.subUserList || [],
-      subUserList: user.state.subUserList || []
+      subUserList: user.state.subUserList || [],
     }
   },
   methods: {
@@ -180,7 +180,7 @@ export default {
           (error) => {
             this.$Loading.error()
             this.$Message.error(error)
-          }
+          },
         )
       } else {
         this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
@@ -197,7 +197,7 @@ export default {
         this.isLogin = false
         await this.$store.dispatch('setUserInfo', {
           ...data,
-          subUserList: this.subUserList
+          subUserList: this.subUserList,
         })
       } else {
         this.switchUser(data, 'user')
@@ -211,7 +211,7 @@ export default {
       let searchArr = this.searchSubUserInput.split('')
       let reg = new RegExp(searchArr.join('.*'))
       this.searchedSubUserList = this.subUserList.filter(
-        (item) => reg.test(item.username) || reg.test(item.company)
+        (item) => reg.test(item.username) || reg.test(item.company),
       )
     },
     selectSubUser(user) {
@@ -219,7 +219,7 @@ export default {
         this.switchUser({
           ...this.userInfo,
           subUser: Object.assign(user, { keys }),
-          subUserList: this.subUserList
+          subUserList: this.subUserList,
         })
       })
     },
@@ -278,8 +278,8 @@ export default {
       await this.$store.dispatch('cleanState')
       Vue.config.lang = this.lang
       this.$router.push('user')
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

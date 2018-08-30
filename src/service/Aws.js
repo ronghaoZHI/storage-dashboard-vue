@@ -25,13 +25,13 @@ export const config = async ({
   timeout = 10000,
   host = HOST.awsHost,
   s3ForcePathStyle,
-  region = 'us-west-1'
+  region = 'us-west-1',
 }) => {
   let _key =
     key && key.accesskey && key.accesskey.length > 0 ? key : await getKey()
   AWS.config.update({
     accessKeyId: _key.accesskey,
-    secretAccessKey: _key.secretkey
+    secretAccessKey: _key.secretkey,
   })
   AWS.config.region = region
   AWS.config.httpOptions = { timeout: timeout }
@@ -43,7 +43,7 @@ export const getS3 = async ({
   timeout = 10000,
   key = awsKey,
   host = HOST.awsHost,
-  s3ForcePathStyle = true
+  s3ForcePathStyle = true,
 } = {}) => {
   await config({ key, timeout, host, s3ForcePathStyle })
   return new AWS.S3()
@@ -54,7 +54,7 @@ export const handler = async (
   params = '',
   host = HOST.awsHost,
   s3ForcePathStyle = true,
-  timeout = 10000
+  timeout = 10000,
 ) => {
   try {
     const s3 = await getS3({ timeout, host, s3ForcePathStyle })
@@ -62,7 +62,7 @@ export const handler = async (
       s3[method](params, (error, data) => {
         error && iView.Message.error(error.message, 5) && console.log(error)
         return error ? reject(error) : resolve(data)
-      })
+      }),
     )
   } catch (error) {
     iView.Message.error(error.message || error.show_msg, 5)
@@ -75,13 +75,13 @@ export const transcoder = async (
   params = '',
   errorMsg = 'Bad Request',
   host = HOST.transcoderHOST,
-  timeout = 10000
+  timeout = 10000,
 ) => {
   await config({ timeout, host })
   try {
     let elastictranscoder = new AWS.ElasticTranscoder({
       paramValidation: false,
-      convertResponseTypes: false
+      convertResponseTypes: false,
     })
     return await new Promise((resolve, reject) =>
       elastictranscoder[method](params, (error, data) => {
@@ -91,7 +91,7 @@ export const transcoder = async (
             : iView.Message.error(error.message, 5)
         }
         return error ? reject(error) : resolve(data)
-      })
+      }),
     )
   } catch (error) {
     console.error(error)

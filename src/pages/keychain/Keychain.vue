@@ -25,18 +25,18 @@ import user from '@/store/modules/user'
 import moment from 'moment'
 export default {
   components: {
-    keychainCard
+    keychainCard,
   },
   data() {
     return {
       data: [],
-      spinShow: true
+      spinShow: true,
     }
   },
   computed: {
     isAdmin() {
       return user.state.type === 'admin'
-    }
+    },
   },
   created() {
     this.getKeychainList()
@@ -46,12 +46,10 @@ export default {
       this.spinShow = true
       this.$Loading.start()
       try {
-        let keys = this.isAdmin
-          ? user.state.subUser.keys
-          : await getAccesskey()
+        let keys = this.isAdmin ? user.state.subUser.keys : await getAccesskey()
         this.data = await _.forEach(keys, (item) => {
           item.ts = item.LastModified = moment(item.ts).format(
-            'YYYY-MM-DD HH:mm'
+            'YYYY-MM-DD HH:mm',
           )
         })
         this.$Loading.finish()
@@ -84,8 +82,8 @@ export default {
         this.$Loading.error()
         console.log(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

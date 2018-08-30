@@ -137,7 +137,7 @@ import legendList from '@/components/legend/legend'
 export default {
   components: {
     groupCard,
-    legendList
+    legendList,
   },
   data() {
     return {
@@ -153,15 +153,15 @@ export default {
       iconColor: '#6bbefc',
       legendList: [
         {
-          text: 'group:存储单元'
+          text: 'group:存储单元',
         },
         {
-          text: 'server:服务器'
+          text: 'server:服务器',
         },
         {
-          text: 'partition:磁盘'
-        }
-      ]
+          text: 'partition:磁盘',
+        },
+      ],
     }
   },
   computed: {
@@ -171,7 +171,7 @@ export default {
         !!this.searchValue &&
         !parseInt(this.searchValue.replace(/\s+/g, ''))
       )
-    }
+    },
   },
   watch: {
     read_only(to, from) {
@@ -180,7 +180,7 @@ export default {
     },
     showChart(to, from) {
       this.getSortedGroupList(this.groupList, to)
-    }
+    },
   },
   created() {
     this.getGroupList()
@@ -206,8 +206,8 @@ export default {
                 : 0,
             [this.searchType]: this.searchValue.replace(/\s+/g, '') || 'ignore',
             count: this.pageCount,
-            read_only: this.read_only
-          }
+            read_only: this.read_only,
+          },
         })
         this.nextGroupId = groupData.next_group_id
         if (groupData.group) {
@@ -215,7 +215,7 @@ export default {
           this.groupList = isAppend
             ? this.getSortedGroupList(
                 this.groupList.concat(groupData.group),
-                this.showChart
+                this.showChart,
               )
             : this.getSortedGroupList(groupData.group, this.showChart)
         } else {
@@ -263,8 +263,8 @@ export default {
       this.nextGroupId = 0
       this.start_group_id = 0
       this.searchValue = ''
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -108,7 +108,7 @@ import fileSaver from 'file-saver'
 import user from '@/store/modules/user'
 export default {
   components: {
-    chart: ECharts
+    chart: ECharts,
   },
   data() {
     return {
@@ -117,13 +117,13 @@ export default {
       dateDefault: {
         seven_days: [lastNDays(7), lastNDays(1)],
         this_month: [new Date(new Date().setDate(1)), lastNDays(1)],
-        thirty_days: [lastNDays(30), lastNDays(1)]
+        thirty_days: [lastNDays(30), lastNDays(1)],
       },
       dateSelect: this.dateSelect,
       dateOptions: {
         disabledDate(date) {
           return date && date.valueOf() > Date.now() - 86400000
-        }
+        },
       },
       exportData: [],
       spinShow: true,
@@ -133,7 +133,7 @@ export default {
       videoH265LfrOptions: lineOptions,
       videoH265HfrOptions: lineOptions,
       audioOptions: lineOptions,
-      transferPackageOptions: lineOptions
+      transferPackageOptions: lineOptions,
     }
   },
   computed: {
@@ -147,7 +147,7 @@ export default {
     },
     theme: function() {
       return this.$store.state.theme
-    }
+    },
   },
   watch: {
     dateSelect(to, from) {
@@ -155,7 +155,7 @@ export default {
     },
     theme(to, from) {
       this.toggleTheme(to)
-    }
+    },
   },
   created() {
     this.dateSelect = this.dateDefault.seven_days
@@ -175,35 +175,35 @@ export default {
             this.transferPackageData = res.distribution.not_video.container_only
             this.overviewOptions = initOverviewOptions(
               this.overviewData,
-              this.theme
+              this.theme,
             )
             this.videoH264LfrOptions = initVideoOptions(
               this.videoData.lfr_low,
-              this.theme
+              this.theme,
             )
             this.videoH264HfrOptions = initVideoOptions(
               this.videoData.hfr_low,
-              this.theme
+              this.theme,
             )
             this.videoH265LfrOptions = initVideoOptions(
               this.videoData.lfr_h265,
-              this.theme
+              this.theme,
             )
             this.videoH265HfrOptions = initVideoOptions(
               this.videoData.hfr_h265,
-              this.theme
+              this.theme,
             )
             this.audioOptions = initNotVideoOptions(
               this.audioData,
               '音频转码',
-              this.theme
+              this.theme,
             )
             this.transferPackageOptions = initNotVideoOptions(
               this.transferPackageData,
               '转封装',
-              this.theme
+              this.theme,
             )
-          })
+          }),
         ]).then((res) => {
           this.exportData = []
           _.each(
@@ -262,10 +262,10 @@ export default {
                 [exportDic.H265HFR_2K]: this.videoData.hfr_h265['2K'][index][1],
                 [exportDic.H265HFR_4K]: this.videoData.hfr_h265['4K'][index][1],
                 [exportDic.videoTranscoding]: this.audioData[index][1],
-                [exportDic.transferPackage]: this.transferPackageData[index][1]
+                [exportDic.transferPackage]: this.transferPackageData[index][1],
               }
               this.exportData.push(exportDataItem)
-            }
+            },
           )
           this.spinShow = false
         })
@@ -301,7 +301,7 @@ export default {
     exportCsv() {
       let content = Csv(_.keys(this.exportData[0]), this.exportData, ',')
       let file = new File(Array.from(content), this.dateRange + '.csv', {
-        type: 'text/csv;charset=utf-8'
+        type: 'text/csv;charset=utf-8',
       })
       fileSaver.saveAs(file)
     },
@@ -309,28 +309,28 @@ export default {
       this.overviewOptions = initOverviewOptions(this.overviewData, theme)
       this.videoH264LfrOptions = initVideoOptions(
         this.videoData.lfr_low,
-        this.theme
+        this.theme,
       )
       this.videoH264HfrOptions = initVideoOptions(
         this.videoData.hfr_low,
-        this.theme
+        this.theme,
       )
       this.videoH265LfrOptions = initVideoOptions(
         this.videoData.lfr_h265,
-        this.theme
+        this.theme,
       )
       this.videoH265HfrOptions = initVideoOptions(
         this.videoData.hfr_h265,
-        this.theme
+        this.theme,
       )
       this.audioOptions = initNotVideoOptions(this.audioData, '音频转码', theme)
       this.transferPackageOptions = initNotVideoOptions(
         this.transferPackageData,
         '转封装',
-        theme
+        theme,
       )
-    }
-  }
+    },
+  },
 }
 
 const exportDic = {
@@ -364,7 +364,7 @@ const exportDic = {
   H265HFR_2K: 'H265高帧率-2K(s)',
   H265HFR_4K: 'H265高帧率-4K(s)',
   videoTranscoding: '音频转码(s)',
-  transferPackage: '转封装(s)'
+  transferPackage: '转封装(s)',
 }
 const fixDate = (n) => (n < 10 ? '0' + n : String(n))
 const formatDate = (date) =>
@@ -376,54 +376,54 @@ const lineOptions = {
     top: '20px',
     textStyle: {
       color: '#1E9FFF',
-      fontSize: 14
+      fontSize: 14,
     },
     icon: 'square',
-    itemGap: 40
+    itemGap: 40,
   },
   tooltip: {
     trigger: 'axis',
     textStyle: {
       color: '#fff',
-      fontSize: 16
+      fontSize: 16,
     },
     axisPointer: {
       lineStyle: {
-        color: '#1e9fff'
+        color: '#1e9fff',
       },
-      z: 0
+      z: 0,
     },
     backgroundColor: 'rgba(71, 86, 105, 0.8)',
-    padding: 10
+    padding: 10,
   },
   grid: {
     top: '60',
     left: '20',
     right: '50',
     bottom: '10',
-    containLabel: true
+    containLabel: true,
   },
   xAxis: {
     type: 'time',
     offset: 5,
     axisLine: {
       lineStyle: {
-        color: '#8492a6'
-      }
+        color: '#8492a6',
+      },
     },
     interval: 86400000,
     axisTick: {
-      show: false
+      show: false,
     },
     axisLabel: {
       textStyle: {
         color: '#8492a6',
-        fontSize: 14
+        fontSize: 14,
       },
       formatter: function(value) {
         return date(value)
-      }
-    }
+      },
+    },
   },
   yAxis: {
     type: 'value',
@@ -432,45 +432,45 @@ const lineOptions = {
     offset: 5,
     nameTextStyle: {
       color: '#8492a6',
-      fontSize: 14
+      fontSize: 14,
     },
     axisLine: {
       show: false,
       lineStyle: {
-        color: '#8492a6'
-      }
+        color: '#8492a6',
+      },
     },
     axisTick: {
-      show: false
+      show: false,
     },
     axisLabel: {
       textStyle: {
         color: '#8492a6',
-        fontSize: 14
-      }
-    }
-  }
+        fontSize: 14,
+      },
+    },
+  },
 }
 const darkLineOptions = {
   grid: {
     show: true,
     backgroundColor: '#293137',
-    borderColor: '#52626d'
+    borderColor: '#52626d',
   },
   xAxis: {
     splitLine: {
       lineStyle: {
-        color: '#52626d'
-      }
-    }
+        color: '#52626d',
+      },
+    },
   },
   yAxis: {
     splitLine: {
       lineStyle: {
-        color: '#52626d'
-      }
-    }
-  }
+        color: '#52626d',
+      },
+    },
+  },
 }
 const seriesPart = {
   type: 'line',
@@ -479,9 +479,9 @@ const seriesPart = {
   areaStyle: {
     normal: {
       color: '#20a0ff',
-      opacity: 0.5
-    }
-  }
+      opacity: 0.5,
+    },
+  },
 }
 const initOverviewOptions = (data, theme) => {
   let themeLineOptions =
@@ -504,14 +504,14 @@ const initOverviewOptions = (data, theme) => {
           res += item.value[1]
         })
         return res
-      }
+      },
     },
     yAxis: {
       axisLabel: {
         formatter: function(value) {
           return timesK(value)
-        }
-      }
+        },
+      },
     },
     color: ['#9f61fc', '#1e9fff', '#0cce66', '#ffac2a', '#8492a6'],
     legend: {
@@ -520,36 +520,36 @@ const initOverviewOptions = (data, theme) => {
         '音频转码任务数',
         '视频截图张数',
         '转封装任务数',
-        '音视频元信息接口调用次数'
-      ]
+        '音视频元信息接口调用次数',
+      ],
     },
     series: [
       {
         name: '视频转码任务数',
         ...seriesPart,
-        data: data.video_transcoding
+        data: data.video_transcoding,
       },
       {
         name: '音频转码任务数',
         ...seriesPart,
-        data: data.audio_transcoding
+        data: data.audio_transcoding,
       },
       {
         name: '视频截图张数',
         ...seriesPart,
-        data: data.snapshot
+        data: data.snapshot,
       },
       {
         name: '转封装任务数',
         ...seriesPart,
-        data: data.container_only
+        data: data.container_only,
       },
       {
         name: '音视频元信息接口调用次数',
         ...seriesPart,
-        data: data.get_metadata
-      }
-    ]
+        data: data.get_metadata,
+      },
+    ],
   })
   return newOptions
 }
@@ -574,14 +574,14 @@ const initVideoOptions = (data, theme) => {
           res += time(item.value[1], 2)
         })
         return res
-      }
+      },
     },
     yAxis: {
       axisLabel: {
         formatter: function(value) {
           return time(value)
-        }
-      }
+        },
+      },
     },
     color: [
       '#9f61fc',
@@ -591,43 +591,43 @@ const initVideoOptions = (data, theme) => {
       '#ffac2a',
       '#8492a6',
       '#aacc11',
-      '#c4cfdf'
+      '#c4cfdf',
     ],
     legend: {
-      data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', '音频转码', '转封装']
+      data: ['SD240', 'SD480', 'SD', 'HD', '2K', '4K', '音频转码', '转封装'],
     },
     series: [
       {
         name: 'SD240',
         ...seriesPart,
-        data: data.SD240
+        data: data.SD240,
       },
       {
         name: 'SD480',
         ...seriesPart,
-        data: data.SD480
+        data: data.SD480,
       },
       {
         name: 'SD',
         ...seriesPart,
-        data: data.SD
+        data: data.SD,
       },
       {
         name: 'HD',
         ...seriesPart,
-        data: data.HD
+        data: data.HD,
       },
       {
         name: '2K',
         ...seriesPart,
-        data: data['2K']
+        data: data['2K'],
       },
       {
         name: '4K',
         ...seriesPart,
-        data: data['4K']
-      }
-    ]
+        data: data['4K'],
+      },
+    ],
   })
   return newOptions
 }
@@ -652,26 +652,26 @@ const initNotVideoOptions = (data, typeName, theme) => {
           res += time(item.value[1], 2)
         })
         return res
-      }
+      },
     },
     yAxis: {
       axisLabel: {
         formatter: function(value) {
           return time(value)
-        }
-      }
+        },
+      },
     },
     color: ['#9f61fc'],
     legend: {
-      data: [typeName]
+      data: [typeName],
     },
     series: [
       {
         name: typeName,
         ...seriesPart,
-        data: data
-      }
-    ]
+        data: data,
+      },
+    ],
   })
   return newOptions
 }

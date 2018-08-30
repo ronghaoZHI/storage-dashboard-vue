@@ -117,20 +117,20 @@ export default {
           {
             required: true,
             message: this.$t('VIDEO.PIPELINE_NAME_CANNOT_EMPTY'),
-            trigger: 'blur change'
+            trigger: 'blur change',
           },
           {
             type: 'string',
             max: 40,
             message: this.$t('VIDEO.PIPELINE_NAME_CHAR_NUMBER'),
-            trigger: 'blur change'
-          }
+            trigger: 'blur change',
+          },
         ],
         InputBucket: [{ required: true }],
-        OutputBucket: [{ required: true }]
+        OutputBucket: [{ required: true }],
       },
       bucketList: [],
-      userACLList: []
+      userACLList: [],
     }
   },
   computed: {
@@ -149,10 +149,10 @@ export default {
         Access: {
           Read: true,
           ReadAcp: true,
-          WriteAcp: true
-        }
+          WriteAcp: true,
+        },
       }
-    }
+    },
   },
   created() {
     this.readPipeline()
@@ -165,7 +165,7 @@ export default {
         try {
           this.$Loading.start()
           let res = await this.$http.get(
-            getTranscoderUrl(`pipelines/${this.pipelineId}`)
+            getTranscoderUrl(`pipelines/${this.pipelineId}`),
           )
           await this.convert2Front(res.Pipeline)
           this.$Loading.finish()
@@ -194,21 +194,21 @@ export default {
             {
               Grantee: this.username,
               GranteeType: 'Canonical',
-              Access: ['FullControl']
-            }
+              Access: ['FullControl'],
+            },
           ]
       permissions.forEach((item) => {
         let acc = {
           Read: false,
           ReadAcp: false,
-          WriteAcp: false
+          WriteAcp: false,
         }
         item.Access.forEach((item) => {
           if (item === 'FullControl') {
             acc = {
               Read: true,
               ReadAcp: true,
-              WriteAcp: true
+              WriteAcp: true,
             }
           } else {
             acc[item] = true
@@ -247,7 +247,7 @@ export default {
         } else {
           await this.$http.put(
             getTranscoderUrl(`pipelines/${this.pipelineId}`),
-            params
+            params,
           )
           this.$Loading.finish()
           this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
@@ -274,14 +274,14 @@ export default {
           }
         }),
         null,
-        undefined
+        undefined,
       )
       return saved
     },
     goPipelineList() {
       this.$router.push({ name: 'pipeline' })
-    }
-  }
+    },
+  },
 }
 const pipelineDefult = {
   Name: '',
@@ -290,8 +290,8 @@ const pipelineDefult = {
   SuccessCallbackUrl: '',
   FailureCallbackUrl: '',
   ContentConfig: {
-    Permissions: []
-  }
+    Permissions: [],
+  },
 }
 
 const groupGrantee = ['AllUsers', 'AuthenticatedUsers']
@@ -303,8 +303,8 @@ const groupACLListDefult = [
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
-    }
+      WriteAcp: false,
+    },
   },
   {
     GranteeType: 'Group',
@@ -312,14 +312,14 @@ const groupACLListDefult = [
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
-    }
-  }
+      WriteAcp: false,
+    },
+  },
 ]
 
 const aclConvert2Save = (data) => {
   const saved = {
-    Grantee: data.Grantee
+    Grantee: data.Grantee,
   }
   if (!groupGrantee.includes(data.Grantee)) {
     saved.GranteeType = data.Grantee.split('@')[1] ? 'Email' : 'Canonical'

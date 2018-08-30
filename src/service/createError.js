@@ -41,7 +41,7 @@ export default function createError(responseError) {
 
     if (body && xml2json(body)) {
       errorMsg = xml2json(body).Error.Message
-    }else if (body && typeof body === 'object') {
+    } else if (body && typeof body === 'object') {
       // 有的接口错误描述还被包了一层，所以也尝试解析
       const realBody = body.data
       if (realBody && typeof realBody === 'object') {
@@ -65,7 +65,12 @@ export default function createError(responseError) {
       // 如果message code有任何一个还没有取到
       if (!errorMsg || !code) {
         const msg =
-          body.message || body.error_description || body.error_message || body.message || body.msg || body.description
+          body.message ||
+          body.error_description ||
+          body.error_message ||
+          body.message ||
+          body.msg ||
+          body.description
         const errorCode = body.code || body.code
 
         if (!errorMsg) {
@@ -87,7 +92,9 @@ export default function createError(responseError) {
       code = 'OFF_LINE'
     } else if (responseError.code === 'ECONNABORTED') {
       code = 504
-      errorMsg = `网络请求超时(${responseError.config.timeout}ms)，请确认网络正常并重试`
+      errorMsg = `网络请求超时(${
+        responseError.config.timeout
+      }ms)，请确认网络正常并重试`
     }
   } else {
     // 请求未发出
@@ -99,7 +106,8 @@ export default function createError(responseError) {
   }
 
   if (!errorMsg) {
-    errorMsg = codeMessage[code] || response.statusText || `抱歉，当前请求异常(${code})`
+    errorMsg =
+      codeMessage[code] || response.statusText || `抱歉，当前请求异常(${code})`
   }
 
   sentMessage(errorMsg, responseError)

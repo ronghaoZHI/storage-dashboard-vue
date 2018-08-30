@@ -58,7 +58,7 @@ export default {
             (e) => {
               e.stopPropagation()
             },
-            false
+            false,
           )
           fileInput.onchange = (e) => {
             const files = e.target.files
@@ -80,7 +80,7 @@ export default {
             let dirReader = item.createReader()
             dirReader.readEntries((entries) => {
               Array.from(entries).forEach((file) =>
-                traverseFileTree(file, path + item.name + '/')
+                traverseFileTree(file, path + item.name + '/'),
               )
             })
           }
@@ -95,12 +95,12 @@ export default {
                 binding.value.fileList.push({
                   name: item.name,
                   lastModifiedDate: moment(item.lastModifiedDate).format(
-                    'YYYY-MM-DD HH:mm'
+                    'YYYY-MM-DD HH:mm',
                   ),
                   size: bytes(item.size),
                   progress: 0,
                   file: item,
-                  isUpload: false
+                  isUpload: false,
                 })
               })
             : target.file(
@@ -108,61 +108,61 @@ export default {
                   binding.value.fileList.push({
                     name: path + item.name,
                     lastModifiedDate: moment(item.lastModifiedDate).format(
-                      'YYYY-MM-DD HH:mm'
+                      'YYYY-MM-DD HH:mm',
                     ),
                     size: bytes(item.size),
                     progress: 0,
                     file: item,
-                    isUpload: false
+                    isUpload: false,
                   })
                 },
                 (error) => {
                   console.log(error)
-                }
+                },
               )
         }
-      }
-    }
+      },
+    },
   },
   props: {
     bucket: {
       type: String,
-      required: true
+      required: true,
     },
     prefix: {
       type: String,
-      default: ''
+      default: '',
     },
     aclType: {
       type: String,
-      default: 'public-read'
+      default: 'public-read',
     },
     checkFileType: {
       type: Boolean,
-      default: false
+      default: false,
     },
     validation: {
-      type: RegExp
+      type: RegExp,
     },
     multiple: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showUploadList: {
       type: Boolean,
-      default: true
+      default: true,
     },
     accept: {
-      type: String
+      type: String,
     },
     validateMessage: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
       fileList: [],
-      self: this
+      self: this,
     }
   },
   watch: {
@@ -183,9 +183,9 @@ export default {
                   console.log(e)
                   this.$Message.error(
                     this.$t('STORAGE.UPLOAD_FAILED', { fileName: file.name }),
-                    5
+                    5,
                   )
-                }
+                },
               )
             } else {
               this.fileList.splice(this.fileList.indexOf(file), 1)
@@ -194,7 +194,7 @@ export default {
           }
         })
       }
-    }
+    },
   },
   methods: {
     async uploadFile(item) {
@@ -204,7 +204,7 @@ export default {
         Bucket: this.bucket,
         Key: this.prefix + item.name,
         ContentType: file.type,
-        Body: file
+        Body: file,
       }
       let options = { partSize: 64 * 1024 * 1024, queueSize: 3 }
       let aws = await getS3({ timeout: 3600000 })
@@ -217,8 +217,8 @@ export default {
     },
     clearFiles() {
       this.fileList = []
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -568,7 +568,7 @@ import {
   I2J,
   generalDefult,
   markerDefult,
-  defaultFontStyle
+  defaultFontStyle,
 } from './Consts'
 export default {
   components: { upload, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item },
@@ -594,27 +594,27 @@ export default {
       padList: [
         { value: 'pad', label: this.$t('STORAGE.CROP_PAD') },
         { value: 'lpad', label: this.$t('STORAGE.CROP_LPAD') },
-        { value: 'mpad', label: this.$t('STORAGE.CROP_MPAD') }
+        { value: 'mpad', label: this.$t('STORAGE.CROP_MPAD') },
       ],
       fillList: [
         { value: 'fill', label: this.$t('STORAGE.CROP_FILL') },
-        { value: 'lfill', label: this.$t('STORAGE.CROP_LFILL') }
+        { value: 'lfill', label: this.$t('STORAGE.CROP_LFILL') },
       ],
       thumbList: [
         { value: 'face', label: this.$t('STORAGE.CROP_FACE') },
         { value: 'faces', label: this.$t('STORAGE.CROP_FACES') },
         { value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER') },
-        { value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER') }
+        { value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER') },
       ],
       fitList: [
         { value: 'fit', label: this.$t('STORAGE.CROP_FIT') },
         { value: 'mfit', label: this.$t('STORAGE.CROP_MFIT') },
-        { value: 'limit', label: this.$t('STORAGE.CROP_LFIT') }
+        { value: 'limit', label: this.$t('STORAGE.CROP_LFIT') },
       ],
       angleList: [
         { value: 'angle', label: this.$t('STORAGE.ANGLE_ROTATION') },
         { value: 'vflip', label: this.$t('STORAGE.ANGLE_VFLIP') },
-        { value: 'hflip', label: this.$t('STORAGE.ANGLE_HFLIP') }
+        { value: 'hflip', label: this.$t('STORAGE.ANGLE_HFLIP') },
       ],
       cropGravityList: [
         { value: 'north_west', label: this.$t('STORAGE.GRAVITY_NORTH_WEST') },
@@ -631,7 +631,7 @@ export default {
         { value: 'face', label: this.$t('STORAGE.CROP_FACE') },
         { value: 'faces', label: this.$t('STORAGE.CROP_FACES') },
         { value: 'face:center', label: this.$t('STORAGE.CROP_FACE_CENTER') },
-        { value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER') }
+        { value: 'faces:center', label: this.$t('STORAGE.CROP_FACES_CENTER') },
       ],
       effectList: [
         { name: this.$t('STORAGE.FILTER_EFFECTS_NONE'), value: 'noEffect' },
@@ -644,7 +644,7 @@ export default {
         { name: this.$t('STORAGE.OIL_PAINT'), value: 'oil_paint' },
         { name: this.$t('STORAGE.PIXELATE'), value: 'pixelate' },
         { name: this.$t('STORAGE.ADD_COLOR'), value: 'color' },
-        { name: this.$t('STORAGE.IMPROVE'), value: 'improve' }
+        { name: this.$t('STORAGE.IMPROVE'), value: 'improve' },
       ],
       colorList: [
         { name: this.$t('STORAGE.SEPIA'), value: 'sepia' },
@@ -653,18 +653,18 @@ export default {
         { name: this.$t('STORAGE.BLUE'), value: 'blue' },
         { name: this.$t('STORAGE.YELLOW'), value: 'yellow' },
         { name: this.$t('STORAGE.CYAN'), value: 'cyan' },
-        { name: this.$t('STORAGE.MAGENTA'), value: 'magenta' }
+        { name: this.$t('STORAGE.MAGENTA'), value: 'magenta' },
       ],
       ruleValidate: {
         transformation: [{ validator: this.validateName, trigger: 'change' }],
         'mark.text': [{ validator: this.validateText, trigger: 'change' }],
         instructions: [
-          { validator: this.validateInstructions, trigger: 'change' }
-        ]
+          { validator: this.validateInstructions, trigger: 'change' },
+        ],
       },
       textareaMinrows: {
-        minRows: 6
-      }
+        minRows: 6,
+      },
     }
   },
   computed: {
@@ -720,21 +720,21 @@ export default {
     },
     bucketPath() {
       return `/bucket/${this.$route.params.bucket}`
-    }
+    },
   },
   watch: {
     general: {
       handler: function(val, oldVal) {
         this.autoSaveAndPreview()
       },
-      deep: true
+      deep: true,
     },
     mark: {
       handler: function(val, oldVal) {
         this.autoSaveAndPreview()
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
     this.readStyles()
@@ -746,10 +746,10 @@ export default {
         this.instructions = this.paramsIS
         let res = await handler('getObject', {
           Bucket: this.bucket,
-          Key: this.key
+          Key: this.key,
         })
         let styles = JSON.parse(
-          new encoding.TextDecoder('utf-8').decode(res.Body)
+          new encoding.TextDecoder('utf-8').decode(res.Body),
         )
         if (isPrimary(styles)) {
           let front = styles2Front(styles)
@@ -761,7 +761,7 @@ export default {
             let file = await this.readOverlayFile(overlay)
             if (/.+\.json$/.test(overlay)) {
               let fontStyle = JSON.parse(
-                new encoding.TextDecoder('utf-8').decode(file)
+                new encoding.TextDecoder('utf-8').decode(file),
               )
               this.fontStyle = fontStyle
               this.fontStyle.font_color = '#' + fontStyle.font_color
@@ -781,19 +781,19 @@ export default {
     async submitStyles(autoSave = false) {
       if (this.styles2Save()) {
         const file = new Blob([JSON.stringify(this.styles2Save())], {
-          type: 'application/json'
+          type: 'application/json',
         })
         try {
           await handler('putObject', {
             Bucket: this.bucket,
             Key: prefix.rules + this.transformation + '.json',
             ContentType: 'application/json',
-            Body: file
+            Body: file,
           })
           !autoSave &&
             this.$router.push({
               name: 'pictureStyles',
-              params: { bucket: this.bucket }
+              params: { bucket: this.bucket },
             })
         } catch (error) {
           this.$Message.success(this.$t('STERAGE.SAVE_FAILED'))
@@ -850,7 +850,7 @@ export default {
         let file
         if (this.markType === 'text') {
           file = new Blob([JSON.stringify(this.font2Save(this.fontStyle))], {
-            type: 'application/json'
+            type: 'application/json',
           })
           markValue = mark2Save(this.mark, this.transformation)
         } else {
@@ -879,7 +879,7 @@ export default {
             : imgs.split('-')[0] + '.png'
         const file = await handler('getObject', {
           Bucket: this.bucket,
-          Key: prefix.overlay + imgName
+          Key: prefix.overlay + imgName,
         })
         await putOverlayFile(imgName, file.Body)
         this.seniorUrl = getImgxUrl(this.instructions)
@@ -918,21 +918,21 @@ export default {
     async readOverlayFile(name) {
       let params = {
         Bucket: this.bucket,
-        Key: prefix.overlay + name
+        Key: prefix.overlay + name,
       }
       let res = await handler('getObject', params)
       return res.Body
     },
     async saveFont(data) {
       const file = new Blob([JSON.stringify(this.font2Save(data))], {
-        type: 'application/json'
+        type: 'application/json',
       })
       try {
         await handler('putObject', {
           Bucket: this.bucket,
           Key: prefix.overlay + this.transformation + '_font.json',
           ContentType: 'application/json',
-          Body: file
+          Body: file,
         })
       } catch (error) {
         this.$Message.error(this.$t('STERAGE.SAVE_FAILED'))
@@ -944,7 +944,7 @@ export default {
         font_size: parseInt(data.font_size),
         font_color: color2Save(data.font_color),
         text: this.mark.text,
-        background: color2Save(data.background)
+        background: color2Save(data.background),
       }
     },
     uploadSuccess(fileName) {
@@ -965,7 +965,7 @@ export default {
       let ruleList = []
       let res = await handler('listObjects', {
         Bucket: this.bucket,
-        Prefix: prefix.rules
+        Prefix: prefix.rules,
       })
       const rules = res.Contents
       _.each(rules, (item) => {
@@ -1038,8 +1038,8 @@ export default {
     },
     back() {
       this.$router.back()
-    }
-  }
+    },
+  },
 }
 const color2Save = (hexStr) => {
   let hex = hexStr
@@ -1059,7 +1059,7 @@ const colorTest = (hex) => {
 const putOverlayFile = async (name, body) => {
   const type = /.+\.png$/.test(name) ? 'application/x-png' : 'application/json'
   const s3 = await getS3({
-    key: { accesskey: previewAccessKey, secretkey: previewSecretKey }
+    key: { accesskey: previewAccessKey, secretkey: previewSecretKey },
   })
   return new Promise((resolve, reject) =>
     s3.putObject(
@@ -1067,13 +1067,13 @@ const putOverlayFile = async (name, body) => {
         Bucket: 'image-example',
         Key: prefix.overlay + name,
         ContentType: type,
-        Body: body
+        Body: body,
       },
       (error, data) => {
         error && iView.Message.error(error, 5)
         return error ? reject(error) : resolve(data)
-      }
-    )
+      },
+    ),
   )
 }
 const getImgxUrl = (IS) => {
@@ -1169,7 +1169,7 @@ const mark2Save = (data, name) => {
     x: parseInt(data.x),
     y: parseInt(data.y),
     gravity: data.gravity,
-    opacity: data.opacity
+    opacity: data.opacity,
   }
   if (data.type === 'text') {
     saved.overlay = 'text:' + name + '_font:' + data.text
@@ -1282,7 +1282,7 @@ const general2Front = (data) => {
       'pixelate',
       'sharpen',
       'auto_contrast',
-      'improve'
+      'improve',
     ]
     const colorArray = [
       'sepia',
@@ -1291,7 +1291,7 @@ const general2Front = (data) => {
       'blue',
       'yellow',
       'cyan',
-      'magenta'
+      'magenta',
     ]
     if (effectArray.includes(effect.split(':')[0])) {
       front.effect = effect.split(':')[0]

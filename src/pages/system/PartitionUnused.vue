@@ -48,7 +48,7 @@ export default {
       try {
         await this.$http.post(PARTITION_UNUSED_ADD, {
           ip: this.data[index].ips[0],
-          path: this.data[index].path
+          path: this.data[index].path,
         })
         this.data.splice(index, 1)
         this.$Loading.finish()
@@ -59,8 +59,8 @@ export default {
         this.$Message.error(this.$t('SYSTEM.FAILURE'))
       }
     },
-    bytes: bytes
-  }
+    bytes: bytes,
+  },
 }
 </script>
 <style lang="less" scoped>

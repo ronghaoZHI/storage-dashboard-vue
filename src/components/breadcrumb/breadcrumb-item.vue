@@ -25,17 +25,17 @@ export default {
   name: 'BscBreadcrumbItem',
   props: {
     href: {
-      type: String
+      type: String,
     },
     replace: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       separator: '',
-      showSeparator: false
+      showSeparator: false,
     }
   },
   computed: {
@@ -44,7 +44,7 @@ export default {
     },
     separatorClasses() {
       return `${prefixCls}-separator`
-    }
+    },
   },
   mounted() {
     this.showSeparator = this.$slots.separator !== undefined
@@ -59,7 +59,7 @@ export default {
       } else {
         window.location.href = this.href
       }
-    }
-  }
+    },
+  },
 }
 </script>

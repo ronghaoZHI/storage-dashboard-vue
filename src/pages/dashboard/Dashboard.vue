@@ -235,13 +235,13 @@ import {
   dateTimeYear,
   bytesSpliteUnits,
   bpsSpliteUnits,
-  timesSpliteUnits
+  timesSpliteUnits,
 } from '@/service/bucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
   components: {
-    chart: ECharts
+    chart: ECharts,
   },
   data() {
     return {
@@ -254,7 +254,7 @@ export default {
         today: [lastNDays(0), lastNDays(0)],
         seven_days: [lastNDays(6), lastNDays(0)],
         this_month: [new Date(new Date().setDate(1)), lastNDays(0)],
-        thirty_days: [lastNDays(29), lastNDays(0)]
+        thirty_days: [lastNDays(29), lastNDays(0)],
       },
       dateSelect: [lastNDays(0), lastNDays(0)],
       originOverview: {},
@@ -265,7 +265,7 @@ export default {
       dateOptions: {
         disabledDate(date) {
           return date && date.valueOf() > Date.now()
-        }
+        },
       },
       exportData: [],
       spinShow: true,
@@ -276,7 +276,7 @@ export default {
       inflowsOptions: lineOptions,
       outflowsOptions: lineOptions,
       requestsOptions: lineOptions,
-      filesOptions: lineOptions
+      filesOptions: lineOptions,
     }
   },
   computed: {
@@ -293,7 +293,7 @@ export default {
             inflowsDark,
             outflowsDark,
             requestsDark,
-            filesDark
+            filesDark,
           ]
         : [capacity, bandwidth, inflows, outflows, requests, files]
     },
@@ -304,7 +304,7 @@ export default {
       return this.$store.getters.buckets
         ? [{ Name: 'All Buckets' }, ...this.$store.getters.buckets]
         : [{ Name: 'All Buckets' }]
-    }
+    },
   },
   watch: {
     dateSelect(to, from) {
@@ -315,7 +315,7 @@ export default {
         formatDate(this.dateSelect[1]) < this.dateDivided ? 'old' : 'oldAndNew'
       this.setOptions(url)
       this.setBandwidthOptions(url)
-    }
+    },
   },
   created() {
     this.$store.dispatch('getBuckets')
@@ -375,14 +375,14 @@ export default {
                       res.sum.write_count +
                       res.sum.delete_count,
                     true,
-                    'times'
+                    'times',
                   ),
-                  files: this.convertData(res.total.num_used, true, '')
+                  files: this.convertData(res.total.num_used, true, ''),
                 }
                 // echarts data old
                 _.extend(this, res)
                 this.setOptions('old')
-              })
+              }),
           ]).then((res) => {
             // export data old
             this.exportData = []
@@ -390,7 +390,7 @@ export default {
               this.time_nodes.map((time) => time * 1000),
               (time, index) => {
                 let exportData = {
-                  time: date(time)
+                  time: date(time),
                 }
                 exportData[exportDic.capacity] = this.distributed.space_used[
                   index
@@ -410,7 +410,7 @@ export default {
                 ] = this.distributed.delete_count[index]
                 exportData[exportDic.files] = this.distributed.num_used[index]
                 this.exportData.push(exportData)
-              }
+              },
             )
             this.spinShow = false
           })
@@ -439,8 +439,8 @@ export default {
                       return b - a
                     })[0],
                     true,
-                    'bps'
-                  ))
+                    'bps',
+                  )),
               )
               Object.keys(res.up_bandwidth).forEach(
                 (item) =>
@@ -449,8 +449,8 @@ export default {
                       return b - a
                     })[0],
                     true,
-                    'bps'
-                  ))
+                    'bps',
+                  )),
               )
 
               this.selectedBandwidthLabel = 'out_band_pub'
@@ -479,7 +479,7 @@ export default {
                 .then((res) => {
                   this.isRedirect = res.is_redirect
                   resNew = res
-                })
+                }),
             ])
           } else {
             // old and new storage
@@ -490,8 +490,8 @@ export default {
                     'old',
                     formatDate(this.dateSelect[0]) +
                       '-' +
-                      this.dateDividedBefore
-                  )
+                      this.dateDividedBefore,
+                  ),
                 )
                 .then((res) => {
                   this.isRedirect = res.is_redirect
@@ -503,7 +503,7 @@ export default {
                 .then((res) => {
                   this.isRedirect = res.is_redirect
                   resNew = res
-                })
+                }),
             ])
           }
           // overview data total
@@ -515,7 +515,7 @@ export default {
                 : resOld.sum.flow_up +
                   resNew.sum.flow_up_cdn +
                   resNew.sum.flow_up_pub,
-              true
+              true,
             ),
             outflows: this.convertData(
               resOld.sum === undefined
@@ -523,7 +523,7 @@ export default {
                 : resOld.sum.flow_down +
                   resNew.sum.flow_down_cdn +
                   resNew.sum.flow_down_pub,
-              true
+              true,
             ),
             requests: this.convertData(
               resOld.sum === undefined
@@ -543,9 +543,9 @@ export default {
                   resNew.sum.delete_count +
                   resNew.sum.list_count,
               true,
-              'times'
+              'times',
             ),
-            files: this.convertData(resNew.total.num_used, true, '')
+            files: this.convertData(resNew.total.num_used, true, ''),
           }
           // echarts data total
           let echartData = {
@@ -557,19 +557,19 @@ export default {
               resOld.distributed === undefined
                 ? resNew.distributed.space_used
                 : resOld.distributed.space_used.concat(
-                    resNew.distributed.space_used
+                    resNew.distributed.space_used,
                   ),
             flow_up:
               resOld.distributed === undefined
                 ? this.combineTwoArray(
                     resNew.distributed.flow_up_cdn,
-                    resNew.distributed.flow_up_pub
+                    resNew.distributed.flow_up_pub,
                   )
                 : resOld.distributed.flow_up.concat(
                     this.combineTwoArray(
                       resNew.distributed.flow_up_cdn,
-                      resNew.distributed.flow_up_pub
-                    )
+                      resNew.distributed.flow_up_pub,
+                    ),
                   ),
             flow_up_pub: resNew.distributed.flow_up_pub,
             up_cdn: resNew.distributed.up_cdn,
@@ -577,13 +577,13 @@ export default {
               resOld.distributed === undefined
                 ? this.combineTwoArray(
                     resNew.distributed.flow_down_cdn,
-                    resNew.distributed.flow_down_pub
+                    resNew.distributed.flow_down_pub,
                   )
                 : resOld.distributed.flow_down.concat(
                     this.combineTwoArray(
                       resNew.distributed.flow_down_cdn,
-                      resNew.distributed.flow_down_pub
-                    )
+                      resNew.distributed.flow_down_pub,
+                    ),
                   ),
             flow_down_pub: resNew.distributed.flow_down_pub,
             down_cdn: resNew.distributed.down_cdn,
@@ -591,39 +591,39 @@ export default {
               resOld.distributed === undefined
                 ? this.combineTwoArray(
                     resNew.distributed.get_count,
-                    resNew.distributed.head_count
+                    resNew.distributed.head_count,
                   )
                 : resOld.distributed.read_count.concat(
                     this.combineTwoArray(
                       resNew.distributed.get_count,
-                      resNew.distributed.head_count
-                    )
+                      resNew.distributed.head_count,
+                    ),
                   ),
             write_count:
               resOld.distributed === undefined
                 ? this.combineTwoArray(
                     resNew.distributed.post_count,
-                    resNew.distributed.put_count
+                    resNew.distributed.put_count,
                   )
                 : resOld.distributed.write_count.concat(
                     this.combineTwoArray(
                       resNew.distributed.post_count,
-                      resNew.distributed.put_count
-                    )
+                      resNew.distributed.put_count,
+                    ),
                   ),
             delete_count:
               resOld.distributed === undefined
                 ? resNew.distributed.delete_count
                 : resOld.distributed.delete_count.concat(
-                    resNew.distributed.delete_count
+                    resNew.distributed.delete_count,
                   ),
             list_count: resNew.distributed.list_count,
             num_used:
               resOld.distributed === undefined
                 ? resNew.distributed.num_used
                 : resOld.distributed.num_used.concat(
-                    resNew.distributed.num_used
-                  )
+                    resNew.distributed.num_used,
+                  ),
           }
           _.extend(this, echartData)
           this.setOptions('oldAndNew')
@@ -638,10 +638,10 @@ export default {
                       formatDate(this.dateSelect[1]) &&
                     formatDate(this.dateSelect[0]) >= this.dateDivided
                     ? dateTimeYear(
-                        echartData.time_nodes[index] * 1000 + 3600000
+                        echartData.time_nodes[index] * 1000 + 3600000,
                       )
                     : date(echartData.time_nodes[index] * 1000)
-                  : ''
+                  : '',
               }
               exportData[exportDic.capacity] = echartData.space_used[index]
               exportData[exportDic.inflows] = echartData.flow_up[index]
@@ -682,7 +682,7 @@ export default {
                 _.omit(this.bandwidthDataRes.down_bandwidth, ['pub']),
                 (value, key) => {
                   exportData[`${key} ${exportDic.cdnOutBand}`] = value[index]
-                }
+                },
               )
               exportData[
                 exportDic.pubInBand
@@ -691,10 +691,10 @@ export default {
                 _.omit(this.bandwidthDataRes.up_bandwidth, ['pub']),
                 (value, key) => {
                   exportData[`${key} ${exportDic.cdnInBand}`] = value[index]
-                }
+                },
               )
               this.exportData.push(exportData)
-            }
+            },
           )
           this.spinShow = false
         } catch (error) {
@@ -707,7 +707,7 @@ export default {
           ) {
             this.$Modal.warning({
               title: this.$t('DASHBOARD.PROMPT'),
-              content: this.$t('DASHBOARD.PROMPT_CONTENT')
+              content: this.$t('DASHBOARD.PROMPT_CONTENT'),
             })
             return
           }
@@ -724,27 +724,27 @@ export default {
                 this.bandwidthDataRes.down_bandwidth.pub,
                 '公网流出带宽',
                 'byte',
-                this.bandwidthDataRes.time_nodes
+                this.bandwidthDataRes.time_nodes,
               ),
               outBandCdn: this.combineTimeDataUnitLabelToObjectArray(
                 _.omit(this.bandwidthDataRes.down_bandwidth, ['pub']),
                 ' cdn 流出带宽',
                 'type',
-                this.bandwidthDataRes.time_nodes
+                this.bandwidthDataRes.time_nodes,
               ),
               inBandPub: this.combineTimeDataUnitLabel(
                 this.bandwidthDataRes.up_bandwidth.pub,
                 '公网流入带宽',
                 'byte',
-                this.bandwidthDataRes.time_nodes
+                this.bandwidthDataRes.time_nodes,
               ),
               inBandCdn: this.combineTimeDataUnitLabelToObjectArray(
                 _.omit(this.bandwidthDataRes.up_bandwidth, ['pub']),
                 ' cdn 流入带宽',
                 'type',
-                this.bandwidthDataRes.time_nodes
+                this.bandwidthDataRes.time_nodes,
               ),
-              theme: this.theme
+              theme: this.theme,
             })
     },
     setOptions(url) {
@@ -754,15 +754,15 @@ export default {
       this.capacityOptions = initOptions({
         dataPart: this.combineTimeDataUnitLabel(
           url === 'old' ? this.distributed.space_used : this.space_used,
-          '存储容量'
+          '存储容量',
         ),
         theme: this.theme,
-        newOneDayFlag: newOneDayFlag
+        newOneDayFlag: newOneDayFlag,
       })
       this.inflowsOptions = initOptions({
         dataPart: this.combineTimeDataUnitLabel(
           url === 'old' ? this.distributed.flow_up : this.flow_up,
-          '流入流量'
+          '流入流量',
         ),
         dataPart1:
           url === 'old'
@@ -773,15 +773,15 @@ export default {
             ? ''
             : this.combineTimeDataUnitLabelToObjectArray(
                 this.up_cdn,
-                ' cdn 流入流量'
+                ' cdn 流入流量',
               ),
         theme: this.theme,
-        newOneDayFlag: newOneDayFlag
+        newOneDayFlag: newOneDayFlag,
       })
       this.outflowsOptions = initOptions({
         dataPart: this.combineTimeDataUnitLabel(
           url === 'old' ? this.distributed.flow_down : this.flow_down,
-          '流出流量'
+          '流出流量',
         ),
         dataPart1:
           url === 'old'
@@ -792,26 +792,26 @@ export default {
             ? ''
             : this.combineTimeDataUnitLabelToObjectArray(
                 this.down_cdn,
-                ' cdn 流出流量'
+                ' cdn 流出流量',
               ),
         theme: this.theme,
-        newOneDayFlag: newOneDayFlag
+        newOneDayFlag: newOneDayFlag,
       })
       this.requestsOptions = initOptions({
         dataPart: this.combineTimeDataUnitLabel(
           url === 'old' ? this.distributed.read_count : this.read_count,
           '读请求数',
-          'times'
+          'times',
         ),
         dataPart1: this.combineTimeDataUnitLabel(
           url === 'old' ? this.distributed.write_count : this.write_count,
           '写请求数',
-          'times'
+          'times',
         ),
         dataPart2: this.combineTimeDataUnitLabel(
           url === 'old' ? this.distributed.delete_count : this.delete_count,
           '删除请求数',
-          'times'
+          'times',
         ),
         dataPart3:
           url === 'old'
@@ -819,19 +819,19 @@ export default {
             : this.combineTimeDataUnitLabel(
                 this.list_count,
                 '列文件请求数',
-                'times'
+                'times',
               ),
         theme: this.theme,
-        newOneDayFlag: newOneDayFlag
+        newOneDayFlag: newOneDayFlag,
       })
       this.filesOptions = initOptions({
         dataPart: this.combineTimeDataUnitLabel(
           url === 'old' ? this.distributed.num_used : this.num_used,
           '文件数',
-          ''
+          '',
         ),
         theme: this.theme,
-        newOneDayFlag: newOneDayFlag
+        newOneDayFlag: newOneDayFlag,
       })
     },
     combineTwoArray(array1, array2) {
@@ -845,7 +845,7 @@ export default {
       data,
       label,
       unit = 'byte',
-      time = this.time_nodes
+      time = this.time_nodes,
     ) {
       let _time =
         time.length === data.length
@@ -858,7 +858,7 @@ export default {
       let object = {
         label: label,
         unit: unit,
-        data: combinedData
+        data: combinedData,
       }
       return object
     },
@@ -866,7 +866,7 @@ export default {
       data,
       label,
       unit = 'byte',
-      time = this.time_nodes
+      time = this.time_nodes,
     ) {
       let objectArray = []
       _.forEach(data, (value, key) => {
@@ -881,7 +881,7 @@ export default {
         let object = {
           label: key + label,
           unit: unit,
-          data: combinedData
+          data: combinedData,
         }
         objectArray.push(object)
       })
@@ -899,7 +899,9 @@ export default {
             : timesSpliteUnits(value, 3)
         : unit === 'byte'
           ? bytes(value)
-          : unit === 'bps' ? bps(value) : times(value)
+          : unit === 'bps'
+            ? bps(value)
+            : times(value)
     },
     getApiURL(url, range) {
       let path = ''
@@ -912,7 +914,9 @@ export default {
       }
       return url === 'new'
         ? getBillUrl(path)
-        : url === 'old' ? getBillOldUrl(path) : getBillBandwidthUrl(path)
+        : url === 'old'
+          ? getBillOldUrl(path)
+          : getBillBandwidthUrl(path)
     },
     tabToggle(index, ref) {
       let vm = this
@@ -926,11 +930,11 @@ export default {
       let file = new File(
         Array.from(content),
         user.state.username + '-' + this.dateRange + '.csv',
-        { type: 'text/csv;charset=utf-8' }
+        { type: 'text/csv;charset=utf-8' },
       )
       fileSaver.saveAs(file)
-    }
-  }
+    },
+  },
 }
 
 const exportDic = {
@@ -949,7 +953,7 @@ const exportDic = {
   writeRequests: '写请求数（次）',
   deleteRequests: '删除请求数（次）',
   listRequests: '列文件请求数（次）',
-  files: '文件数（个）'
+  files: '文件数（个）',
 }
 const fixDate = (n) => (n < 10 ? '0' + n : String(n))
 const formatDate = (date) =>
@@ -961,42 +965,42 @@ const lineOptions = {
     trigger: 'axis',
     textStyle: {
       color: '#fff',
-      fontSize: 14
+      fontSize: 14,
     },
     axisPointer: {
       lineStyle: {
-        color: '#1e9fff'
+        color: '#1e9fff',
       },
-      z: 0
+      z: 0,
     },
     backgroundColor: 'rgba(71, 86, 105, 0.8)',
-    padding: 10
+    padding: 10,
   },
   grid: {
     top: '40',
     left: '20',
     right: '50',
     bottom: '10',
-    containLabel: true
+    containLabel: true,
   },
   xAxis: {
     type: 'time',
     offset: 5,
     axisLine: {
       lineStyle: {
-        color: '#8492a6'
-      }
+        color: '#8492a6',
+      },
     },
     interval: 86400000,
     axisTick: {
-      show: false
+      show: false,
     },
     axisLabel: {
       textStyle: {
         color: '#8492a6',
-        fontSize: 14
-      }
-    }
+        fontSize: 14,
+      },
+    },
   },
   yAxis: {
     type: 'value',
@@ -1005,52 +1009,52 @@ const lineOptions = {
     offset: 5,
     nameTextStyle: {
       color: '#8492a6',
-      fontSize: 14
+      fontSize: 14,
     },
     axisLine: {
       show: false,
       lineStyle: {
-        color: '#8492a6'
-      }
+        color: '#8492a6',
+      },
     },
     axisTick: {
-      show: false
+      show: false,
     },
     axisLabel: {
       textStyle: {
         color: '#8492a6',
-        fontSize: 14
-      }
-    }
-  }
+        fontSize: 14,
+      },
+    },
+  },
 }
 const darkLineOptions = {
   legend: {
     pageIconColor: '#c0ccda',
     pageIconInactiveColor: '#555',
     pageTextStyle: {
-      color: '#c0ccda'
-    }
+      color: '#c0ccda',
+    },
   },
   grid: {
     show: true,
     backgroundColor: '#293137',
-    borderColor: '#52626d'
+    borderColor: '#52626d',
   },
   xAxis: {
     splitLine: {
       lineStyle: {
-        color: '#52626d'
-      }
-    }
+        color: '#52626d',
+      },
+    },
   },
   yAxis: {
     splitLine: {
       lineStyle: {
-        color: '#52626d'
-      }
-    }
-  }
+        color: '#52626d',
+      },
+    },
+  },
 }
 
 const initBandwidthOptions = ({
@@ -1058,7 +1062,7 @@ const initBandwidthOptions = ({
   outBandCdn,
   inBandPub,
   inBandCdn,
-  theme
+  theme,
 }) => {
   let themeLineOptions =
     theme === 'dark'
@@ -1082,10 +1086,10 @@ const initBandwidthOptions = ({
       areaStyle: {
         normal: {
           color: '#20a0ff',
-          opacity: 0.5
-        }
-      }
-    }
+          opacity: 0.5,
+        },
+      },
+    },
   ]
 
   _.forEach(outBandCdn, (value, index) => {
@@ -1099,9 +1103,9 @@ const initBandwidthOptions = ({
       areaStyle: {
         normal: {
           color: '#20a0ff',
-          opacity: 0.5
-        }
-      }
+          opacity: 0.5,
+        },
+      },
     }
     seriesArray.push(seriesItem)
   })
@@ -1116,9 +1120,9 @@ const initBandwidthOptions = ({
     areaStyle: {
       normal: {
         color: '#20a0ff',
-        opacity: 0.5
-      }
-    }
+        opacity: 0.5,
+      },
+    },
   })
 
   _.forEach(inBandCdn, (value, index) => {
@@ -1132,9 +1136,9 @@ const initBandwidthOptions = ({
       areaStyle: {
         normal: {
           color: '#20a0ff',
-          opacity: 0.5
-        }
-      }
+          opacity: 0.5,
+        },
+      },
     }
     seriesArray.push(seriesItem)
   })
@@ -1147,7 +1151,7 @@ const initBandwidthOptions = ({
       '#f85959',
       '#ffac2a',
       '#8492a6',
-      '#c4cfdf'
+      '#c4cfdf',
     ],
     legend: {
       type: 'scroll',
@@ -1155,10 +1159,10 @@ const initBandwidthOptions = ({
       top: '20px',
       textStyle: {
         color: '#1E9FFF',
-        fontSize: 14
+        fontSize: 14,
       },
       icon: 'square',
-      itemGap: 40
+      itemGap: 40,
     },
     series: seriesArray,
     tooltip: {
@@ -1174,22 +1178,22 @@ const initBandwidthOptions = ({
           res += bps(item.value[1], 3)
         })
         return res
-      }
+      },
     },
     xAxis: {
       axisLabel: {
         formatter: function(value) {
           return dateTime(value)
-        }
-      }
+        },
+      },
     },
     yAxis: {
       axisLabel: {
         formatter: function(value) {
           return bps(value)
-        }
-      }
-    }
+        },
+      },
+    },
   })
   return newOptions
 }
@@ -1200,7 +1204,7 @@ const initOptions = ({
   dataPart2,
   dataPart3,
   theme,
-  newOneDayFlag
+  newOneDayFlag,
 }) => {
   let themeLineOptions =
     theme === 'dark'
@@ -1208,7 +1212,9 @@ const initOptions = ({
       : _.defaultsDeep({}, lineOptions)
   let n = Math.floor((dataPart.data.length - 1) / 7) + 1
   themeLineOptions.xAxis.interval = newOneDayFlag
-    ? dataPart.data.length === 1 ? 86400000 : 3600000 * n
+    ? dataPart.data.length === 1
+      ? 86400000
+      : 3600000 * n
     : 86400000 * n
   themeLineOptions.grid.top = '60'
   let legendData = []
@@ -1224,10 +1230,10 @@ const initOptions = ({
         areaStyle: {
           normal: {
             color: '#20a0ff',
-            opacity: 0.5
-          }
-        }
-      }
+            opacity: 0.5,
+          },
+        },
+      },
     ]
   } else {
     legendData = [dataPart.label, dataPart1.label]
@@ -1240,9 +1246,9 @@ const initOptions = ({
         areaStyle: {
           normal: {
             color: '#20a0ff',
-            opacity: 0.5
-          }
-        }
+            opacity: 0.5,
+          },
+        },
       },
       {
         type: 'line',
@@ -1252,10 +1258,10 @@ const initOptions = ({
         areaStyle: {
           normal: {
             color: '#20a0ff',
-            opacity: 0.5
-          }
-        }
-      }
+            opacity: 0.5,
+          },
+        },
+      },
     ]
     if (dataPart2 instanceof Array) {
       _.forEach(dataPart2, (value, index) => {
@@ -1268,9 +1274,9 @@ const initOptions = ({
           areaStyle: {
             normal: {
               color: '#20a0ff',
-              opacity: 0.5
-            }
-          }
+              opacity: 0.5,
+            },
+          },
         }
         seriesArray.push(seriesItem)
       })
@@ -1285,9 +1291,9 @@ const initOptions = ({
           areaStyle: {
             normal: {
               color: '#20a0ff',
-              opacity: 0.5
-            }
-          }
+              opacity: 0.5,
+            },
+          },
         },
         {
           type: 'line',
@@ -1297,10 +1303,10 @@ const initOptions = ({
           areaStyle: {
             normal: {
               color: '#20a0ff',
-              opacity: 0.5
-            }
-          }
-        }
+              opacity: 0.5,
+            },
+          },
+        },
       ]
       seriesArray = seriesArray.concat(seriesItem)
     }
@@ -1313,7 +1319,7 @@ const initOptions = ({
       '#f85959',
       '#ffac2a',
       '#8492a6',
-      '#c4cfdf'
+      '#c4cfdf',
     ],
     legend: {
       type: 'scroll',
@@ -1321,10 +1327,10 @@ const initOptions = ({
       top: '20px',
       textStyle: {
         color: '#1E9FFF',
-        fontSize: 14
+        fontSize: 14,
       },
       icon: 'square',
-      itemGap: 40
+      itemGap: 40,
     },
     series: seriesArray,
     tooltip: {
@@ -1347,26 +1353,28 @@ const initOptions = ({
               : times(item.value[1])
         })
         return res
-      }
+      },
     },
     xAxis: {
       axisLabel: {
         formatter: function(value) {
           return newOneDayFlag ? dateTime(value + 3600000) : date(value)
-        }
-      }
+        },
+      },
     },
     yAxis: {
       name:
         dataPart.unit === 'byte'
           ? ''
-          : dataPart.unit === 'times' ? '单位：次' : '单位：个',
+          : dataPart.unit === 'times'
+            ? '单位：次'
+            : '单位：个',
       axisLabel: {
         formatter: function(value) {
           return dataPart.unit === 'byte' ? bytes(value) : timesK(value)
-        }
-      }
-    }
+        },
+      },
+    },
   })
   return newOptions
 }

@@ -31,7 +31,7 @@ Vue.prototype.$http = axios
 iView.LoadingBar.config({
   color: '#fff',
   failedColor: '#f0ad4e',
-  height: 3
+  height: 3,
 })
 
 Object.keys(messages).forEach(function(lang) {
@@ -44,5 +44,5 @@ new Vue({
   el: '#app',
   store,
   router,
-  template: '<App/>'
+  template: '<App/>',
 })

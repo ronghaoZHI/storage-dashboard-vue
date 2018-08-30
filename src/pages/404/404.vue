@@ -16,8 +16,8 @@ export default {
   methods: {
     toIndex() {
       this.$router.push('/')
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -33,7 +33,7 @@ import { transcoder } from '@/service/Aws'
 import legendList from '@/components/legend/legend'
 export default {
   components: {
-    legendList
+    legendList,
   },
   data() {
     return {
@@ -45,8 +45,8 @@ export default {
       legendList: [
         {
           icon: 'ios-trash',
-          text: 'PUBLIC.DELETE'
-        }
+          text: 'PUBLIC.DELETE',
+        },
       ],
       videoNames: {
         Codec: this.$t('VIDEO.ENCODING'),
@@ -56,21 +56,21 @@ export default {
         BitRate: this.$t('VIDEO.BIT_RATE'),
         FrameRate: this.$t('VIDEO.FRAME_RATE'),
         Resolution: this.$t('VIDEO.RESOLUTION'),
-        AspectRatio: this.$t('VIDEO.ASPECT_RATIO')
+        AspectRatio: this.$t('VIDEO.ASPECT_RATIO'),
       },
       audioNames: {
         Codec: this.$t('VIDEO.ENCODING'),
         Profile: this.$t('VIDEO.CODING_QUALITY'),
         SampleRate: this.$t('VIDEO.SAMPLE_RATE'),
         BitRate: this.$t('VIDEO.BIT_RATE'),
-        Channels: this.$t('VIDEO.CHANNELS')
+        Channels: this.$t('VIDEO.CHANNELS'),
       },
       WatermarkConfigNames: {
         Width: this.$t('VIDEO.WIDTH'),
         Height: this.$t('VIDEO.HEIGHT'),
         Location: this.$t('VIDEO.POSITION'),
         LocationHOffset: this.$t('VIDEO.OFFSET_X'),
-        LocationVOffset: this.$t('VIDEO.OFFSET_Y')
+        LocationVOffset: this.$t('VIDEO.OFFSET_Y'),
       },
       LocationNames: {
         NorthEast: '右上',
@@ -81,13 +81,13 @@ export default {
         West: '左中',
         SouthEast: '右下',
         South: '中下',
-        SouthWest: '左下'
+        SouthWest: '左下',
       },
       listHeader: [
         {
           title: 'ID',
           width: '75px',
-          key: 'id'
+          key: 'id',
         },
         {
           title: this.$t('VIDEO.TEMPLATE_NAME_TABLE'),
@@ -100,8 +100,8 @@ export default {
                 {
                   props: {
                     placement: 'right',
-                    trigger: 'hover'
-                  }
+                    trigger: 'hover',
+                  },
                 },
                 [
                   h('div', [
@@ -109,29 +109,29 @@ export default {
                     h('Icon', {
                       props: {
                         type: 'ios-information-outline',
-                        size: '14'
+                        size: '14',
                       },
                       class: {
-                        'icon-disc': true
-                      }
-                    })
+                        'icon-disc': true,
+                      },
+                    }),
                   ]),
                   h(
                     'div',
                     {
-                      slot: 'content'
+                      slot: 'content',
                     },
-                    params.row.description
-                  )
-                ]
+                    params.row.description,
+                  ),
+                ],
               )
             }
-          }
+          },
         },
         {
           title: this.$t('VIDEO.CONTAINER'),
           width: '90px',
-          key: 'container'
+          key: 'container',
         },
         {
           title: this.$t('VIDEO.VIDEO'),
@@ -142,8 +142,8 @@ export default {
               {
                 props: {
                   placement: 'right',
-                  trigger: 'hover'
-                }
+                  trigger: 'hover',
+                },
               },
               [
                 h(
@@ -153,25 +153,25 @@ export default {
                       'Tag',
                       {
                         props: {
-                          type: 'border'
-                        }
+                          type: 'border',
+                        },
                       },
-                      `${item.name}:${item.value}`
-                    )
-                  )
+                      `${item.name}:${item.value}`,
+                    ),
+                  ),
                 ),
                 h(
                   'div',
                   {
-                    slot: 'content'
+                    slot: 'content',
                   },
                   params.row.videoDetails.map((item) =>
-                    h('p', `${item.name}:${item.value}`)
-                  )
-                )
-              ]
+                    h('p', `${item.name}:${item.value}`),
+                  ),
+                ),
+              ],
             )
-          }
+          },
         },
         {
           title: this.$t('VIDEO.AUDIO'),
@@ -182,8 +182,8 @@ export default {
               {
                 props: {
                   placement: 'right',
-                  trigger: 'hover'
-                }
+                  trigger: 'hover',
+                },
               },
               [
                 h(
@@ -193,25 +193,25 @@ export default {
                       'Tag',
                       {
                         props: {
-                          type: 'border'
-                        }
+                          type: 'border',
+                        },
                       },
-                      `${item.name}:${item.value}`
-                    )
-                  )
+                      `${item.name}:${item.value}`,
+                    ),
+                  ),
                 ),
                 h(
                   'div',
                   {
-                    slot: 'content'
+                    slot: 'content',
                   },
                   params.row.audioDetails.map((item) =>
-                    h('p', `${item.name}:${item.value}`)
-                  )
-                )
-              ]
+                    h('p', `${item.name}:${item.value}`),
+                  ),
+                ),
+              ],
             )
-          }
+          },
         },
         {
           title: this.$t('VIDEO.WATERMARK'),
@@ -224,14 +224,14 @@ export default {
                   'Tag',
                   {
                     props: {
-                      type: 'border'
-                    }
+                      type: 'border',
+                    },
                   },
-                  `${item.name}:${item.value}`
-                )
-              )
+                  `${item.name}:${item.value}`,
+                ),
+              ),
             )
-          }
+          },
         },
         {
           title: this.$t('VIDEO.OPERATION'),
@@ -246,35 +246,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 500,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-8': true
-                  }
+                    'mar-r-8': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.goTemplateEdit(params.row.id)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -282,37 +282,37 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 1000,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deletePresetConfirm(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   created() {
@@ -353,7 +353,7 @@ export default {
         await transcoder(
           'deletePreset',
           { Id: rule.id },
-          this.$t('VIDEO.TEMPLATE_DELETED_ERROR')
+          this.$t('VIDEO.TEMPLATE_DELETED_ERROR'),
         )
         this.templateList.splice(rule._index, 1)
         this.$Loading.finish()
@@ -393,7 +393,7 @@ export default {
                 : '0px',
               LocationVOffset: !!item.WatermarkConfig.LocationVOffset
                 ? `${item.WatermarkConfig.LocationVOffset}px`
-                : '0px'
+                : '0px',
             }
           : watermarkDefault
         const frontItem = {
@@ -405,7 +405,7 @@ export default {
           audio: [],
           videoDetails: [],
           audioDetails: [],
-          WatermarkConfig: []
+          WatermarkConfig: [],
         }
         _.forEach(video, (value, key) => {
           if (key === 'FixedGOP') {
@@ -413,19 +413,19 @@ export default {
             _.forEach(value, (value, key) => {
               frontItem.videoDetails.push({
                 name: this.videoNames[key],
-                value: value
+                value: value,
               })
             })
           } else if (videoMust.includes(key)) {
             frontItem.video.push({ name: this.videoNames[key], value: value })
             frontItem.videoDetails.push({
               name: this.videoNames[key],
-              value: value
+              value: value,
             })
           } else {
             frontItem.videoDetails.push({
               name: this.videoNames[key],
-              value: value
+              value: value,
             })
           }
         })
@@ -434,19 +434,19 @@ export default {
             _.forEach(value, (value, key) => {
               frontItem.audioDetails.push({
                 name: this.audioNames[key],
-                value: value
+                value: value,
               })
             })
           } else if (audioMust.includes(key)) {
             frontItem.audio.push({ name: this.audioNames[key], value: value })
             frontItem.audioDetails.push({
               name: this.audioNames[key],
-              value: value
+              value: value,
             })
           } else {
             frontItem.audioDetails.push({
               name: this.audioNames[key],
-              value: value
+              value: value,
             })
           }
         })
@@ -454,13 +454,13 @@ export default {
         _.forEach(WatermarkConfig, (value, key) => {
           frontItem.WatermarkConfig.push({
             name: this.WatermarkConfigNames[key],
-            value: value
+            value: value,
           })
         })
         if (audio.CodecOptions && audio.CodecOptions.Profile) {
           frontItem.audio.profile = {
             name: this.$t('VIDEO.CODING_QUALITY'),
-            value: audio.CodecOptions.Profile
+            value: audio.CodecOptions.Profile,
           }
         }
         frontList.push(frontItem)
@@ -473,10 +473,10 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.deletePreset(rule)
+        onOk: () => this.deletePreset(rule),
       })
-    }
-  }
+    },
+  },
 }
 const videoMust = ['Codec', 'FrameRate', 'Resolution', 'BitRate', 'AspectRatio']
 const audioMust = ['Codec', 'SampleRate', 'Channels', 'BitRate']
@@ -485,7 +485,7 @@ const watermarkDefault = {
   Width: '图片宽度',
   Location: '右上',
   LocationHOffset: '0px',
-  LocationVOffset: '0px'
+  LocationVOffset: '0px',
 }
 </script>
 <style lang="less">

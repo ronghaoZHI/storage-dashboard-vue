@@ -11,11 +11,11 @@ export function updateUser(data) {
 export function getSSOLoginUrl() {
   return `https://uc.baishancloud.com/web/user/checkLogin?language=1&appId=${
     window.dashboard_conf.appID
-    }`
+  }`
 }
 
 export function ssoLogout() {
   return `https://uc.portal.baishancloud.com/web/user/logout?language=1&appId=${
     window.dashboard_conf.appID
-    }`
+  }`
 }

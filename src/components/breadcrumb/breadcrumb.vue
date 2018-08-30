@@ -11,18 +11,18 @@ export default {
   props: {
     separator: {
       type: String,
-      default: '/'
-    }
+      default: '/',
+    },
   },
   computed: {
     classes() {
       return `${prefixCls}`
-    }
+    },
   },
   watch: {
     separator() {
       this.updateChildren()
-    }
+    },
   },
   mounted() {
     this.updateChildren()
@@ -37,8 +37,8 @@ export default {
       this.$children.forEach((child) => {
         child.separator = this.separator
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less">

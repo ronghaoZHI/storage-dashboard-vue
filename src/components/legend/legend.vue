@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  props: ['data']
+  props: ['data'],
 }
 </script>
 <style lang="less" scoped>

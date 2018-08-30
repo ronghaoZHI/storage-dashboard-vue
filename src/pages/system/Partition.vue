@@ -205,7 +205,7 @@ import {
   PARTITION_DELETED_LIST,
   PARTITION_USED_MOVE,
   PARTITION_USED_SET,
-  PARTITION_USED_DELETED
+  PARTITION_USED_DELETED,
 } from '@/service/API'
 export default {
   components: {
@@ -213,7 +213,7 @@ export default {
     idcCard,
     partitionUnused,
     partitionDeleted,
-    detailModal
+    detailModal,
   },
   data() {
     return {
@@ -221,22 +221,22 @@ export default {
       showDetailModal: false,
       modalTitles: {
         groupTitle: this.$t('SYSTEM.BASE_INFO'),
-        partitionTitle: this.$t('SYSTEM.GROUP_INFO')
+        partitionTitle: this.$t('SYSTEM.GROUP_INFO'),
       },
       typeArray: [
         { name: this.$t('SYSTEM.ALL_PARTITION_TYPE'), value: 'ignore' },
         { name: 'SATA', value: 'SATA' },
-        { name: 'SSD', value: 'SSD' }
+        { name: 'SSD', value: 'SSD' },
       ],
       readArray: [
         { name: this.$t('SYSTEM.ALL_WRITE_STATE'), value: 'ignore' },
         { name: this.$t('SYSTEM.READONLY'), value: 1 },
-        { name: this.$t('SYSTEM.WRITABLE'), value: 0 }
+        { name: this.$t('SYSTEM.WRITABLE'), value: 0 },
       ],
       failArray: [
         { name: this.$t('SYSTEM.ALL_FAIL_STATE'), value: 'ignore' },
         { name: this.$t('SYSTEM.NORMAL'), value: 0 },
-        { name: this.$t('SYSTEM.DELETED'), value: 1 }
+        { name: this.$t('SYSTEM.DELETED'), value: 1 },
       ],
       search: {
         idc: 'ignore',
@@ -247,7 +247,7 @@ export default {
         min_capacity: '',
         max_capacity: '',
         min_free: '',
-        max_free: ''
+        max_free: '',
       },
       showChart: 'ioutil',
       spinContent: false,
@@ -271,19 +271,19 @@ export default {
         { name: this.$t('SYSTEM.CAPACITY'), value: 'space_used' },
         { name: this.$t('SYSTEM.STATE'), value: 'readonly' },
         { name: this.$t('SYSTEM.CREATION_TIME'), value: 'ts' },
-        { name: this.$t('SYSTEM.MIGRATION_PROGRESS'), value: 'traffic_status' }
+        { name: this.$t('SYSTEM.MIGRATION_PROGRESS'), value: 'traffic_status' },
       ],
       usedHeader: [
         {
           title: 'ID',
           key: 'partition_id',
-          width: 260
+          width: 260,
         },
         {
           title: 'IDC',
           key: 'idc',
           align: 'left',
-          width: 150
+          width: 150,
         },
         {
           title: 'IO',
@@ -299,11 +299,11 @@ export default {
             return h(
               'div',
               {
-                class: params.row.ioutil > 90 ? 'redFont' : ''
+                class: params.row.ioutil > 90 ? 'redFont' : '',
               },
-              [font]
+              [font],
             )
-          }
+          },
         },
         {
           title: '容量',
@@ -319,11 +319,11 @@ export default {
             return h(
               'div',
               {
-                class: params.row.used_rate > 99 ? 'redFont' : ''
+                class: params.row.used_rate > 99 ? 'redFont' : '',
               },
-              [font]
+              [font],
             )
-          }
+          },
         },
         {
           title: 'CPU',
@@ -339,11 +339,11 @@ export default {
             return h(
               'div',
               {
-                class: params.row.cpu > 20 ? 'redFont' : ''
+                class: params.row.cpu > 20 ? 'redFont' : '',
               },
-              [font]
+              [font],
             )
-          }
+          },
         },
         {
           title: this.$t('SYSTEM.USED_TOTAL_CAPACITY'),
@@ -355,12 +355,12 @@ export default {
                 ? `${bytes(params.row.space)}/${bytes(params.row.capacity)}`
                 : '--/--'
             return h('div', [font])
-          }
+          },
         },
         {
           title: this.$t('SYSTEM.MEDIA_TYPE'),
           key: 'media_type',
-          width: 65
+          width: 65,
         },
         {
           title: this.$t('SYSTEM.IS_NORMAL'),
@@ -373,17 +373,17 @@ export default {
             return h(
               'div',
               {
-                class: !!params.row.fail ? 'redFont' : ''
+                class: !!params.row.fail ? 'redFont' : '',
               },
-              [font]
+              [font],
             )
-          }
+          },
         },
         {
           title: this.$t('SYSTEM.NUM'),
           key: 'group_num',
           align: 'right',
-          width: 65
+          width: 65,
         },
         {
           title: this.$t('VIDEO.OPERATION'),
@@ -401,20 +401,20 @@ export default {
                         props: {
                           type: 'ghost',
                           size: 'small',
-                          disabled: params.row.disabled
+                          disabled: params.row.disabled,
                         },
                         on: {
                           click: () => {
                             this.usedDeletedConfirm(params.row._index)
-                          }
+                          },
                         },
                         style: {
                           color: '#fff',
                           'background-color': '#f85959',
-                          'border-color': '#f85959'
-                        }
+                          'border-color': '#f85959',
+                        },
                       },
-                      [this.$t('PUBLIC.DELETE')]
+                      [this.$t('PUBLIC.DELETE')],
                     )
                   : h(
                       'i-button',
@@ -422,15 +422,15 @@ export default {
                         props: {
                           type: 'ghost',
                           size: 'small',
-                          disabled: params.row.disabled
+                          disabled: params.row.disabled,
                         },
                         on: {
                           click: () => {
                             this.usedMove(params.row._index)
-                          }
-                        }
+                          },
+                        },
                       },
-                      [this.$t('SYSTEM.MIGRATE')]
+                      [this.$t('SYSTEM.MIGRATE')],
                     )
             return h('div', [
               h(
@@ -438,10 +438,10 @@ export default {
                 {
                   style: {
                     display: 'inline-block',
-                    padding: '0 8px 0 0'
-                  }
+                    padding: '0 8px 0 0',
+                  },
                 },
-                [buttons]
+                [buttons],
               ),
               h(
                 'i-switch',
@@ -449,53 +449,53 @@ export default {
                   props: {
                     value: params.row.readonly === 0,
                     size: 'large',
-                    disabled: params.row.disabled
+                    disabled: params.row.disabled,
                   },
                   on: {
                     input: () => {
                       this.usedSetConfirm(params.row._index)
-                    }
-                  }
+                    },
+                  },
                 },
                 [
                   h(
                     'span',
                     {
-                      slot: 'open'
+                      slot: 'open',
                     },
-                    this.$t('SYSTEM.WRITABLE')
+                    this.$t('SYSTEM.WRITABLE'),
                   ),
                   h(
                     'span',
                     {
-                      slot: 'close'
+                      slot: 'close',
                     },
-                    this.$t('SYSTEM.READONLY')
-                  )
-                ]
+                    this.$t('SYSTEM.READONLY'),
+                  ),
+                ],
               ),
               h(
                 'i-button',
                 {
                   props: {
-                    size: 'small'
+                    size: 'small',
                   },
                   on: {
                     click: () => {
                       this.detailItem = params.row
                       this.openDetail(params.row.partition_id)
-                    }
+                    },
                   },
                   style: {
-                    margin: '0 0 0 8px'
-                  }
+                    margin: '0 0 0 8px',
+                  },
                 },
-                [this.$t('SYSTEM.DETAILS')]
-              )
+                [this.$t('SYSTEM.DETAILS')],
+              ),
             ])
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
@@ -547,41 +547,41 @@ export default {
         { name: 'IDC', value: this.detailItem.idc },
         {
           name: 'IP',
-          value: this.detailItem.inn_ips ? this.detailItem.inn_ips[0] : ''
+          value: this.detailItem.inn_ips ? this.detailItem.inn_ips[0] : '',
         },
         {
           name: this.$t('SYSTEM.CAPACITY'),
           value: this.detailItem.used_rate,
-          isRed: this.detailItem.used_rate > 99
+          isRed: this.detailItem.used_rate > 99,
         },
         {
           name: 'CPU',
           value: this.detailItem.cpuFont,
           tooltip: this.$t('SYSTEM.PARTITION_CPU_INFO'),
-          isRed: this.detailItem.cpu > 20
+          isRed: this.detailItem.cpu > 20,
         },
         {
           name: this.$t('SYSTEM.MEDIA_TYPE'),
-          value: this.detailItem.media_type
+          value: this.detailItem.media_type,
         },
         {
           name: 'IO',
           value: this.detailItem.ioutil,
-          isRed: this.detailItem.ioutil > 90
+          isRed: this.detailItem.ioutil > 90,
         },
         {
           name: this.$t('SYSTEM.RW_STATUS'),
-          value: this.detailItem.readonlyFont
+          value: this.detailItem.readonlyFont,
         },
         {
           name: this.$t('SYSTEM.IS_DEL'),
           value: this.detailItem.failFont,
-          isRed: this.detailItem.fail
-        }
+          isRed: this.detailItem.fail,
+        },
       ]
       let detailHead = this.detailHead
       return { tableData, basicInfo, detailHead }
-    }
+    },
   },
   created() {
     this.searchIdc()
@@ -668,10 +668,10 @@ export default {
       this.$Loading.start()
       try {
         const params = {
-          partition_id: id
+          partition_id: id,
         }
         this.usedDetail = await this.$http.get(PARTITION_USED_DETAIL, {
-          params
+          params,
         })
         this.spinGroup = false
         this.$Loading.finish()
@@ -693,7 +693,7 @@ export default {
           read_only: this.search.read_only,
           ip: this.IPparam,
           page: this.pageCount,
-          count: 20
+          count: 20,
         }
         let listData = await this.$http.get(listURL, { params })
         this.partitionList = listData.partition || []
@@ -733,7 +733,7 @@ export default {
             ? bytes(`${this.search.max_free}TB`)
             : 'ignore',
           page: this.pageCount,
-          count: 20
+          count: 20,
         }
         let unusedData = await this.$http.get(listURL, { params })
         this.unusedList = unusedData.partition || []
@@ -773,7 +773,7 @@ export default {
         min_capacity: '',
         max_capacity: '',
         min_free: '',
-        max_free: ''
+        max_free: '',
       }
     },
     openDetail(id) {
@@ -794,7 +794,7 @@ export default {
           this.partitionList[index].readonly = !!readonly ? 0 : 1
           this.partitionList[index].readonly = readonly
         },
-        onOk: () => this.usedSet(index)
+        onOk: () => this.usedSet(index),
       })
     },
     async usedSet(index) {
@@ -805,7 +805,7 @@ export default {
       try {
         let params = {
           read_only: newValue,
-          partition_id: this.partitionList[index].partition_id
+          partition_id: this.partitionList[index].partition_id,
         }
         await this.$http.post(PARTITION_USED_SET, params)
         this.partitionList[index].readonly = newValue
@@ -824,7 +824,7 @@ export default {
       this.$Loading.start()
       try {
         let params = {
-          partition_id: this.partitionList[index].partition_id
+          partition_id: this.partitionList[index].partition_id,
         }
         await this.$http.post(PARTITION_USED_MOVE, params)
         this.partitionList[index].disabled = true
@@ -843,7 +843,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.usedDeleted(id)
+        onOk: () => this.usedDeleted(id),
       })
     },
     async usedDeleted(index) {
@@ -851,7 +851,7 @@ export default {
       this.$Loading.start()
       try {
         let params = {
-          partition_id: this.partitionList[index].partition_id
+          partition_id: this.partitionList[index].partition_id,
         }
         await this.$http.post(PARTITION_USED_DELETED, params)
         this.partitionList[index].disabled = true
@@ -863,8 +863,8 @@ export default {
         this.$Loading.error()
         this.$Message.error(this.$t('SYSTEM.FAILURE'))
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

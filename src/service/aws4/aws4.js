@@ -43,7 +43,7 @@ function RequestSigner(req, credentials) {
 
   let headers = (request.headers = request.headers || {})
   let hostParts = this.matchHost(
-    request.hostname || request.host || headers.Host || headers.host
+    request.hostname || request.host || headers.Host || headers.host,
   )
 
   this.request = request
@@ -97,7 +97,7 @@ RequestSigner.prototype.isSingleRegion = function() {
 
   return (
     ['cloudfront', 'ls', 'route53', 'iam', 'importexport', 'sts'].indexOf(
-      this.service
+      this.service,
     ) >= 0
   )
 }
@@ -223,7 +223,7 @@ RequestSigner.prototype.authHeader = function() {
       '/' +
       this.credentialString(),
     'SignedHeaders=' + this.signedHeaders(),
-    'Signature=' + this.signature()
+    'Signature=' + this.signature(),
   ].join(', ')
 }
 
@@ -233,7 +233,7 @@ RequestSigner.prototype.signature = function() {
     this.credentials.secretAccessKey,
     date,
     this.region,
-    this.service
+    this.service,
   ].join()
   let kDate
   let kRegion
@@ -254,7 +254,7 @@ RequestSigner.prototype.stringToSign = function() {
     'AWS4-HMAC-SHA256',
     this.getDateTime(),
     this.credentialString(),
-    hash(this.canonicalString(), 'hex')
+    hash(this.canonicalString(), 'hex'),
   ].join('\n')
 }
 
@@ -283,8 +283,8 @@ RequestSigner.prototype.canonicalString = function() {
                 ? query[key][0]
                 : query[key].slice().sort()
             return obj
-          }, {})
-      )
+          }, {}),
+      ),
     )
   }
   if (pathStr !== '/') {
@@ -311,7 +311,7 @@ RequestSigner.prototype.canonicalString = function() {
     queryStr,
     this.canonicalHeaders() + '\n',
     this.signedHeaders(),
-    bodyHash
+    bodyHash,
   ].join('\n')
 }
 
@@ -351,7 +351,7 @@ RequestSigner.prototype.defaultCredentials = function() {
   return {
     accessKeyId: env.AWS_ACCESS_KEY_ID || env.AWS_ACCESS_KEY,
     secretAccessKey: env.AWS_SECRET_ACCESS_KEY || env.AWS_SECRET_KEY,
-    sessionToken: env.AWS_SESSION_TOKEN
+    sessionToken: env.AWS_SESSION_TOKEN,
   }
 }
 
@@ -379,7 +379,7 @@ RequestSigner.prototype.parsePath = function() {
 
   this.parsedPath = {
     path: path,
-    query: query
+    query: query,
   }
 }
 

@@ -73,8 +73,8 @@ export default {
         'pipeline',
         'output',
         'job',
-        'statistics'
-      ]
+        'statistics',
+      ],
     }
   },
   computed: {
@@ -86,13 +86,13 @@ export default {
     },
     logoWidth() {
       return this.isMini ? '30px' : '164px'
-    }
+    },
   },
   watch: {
     $route(to, from) {
       this.activeName = to.meta.ali
       this.openName = to.meta.parent ? [to.meta.parent] : []
-    }
+    },
   },
   mounted() {
     const self = this
@@ -114,8 +114,8 @@ export default {
     async miniChange(value) {
       this.isMini = value
       await this.$store.dispatch('toggleMiniMenu', this.isMini)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -1,7 +1,6 @@
 <template>
   <div class="bsc-partition-node">
-    <span v-pinter="data"
-          @click="showDetail(data)"></span>
+    <span v-pinter="data"></span>
     <span>{{spacePercent}}-{{ioutil}}</span>
   </div>
 </template>
@@ -23,15 +22,15 @@ export default {
             '#76d0a3',
             '#76d0a3',
             '#76d0a3',
-            '#F1A4A4'
+            '#F1A4A4',
           ]
           el.style.backgroundColor = colorList[Math.floor(data.ioutil / 10)]
         } else {
           el.style.backgroundColor = '#e5e9f2'
         }
         el.style.width = nodeWidth + 'px'
-      }
-    }
+      },
+    },
   },
   props: ['data'],
   data() {
@@ -40,14 +39,9 @@ export default {
       spacePercent:
         this.data.space && this.data.capacity
           ? Math.floor((this.data.space / this.data.capacity) * 100)
-          : ''
+          : '',
     }
   },
-  methods: {
-    showDetail(data) {
-      console.log(data)
-    }
-  }
 }
 </script>
 <style lang="less" scoped>

@@ -30,11 +30,11 @@ export default {
     },
     miniMenu() {
       return this.$store.state.miniMenu
-    }
+    },
   },
   created() {
     this.$Message.config({
-      duration: 3
+      duration: 3,
     })
     localStorage.getItem('showHost') !== 'false' &&
       this.$Notice.warning({
@@ -43,9 +43,9 @@ export default {
         duration: 0,
         onClose: () => {
           localStorage.setItem('showHost', false)
-        }
+        },
       })
-  }
+  },
 }
 </script>
 

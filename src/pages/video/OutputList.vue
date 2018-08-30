@@ -19,12 +19,12 @@ import { handler } from '@/service/Aws'
 import {
   getBucketPolicy,
   putBucketPolicy,
-  getTranscodes
+  getTranscodes,
 } from '@/pages/video/data'
 import legendList from '@/components/legend/legend'
 export default {
   components: {
-    legendList
+    legendList,
   },
   data() {
     return {
@@ -34,31 +34,31 @@ export default {
       legendList: [
         {
           icon: 'ios-toggle',
-          text: 'VIDEO.STATUS'
+          text: 'VIDEO.STATUS',
         },
         {
           icon: 'compose',
-          text: 'PUBLIC.EDIT'
+          text: 'PUBLIC.EDIT',
         },
         {
           icon: 'ios-trash',
-          text: 'PUBLIC.DELETE'
-        }
+          text: 'PUBLIC.DELETE',
+        },
       ],
       listHeader: [
         {
           title: 'ID',
-          key: 'id'
+          key: 'id',
         },
         {
           title: this.$t('VIDEO.INPUT_BUCKET'),
           width: '13%',
-          key: 'input_bucket'
+          key: 'input_bucket',
         },
         {
           title: this.$t('VIDEO.OUTPUT_BUCKET'),
           width: '13%',
-          key: 'output_bucket'
+          key: 'output_bucket',
         },
         {
           title: this.$t('VIDEO.KEYS_REG'),
@@ -66,17 +66,17 @@ export default {
           render: (h, params) => {
             if (params.row.allowed_keys_regex.length > 0) {
               return params.row.allowed_keys_regex.map((regex) =>
-                h('p', `${regex}`)
+                h('p', `${regex}`),
               )
             }
-          }
+          },
         },
         {
           title: this.$t('VIDEO.OUTPUT_KEY_PREFIX'),
           width: '13%',
           render: (h, params) => {
             return h('p', [params.row.output_key_prefix])
-          }
+          },
         },
         {
           title: this.$t('VIDEO.OUTPUTS'),
@@ -104,13 +104,13 @@ export default {
                   `${this.$t('VIDEO.HLS_SLICE_LENGTH')}:${sd},`,
                   h('br'),
                   `水印文件key:${inputKey},`,
-                  h('br')
+                  h('br'),
                 ])
               })
               return h(
                 'div',
                 {
-                  class: 'output-wrap'
+                  class: 'output-wrap',
                 },
                 [
                   h('p', [
@@ -124,7 +124,7 @@ export default {
                       .segment_duration || '-'},`,
                     h('br'),
                     `水印文件key:${firstInputKey},`,
-                    h('br')
+                    h('br'),
                   ]),
                   h('Poptip', [
                     h(
@@ -132,27 +132,27 @@ export default {
                       {
                         props: {
                           type: 'ghost',
-                          size: 'small'
+                          size: 'small',
                         },
-                        class: 'button-more'
+                        class: 'button-more',
                       },
-                      ['更多']
+                      ['更多'],
                     ),
                     h(
                       'div',
                       {
-                        slot: 'content'
+                        slot: 'content',
                       },
-                      [popContent]
-                    )
-                  ])
-                ]
+                      [popContent],
+                    ),
+                  ]),
+                ],
               )
             } else if (outputs.length > 0) {
               return h(
                 'p',
                 {
-                  class: 'output-wrap'
+                  class: 'output-wrap',
                 },
                 [
                   `keySuffix:${outputs[0].key_suffix},`,
@@ -165,11 +165,11 @@ export default {
                     .segment_duration || '-'},`,
                   h('br'),
                   `水印文件key:${firstInputKey},`,
-                  h('br')
-                ]
+                  h('br'),
+                ],
               )
             }
-          }
+          },
         },
         {
           title: this.$t('VIDEO.OPERATION'),
@@ -184,11 +184,11 @@ export default {
                   props: {
                     content: this.$t('VIDEO.STATUS'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
@@ -196,32 +196,32 @@ export default {
                     {
                       props: {
                         value: params.row.is_enabled === 'true',
-                        size: 'large'
+                        size: 'large',
                       },
                       on: {
                         input: () => {
                           this.changeStatus(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h(
                         'span',
                         {
-                          slot: 'open'
+                          slot: 'open',
                         },
-                        this.$t('VIDEO.OPEN')
+                        this.$t('VIDEO.OPEN'),
                       ),
                       h(
                         'span',
                         {
-                          slot: 'close'
+                          slot: 'close',
                         },
-                        this.$t('VIDEO.CLOSE')
-                      )
-                    ]
-                  )
-                ]
+                        this.$t('VIDEO.CLOSE'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -229,38 +229,38 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.goOutputEdit(
                             params.row.input_bucket,
-                            params.row.id
+                            params.row.id,
                           )
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -268,37 +268,37 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 1000,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deletePolicyConfirm(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   created() {
@@ -312,7 +312,7 @@ export default {
         let polifyList = await Promise.all(
           bucketNames.map((bucket) => {
             return getBucketPolicy(bucket)
-          })
+          }),
         )
         this.policyFront = this.convert2Front(polifyList)
         this.$Loading.finish()
@@ -352,7 +352,7 @@ export default {
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
         onOk: () =>
-          this.deletePolicy(policy.input_bucket, policy.id, policy._index)
+          this.deletePolicy(policy.input_bucket, policy.id, policy._index),
       })
     },
     async deletePolicy(bucket, id, index) {
@@ -389,12 +389,12 @@ export default {
     async putBucketPolicy(bucket, data) {
       const policy = {
         name: 'post_upload_transcoding',
-        value: data
+        value: data,
       }
       try {
         return handler('putBucketPolicy', {
           Bucket: bucket,
-          Policy: JSON.stringify(policy)
+          Policy: JSON.stringify(policy),
         })
       } catch (error) {
         return Promise.reject(error)
@@ -425,10 +425,10 @@ export default {
     goOutputEdit(bucket, id) {
       this.$router.push({
         name: 'outputEdit',
-        params: { bucket: bucket, id: id }
+        params: { bucket: bucket, id: id },
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scope>

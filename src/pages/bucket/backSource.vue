@@ -123,16 +123,16 @@ export default {
       legendList: [
         {
           icon: 'ios-toggle',
-          text: 'VIDEO.STATUS'
+          text: 'VIDEO.STATUS',
         },
         {
           icon: 'compose',
-          text: 'PUBLIC.EDIT'
+          text: 'PUBLIC.EDIT',
         },
         {
           icon: 'ios-trash',
-          text: 'PUBLIC.DELETE'
-        }
+          text: 'PUBLIC.DELETE',
+        },
       ],
       isEdit: false,
       editId: '',
@@ -142,7 +142,7 @@ export default {
         request_headers: [],
         domain: '',
         uri_pattern: '',
-        allow_method: []
+        allow_method: [],
       },
       requestHeader: '',
       requestHeaderFormatError: false,
@@ -152,8 +152,8 @@ export default {
           {
             required: true,
             message: this.$t('STORAGE.MODE_CANNOT_EMPTY'),
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         domain: [
           {
@@ -161,7 +161,7 @@ export default {
             validator: (rule, value, callback) => {
               let urlRegExp = new RegExp(
                 '^(?:(?:(?:(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$',
-                'i'
+                'i',
               )
               if (!value) {
                 callback(new Error(this.$t('STORAGE.DOMAIN_CANNOT_EMPTY')))
@@ -171,8 +171,8 @@ export default {
                 callback()
               }
             },
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         allow_method: [
           {
@@ -180,9 +180,9 @@ export default {
             type: 'array',
             min: 1,
             message: this.$t('STORAGE.ALLOW_METHOD_CANNOT_EMPTY'),
-            trigger: 'change'
-          }
-        ]
+            trigger: 'change',
+          },
+        ],
       },
       fetchRuleList: [],
       list404Header: [
@@ -196,9 +196,9 @@ export default {
                 ? 200
                 : params.row.fetch_mode === 'fetch_302'
                   ? 302
-                  : 404
+                  : 404,
             )
-          }
+          },
         },
         {
           title: this.$t('STORAGE.SOURCE_HEADER'),
@@ -209,11 +209,11 @@ export default {
               'div',
               { style: { padding: '8px 0' } },
               _.map(params.row.request_headers, (value, key) => [
-                h('div', { style: { margin: '2px 0' } }, `${key}:${value}`)
+                h('div', { style: { margin: '2px 0' } }, `${key}:${value}`),
               ]),
-              h('br')
+              h('br'),
             )
-          }
+          },
         },
         {
           title: this.$t('STORAGE.SOURCE_DOMAIN'),
@@ -221,17 +221,17 @@ export default {
           width: '17%',
           render: (h, params) => {
             return h('div', { style: { padding: '8px 0' } }, params.row.domain)
-          }
+          },
         },
         {
           title: this.$t('STORAGE.URI_PATTERN'),
           key: 'uri_pattern',
-          width: '17%'
+          width: '17%',
         },
         {
           title: this.$t('STORAGE.ALLOW_METHOD'),
           key: 'allow_method',
-          width: '17%'
+          width: '17%',
         },
         {
           title: this.$t('STORAGE.TABLE_ACTION'),
@@ -245,11 +245,11 @@ export default {
                   props: {
                     content: this.$t('VIDEO.STATUS'),
                     delay: 500,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-8': true
-                  }
+                    'mar-r-8': true,
+                  },
                 },
                 [
                   h(
@@ -257,32 +257,32 @@ export default {
                     {
                       props: {
                         value: params.row.is_active === 1,
-                        size: 'large'
+                        size: 'large',
                       },
                       on: {
                         input: () => {
                           this.changeStatus(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h(
                         'span',
                         {
-                          slot: 'open'
+                          slot: 'open',
                         },
-                        this.$t('VIDEO.OPEN')
+                        this.$t('VIDEO.OPEN'),
                       ),
                       h(
                         'span',
                         {
-                          slot: 'close'
+                          slot: 'close',
                         },
-                        this.$t('VIDEO.CLOSE')
-                      )
-                    ]
-                  )
-                ]
+                        this.$t('VIDEO.CLOSE'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -290,35 +290,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 500,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-8': true
-                  }
+                    'mar-r-8': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.edit404Rule(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -326,44 +326,44 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 500,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.delete404RuleConfirm(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
+          },
+        },
       ],
-      iconSize: 16
+      iconSize: 16,
     }
   },
   computed: {
     bucket() {
       return this.$route.params.bucket
-    }
+    },
   },
   watch: {
     requestHeader(to, from) {
@@ -372,7 +372,7 @@ export default {
         index > 0
           ? !(to.slice(0, index).trim() && to.slice(index + 1).trim())
           : true
-    }
+    },
   },
   created() {
     this.list404Rules()
@@ -381,7 +381,7 @@ export default {
     async list404Rules() {
       let rule = {
         action: 'list',
-        bucket: this.bucket
+        bucket: this.bucket,
       }
       try {
         this.$Loading.start()
@@ -408,7 +408,7 @@ export default {
         request_headers: [],
         domain: '',
         uri_pattern: '',
-        allow_method: []
+        allow_method: [],
       }
       this.isEdit = false
     },
@@ -430,7 +430,7 @@ export default {
         uri_pattern: this.formValidate404.uri_pattern
           ? this.formValidate404.uri_pattern
           : '/(.*)',
-        allow_method: this.formValidate404.allow_method.join()
+        allow_method: this.formValidate404.allow_method.join(),
       }
       if (
         rule.fetch_mode !== 'fetch_302' &&
@@ -463,7 +463,7 @@ export default {
       let rule = {
         action: row.is_active === 1 ? 'unactive' : 'active',
         bucket: this.bucket,
-        id: row.id
+        id: row.id,
       }
       try {
         this.$Loading.start()
@@ -491,12 +491,12 @@ export default {
           this.fetchRuleList[row._index].request_headers,
           (value, key) => {
             this.formValidate404.request_headers.push(`${key}:${value}`)
-          }
+          },
         )
       }
       this.domainPrepend = this.fetchRuleList[row._index].domain.split('://')[0]
       this.formValidate404.domain = this.fetchRuleList[row._index].domain.split(
-        '://'
+        '://',
       )[1]
       this.formValidate404.uri_pattern = this.fetchRuleList[
         row._index
@@ -513,14 +513,14 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.delete404Rule(row)
+        onOk: () => this.delete404Rule(row),
       })
     },
     async delete404Rule(row) {
       let rule = {
         action: 'remove',
         bucket: this.bucket,
-        id: row.id
+        id: row.id,
       }
       try {
         this.$Loading.start()
@@ -532,8 +532,8 @@ export default {
         this.$Loading.error()
         this.$Message.error(this.$t('STORAGE.DELETE_FAIL'))
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

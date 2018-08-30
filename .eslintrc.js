@@ -29,7 +29,7 @@ module.exports = {
     "no-mixed-spaces-and-tabs": ["error", "smart-tabs"],
     "vue/valid-v-model": 0,
     "arrow-parens": 0,
-    "comma-dangle": 0,
+    "comma-dangle": ["error", "always-multiline"],
     // allow async-await
     "generator-star-spacing": 0,
     "prefer-promise-reject-errors": 0,

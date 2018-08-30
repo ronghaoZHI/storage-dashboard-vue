@@ -83,23 +83,23 @@ export default {
         {
           title: 'Name',
           key: 'ruleName',
-          width: 150
+          width: 150,
         },
         {
           title: 'Styles',
           width: 300,
           ellipsis: true,
-          key: 'IS'
+          key: 'IS',
         },
         {
           title: 'Quality',
           key: 'quality',
-          width: 150
+          width: 150,
         },
         {
           title: 'Format',
           key: 'format',
-          width: 150
+          width: 150,
         },
         {
           title: 'Actions',
@@ -113,35 +113,35 @@ export default {
                   props: {
                     content: this.$t('STORAGE.IMG_PREVIEW'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.previewModal(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'eye',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -149,35 +149,35 @@ export default {
                   props: {
                     content: this.$t('STORAGE.EXPORT_STYLE'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.exportStyle(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'share',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -185,35 +185,35 @@ export default {
                   props: {
                     content: this.$t('STORAGE.EDIT'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.goEdit(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -221,37 +221,37 @@ export default {
                   props: {
                     content: this.$t('STORAGE.DELETE_STYLE'),
                     delay: 1000,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deleteStyleConfirm(params.row)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
@@ -260,7 +260,7 @@ export default {
     },
     bucketPath() {
       return `/bucket/${this.$route.params.bucket}`
-    }
+    },
   },
   created() {
     this.getList()
@@ -269,7 +269,7 @@ export default {
     goCreateStyle() {
       this.$router.push({
         name: 'editStyles',
-        params: { bucket: this.bucket, ruleName: 'noRuleName', IS: 'noIS' }
+        params: { bucket: this.bucket, ruleName: 'noRuleName', IS: 'noIS' },
       })
     },
     async getList() {
@@ -277,7 +277,7 @@ export default {
         this.$Loading.start()
         let res = await handler('listObjects', {
           Bucket: this.bucket,
-          Prefix: prefix.rules
+          Prefix: prefix.rules,
         })
         const fileList = res.Contents
         _.each(fileList, (file) => {
@@ -292,20 +292,20 @@ export default {
     async getObject(file) {
       let params = {
         Bucket: this.bucket,
-        Key: file.Key
+        Key: file.Key,
       }
       let res = await handler('getObject', params)
       let fileJson = JSON.parse(Utf8ArrayToStr(res.Body))
       let ruleName = file.Key.split(prefix.rules)[1].split('.json')[0]
       this.styleList.push({
         ruleName: ruleName,
-        ...this.convert2list(fileJson)
+        ...this.convert2list(fileJson),
       })
     },
     convert2list(data) {
       const listItem = {
         quality: '--',
-        format: this.$t('STORAGE.FORMAT_ORIGINAL')
+        format: this.$t('STORAGE.FORMAT_ORIGINAL'),
       }
       const ISArry = []
       const overlayList = new Set()
@@ -327,19 +327,19 @@ export default {
     deleteStyleConfirm(style) {
       this.$Modal.confirm({
         content: this.$t('STORAGE.DELETE_CONFIRMED', {
-          fileName: style.ruleName
+          fileName: style.ruleName,
         }),
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.deleteStyle(style)
+        onOk: () => this.deleteStyle(style),
       })
     },
     async deleteStyle(style) {
       try {
         await handler('deleteObject', {
           Bucket: this.bucket,
-          Key: prefix.rules + style.ruleName + '.json'
+          Key: prefix.rules + style.ruleName + '.json',
         })
         this.styleList.splice(style._index, 1)
         this.$Message.success(this.$t('STORAGE.DELETE_STYLE_SUCCESS'))
@@ -350,7 +350,7 @@ export default {
     async exportStyle(style) {
       let url = await getURL(
         this.bucket,
-        prefix.rules + style.ruleName + '.json'
+        prefix.rules + style.ruleName + '.json',
       )
       document.querySelector('#element-download').href = url
       document.querySelector('#span-download').click()
@@ -358,7 +358,7 @@ export default {
     goEdit(style) {
       this.$router.push({
         name: 'editStyles',
-        params: { bucket: this.bucket, ruleName: style.ruleName, IS: style.IS }
+        params: { bucket: this.bucket, ruleName: style.ruleName, IS: style.IS },
       })
     },
     json2instruction(jsonData) {
@@ -376,7 +376,7 @@ export default {
       })
       return {
         instruction: instructionArray.join(','),
-        overlayFileName
+        overlayFileName,
       }
     },
     async previewModal(style) {
@@ -396,10 +396,10 @@ export default {
     async putOverlayObject(fileName) {
       const file = await handler('getObject', {
         Bucket: this.bucket,
-        Key: prefix.overlay + fileName
+        Key: prefix.overlay + fileName,
       })
       const s3 = await getS3({
-        key: { accesskey: previewAccessKey, secretkey: previewSecretKey }
+        key: { accesskey: previewAccessKey, secretkey: previewSecretKey },
       })
       return new Promise((resolve, reject) =>
         s3.putObject(
@@ -407,13 +407,13 @@ export default {
             Bucket: 'image-example',
             Key: prefix.overlay + fileName,
             ContentType: file.ContentType,
-            Body: file.Body
+            Body: file.Body,
           },
           (error, data) => {
             error && iView.Message.error(error.message, 5)
             return error ? reject(error) : resolve(data)
-          }
-        )
+          },
+        ),
       )
     },
     uploadModal() {
@@ -427,8 +427,8 @@ export default {
       this.getObject(file).then((res) => {
         this.showUploadModal = false
       })
-    }
-  }
+    },
+  },
 }
 
 const getURL = async (bucket, key) => {
@@ -441,7 +441,7 @@ const getURL = async (bucket, key) => {
       acl.Grants,
       (item) =>
         item.Grantee.URI &&
-        item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers'
+        item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers',
     )
     return isAllUser ? url.split('?')[0] : url
   } catch (error) {

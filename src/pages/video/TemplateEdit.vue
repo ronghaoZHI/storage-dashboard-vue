@@ -342,7 +342,7 @@ export default {
         'ts',
         'wmv',
         'wma',
-        'mp2'
+        'mp2',
       ],
       videoCodecList: [
         {
@@ -357,14 +357,14 @@ export default {
             'ts',
             'wmv',
             'wma',
-            'mp2'
-          ]
+            'mp2',
+          ],
         },
         { name: 'gif', value: 'gif', container: ['gif'] },
         { name: 'H.264', value: 'H.264', container: ['flv', 'mp4', 'ts'] },
         { name: 'H.265', value: 'H.265', container: ['mp4', 'ts'] },
         { name: 'mpeg2', value: 'mpeg2', container: ['mpg'] },
-        { name: 'msmpeg4', value: 'msmpeg4', container: ['wmv'] }
+        { name: 'msmpeg4', value: 'msmpeg4', container: ['wmv'] },
       ],
       videoProfileList: ['baseline', 'main', 'high'],
       videoLevelList: [
@@ -380,7 +380,7 @@ export default {
         '3.1',
         '3.2',
         '4',
-        '4.1'
+        '4.1',
       ],
       videoFrameRateList: [
         { name: this.$t('VIDEO.UNALTERED'), value: 'auto' },
@@ -392,31 +392,31 @@ export default {
         { name: '29.97', value: '29.97' },
         { name: '30', value: '30' },
         { name: '50', value: '50' },
-        { name: '60', value: '60' }
+        { name: '60', value: '60' },
       ],
       aspectRatioList: [
         { name: this.$t('VIDEO.UNALTERED'), value: 'auto' },
         { name: '1:1', value: '1:1' },
         { name: '4:3', value: '4:3' },
         { name: '3:2', value: '3:2' },
-        { name: '16:9', value: '16:9' }
+        { name: '16:9', value: '16:9' },
       ],
       audioCodecList: [
         {
           name: this.$t('VIDEO.UNALTERED'),
           value: 'auto',
-          container: ['flac', 'flv', 'gif', 'mp4', 'mpg', 'ts', 'wmv']
+          container: ['flac', 'flv', 'gif', 'mp4', 'mpg', 'ts', 'wmv'],
         },
         { name: 'AAC', value: 'AAC', container: ['mp4', 'ts', 'flv'] },
         { name: 'mp3', value: 'mp3', container: ['flv', 'mp4', 'ts', 'mp3'] },
         { name: 'mp2', value: 'mp2', container: ['mpg', 'mp2'] },
-        { name: 'wmav2', value: 'wmav2', container: ['wmv', 'wma'] }
+        { name: 'wmav2', value: 'wmav2', container: ['wmv', 'wma'] },
       ],
       audioProfileList: [
         { name: this.$t('VIDEO.ADAPTIVE'), value: 'auto' },
         { name: 'AAC-LC', value: 'AAC-LC' },
         { name: 'HE-AAC', value: 'HE-AAC' },
-        { name: 'HE-AACv2', value: 'HE-AACv2' }
+        { name: 'HE-AACv2', value: 'HE-AACv2' },
       ],
       audioSampleRateList: [
         { name: this.$t('VIDEO.UNALTERED'), value: 'auto' },
@@ -424,7 +424,7 @@ export default {
         { name: '32000', value: '32000' },
         { name: '44100', value: '44100' },
         { name: '48000', value: '48000' },
-        { name: '96000', value: '96000' }
+        { name: '96000', value: '96000' },
       ],
       audioChannelsList: [
         { name: this.$t('VIDEO.UNALTERED'), value: 'auto' },
@@ -443,23 +443,23 @@ export default {
         { name: '13', value: '13' },
         { name: '14', value: '14' },
         { name: '15', value: '15' },
-        { name: '16', value: '16' }
+        { name: '16', value: '16' },
       ],
       ruleValidate: {
         Name: [{ validator: this.validateName, trigger: 'change' }],
         Description: [
-          { validator: this.validateDiscription, trigger: 'change' }
+          { validator: this.validateDiscription, trigger: 'change' },
         ],
         KeyframesMaxDist: [
-          { validator: this.validateMaxDist, trigger: 'change' }
-        ]
-      }
+          { validator: this.validateMaxDist, trigger: 'change' },
+        ],
+      },
     }
   },
   computed: {
     templateId() {
       return this.$route.params.id
-    }
+    },
   },
   created() {
     this.readPreset()
@@ -496,7 +496,7 @@ export default {
           delete template.Id
           await this.$http.put(
             getTranscoderUrl(`presets/${this.templateId}`),
-            template
+            template,
           )
           this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
         }
@@ -569,8 +569,8 @@ export default {
           callback()
         }
       }
-    }
-  }
+    },
+  },
 }
 
 const convert2Front = (data) => {
@@ -656,14 +656,14 @@ const auxiliaryDefult = {
   only_width: 1,
   only_height: 1,
   audioBitRate: 'auto',
-  audioBitRateValue: 64
+  audioBitRateValue: 64,
 }
 const watermarkConfigDefault = {
   Height: '0',
   Width: '0',
   Location: 'NorthEast',
   LocationHOffset: '0',
-  LocationVOffset: '0'
+  LocationVOffset: '0',
 }
 const templateDefult = {
   Name: '',
@@ -673,26 +673,26 @@ const templateDefult = {
   Audio: {
     Codec: 'auto',
     CodecOptions: {
-      Profile: 'auto'
+      Profile: 'auto',
     },
     SampleRate: 'auto',
     BitRate: '64',
-    Channels: 'auto'
+    Channels: 'auto',
   },
   Video: {
     Codec: 'auto',
     CodecOptions: {
       Profile: 'baseline',
-      Level: '1'
+      Level: '1',
     },
     KeyframesMaxDist: '1',
     FixedGOP: false,
     BitRate: '64',
     FrameRate: 'auto',
     Resolution: 'auto',
-    AspectRatio: 'auto'
+    AspectRatio: 'auto',
   },
-  WatermarkConfig: watermarkConfigDefault
+  WatermarkConfig: watermarkConfigDefault,
 }
 const audioOnly = ['flac', 'mp3', 'wma', 'mp2']
 const container2codec = { mp3: 'mp3', wma: 'wmav2', mp2: 'mp2' }

@@ -19,12 +19,12 @@ export default {
         doc.ondragleave = (e) => e.preventDefault()
         doc.ondragenter = (e) => e.preventDefault()
         doc.ondragover = (e) => e.preventDefault()
-      }
-    }
+      },
+    },
   },
   created() {
     $('body').addClass(`${this.$store.state.theme}`)
-  }
+  },
 }
 </script>
 <style lang="less">

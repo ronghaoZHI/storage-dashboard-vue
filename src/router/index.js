@@ -12,7 +12,7 @@ const redirectToLogin = async (to, next) => {
   await store.dispatch('cleanState')
   next({
     path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
-    ticket: { redirect: to.fullPath }
+    ticket: { redirect: to.fullPath },
   })
 }
 
@@ -20,7 +20,7 @@ const hasPermission = (to) => {
   const router = {
     // check the type of this router
     name: to.meta && to.meta.parent ? to.meta.parent : to.name || 'overview',
-    meta: { show: true }
+    meta: { show: true },
   }
   return _.some(store.getters.menuList, router)
 }
@@ -37,9 +37,9 @@ router.beforeEach((to, from, next) => {
             !from.name && !to.name
               ? {
                   path:
-                    store.state.user.type === 'sub' ? '/bucket' : '/overview'
+                    store.state.user.type === 'sub' ? '/bucket' : '/overview',
                 }
-              : {}
+              : {},
           )
         : redirectToLogin(to, next)
     } else {
@@ -52,12 +52,12 @@ router.beforeEach((to, from, next) => {
             'a',
             {
               on: {
-                click: () => redirectToLogin(to, next)
-              }
+                click: () => redirectToLogin(to, next),
+              },
             },
-            '重新登录'
+            '重新登录',
           )
-        }
+        },
       })
       iView.LoadingBar.finish()
     }

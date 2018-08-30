@@ -34,7 +34,7 @@ export default {
       listHeader: [
         {
           title: this.$t('SETTINGS.BOUND_DOMAIN'),
-          key: 'domain'
+          key: 'domain',
         },
         {
           title: this.$t('VIDEO.OPERATION'),
@@ -46,42 +46,42 @@ export default {
                 props: {
                   content: this.$t('PUBLIC.DELETE'),
                   delay: 1000,
-                  placement: 'top'
-                }
+                  placement: 'top',
+                },
               },
               [
                 h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         this.deleteConfirm(params.row)
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'ios-trash',
-                        size: this.iconSize
-                      }
-                    })
-                  ]
-                )
-              ]
+                        size: this.iconSize,
+                      },
+                    }),
+                  ],
+                ),
+              ],
             )
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
     bucket() {
       return this.$route.params.bucket
-    }
+    },
   },
   created() {
     this.getList()
@@ -102,18 +102,18 @@ export default {
     deleteConfirm(row) {
       this.$Modal.confirm({
         content: this.$t('SETTINGS.DOMAIN_DELETE_CONFIRM', {
-          domain: row.domain
+          domain: row.domain,
         }),
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.deleteDomain(row)
+        onOk: () => this.deleteDomain(row),
       })
     },
     async deleteDomain(row) {
       try {
         await this.$http.delete(`${CUSTOM_DOMAIN}/${this.bucket}`, {
-          params: { custom_domain: row.domain }
+          params: { custom_domain: row.domain },
         })
         this.listData.splice(row._index, 1)
         this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
@@ -125,7 +125,7 @@ export default {
       if (this.inputCheck) {
         try {
           await this.$http.post(`${CUSTOM_DOMAIN}/${this.bucket}`, {
-            custom_domain: this.newDomain
+            custom_domain: this.newDomain,
           })
           this.listData.push({ domain: this.newDomain })
           this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
@@ -140,10 +140,10 @@ export default {
     },
     newDomainTest(value) {
       this.inputCheck = /^[a-zA-Z\d-]{0,63}(\.[a-zA-Z\d-]{0,63})+$/.test(
-        this.newDomain
+        this.newDomain,
       )
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -86,7 +86,7 @@ import { bytes, thousands } from '@/service/bucketService'
 import {
   PARTITION_USED_MOVE,
   PARTITION_USED_SET,
-  PARTITION_USED_DELETED
+  PARTITION_USED_DELETED,
 } from '@/service/API'
 
 export default {
@@ -98,7 +98,7 @@ export default {
       showDetailModal: false,
       modalTitles: {
         groupTitle: this.$t('SYSTEM.BASE_INFO'),
-        partitionTitle: this.$t('SYSTEM.GROUP_INFO')
+        partitionTitle: this.$t('SYSTEM.GROUP_INFO'),
       },
       waitingCard:
         this.data.is_del === 1 ||
@@ -112,8 +112,8 @@ export default {
         { name: this.$t('SYSTEM.STATE'), value: 'readonly' },
         { name: this.$t('SYSTEM.CLOSE_TIME'), value: 'close_ts' },
         { name: this.$t('SYSTEM.CREATION_TIME'), value: 'ts' },
-        { name: this.$t('SYSTEM.MIGRATION_PROGRESS'), value: 'traffic_status' }
-      ]
+        { name: this.$t('SYSTEM.MIGRATION_PROGRESS'), value: 'traffic_status' },
+      ],
     }
   },
   computed: {
@@ -152,7 +152,7 @@ export default {
       },
       set(value) {
         this.update(value)
-      }
+      },
     },
     modalData() {
       let tableData = _.map(this.detail, (item) => {
@@ -179,30 +179,30 @@ export default {
         {
           name: this.$t('SYSTEM.CAPACITY'),
           value: this.myData.used_rateFont,
-          isRed: this.myData.used_rate > 99
+          isRed: this.myData.used_rate > 99,
         },
         {
           name: 'CPU',
           value: this.myData.cpuFont,
           tooltip: this.$t('SYSTEM.PARTITION_CPU_INFO'),
-          isRed: this.myData.cpu > 20
+          isRed: this.myData.cpu > 20,
         },
         { name: this.$t('SYSTEM.MEDIA_TYPE'), value: this.myData.media_type },
         {
           name: 'IO',
           value: this.myData.ioutilFont,
-          isRed: this.myData.ioutil > 90
+          isRed: this.myData.ioutil > 90,
         },
         { name: this.$t('SYSTEM.RW_STATUS'), value: this.myData.readonlyFont },
         {
           name: this.$t('SYSTEM.IS_DEL'),
           value: this.myData.failFont,
-          isRed: this.myData.fail
-        }
+          isRed: this.myData.fail,
+        },
       ]
       let detailHead = this.detailHead
       return { tableData, basicInfo, detailHead }
-    }
+    },
   },
   watch: {
     data: {
@@ -213,8 +213,8 @@ export default {
             : ''
         this.isWrite = to.readonly === 0
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     openDetail() {
@@ -233,7 +233,7 @@ export default {
         onCancel: () => {
           this.isWrite = !newWrite
         },
-        onOk: () => this.usedSet(newWrite)
+        onOk: () => this.usedSet(newWrite),
       })
     },
     async usedSet(newWrite) {
@@ -242,7 +242,7 @@ export default {
       try {
         let params = {
           read_only: newWrite ? 0 : 1,
-          partition_id: this.myData.partition_id
+          partition_id: this.myData.partition_id,
         }
         await this.$http.post(PARTITION_USED_SET, params)
         this.spinShow = false
@@ -260,7 +260,7 @@ export default {
       this.$Loading.start()
       try {
         let params = {
-          partition_id: this.myData.partition_id
+          partition_id: this.myData.partition_id,
         }
         await this.$http.post(PARTITION_USED_MOVE, params)
         this.waitingCard = 'bsc-waiting-card'
@@ -279,7 +279,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.usedDeleted()
+        onOk: () => this.usedDeleted(),
       })
     },
     async usedDeleted() {
@@ -287,7 +287,7 @@ export default {
       this.$Loading.start()
       try {
         let params = {
-          partition_id: this.myData.partition_id
+          partition_id: this.myData.partition_id,
         }
         await this.$http.post(PARTITION_USED_DELETED, params)
         this.myData.is_del = 1
@@ -302,8 +302,8 @@ export default {
       }
     },
     bytes: bytes,
-    thousands: thousands
-  }
+    thousands: thousands,
+  },
 }
 </script>
 <style lang="less" scoped>

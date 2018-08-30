@@ -199,31 +199,31 @@ export default {
       required: true,
       default() {
         return groupACLListDefult
-      }
+      },
     },
     userAcl: {
       type: Array,
       required: true,
       default() {
         return this.owerACL
-      }
+      },
     },
     isInline: {
       type: Boolean,
       default() {
         return false
-      }
+      },
     },
     width: {
-      type: Number
-    }
+      type: Number,
+    },
   },
   data() {
     return {
       iconSize: 16,
       isAddUser: false,
       newUserItem: _.cloneDeep(newUserItemDefult),
-      userACLList: _.cloneDeep(this.userAcl)
+      userACLList: _.cloneDeep(this.userAcl),
     }
   },
   computed: {
@@ -243,7 +243,7 @@ export default {
         ? {
             width: `${this.width -
               parseInt(this.width * 0.2) -
-              parseInt(this.width * 0.25 * 2)}px`
+              parseInt(this.width * 0.25 * 2)}px`,
           }
         : {}
     },
@@ -252,7 +252,7 @@ export default {
     },
     td25Style() {
       return this.width ? { width: `${parseInt(this.width * 0.25)}px` } : {}
-    }
+    },
   },
   methods: {
     addUser() {
@@ -265,8 +265,8 @@ export default {
     },
     deleteUser(index) {
       this.userAcl.splice(index, 1)
-    }
-  }
+    },
+  },
 }
 
 const newUserItemDefult = {
@@ -274,8 +274,8 @@ const newUserItemDefult = {
   Access: {
     Read: false,
     ReadAcp: false,
-    WriteAcp: false
-  }
+    WriteAcp: false,
+  },
 }
 
 const groupACLListDefult = [
@@ -285,8 +285,8 @@ const groupACLListDefult = [
     Access: {
       Read: true,
       ReadAcp: false,
-      WriteAcp: false
-    }
+      WriteAcp: false,
+    },
   },
   {
     GranteeType: 'Group',
@@ -294,9 +294,9 @@ const groupACLListDefult = [
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
-    }
-  }
+      WriteAcp: false,
+    },
+  },
 ]
 </script>
 <style lang="less">

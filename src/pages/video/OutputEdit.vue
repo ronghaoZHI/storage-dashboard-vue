@@ -368,7 +368,7 @@
 import {
   putBucketPolicy,
   getTranscodes,
-  getTemplateInfo
+  getTemplateInfo,
 } from '@/pages/video/data'
 import user from '@/store/modules/user'
 import fileAcl from '@/components/ACL/fileAcl.vue'
@@ -388,7 +388,7 @@ export default {
         { name: '1:1', value: '1:1' },
         { name: '4:3', value: '4:3' },
         { name: '3:2', value: '3:2' },
-        { name: '16:9', value: '16:9' }
+        { name: '16:9', value: '16:9' },
       ],
       formatList: ['png', 'jpg'],
       templateList: this.templateList,
@@ -410,18 +410,18 @@ export default {
           {
             required: true,
             message: this.$t('VIDEO.PERSET_REQUIRED'),
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         key_suffix: [
           {
             required: true,
             message: this.$t('VIDEO.KEY_SUFFIX_REQUIRED'),
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         segment_duration: [
-          { validator: this.validateSegment, trigger: 'blur' }
+          { validator: this.validateSegment, trigger: 'blur' },
         ],
         InputKey: [{ validator: this.validateInputKey, trigger: 'change' }],
         time: [
@@ -429,27 +429,27 @@ export default {
             type: 'number',
             min: 1,
             message: this.$t('PUBLIC.NOT_LESS', { num: '1' }),
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         width: [{ validator: this.validateWidth, trigger: 'change' }],
-        height: [{ validator: this.validateWidth, trigger: 'change' }]
+        height: [{ validator: this.validateWidth, trigger: 'change' }],
       },
       outputsHeader: [
         {
           title: this.$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX'),
           key: 'key_suffix',
-          width: 140
+          width: 140,
         },
         {
           title: this.$t('VIDEO.TRANSCODING_TEMPLATE'),
           key: 'template',
-          width: 100
+          width: 100,
         },
         {
           title: this.$t('VIDEO.HLS_SLICE_LENGTH'),
           width: 120,
-          key: 'segment_duration'
+          key: 'segment_duration',
         },
         {
           title: '水印文件Key',
@@ -459,9 +459,9 @@ export default {
             return h('div', [
               params.row.watermarks
                 ? params.row.watermarks[0].InputKey
-                : '水印未启用'
+                : '水印未启用',
             ])
-          }
+          },
         },
         {
           title: 'Actions',
@@ -475,35 +475,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.editOutput(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -511,75 +511,75 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deleteOutput(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
+          },
+        },
       ],
       shotsHeader: [
         {
           title: this.$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX'),
           key: 'key_suffix',
-          width: 140
+          width: 140,
         },
         {
           title: this.$t('VIDEO.FORMAT'),
           key: 'format',
-          width: 70
+          width: 70,
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_START_TIME_SECOND'),
           width: 160,
-          key: 'time'
+          key: 'time',
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_INTERVAL_SECOND'),
           width: 140,
-          key: 'interval'
+          key: 'interval',
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_MAX_NUMBER'),
           width: 120,
-          key: 'number'
+          key: 'number',
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_RESOLUTION'),
           width: 100,
-          key: 'resolution'
+          key: 'resolution',
         },
         {
           title: this.$t('VIDEO.ASPECT_RATIO'),
           width: 80,
-          key: 'aspect_ratio'
+          key: 'aspect_ratio',
         },
         {
           title: 'Actions',
@@ -593,35 +593,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.editShot(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -629,37 +629,37 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 1000,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deleteShot(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
@@ -679,8 +679,8 @@ export default {
         Access: {
           Read: true,
           ReadAcp: true,
-          WriteAcp: true
-        }
+          WriteAcp: true,
+        },
       }
     },
     osError() {
@@ -688,7 +688,7 @@ export default {
         this.transcode.snapshots.length === 0 &&
         this.transcode.outputs.length === 0
       )
-    }
+    },
   },
   created() {
     this.getTranscode()
@@ -732,7 +732,7 @@ export default {
       this.outputIndex = index
       this.outputModal = _.clone(this.transcode.outputs[index])
       this.outputModal.segment_duration = parseInt(
-        this.outputModal.segment_duration
+        this.outputModal.segment_duration,
       )
       this.outputModal.InputKey = this.outputModal.watermarks
         ? this.outputModal.watermarks[0].InputKey
@@ -763,7 +763,7 @@ export default {
       }`
       const outputSave = this.auxiliary.isWaterMarkerOpen
         ? Object.assign(this.outputModal, {
-            watermarks: [{ InputKey: this.outputModal.InputKey }]
+            watermarks: [{ InputKey: this.outputModal.InputKey }],
           })
         : this.outputModal
       delete outputSave.InputKey
@@ -879,7 +879,7 @@ export default {
           return false
         }
         const unified = segments.filter(
-          (seg) => parseInt(seg) === parseInt(segments[0])
+          (seg) => parseInt(seg) === parseInt(segments[0]),
         )
         if (unified.length !== segments.length) {
           this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
@@ -947,7 +947,7 @@ export default {
         this.$Loading.start()
         let [originalTrans, trans] = await Promise.all([
           getTranscodes(this.bucket),
-          getTranscodes(this.inputBucket)
+          getTranscodes(this.inputBucket),
         ])
 
         let newTrans = this.convert2Save(this.transcode)
@@ -965,7 +965,7 @@ export default {
 
         await Promise.all([
           putBucketPolicy(this.bucket, originalTrans),
-          putBucketPolicy(this.inputBucket, trans)
+          putBucketPolicy(this.inputBucket, trans),
         ])
         this.$router.push({ name: 'output' })
         this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
@@ -1016,7 +1016,7 @@ export default {
           }
         }),
         null,
-        undefined
+        undefined,
       )
       if (!this.auxiliary.MP) {
         delete saved.master_playlist
@@ -1060,7 +1060,7 @@ export default {
       if (!front.master_playlist) {
         front.master_playlist = {
           format: 'HLSv3',
-          name: ''
+          name: '',
         }
       }
       this.transcode = front
@@ -1071,14 +1071,14 @@ export default {
         let acc = {
           Read: false,
           ReadAcp: false,
-          WriteAcp: false
+          WriteAcp: false,
         }
         item.Access.forEach((item) => {
           if (item === 'FullControl') {
             acc = {
               Read: true,
               ReadAcp: true,
-              WriteAcp: true
+              WriteAcp: true,
             }
           } else {
             acc[item] = true
@@ -1143,8 +1143,8 @@ export default {
       } else {
         callback()
       }
-    }
-  }
+    },
+  },
 }
 const isREG = (vlaue) => {
   try {
@@ -1163,8 +1163,8 @@ const groupACLListDefult = [
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
-    }
+      WriteAcp: false,
+    },
   },
   {
     GranteeType: 'Group',
@@ -1172,9 +1172,9 @@ const groupACLListDefult = [
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
-    }
-  }
+      WriteAcp: false,
+    },
+  },
 ]
 
 const auxiliaryDefult = {
@@ -1183,13 +1183,13 @@ const auxiliaryDefult = {
   extension: '',
   regular: '',
   MP: false,
-  isWaterMarkerOpen: false
+  isWaterMarkerOpen: false,
 }
 
 const outputsDefult = {
   key_suffix: '',
   preset_id: '',
-  segment_duration: 0
+  segment_duration: 0,
 }
 const shotDefult = {
   key_suffix: '',
@@ -1200,7 +1200,7 @@ const shotDefult = {
   resolution: 'auto',
   aspect_ratio: 'auto',
   width: '',
-  height: ''
+  height: '',
 }
 
 const transcodeDefult = {
@@ -1216,15 +1216,15 @@ const transcodeDefult = {
   output_acls: [],
   master_playlist: {
     format: 'HLSv3',
-    name: ''
+    name: '',
   },
   success_callback_url: '',
-  failure_callback_url: ''
+  failure_callback_url: '',
 }
 
 const aclConvert2Save = (data) => {
   const saved = {
-    Grantee: data.Grantee
+    Grantee: data.Grantee,
   }
 
   if (!groupGrantee.includes(data.Grantee)) {

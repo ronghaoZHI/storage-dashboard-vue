@@ -29,12 +29,12 @@ async function getS3ByHttpHeaders(config) {
       host: config.url.split('//')[1].split('/')[0],
       method: config.method.toUpperCase(),
       path: config.url.split('.com')[1],
-      body: JSON.stringify(config.data)
+      body: JSON.stringify(config.data),
     },
     {
       secretAccessKey: key.secretkey,
-      accessKeyId: key.accesskey
-    }
+      accessKeyId: key.accesskey,
+    },
   )
   return signed.headers
 }
@@ -64,20 +64,18 @@ http.interceptors.request.use(
   (config) => {
     return requestConf(config)
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 )
 
 // storage-api convert error to success
 function errorHandle(data) {
   if (data.error && data.error.status_code >= 400) {
-    const [code, msg] = [STATUS_CODE[data.error.status_code] || '', data.error.show_msg ||
-        data.error.msg.message ||
-        data.error.msg]
+    const [code, msg] = [
+      STATUS_CODE[data.error.status_code] || '',
+      data.error.show_msg || data.error.msg.message || data.error.msg,
+    ]
     sentMessage(msg, data)
-    iView.Message.error(
-      `${code} ${msg}`,
-      1000
-    )
+    iView.Message.error(`${code} ${msg}`, 1000)
     return Promise.reject(data.error)
   } else {
     return data.data || data
@@ -85,7 +83,8 @@ function errorHandle(data) {
 }
 
 http.interceptors.response.use(
-  (response) => errorHandle(response.data), createError
+  (response) => errorHandle(response.data),
+  createError,
 )
 
 // set storage-api token

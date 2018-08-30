@@ -349,7 +349,7 @@ import {
   listPipelines,
   getTemplateInfo,
   formateSS,
-  getSS
+  getSS,
 } from '@/pages/video/data'
 import { handler } from '@/service/Aws'
 import { getTranscoderUrl } from '@/service/API'
@@ -381,7 +381,7 @@ export default {
       ruleValidate: {
         'Playlists.Name': [{ validator: this.validateName, trigger: 'change' }],
         'Playlists.OutputKeys': [
-          { validator: this.validateOutputKeys, trigger: 'change' }
+          { validator: this.validateOutputKeys, trigger: 'change' },
         ],
         Inputs: [{ validator: this.validateInputs, trigger: 'change' }],
         SegmentDuration: [{ validator: this.validateSegment, trigger: 'blur' }],
@@ -390,49 +390,49 @@ export default {
           {
             required: true,
             message: this.$t('VIDEO.PERSET_REQUIRED'),
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         Key: [
           {
             required: true,
             message: this.$t('VIDEO.KEY_SUFFIX_REQUIRED'),
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         Time: [
           {
             type: 'number',
             min: 1,
             message: this.$t('PUBLIC.NOT_LESS', { num: '1' }),
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         width: [{ validator: this.validateWidth, trigger: 'change' }],
-        height: [{ validator: this.validateWidth, trigger: 'change' }]
+        height: [{ validator: this.validateWidth, trigger: 'change' }],
       },
       aspectRatioList: [
         { name: this.$t('VIDEO.UNALTERED'), value: 'auto' },
         { name: '1:1', value: '1:1' },
         { name: '4:3', value: '4:3' },
         { name: '3:2', value: '3:2' },
-        { name: '16:9', value: '16:9' }
+        { name: '16:9', value: '16:9' },
       ],
       outputsHeader: [
         {
           title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
           key: 'Key',
-          width: 140
+          width: 140,
         },
         {
           title: this.$t('VIDEO.TRANSCODING_TEMPLATE'),
           key: 'template',
-          width: 100
+          width: 100,
         },
         {
           title: this.$t('VIDEO.HLS_SLICE_LENGTH'),
           width: 120,
-          key: 'SegmentDuration'
+          key: 'SegmentDuration',
         },
         {
           title: '水印文件Key',
@@ -442,9 +442,9 @@ export default {
             return h('div', [
               params.row.Watermarks
                 ? params.row.Watermarks[0].InputKey
-                : '水印未启用'
+                : '水印未启用',
             ])
-          }
+          },
         },
         {
           title: 'Actions',
@@ -458,35 +458,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.editOutput(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -494,75 +494,75 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deleteOutput(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
+          },
+        },
       ],
       shotsHeader: [
         {
           title: this.$t('VIDEO.OUTPUT_FILE_NAME_SUFFIX'),
           key: 'Key',
-          width: 140
+          width: 140,
         },
         {
           title: this.$t('VIDEO.FORMAT'),
           key: 'Format',
-          width: 70
+          width: 70,
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_START_TIME_SECOND'),
           width: 160,
-          key: 'Time'
+          key: 'Time',
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_INTERVAL_SECOND'),
           width: 140,
-          key: 'Interval'
+          key: 'Interval',
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_MAX_NUMBER'),
           width: 120,
-          key: 'Number'
+          key: 'Number',
         },
         {
           title: this.$t('VIDEO.SCREENSHOT_RESOLUTION'),
           width: 100,
-          key: 'Resolution'
+          key: 'Resolution',
         },
         {
           title: this.$t('VIDEO.ASPECT_RATIO'),
           width: 80,
-          key: 'AspectRatio'
+          key: 'AspectRatio',
         },
         {
           title: 'Actions',
@@ -576,35 +576,35 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.EDIT'),
                     delay: 1000,
-                    placement: 'top'
+                    placement: 'top',
                   },
                   class: {
-                    'mar-r-5': true
-                  }
+                    'mar-r-5': true,
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.editShot(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'compose',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
               ),
               h(
                 'Tooltip',
@@ -612,43 +612,43 @@ export default {
                   props: {
                     content: this.$t('PUBLIC.DELETE'),
                     delay: 1000,
-                    placement: 'top'
-                  }
+                    placement: 'top',
+                  },
                 },
                 [
                   h(
                     'i-button',
                     {
                       props: {
-                        size: 'small'
+                        size: 'small',
                       },
                       on: {
                         click: () => {
                           this.deleteShot(params.row._index)
-                        }
-                      }
+                        },
+                      },
                     },
                     [
                       h('Icon', {
                         props: {
                           type: 'ios-trash',
-                          size: this.iconSize
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ])
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   computed: {
     osError() {
       return this.job.Snapshots.length === 0 && this.job.Outputs.length === 0
-    }
+    },
   },
   created() {
     this.createdMethods()
@@ -697,13 +697,13 @@ export default {
         }
         if (segmentsSet.size !== 1) {
           this.$Message.warning(
-            this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT')
+            this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CONSISTENT'),
           )
           this.HLSError = true
           return false
         } else if (segments[0] === 0) {
           this.$Message.warning(
-            this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0')
+            this.$t('VIDEO.ADAPTIVE_HLS_SLICE_LENGTH_CANNOT_BE_0'),
           )
           this.HLSError = true
           return false
@@ -772,7 +772,7 @@ export default {
       this.outputIndex = index
       this.outputModal = _.clone(this.job.Outputs[index])
       this.outputModal.SegmentDuration = parseInt(
-        this.outputModal.SegmentDuration
+        this.outputModal.SegmentDuration,
       )
       this.outputModal.InputKey = this.outputModal.Watermarks
         ? this.outputModal.Watermarks[0].InputKey
@@ -817,7 +817,7 @@ export default {
       }`
       const outputSave = this.isWaterMarkerOpen
         ? Object.assign(this.outputModal, {
-            Watermarks: [{ InputKey: this.outputModal.InputKey }]
+            Watermarks: [{ InputKey: this.outputModal.InputKey }],
           })
         : this.outputModal
       delete outputSave.InputKey
@@ -828,14 +828,14 @@ export default {
             TimeSpan: {
               StartTime: getSS(
                 this.outputModal.StartTime,
-                this.outputModal.StartTimeMS
+                this.outputModal.StartTimeMS,
               ),
               Duration: getSS(
                 this.outputModal.Duration,
-                this.outputModal.DurationMS
-              )
-            }
-          }
+                this.outputModal.DurationMS,
+              ),
+            },
+          },
         ]
       }
       delete outputSave.StartTime
@@ -933,7 +933,7 @@ export default {
       let res = await handler('listObjects', {
         Bucket: this.pipeInputBucket,
         MaxKeys: 50,
-        Prefix: searchValue
+        Prefix: searchValue,
       })
       this.fileList = res.Contents
       this.fileInfo = !!res.IsTruncated
@@ -987,20 +987,20 @@ export default {
       } else {
         callback()
       }
-    }
-  }
+    },
+  },
 }
 const jobDefult = {
   Inputs: [
     {
-      Key: ''
-    }
+      Key: '',
+    },
   ],
   OutputKeyPrefix: '',
   Outputs: [],
   Snapshots: [],
   Playlists: { Format: 'HLSv3', Name: '', OutputKeys: [] },
-  PipelineId: ''
+  PipelineId: '',
 }
 
 const outputsDefult = {
@@ -1010,7 +1010,7 @@ const outputsDefult = {
   StartTime: '0:0:0',
   StartTimeMS: '0',
   Duration: '0:0:0',
-  DurationMS: '0'
+  DurationMS: '0',
 }
 
 const shotDefult = {
@@ -1022,7 +1022,7 @@ const shotDefult = {
   Resolution: 'auto',
   AspectRatio: 'auto',
   width: '',
-  height: ''
+  height: '',
 }
 </script>
 <style lang="less" scoped>

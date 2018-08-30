@@ -13,12 +13,12 @@ import { NODE } from '@/service/API'
 import machineCard from './MachineCard'
 export default {
   components: {
-    machineCard
+    machineCard,
   },
   data() {
     return {
       spinShow: true,
-      machineList: []
+      machineList: [],
     }
   },
   created() {
@@ -36,8 +36,8 @@ export default {
         this.spinShow = false
         this.$Loading.error()
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

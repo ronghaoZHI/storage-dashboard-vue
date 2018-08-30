@@ -33,8 +33,8 @@ export default {
   computed: {
     list() {
       return this.data
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

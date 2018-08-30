@@ -21,7 +21,7 @@ const timeSpliteUnits = (t, digit = 1) => {
   const units = ['s', 'min', 'h']
   const exponent = Math.min(
     Math.floor(Math.log(time) / Math.log(60)),
-    units.length - 1
+    units.length - 1,
   )
   const number = (time / Math.pow(60, Math.floor(exponent))).toFixed(digit)
 
@@ -52,7 +52,7 @@ const bytesSpliteUnits = (bt, digit = 1) => {
   const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
   const exponent = Math.min(
     Math.floor(Math.log(bytes) / Math.log(1024)),
-    units.length - 1
+    units.length - 1,
   )
   const number = (bytes / Math.pow(1024, Math.floor(exponent))).toFixed(digit)
 
@@ -85,11 +85,11 @@ const bpsSpliteUnits = (bs, digit = 1) => {
     'Pbps',
     'Ebps',
     'Zbps',
-    'Ybps'
+    'Ybps',
   ]
   const exponent = Math.min(
     Math.floor(Math.log(bps) / Math.log(1024)),
-    units.length - 1
+    units.length - 1,
   )
   const number = (bps / Math.pow(1024, Math.floor(exponent))).toFixed(digit)
 
@@ -122,7 +122,7 @@ const timesK = (t, digit = 1) => {
   const units = ['', 'K', 'M', 'BN']
   const exponent = Math.min(
     Math.floor(Math.log(times) / Math.log(1000)),
-    units.length - 1
+    units.length - 1,
   )
   const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(digit)
 
@@ -142,11 +142,11 @@ const timesSpliteUnits = (t, digit = 1, isFloat = false) => {
   const units = ['', 'K', 'M', 'BN']
   const exponent = Math.min(
     Math.floor(Math.log(times) / Math.log(1000)),
-    units.length - 1
+    units.length - 1,
   )
   let specialDigit = units[exponent] ? digit : 0
   const number = (times / Math.pow(1000, Math.floor(exponent))).toFixed(
-    specialDigit
+    specialDigit,
   )
   return [number, units[exponent]]
 }
@@ -155,7 +155,7 @@ const date = (value, type = 'YMD') => {
   let texts = [
     date.getFullYear(),
     checkDate(date.getMonth() + 1),
-    checkDate(date.getDate())
+    checkDate(date.getDate()),
   ]
   if (type === 'MD') {
     texts = [checkDate(date.getMonth() + 1), checkDate(date.getDate())]
@@ -175,7 +175,7 @@ const dateTimeYear = (value) => {
   let dateTexts = [
     date.getFullYear(),
     checkDate(date.getMonth() + 1),
-    checkDate(date.getDate())
+    checkDate(date.getDate()),
   ]
   let timeTexts = [checkDate(date.getHours()), checkDate(date.getMinutes())]
   return dateTexts.join('-') + ' ' + timeTexts.join(':')
@@ -197,7 +197,8 @@ Vue.filter('userType', (Grantee) => {
   } else if (
     Grantee.Type === 'Group' &&
     (Grantee.URI &&
-      Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
+      Grantee.URI ===
+        'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
   ) {
     return 'Auth Users'
   } else if (Grantee.ID) {
@@ -219,7 +220,7 @@ const convertPrefix2Router = (prefix) => {
       copyArray.length = index + 1
       routeArray.push({
         text: item,
-        prefix: copyArray.join('/') + '/'
+        prefix: copyArray.join('/') + '/',
       })
     })
     return routeArray
@@ -229,7 +230,7 @@ const convertPrefix2Router = (prefix) => {
 }
 const prefix = {
   overlay: 'imgx/overlay/',
-  rules: 'imgx/cmd_template/'
+  rules: 'imgx/cmd_template/',
 }
 const Utf8ArrayToStr = (array) => {
   let [out, i, len, c, char2, char3] = ['', 0, array.length, '', '', '']
@@ -258,7 +259,7 @@ const Utf8ArrayToStr = (array) => {
         char2 = array[i++]
         char3 = array[i++]
         out += String.fromCharCode(
-          ((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0)
+          ((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0),
         )
         break
     }
@@ -282,5 +283,5 @@ export {
   bytesSpliteUnits,
   bpsSpliteUnits,
   timesSpliteUnits,
-  thousands
+  thousands,
 }

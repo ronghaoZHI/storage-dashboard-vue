@@ -35,7 +35,7 @@ export default {
       groupACLList: [],
       userACLList: [],
       owner: this.owner,
-      iconSize: 16
+      iconSize: 16,
     }
   },
   computed: {
@@ -44,7 +44,7 @@ export default {
     },
     breadcrumb() {
       return convertPrefix2Router(this.prefix)
-    }
+    },
   },
   created() {
     this.getACLList()
@@ -55,14 +55,14 @@ export default {
       try {
         let res = await handler('getObjectAcl', {
           Bucket: this.bucket,
-          Key: this.prefix
+          Key: this.prefix,
         })
         this.groupACLList = convertGrants(res.Grants)[0]
         this.userACLList = convertGrants(res.Grants)[1]
         this.Data = {
           bucket: this.bucket,
           grants: res.Grants,
-          owner: res.Owner
+          owner: res.Owner,
         }
         this.owner = res.Owner.ID
       } catch (error) {
@@ -91,8 +91,8 @@ export default {
         Key: this.prefix,
         AccessControlPolicy: {
           Grants: saved,
-          Owner: this.Data.owner
-        }
+          Owner: this.Data.owner,
+        },
       }
       try {
         await handler('putObjectAcl', params)
@@ -105,15 +105,15 @@ export default {
     },
     getUrl(prefix) {
       return `/bucket/${this.bucket}/prefix/${prefix.replace('/', '%2F')}`
-    }
-  }
+    },
+  },
 }
 const acl2save = (item) => {
   let savedItem = {}
   if (item.GranteeOrigin) {
     savedItem = {
       Grantee: item.GranteeOrigin,
-      Permission: item.Access
+      Permission: item.Access,
     }
   } else {
     savedItem.Grantee = item.Grantee.includes('@')
@@ -168,8 +168,8 @@ const user2front = (grant) => {
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
-    }
+      WriteAcp: false,
+    },
   }
 }
 const convertPermission = (grant, permission) => {
@@ -177,7 +177,7 @@ const convertPermission = (grant, permission) => {
     grant.Access = {
       Read: true,
       ReadAcp: true,
-      WriteAcp: true
+      WriteAcp: true,
     }
   } else {
     grant.Access[per2acc[permission]] = true
@@ -197,13 +197,13 @@ const per2acc = {
   READ: 'Read',
   WRITE: 'Write',
   READ_ACP: 'ReadAcp',
-  WRITE_ACP: 'WriteAcp'
+  WRITE_ACP: 'WriteAcp',
 }
 const acc2per = {
   Read: 'READ',
   Write: 'WRITE',
   ReadAcp: 'READ_ACP',
-  WriteAcp: 'WRITE_ACP'
+  WriteAcp: 'WRITE_ACP',
 }
 const groupACLListDefult = [
   {
@@ -212,12 +212,12 @@ const groupACLListDefult = [
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
+      WriteAcp: false,
     },
     GranteeOrigin: {
       Type: 'Group',
-      URI: 'http://acs.amazonaws.com/groups/global/AllUsers'
-    }
+      URI: 'http://acs.amazonaws.com/groups/global/AllUsers',
+    },
   },
   {
     GranteeType: 'Group',
@@ -225,13 +225,13 @@ const groupACLListDefult = [
     Access: {
       Read: false,
       ReadAcp: false,
-      WriteAcp: false
+      WriteAcp: false,
     },
     GranteeOrigin: {
       Type: 'Group',
-      URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers'
-    }
-  }
+      URI: 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers',
+    },
+  },
 ]
 </script>
 <style type="less">

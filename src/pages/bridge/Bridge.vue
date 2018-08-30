@@ -43,10 +43,7 @@
   </div>
 </template>
 <script>
-import {
-  USERINFO,
-  BOUND_USER,
-} from '@/service/API'
+import { USERINFO, BOUND_USER } from '@/service/API'
 import { getAccesskey } from 'api/login'
 import { getSSOLoginUrl } from 'api/sso'
 import user from '@/store/modules/user'
@@ -61,7 +58,7 @@ export default {
       selectedCustomer: '',
       showUserSelect: false,
       userInfo: user.state || {},
-      subUserList: user.state.subUserList || []
+      subUserList: user.state.subUserList || [],
     }
   },
   created() {
@@ -93,7 +90,7 @@ export default {
         (error) => {
           this.$Loading.error()
           this.$Message.error(error)
-        }
+        },
       )
     },
     async adminMode(data) {
@@ -105,7 +102,7 @@ export default {
         this.showUserSelect = true
         await this.$store.dispatch('setUserInfo', {
           ...data,
-          subUserList: this.subUserList
+          subUserList: this.subUserList,
         })
       } else {
         this.toIndex(data)
@@ -119,7 +116,7 @@ export default {
       let searchArr = this.searchSubUserInput.split('')
       let reg = new RegExp(searchArr.join('.*'))
       this.searchedSubUserList = this.subUserList.filter(
-        (item) => reg.test(item.username) || reg.test(item.company)
+        (item) => reg.test(item.username) || reg.test(item.company),
       )
     },
     selectSubUser(user) {
@@ -127,7 +124,7 @@ export default {
         this.toIndex({
           ...this.userInfo,
           subUser: Object.assign(user, { keys }),
-          subUserList: this.subUserList
+          subUserList: this.subUserList,
         })
       })
     },
@@ -170,8 +167,8 @@ export default {
       await this.$store.dispatch('cleanState')
       Vue.config.lang = this.lang
       this.$router.push('user')
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

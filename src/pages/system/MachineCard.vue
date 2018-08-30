@@ -77,7 +77,7 @@ import { bytes } from '@/service/bucketService'
 import partitionNode from './PartitionNode'
 export default {
   components: {
-    partitionNode
+    partitionNode,
   },
   directives: {
     cloBtn: {
@@ -90,7 +90,7 @@ export default {
             .siblings('.button-open')
             .toggleClass('dn')
         })
-      }
+      },
     },
     openBtn: {
       bind: function(el) {
@@ -102,7 +102,7 @@ export default {
             .siblings('.button-close')
             .toggleClass('dn')
         })
-      }
+      },
     },
     percentPointer: {
       inserted: function(el, binding) {
@@ -117,7 +117,7 @@ export default {
           '#76d0a3',
           '#76d0a3',
           '#76d0a3',
-          '#F1A4A4'
+          '#F1A4A4',
         ]
         data.forEach((item, index) => {
           let val = `span:nth-child(${index + 1})`
@@ -129,13 +129,13 @@ export default {
               .children(val)
               .css('background-color', colorList[Math.floor(item.percent / 10)])
         })
-      }
-    }
+      },
+    },
   },
   props: ['data'],
   data() {
     return {
-      memPointData: []
+      memPointData: [],
     }
   },
   computed: {
@@ -143,11 +143,11 @@ export default {
       return this.data.partitions.ok
         .concat(this.data.partitions.bad)
         .slice(0, 50)
-    }
+    },
   },
   methods: {
-    bytes: bytes
-  }
+    bytes: bytes,
+  },
 }
 </script>
 <style lang="less" scoped>

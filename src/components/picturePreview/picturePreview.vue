@@ -89,7 +89,7 @@ export default {
       selectedPictureIndex: 0,
       width: 0,
       height: 0,
-      spinShow: true
+      spinShow: true,
     }
   },
   watch: {
@@ -129,7 +129,7 @@ export default {
         : $('.picture-show-box, .big-picture-show-box')
             .addClass('big-picture-show-box')
             .removeClass('picture-show-box')
-    }
+    },
   },
   created() {
     // ESC close
@@ -151,16 +151,16 @@ export default {
       this.pictureUrl = await getURL(
         this.bucket,
         this.fileList[this.selectedIndex],
-        this.prefix
+        this.prefix,
       )
       $(`.gallery-list-item:eq(${this.selectedPictureIndex - 1})`).addClass(
-        'active'
+        'active',
       )
       this.pictureUrlList = await Promise.all(
         Array.map(
           this.fileList.filter((file) => file.isImage && file.isImage === true),
-          (imageFile) => getURL(this.bucket, imageFile, this.prefix)
-        )
+          (imageFile) => getURL(this.bucket, imageFile, this.prefix),
+        ),
       )
     },
     changePicture(item, index) {
@@ -186,7 +186,7 @@ export default {
     larger() {
       let width = $('.box-picture').width()
       $('.box-picture').width(
-        (this.width = width >= 5000 ? width : width * 1.25)
+        (this.width = width >= 5000 ? width : width * 1.25),
       )
       this.height = $('.box-picture').height()
     },
@@ -208,8 +208,8 @@ export default {
     download() {
       document.querySelector('#element-download').href = this.pictureUrl
       document.querySelector('#span-download').click()
-    }
-  }
+    },
+  },
 }
 const getURL = async (bucket, file, prefix) => {
   try {
@@ -221,7 +221,7 @@ const getURL = async (bucket, file, prefix) => {
       acl.Grants,
       (item) =>
         item.Grantee.URI &&
-        item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers'
+        item.Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers',
     )
     return isAllUser ? url.split('?')[0] : url
   } catch (error) {

@@ -1,59 +1,72 @@
 <template>
-    <div class="bsc-header">
-        <div class="layout-header" :class="{'layout-header-mini': miniMenu}">
-            <div class="layout-header-left">
-                <a @click="getCDNUrl()">{{$t('NAV.CDN')}}</a>
-                <a disabled class="active">{{$t('NAV.CWN')}}</a>
-                <Tooltip :content="$t('OVERVIEW.COMING_SOON')" placement="bottom"><a disabled>{{$t('NAV.CLN')}}</a></Tooltip>
-            </div>
-            <div class="layout-header-right">
-                <div class="button-document" @click="openDoc">
-                    <Tooltip :content="$t('STORAGE.DOCUMENTATION')" placement="bottom">
-                        <Icon type="help-circled" :size="24"></Icon>
-                    </Tooltip>
-                </div>
-                <div class="button-document">
-                    <i-switch v-model="lang" @on-change="toggleLanguage" >
-                        <span slot="open">中</span>
-                        <span slot="close">EN</span>
-                    </i-switch>
-                </div>
-                <div class="button-document" @click="toggleTheme">
-                    <Tooltip :content="$t('STORAGE.TOGGLE_THEME')" placement="bottom">
-                        <Icon type="android-color-palette" :size="24"></Icon>
-                    </Tooltip>
-                </div>
-                <Dropdown style="margin-left:20px"
-                          @on-click="menuClick"
-                          placement="bottom-end">
-                    <a class="dropdown-link"
-                       href="javascript:void(0)">{{uname}}</a>
-                    <Icon type="chevron-down"
-                          class="icon-top-down"></Icon>
-                    <Dropdown-menu slot="list">
-                        <Dropdown-item v-show="isAdminMode" name="selectSubUser">{{$t("NAV.RESELECT_USER")}}</Dropdown-item>
-                        <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
-                        <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
-                    </Dropdown-menu>
-                </Dropdown>
-            </div>
+  <div class="bsc-header">
+    <div class="layout-header"
+         :class="{'layout-header-mini': miniMenu}">
+      <div class="layout-header-left">
+        <a @click="getCDNUrl()">{{$t('NAV.CDN')}}</a>
+        <a disabled
+           class="active">{{$t('NAV.CWN')}}</a>
+        <Tooltip :content="$t('OVERVIEW.COMING_SOON')"
+                 placement="bottom">
+          <a disabled>{{$t('NAV.CLN')}}</a>
+        </Tooltip>
+      </div>
+      <div class="layout-header-right">
+        <div class="button-document"
+             @click="openDoc">
+          <Tooltip :content="$t('STORAGE.DOCUMENTATION')"
+                   placement="bottom">
+            <Icon type="help-circled"
+                  :size="24"></Icon>
+          </Tooltip>
         </div>
-        <Modal v-model="rePasswordModal"
-               :title="$t('NAV.CHANGE_PASSWORD')"
-               @on-ok="changePassword"
-               @on-cancel="rePasswordModal = false">
-            <Form ref="rePasswordForm"
-                  :model="rePasswordForm"
-                  :rules="ruleValidate"
-                  :label-width="90">
-                <Form-item :label="$t('LOGIN.KEY')"
-                           prop="password">
-                    <Input v-model="rePasswordForm.password"
-                           :placeholder="$t('NAV.NEW_PASSWORD')" />
-                </Form-item>
-            </Form>
-        </Modal>
+        <div class="button-document">
+          <i-switch v-model="lang"
+                    @on-change="toggleLanguage">
+            <span slot="open">中</span>
+            <span slot="close">EN</span>
+          </i-switch>
+        </div>
+        <div class="button-document"
+             @click="toggleTheme">
+          <Tooltip :content="$t('STORAGE.TOGGLE_THEME')"
+                   placement="bottom">
+            <Icon type="android-color-palette"
+                  :size="24"></Icon>
+          </Tooltip>
+        </div>
+        <Dropdown style="margin-left:20px"
+                  @on-click="menuClick"
+                  placement="bottom-end">
+          <a class="dropdown-link"
+             href="javascript:void(0)">{{uname}}</a>
+          <Icon type="chevron-down"
+                class="icon-top-down"></Icon>
+          <Dropdown-menu slot="list">
+            <Dropdown-item v-show="isAdminMode"
+                           name="selectSubUser">{{$t("NAV.RESELECT_USER")}}</Dropdown-item>
+            <Dropdown-item name="rePasssword">{{$t("NAV.CHANGE_PASSWORD")}}</Dropdown-item>
+            <Dropdown-item name="logout">{{$t("NAV.LOGOUT")}}</Dropdown-item>
+          </Dropdown-menu>
+        </Dropdown>
+      </div>
     </div>
+    <Modal v-model="rePasswordModal"
+           :title="$t('NAV.CHANGE_PASSWORD')"
+           @on-ok="changePassword"
+           @on-cancel="rePasswordModal = false">
+      <Form ref="rePasswordForm"
+            :model="rePasswordForm"
+            :rules="ruleValidate"
+            :label-width="90">
+        <Form-item :label="$t('LOGIN.KEY')"
+                   prop="password">
+          <Input v-model="rePasswordForm.password"
+                 :placeholder="$t('NAV.NEW_PASSWORD')" />
+        </Form-item>
+      </Form>
+    </Modal>
+  </div>
 </template>
 <script>
 import Vue from 'vue'
@@ -71,7 +84,7 @@ export default {
       lang: store.state.lang === 'cn',
       cdnUrl: getCookie('uc_cdn_auth') === '1',
       rePasswordForm: {
-        password: ''
+        password: '',
       },
       ruleValidate: {
         password: [
@@ -79,10 +92,10 @@ export default {
             required: true,
             len: 6,
             message: 'Requires 6 charactors',
-            trigger: 'blur'
-          }
-        ]
-      }
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   computed: {
@@ -99,7 +112,7 @@ export default {
     },
     isAdminMode() {
       return checkRole('LIST_USERS')
-    }
+    },
   },
   methods: {
     async menuClick(name) {
@@ -111,7 +124,7 @@ export default {
         let res = await this.$http.get(BOUND_USER)
         await this.$store.dispatch(
           'setUserInfo',
-          _.extend(user.state, { subUserList: res })
+          _.extend(user.state, { subUserList: res }),
         )
         await clear()
         const bundUserPath =
@@ -132,7 +145,7 @@ export default {
       try {
         await repassword({
           email: user.state.email,
-          password: this.rePasswordForm.password
+          password: this.rePasswordForm.password,
         })
         logout()
       } catch (error) {
@@ -151,15 +164,15 @@ export default {
     async toggleTheme() {
       await this.$store.dispatch(
         'toggleTheme',
-        this.$store.state.theme === 'dark' ? 'white' : 'dark'
+        this.$store.state.theme === 'dark' ? 'white' : 'dark',
       )
       if (this.$store.state.theme === 'dark') {
         $('body').addClass('dark')
       } else {
         $('body').removeClass('dark')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

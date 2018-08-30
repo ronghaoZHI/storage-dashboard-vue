@@ -46,7 +46,7 @@ import { listPipelines, getTemplateInfo } from '@/pages/video/data'
 import legendList from '@/components/legend/legend'
 export default {
   components: {
-    legendList
+    legendList,
   },
   data() {
     return {
@@ -61,8 +61,8 @@ export default {
       legendList: [
         {
           icon: 'ios-trash',
-          text: 'PUBLIC.DELETE'
-        }
+          text: 'PUBLIC.DELETE',
+        },
       ],
       listHeader: [
         {
@@ -76,15 +76,15 @@ export default {
                 props: {
                   content: params.row.Id,
                   placement: 'right',
-                  trigger: 'hover'
+                  trigger: 'hover',
                 },
                 style: {
-                  cursor: 'pointer'
-                }
+                  cursor: 'pointer',
+                },
               },
-              [h('div', [jobiId])]
+              [h('div', [jobiId])],
             )
-          }
+          },
         },
         {
           title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
@@ -99,20 +99,20 @@ export default {
                     'Tag',
                     {
                       props: {
-                        type: 'border'
-                      }
+                        type: 'border',
+                      },
                     },
-                    item
-                  )
-                )
+                    item,
+                  ),
+                ),
               )
             }
-          }
+          },
         },
         {
           title: this.$t('VIDEO.PIPE_ID'),
           width: '17%',
-          key: 'PipelineId'
+          key: 'PipelineId',
         },
         {
           title: this.$t('VIDEO.JOB_TEMPLATE'),
@@ -126,25 +126,25 @@ export default {
                     'Tag',
                     {
                       props: {
-                        type: 'border'
-                      }
+                        type: 'border',
+                      },
                     },
-                    item
-                  )
-                )
+                    item,
+                  ),
+                ),
               )
             }
-          }
+          },
         },
         {
           title: this.$t('VIDEO.STATUS'),
           width: '10%',
-          key: 'Status'
+          key: 'Status',
         },
         {
           title: this.$t('VIDEO.CREATE_TIME'),
           width: '17%',
-          key: 'cTime'
+          key: 'cTime',
         },
         {
           title: this.$t('VIDEO.OPERATION'),
@@ -158,36 +158,36 @@ export default {
                 props: {
                   content: this.$t('PUBLIC.DELETE'),
                   delay: 1000,
-                  placement: 'top'
-                }
+                  placement: 'top',
+                },
               },
               [
                 h(
                   'i-button',
                   {
                     props: {
-                      size: 'small'
+                      size: 'small',
                     },
                     on: {
                       click: () => {
                         this.deleteJobConfirm(params.row)
-                      }
-                    }
+                      },
+                    },
                   },
                   [
                     h('Icon', {
                       props: {
                         type: 'ios-trash',
-                        size: this.iconSize
-                      }
-                    })
-                  ]
-                )
-              ]
+                        size: this.iconSize,
+                      },
+                    }),
+                  ],
+                ),
+              ],
             )
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   created() {
@@ -210,7 +210,7 @@ export default {
         } else {
           res = await transcoder('listJobsByPipeline', {
             PipelineId: id,
-            PageToken: pageToken
+            PageToken: pageToken,
           })
         }
         this.jobList = await convert2Front(res.Jobs)
@@ -270,7 +270,7 @@ export default {
         await transcoder(
           'cancelJob',
           { Id: job.Id },
-          this.$t('VIDEO.JOB_CANCEL_ERROR')
+          this.$t('VIDEO.JOB_CANCEL_ERROR'),
         )
         this.jobList.splice(job._index, 1)
         this.$Loading.finish()
@@ -285,10 +285,10 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.cancelJob(job)
+        onOk: () => this.cancelJob(job),
       })
-    }
-  }
+    },
+  },
 }
 
 const convert2Front = async (data) => {
@@ -331,16 +331,16 @@ const convert2Front = async (data) => {
 const createData = {
   Inputs: [
     {
-      Key: 'path/source'
-    }
+      Key: 'path/source',
+    },
   ],
   OutputKeyPrefix: 'path/output',
   Outputs: [
     {
       Key: 'outputName',
       PresetId: '623',
-      SegmentDuration: '20'
-    }
+      SegmentDuration: '20',
+    },
   ],
   Snapshots: [
     {
@@ -348,10 +348,10 @@ const createData = {
       Format: 'jpg',
       Time: '1233',
       Interval: '12',
-      Number: '1000'
-    }
+      Number: '1000',
+    },
   ],
-  PipelineId: '1164000000039767922'
+  PipelineId: '1164000000039767922',
 }
 const pipelinesData = {
   Name: ' forJob',
@@ -362,12 +362,12 @@ const pipelinesData = {
       {
         GranteeType: 'Group',
         Grantee: 'AllUsers',
-        Access: ['FullControl']
-      }
-    ]
+        Access: ['FullControl'],
+      },
+    ],
   },
   SuccessCallbackUrl: '',
-  FailureCallbackUrl: ''
+  FailureCallbackUrl: '',
 }
 </script>
 <style lang="less" scoped>

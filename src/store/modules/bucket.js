@@ -28,12 +28,12 @@ const actions = {
 const getters = {
   buckets(state) {
     return state.buckets.Buckets
-  }
+  },
 }
 
 export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 }

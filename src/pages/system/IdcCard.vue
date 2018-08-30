@@ -107,8 +107,8 @@ export default {
         return 'SATA'
       }
       return 'all'
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

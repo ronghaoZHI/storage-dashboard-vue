@@ -6,5 +6,5 @@ export const HOST = {
   transcoderHOST:
     window.dashboard_conf.transcoderHOST || 'transcoder-ss.bscstorage.com',
   policyHOST: 'policy-ss.bscstorage.com',
-  imgxHOST: 'imgx-ss.bscstorage.com'
+  imgxHOST: 'imgx-ss.bscstorage.com',
 }

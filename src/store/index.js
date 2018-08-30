@@ -14,7 +14,7 @@ const store = new Vuex.Store({
     token: sessionStorage.getItem('token'),
     theme: sessionStorage.getItem('theme') || 'dark',
     lang: getCookie('uc_lang') || 'cn',
-    miniMenu: false
+    miniMenu: false,
   },
   actions: {
     setToken({ commit }, token) {
@@ -32,7 +32,7 @@ const store = new Vuex.Store({
     cleanState({ commit }) {
       commit('SET_BUCKETS', {})
       commit('REFRESH_MENU')
-    }
+    },
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -52,14 +52,14 @@ const store = new Vuex.Store({
       sessionStorage.removeItem('token')
       state.token = ''
       Object.keys(user.state).forEach((k) => Vue.delete(user.state, k))
-    }
+    },
   },
   modules: {
     bucket,
     user,
     menu,
-    errorLog
-  }
+    errorLog,
+  },
 })
 
 export default store

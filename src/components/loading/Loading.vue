@@ -16,8 +16,8 @@ export default {
   computed: {
     isShow() {
       return this.$store.state.loading
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

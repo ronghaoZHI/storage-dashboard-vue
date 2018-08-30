@@ -126,7 +126,10 @@ const userManage = {
 
 const hasPermission = (role, route) => {
   if (route.meta && route.meta.role) {
-    return (new Set(route.meta.role.concat(role))).size < (route.meta.role.length + role.length)
+    return (
+      new Set(route.meta.role.concat(role)).size <
+      route.meta.role.length + role.length
+    )
   } else {
     return true
   }
@@ -134,11 +137,12 @@ const hasPermission = (role, route) => {
 
 const getRole = () => {
   // if user's type is subuser, 'user.state.perm'.length === 0
-  const perm = user.state && user.state.subUser ? user.state.subUser.info.perm[1] : user.state.perms
-  if(Array.isArray(perm)) {
-    return perm.length > 0
-    ? perm
-    : ['SUBUSER']
+  const perm =
+    user.state && user.state.subUser
+      ? user.state.subUser.info.perm[1]
+      : user.state.perms
+  if (Array.isArray(perm)) {
+    return perm.length > 0 ? perm : ['SUBUSER']
   } else {
     createAlert('权限字段错误')
     return []

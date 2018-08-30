@@ -56,7 +56,7 @@ import { TRAFFIC_LIST } from '@/service/API'
 import legendList from '@/components/legend/legend'
 export default {
   components: {
-    legendList
+    legendList,
   },
   data() {
     return {
@@ -69,20 +69,20 @@ export default {
       trafficList: [],
       legendList: [
         {
-          text: 'group:存储单元'
+          text: 'group:存储单元',
         },
         {
-          text: 'server:服务器'
+          text: 'server:服务器',
         },
         {
-          text: 'partition:磁盘'
-        }
+          text: 'partition:磁盘',
+        },
       ],
       listHeader: [
         {
           title: 'Group ID',
           key: 'group_id',
-          width: 150
+          width: 150,
         },
         {
           title: this.$t('SYSTEM.PROGRESS'),
@@ -92,15 +92,15 @@ export default {
           render: (h, params) => {
             return h('Progress', {
               props: {
-                percent: params.row.process_percent
-              }
+                percent: params.row.process_percent,
+              },
             })
-          }
+          },
         },
         {
           title: this.$t('SYSTEM.TIME_SPENT'),
           key: 'spent_time',
-          width: 150
+          width: 150,
         },
         {
           title: this.$t('SYSTEM.REMAINING_TIME'),
@@ -118,12 +118,12 @@ export default {
                   : -1
                 : a < b
                   ? 1
-                  : -1
+                  : -1,
         },
         {
           title: this.$t('SYSTEM.GROUP_STATUS'),
           key: 'group_status',
-          width: 150
+          width: 150,
         },
         {
           title: this.$t('SYSTEM.SOURCE_DISK'),
@@ -139,21 +139,21 @@ export default {
                   {
                     props: {
                       content: item[2],
-                      placement: 'top-end'
-                    }
+                      placement: 'top-end',
+                    },
                   },
                   [
                     h(
                       'div',
                       { style: { margin: '2px 0' } },
-                      `${item[0]}:/s2/drive/${item[1]}`
-                    )
-                  ]
+                      `${item[0]}:/s2/drive/${item[1]}`,
+                    ),
+                  ],
                 ),
-                h('br')
-              ])
+                h('br'),
+              ]),
             )
-          }
+          },
         },
         {
           title: this.$t('SYSTEM.TARGET_DISK'),
@@ -165,16 +165,16 @@ export default {
               {
                 props: {
                   content: params.row.target_disk[2],
-                  placement: 'top-end'
-                }
+                  placement: 'top-end',
+                },
               },
               `${params.row.target_disk[0]}:/s2/drive/${
                 params.row.target_disk[1]
-              }`
+              }`,
             )
-          }
-        }
-      ]
+          },
+        },
+      ],
     }
   },
   created() {
@@ -209,15 +209,15 @@ export default {
           source_disk: value.src_node_ip.map((val, index) => [
             val,
             value.src_partition_paths[index].slice(-3),
-            value.src_partition_id[index]
+            value.src_partition_id[index],
           ]),
           target_disk: [
             value.target_node_ip ? value.target_node_ip[0] : '-',
             value.target_partition_path
               ? value.target_partition_path.slice(-3)
               : '-',
-            value.target_partition_id ? value.target_partition_id : '-'
-          ]
+            value.target_partition_id ? value.target_partition_id : '-',
+          ],
         }
         frontList.push(frontItem)
       })
@@ -228,14 +228,14 @@ export default {
       let _trafficList =
         this.searchType === 'group_id'
           ? this.trafficListAll.filter(
-              (value) => value.group_id >= this.searchValue
+              (value) => value.group_id >= this.searchValue,
             )
           : this.searchValue
             ? this.trafficListAll.filter(
                 (value) =>
                   this.searchType === 'server_ip'
                     ? value.src_server_ip.indexOf(this.searchValue) >= 0
-                    : value.src_partition_id.indexOf(this.searchValue) >= 0
+                    : value.src_partition_id.indexOf(this.searchValue) >= 0,
               )
             : this.trafficListAll
       this.trafficList =
@@ -246,8 +246,8 @@ export default {
     async refresh() {
       await this.getTrafficList(true)
       this.getFilterTrafficList()
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
