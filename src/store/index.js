@@ -116,8 +116,8 @@ const store = new Vuex.Store({
       sessionStorage.setItem('miniMenu', miniMenu)
     },
     SET_VALUES(state, data) {
-      let _state = Object.assign(state, data)
-      console.log('state', _state)
+      const _state = Object.assign(state, data)
+      sessionStorage.setItem('store', JSON.stringify(_state))
       state = _state
     },
     LOGOUT(state) {

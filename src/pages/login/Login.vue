@@ -235,9 +235,9 @@ export default {
     },
     async selectSubUser(user) {
       const _state = this.$store.state
-      await this.$store.dispatch('setBaseInfo', {current: user})
+      await this.$store.dispatch('setBaseInfo', {current: user, manager: [_state.current]})
       const keys = await getAccesskey(user.username)
-      this.switchUser({perms: user.perms, keys, manager: [_state.current]})
+      this.switchUser({perms: user.perms, keys})
     },
     async toIndex(data, router = '/overview') {
       await this.$store.dispatch('setUserInfo', data)
