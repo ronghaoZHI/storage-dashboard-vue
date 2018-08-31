@@ -2,7 +2,8 @@ import iView from 'iview-bsc'
 import { HOST } from './HOST'
 import AWS from 'aws-sdk'
 import { getAccesskey } from 'api/login'
-import user from '@/store/modules/user'
+import store from '@/store'
+import { checkRole } from 'helper'
 import { logout, isSSOLogin } from '@/service/Helper'
 
 let awsKey = {}
@@ -10,11 +11,12 @@ let awsKey = {}
 export const clear = () => (awsKey = {})
 
 export const getKey = async () => {
+  awsKey = store.default.state.keys[0]
   return !isSSOLogin
     ? logout('Login status is invalid')
     : (awsKey =
-        user.state.type === 'admin'
-          ? (awsKey = user.state.subUser.keys[0])
+        checkRole('LIST_USERS')
+          ? (awsKey = store.default.state.keys[0])
           : awsKey.accesskey
             ? awsKey
             : getAccesskey().then((res) => (awsKey = res[0])))

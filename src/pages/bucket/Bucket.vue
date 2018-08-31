@@ -59,7 +59,8 @@
 import { handler } from '@/service/Aws'
 import { removeItemFromArray } from '@/service/bucketService'
 import moment from 'moment'
-import userStore from '@/store/modules/user'
+import { checkRole } from 'helper'
+import store from '@/store'
 import { SUB_USER, REDIRECT_BUCKET } from '@/service/API'
 
 export default {
@@ -78,7 +79,7 @@ export default {
       return this.$route.params.bucket || ''
     },
     isSubUser() {
-      return userStore.state.type === 'sub'
+      return checkRole('SUBUSER')
     },
   },
   watch: {
@@ -97,7 +98,7 @@ export default {
           this.getBucketAcl(item.Name).then((acl) => {
             acl.Grants.forEach((grant) => {
               if (
-                grant.Grantee.ID === userStore.state.username &&
+                grant.Grantee.ID === store.state.current.username &&
                 (grant.Permission === 'FULL_CONTROL' ||
                   grant.Permission === 'READ')
               ) {
@@ -187,7 +188,7 @@ export default {
         await handler('createBucket', { Bucket: this.createBucketValue })
         this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
         await this.getBucketList(true)
-        userStore.state.type === 'super' &&
+        checkRole('SUB') &&
           this.createRedirectBucket(this.createBucketValue)
         this.createBucketValue = ''
       } else {

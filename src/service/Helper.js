@@ -8,11 +8,11 @@ import createAlert from './createAlert'
 export const logout = async (message) => {
   message
     ? iView.Modal.error({
-        title: 'Need login',
-        content: `${message},need to login again`,
-        onOk: () => dataClearAndLocation(),
-        okText: 'OK',
-      })
+      title: 'Need login',
+      content: `${message},need to login again`,
+      onOk: () => dataClearAndLocation(),
+      okText: 'OK',
+    })
     : dataClearAndLocation()
 }
 
@@ -56,13 +56,14 @@ export function getCookie(name) {
   return ''
 }
 
-export function checkRole(role, checkSub = false) {
+export function checkRole(role, checkManager = false) {
   const _store = store.default || store
-  const perm = checkSub
-    ? _store.state.subUser.info.perm.flat()
-    : _store.state.user.perms
+  const perm = checkManager ? _store.state.manager[0].perms : _store.state.perms
   if (Array.isArray(perm) && typeof role === 'string') {
     return perm.includes(role)
+  } else if (Array.isArray(perm) && Array.isArray(role)) {
+    return new Set(perm.concat(role)).size <
+      perm.length + role.length
   } else {
     createAlert('权限字段错误')
     return false

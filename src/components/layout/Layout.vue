@@ -6,7 +6,7 @@
       <div class="layout-container"
            :class="{'layout-container-mimi-menu': miniMenu}">
         <div class="flex-box">
-          <header-top :username="username"></header-top>
+          <header-top></header-top>
           <div class="layout-content">
             <router-view></router-view>
           </div>
@@ -16,7 +16,6 @@
   </div>
 </template>
 <script>
-import user from '@/store/modules/user'
 import headerTop from '../header'
 import menuLeft from '../menu'
 export default {
@@ -25,9 +24,6 @@ export default {
     return {}
   },
   computed: {
-    username() {
-      return user.state.username
-    },
     miniMenu() {
       return this.$store.state.miniMenu
     },

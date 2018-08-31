@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-import menuState from '@/store/modules/menu'
+import store from '@/store'
 import leftBlue from '../../assets/menu-toggle-lb.svg'
 import left from '../../assets/menu-toggle-l.svg'
 import rightBlue from '../../assets/menu-toggle-rb.svg'
@@ -79,7 +79,7 @@ export default {
   },
   computed: {
     menuList: function() {
-      return _.filter(menuState.state.menuList, (item) => item.meta.show)
+      return _.filter(store.state.menuList, (item) => item.meta.show)
     },
     logoSrc() {
       return this.isMini ? logoMini : logo

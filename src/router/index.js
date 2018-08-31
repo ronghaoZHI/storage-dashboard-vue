@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import routes from './routerItem'
 import iView from 'iview-bsc'
 import store from '@/store'
+import { checkRole } from 'helper'
 
 Vue.use(Router)
 
@@ -37,7 +38,7 @@ router.beforeEach((to, from, next) => {
             !from.name && !to.name
               ? {
                   path:
-                    store.state.user.type === 'sub' ? '/bucket' : '/overview',
+                    checkRole('SUB', store.getters.mode === 'manage') ? '/bucket' : '/overview',
                 }
               : {},
           )

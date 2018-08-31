@@ -321,9 +321,11 @@ import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
-import { getBillUrl, FETCH_404, ACCESS_LIST } from '@/service/API'
+import { getBillUrl } from '@/service/API'
+import { postAccess, postRetrieve } from 'api/data'
 import { handler } from '@/service/Aws'
-import user from '@/store/modules/user'
+import { checkRole } from 'helper'
+import store from '@/store'
 import {
   bytes,
   times,
@@ -896,8 +898,8 @@ export default {
     },
     getApiURL() {
       let path = '?custom_range=' + this.dateRange
-      if (user.state.type === 'admin') {
-        path += '&customer=' + user.state.subUser.username
+      if (checkRole('SUBUSER')) {
+        path += '&customer=' + store.state.current.username
       }
       return getBillUrl(path)
     },
@@ -916,7 +918,7 @@ export default {
         bucket: name,
       }
       try {
-        return await this.$http.post(FETCH_404, rule)
+        return await postRetrieve(rule, store.state.current.username)
       } catch (error) {
         console.log(error)
       }
@@ -927,7 +929,7 @@ export default {
         bucket: name,
       }
       try {
-        return await this.$http.post(ACCESS_LIST, params)
+        return await postAccess(params, store.state.current.username)
       } catch (error) {
         console.log(error)
       }

@@ -98,7 +98,7 @@
                 <span class="info">
                   <Icon type="briefcase"></Icon> {{user.company}}</span>
                 <span class="icon"
-                      v-show="user.info.type === 'super'">
+                      v-show="user.perms.includes('SUB')">
                   <Icon type="star"></Icon>
                 </span>
               </div>
@@ -147,18 +147,23 @@ export default {
     return {
       lang: store.state.lang,
       selectedCustomer: '',
-      isLogin: !checkRole('LIST_USERS'), // show selectSubuser Tab or not
+      isLogin: !checkRole('LIST_USERS', store.getters.mode === 'manage'), // show selectSubuser Tab or not
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
       loginForm: {
         username: localStorage.getItem('loginEmail'),
         password: '',
       },
       showPassword: false,
-      userInfo: user.state || {},
       searchSubUserInput: '',
-      searchedSubUserList: user.state.subUserList || [],
-      subUserList: user.state.subUserList || [],
     }
+  },
+  computed: {
+    subUserList() {
+      return this.$store.state.users || []
+    },
+    searchedSubUserList() {
+      return this.$store.state.users || []
+    },
   },
   methods: {
     async loginSubmit(name) {
@@ -170,11 +175,7 @@ export default {
           : localStorage.setItem('loginEmail', '')
         loginByUsername({ ...this.loginForm }).then(
           (res) => {
-            res.type === 'admin'
-              ? this.adminMode(res)
-              : res.type === 'superadmin'
-                ? this.toIndex(res, '/system/group')
-                : this.toIndex(res)
+            this.setBaseInfo(res)
             this.$Loading.finish()
           },
           (error) => {
@@ -186,18 +187,31 @@ export default {
         this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
       }
     },
+    setBaseInfo(res) {
+      this.$store
+        .dispatch('setBaseInfo', {
+          current: res,
+          token: res.token,
+          perms: res.perms,
+        })
+        .then((state) => {
+          checkRole('LIST_USERS')
+            ? this.adminMode(res)
+            : checkRole('OPS')
+              ? this.toIndex(res, '/system/group')
+              : this.toIndex(res)
+        })
+    },
     async adminMode(data) {
       await this.$store.dispatch('setToken', data.token)
       this.$http.defaults.headers.common['Authorization'] = data.token
       let res = await this.$http.get(BOUND_USER)
-      this.userInfo = data
       if (res.length > 0) {
         this.subUserList = res
         this.searchedSubUserList = res
         this.isLogin = false
-        await this.$store.dispatch('setUserInfo', {
-          ...data,
-          subUserList: this.subUserList,
+        this.$store.dispatch('setBaseInfo', {
+          users: res,
         })
       } else {
         this.switchUser(data, 'user')
@@ -215,12 +229,10 @@ export default {
       )
     },
     selectSubUser(user) {
+      const _state = this.$store.state
+      console.log('selectSubUser', this.$store.state)
       getAccesskey(user.username).then((keys) => {
-        this.switchUser({
-          ...this.userInfo,
-          subUser: Object.assign(user, { keys }),
-          subUserList: this.subUserList,
-        })
+        this.switchUser({current: user, perms: user.perms, keys, manager: [_state.current]})
       })
     },
     async toIndex(data, router = '/overview') {
@@ -234,7 +246,7 @@ export default {
       Vue.config.lang = this.lang
     },
     async switchUser(data, router = '/overview') {
-      await this.$store.dispatch('setUserInfo', data)
+      this.$store.dispatch('setBaseInfo', data)
       await this.$store.dispatch('cleanState')
 
       let redirect = this.$route.query.redirect // get redirect path

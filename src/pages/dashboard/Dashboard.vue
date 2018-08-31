@@ -224,7 +224,8 @@ import requestsDark from '../../assets/dashboard/requests-dark.svg'
 import files from '../../assets/dashboard/files.svg'
 import filesDark from '../../assets/dashboard/files-dark.svg'
 import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from '@/service/API'
-import user from '@/store/modules/user'
+import store from '@/store'
+import { checkRole } from 'helper'
 import {
   bytes,
   bps,
@@ -909,8 +910,8 @@ export default {
       if (this.selectedBucket && this.selectedBucket !== 'All Buckets') {
         path += '&bucket=' + this.selectedBucket
       }
-      if (user.state.type === 'admin') {
-        path += '&customer=' + user.state.subUser.username
+      if (checkRole('SUBUSER')) {
+        path += '&customer=' + store.state.current.username
       }
       return url === 'new'
         ? getBillUrl(path)
@@ -929,7 +930,7 @@ export default {
       let content = Csv(_.keys(this.exportData[0]), this.exportData, ',')
       let file = new File(
         Array.from(content),
-        user.state.username + '-' + this.dateRange + '.csv',
+        store.state.current.username + '-' + this.dateRange + '.csv',
         { type: 'text/csv;charset=utf-8' },
       )
       fileSaver.saveAs(file)

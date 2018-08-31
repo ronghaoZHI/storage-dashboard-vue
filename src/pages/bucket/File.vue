@@ -181,7 +181,8 @@ import { bytes, keyFilter, convertPrefix2Router } from '@/service/bucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
 import upload from '@/components/upload/upload'
 import Clipboard from 'clipboard'
-import user from '@/store/modules/user'
+import store from '@/store'
+import { checkRole } from 'helper'
 import legendList from '@/components/legend/legend'
 import moment from 'moment'
 import filePermission from './FilePermissions'
@@ -857,11 +858,11 @@ export default {
       this.$refs.upload.clearFiles()
     },
     async checkCanUpload() {
-      if (user.state.type === 'sub') {
+      if (checkRole('SUBUSER')) {
         let acl = await handler('getBucketAcl', { Bucket: this.bucket })
         _.each(acl.Grants, (grant) => {
           if (
-            grant.Grantee.ID === user.state.username &&
+            grant.Grantee.ID === store.state.current.username &&
             (grant.Permission === 'FULL_CONTROL' ||
               grant.Permission === 'WRITE')
           ) {

@@ -74,10 +74,8 @@ import { BOUND_USER } from '@/service/API'
 import { repassword } from 'api/login'
 import { clear } from '@/service/Aws'
 import { logout, getCookie, createCookie, checkRole } from 'helper'
-import user from '@/store/modules/user'
 import store from '@/store'
 export default {
-  props: ['username'],
   data() {
     return {
       rePasswordModal: false,
@@ -99,19 +97,20 @@ export default {
     }
   },
   computed: {
-    uname: function() {
-      return checkRole('LIST_USERS') && user.state.subUser
-        ? `${this.username} -- ${user.state.subUser.username}`
-        : this.username
+    uname() {
+      const _state = this.$store.state
+      return checkRole('LIST_USERS', this.$store.getters.mode === 'manage') && _state.current
+        ? `${_state.manager[0].username} -- ${_state.current.username}`
+        : _state.current.username
     },
-    theme: function() {
+    theme() {
       return this.$store.state.theme
     },
     miniMenu() {
       return this.$store.state.miniMenu
     },
     isAdminMode() {
-      return checkRole('LIST_USERS')
+      return checkRole('LIST_USERS', this.$store.getters.mode === 'manage')
     },
   },
   methods: {
@@ -122,10 +121,7 @@ export default {
         this.rePasswordModal = true
       } else if (name === 'selectSubUser') {
         let res = await this.$http.get(BOUND_USER)
-        await this.$store.dispatch(
-          'setUserInfo',
-          _.extend(user.state, { subUserList: res }),
-        )
+        this.$store.dispatch('setBaseInfo', { users: res })
         await clear()
         const bundUserPath =
           window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login'
@@ -144,7 +140,7 @@ export default {
       }
       try {
         await repassword({
-          email: user.state.email,
+          email: store.state.current.email,
           password: this.rePasswordForm.password,
         })
         logout()
