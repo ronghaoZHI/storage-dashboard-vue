@@ -1,16 +1,13 @@
 <template>
   <div class="bsc-user">
     <Button type="primary"
-            v-show="!isAdmin && !isAdminSuper"
+            v-show="true"
             @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
     <Button type="primary"
-            v-show="isAdmin"
+            v-show="canCreateUser"
             @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
     <Button type="primary"
-            v-show="isSuperHigh"
-            @click="createUserModal = true">{{$t("USER.CREATE_SUPER_USER")}}</Button>
-    <Button type="primary"
-            v-show="isAdmin"
+            v-show="true"
             @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
     <Input v-if="userList.length > 0"
            v-model="searchUserInput"
@@ -53,18 +50,18 @@
                  placeholder="Company" />
           <span style="position: absolute;right: 10px;">*{{$t("USER.BUSNISS_LICENSE")}}</span>
         </Form-item>
-        <Form-item :label="$t('USER.USER_TYPE')"
-                   v-show="!isSuperHigh">
-          <Radio-group v-model="createUserForm.type">
-            <Radio label="normal">Normal</Radio>
-            <Radio label="super">Super</Radio>
-          </Radio-group>
+        <Form-item :label="$t('USER.PERMISSON_CONFIG')"
+                   prop="perms">
+          <CheckboxGroup v-model="createUserForm.perms">
+            <Checkbox v-for="perm in canCreatePerms" :label="perm" :key="perm"></Checkbox>
+          </CheckboxGroup>
         </Form-item>
-        <Form-item :label="$t('USER.CREATE_SUPER_USER_PERMISSON')"
-                   v-if="createUserForm.type === 'super' && !isSuperHigh">
-          <Radio-group v-model="createUserForm.super_level">
-            <Radio label="low">{{$t("USER.CREATE_SUPER_USER_PERMISSON_NO")}}</Radio>
-            <Radio label="high">{{$t("USER.CREATE_SUPER_USER_PERMISSON_YES")}}</Radio>
+        <Form-item :label="$t('USER.USER_TYPE')"
+                   prop="sso_type"
+                   v-show="canUseSSOType">
+          <Radio-group v-model="createUserForm.sso_type">
+            <Radio label="1">Customer</Radio>
+            <Radio label="2">Staff</Radio>
           </Radio-group>
         </Form-item>
       </Form>
@@ -100,7 +97,7 @@
            ok-text="确定(此请求耗时较长，请勿多次尝试)"
            @on-ok="createSubUser">
       <div class="section-separator"
-           v-show="!isEditSubUser">
+           v-show="1">
         <div class="separator-body">
           <span class="separator-icon"></span>
           <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
@@ -180,17 +177,17 @@ import {
   BOUND_USER_SUPERADMIN,
   ALL_USER,
   ALL_USER_SUPERADMIN,
-  CREATE_USER,
-  CREATE_USER_SUPERADMIN,
   SUB_USER,
-  CREATE_SUB_USER,
   BIND_USER,
   BIND_USER_SUPERADMIN,
   UNBIND_USER,
   UNBIND_USER_SUPERADMIN,
   getSuperSubUserUrl,
 } from '@/service/API'
-import { listSubAcl, createSub, redirectBucket, updateSubAcl } from 'api/user'
+import { getListSubAcl, postCreateSub, postRedirectBucket, postUpdateSubAcl, postCreateUser } from 'api/user'
+import { checkRole } from 'helper'
+console.log(user.state)
+
 export default {
   data() {
     return {
@@ -212,17 +209,16 @@ export default {
         (user.state && user.state.type === 'admin' && !isSuper()) ||
         user.state.type === 'superadmin',
       isSuperHigh:
-        user.state.type === 'super' && user.state.super_level === 'high',
+        user.state && user.state.type === 'super' && user.state.super_level === 'high',
       createUserForm: {
-        username: '',
-        email: '',
-        password: '',
-        company: '',
-        type:
-          user.state.type === 'super' && user.state.super_level === 'high'
-            ? 'super'
-            : 'normal',
-        super_level: 'low',
+        // test_data default
+        username: 'test_',
+        email: 'test_@qq.com',
+        password: '123456',
+        company: 'test',
+        perms: [],
+        perm_rule: 'rule1',
+        sso_type: '1',
       },
       userRuleValidate: {
         username: [
@@ -252,6 +248,9 @@ export default {
             message: 'Company format is incorrect',
             trigger: 'blur',
           },
+        ],
+        perms: [
+          { required: true, type: 'array', min: 1, message: 'Requires config permssion', trigger: 'change' },
         ],
       },
       createSubUserForm: initSubUser(),
@@ -563,12 +562,24 @@ export default {
                 ],
     }
   },
+  watched:{
+  },
   computed: {
-    isAdminSuper() {
-      return user.state && user.state.type === 'admin' && isSuper()
+    canCreateUser() {
+      return checkRole('CREATE_USER')
+    },
+    canCreateSub() {
+      return checkRole('SUB')
+    },
+    canCreatePerms() {
+      return user.state ? user.state.can_create_perms : []
+    },
+    canUseSSOType() {
+      return checkRole('BIND_USER')
     },
   },
   created() {
+    console.log(user.state)
     this.getUserList()
   },
   methods: {
@@ -606,7 +617,7 @@ export default {
                 ? { bucket: bucket.Name, customer: user.state.subUser.username }
                 : { bucket: bucket.Name }
               this.bucketList = res.Buckets
-              return listSubAcl({ params }).then((acl) => {
+              return getListSubAcl({ params }).then((acl) => {
                 return { bucket: bucket.Name, acl: acl }
               })
             }),
@@ -750,15 +761,8 @@ export default {
       this.$refs['createUserForm'].validate((valid) => {
         if (valid) {
           this.$Loading.start()
-          self.$http
-            .post(
-              this.isSuperHigh
-                ? CREATE_SUB_USER
-                : user.state.type === 'superadmin'
-                  ? CREATE_USER_SUPERADMIN
-                  : CREATE_USER,
-              { ...self.createUserForm },
-            )
+          this.createUserForm.sso_type = parseInt(this.createUserForm.sso_type)
+          postCreateUser(JSON.stringify(self.createUserForm))
             .then(
               (res) => {
                 self.createUserForm = {
@@ -766,7 +770,9 @@ export default {
                   email: '',
                   password: '',
                   company: '',
-                  type: 'normal',
+                  perm_rule: 'rule1',
+                  perms: [],
+                  sso_type: '1',
                 }
                 this.searchUserInput = ''
                 this.getUserList()
@@ -774,10 +780,13 @@ export default {
                 this.$Loading.finish()
               },
               (e) => {
+                this.createUserForm.sso_type = `${this.createUserForm.sso_type}`
+                this.$Message.error(e.msg)
                 this.$Loading.error()
               },
             )
         } else {
+          console.log("err")
           this.$Message.error(this.$t('USER.CREATE_INFO'))
         }
       })
@@ -803,9 +812,8 @@ export default {
       } else {
         try {
           this.$Loading.start()
-          let user = await createSub({
+          let user = await postCreateSub({
             ...this.createSubUserForm,
-            type: 'sub',
           })
           await Promise.all(
             Array.map(this.createSubUserForm.acl, (bucket) => {
@@ -813,7 +821,7 @@ export default {
                 convertObject2Array(bucket.bucket_acl_obj).length > 0 ||
                 convertObject2Array(bucket.file_acl_obj).length > 0
               ) {
-                return redirectBucket({
+                return postRedirectBucket({
                   original: bucket.bucket,
                   email: user.email,
                   redirect:
@@ -860,14 +868,14 @@ export default {
         await Promise.all(
           Array.map(this.createSubUserForm.acl, (acl) => {
             return acl.redirect
-              ? updateSubAcl({
-                  email: this.createSubUserForm.email,
+              ? postUpdateSubAcl({
+                  username: this.createSubUserForm.username,
                   bucket: acl.bucket,
                   bucket_acl: convertObject2Array(acl.bucket_acl_obj),
                   file_acl: convertObject2Array(acl.file_acl_obj),
                 })
-              : redirectBucket({
-                  email: this.createSubUserForm.email,
+              : postRedirectBucket({
+                  username: this.createSubUserForm.username,
                   original: acl.bucket,
                   redirect:
                     acl.bucket +
