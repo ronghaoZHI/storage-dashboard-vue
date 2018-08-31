@@ -88,6 +88,6 @@ http.interceptors.response.use(
 )
 
 // set storage-api token
-http.defaults.headers.common['Authorization'] = store.state.token
+if (store.state) http.defaults.headers.common['Authorization'] = store.state.token
 
 export default http

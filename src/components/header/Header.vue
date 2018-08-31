@@ -98,10 +98,7 @@ export default {
   },
   computed: {
     uname() {
-      const _state = this.$store.state
-      return checkRole('LIST_USERS', this.$store.getters.mode === 'manage') && _state.current
-        ? `${_state.manager[0].username} -- ${_state.current.username}`
-        : _state.current.username
+      return this.$store.state.current.username
     },
     theme() {
       return this.$store.state.theme

@@ -118,7 +118,6 @@
 import { loginByUsername, getAccesskey } from 'api/login'
 import { BOUND_USER } from '@/service/API'
 import { checkRole } from 'helper'
-import user from '@/store/modules/user'
 import store from '@/store'
 import Vue from 'vue'
 export default {
@@ -285,8 +284,8 @@ export default {
       localStorage.setItem('keepEmail', this.keepEmail)
     },
     async toUserMange() {
-      delete user.state.subUser
-      await this.$store.dispatch('setUserInfo', user.state)
+      const keys = await getAccesskey(this.$store.state.current.username)
+      await this.$store.dispatch('setBaseInfo', { keys: keys})
       await this.$store.dispatch('cleanState')
       Vue.config.lang = this.lang
       this.$router.push('user')

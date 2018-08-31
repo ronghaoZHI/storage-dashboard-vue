@@ -44,6 +44,7 @@ const hasPermission = (role, route) => {
 const getRole = () => {
   // if user's type is subuser, 'user.state.perm'.length === 0
   const perm = store ? store.state.perms : []
+  console.log('getRole', perm)
   if (Array.isArray(perm)) {
     return perm.length > 0 ? perm : ['SUBUSER']
   } else {
@@ -116,7 +117,6 @@ const store = new Vuex.Store({
     },
     SET_VALUES(state, data) {
       let _state = Object.assign(state, data)
-      console.log('stringify', _state)
       sessionStorage.setItem('store', JSON.stringify(_state))
       state = _state
     },

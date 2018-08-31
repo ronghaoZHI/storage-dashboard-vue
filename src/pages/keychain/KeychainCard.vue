@@ -34,7 +34,6 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
-import user from '@/store/modules/user'
 export default {
   directives: {
     clip: {
@@ -46,7 +45,7 @@ export default {
   props: ['keychain', 'work'],
   data() {
     return {
-      isAdmin: user.state.type === 'admin',
+      isAdmin: this.$store.getters.mode === 'manage',
     }
   },
   methods: {

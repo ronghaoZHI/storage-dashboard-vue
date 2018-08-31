@@ -17,7 +17,7 @@ export const getKey = async () => {
     : (awsKey =
         checkRole('LIST_USERS')
           ? (awsKey = store.default.state.keys[0])
-          : awsKey.accesskey
+          : awsKey && awsKey.accesskey
             ? awsKey
             : getAccesskey().then((res) => (awsKey = res[0])))
 }

@@ -21,7 +21,7 @@
 import { getAccesskey, postAccesskey, deleteAccesskey } from 'api/login'
 import { clear } from '@/service/Aws'
 import keychainCard from './KeychainCard'
-import user from '@/store/modules/user'
+import store from '@/store'
 import moment from 'moment'
 export default {
   components: {
@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     isAdmin() {
-      return user.state.type === 'admin'
+      return this.$store.getters.mode === 'manage'
     },
   },
   created() {
@@ -46,7 +46,7 @@ export default {
       this.spinShow = true
       this.$Loading.start()
       try {
-        let keys = this.isAdmin ? user.state.subUser.keys : await getAccesskey()
+        let keys = this.isAdmin ? store.state.keys : await getAccesskey()
         this.data = await _.forEach(keys, (item) => {
           item.ts = item.LastModified = moment(item.ts).format(
             'YYYY-MM-DD HH:mm',
