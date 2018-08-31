@@ -180,6 +180,7 @@ export default {
                   this.$emit('uploadSuccess', file.name)
                 },
                 (e) => {
+                  console.log(e)
                   this.$Message.error(
                     this.$t('STORAGE.UPLOAD_FAILED', { fileName: file.name }),
                     5
