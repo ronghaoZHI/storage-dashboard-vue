@@ -117,7 +117,7 @@ const store = new Vuex.Store({
     },
     SET_VALUES(state, data) {
       let _state = Object.assign(state, data)
-      sessionStorage.setItem('store', JSON.stringify(_state))
+      console.log('state', _state)
       state = _state
     },
     LOGOUT(state) {
@@ -125,7 +125,9 @@ const store = new Vuex.Store({
       sessionStorage.removeItem('store')
       sessionStorage.removeItem('token')
       state.token = ''
-      Object.keys(user.state).forEach((k) => Vue.delete(user.state, k))
+      state.manager = []
+      state.keys = []
+      Object.keys(state.current).forEach((k) => Vue.delete(state.current, k))
     },
   },
   getters: {

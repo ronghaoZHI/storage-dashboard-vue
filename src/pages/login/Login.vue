@@ -98,7 +98,7 @@
                 <span class="info">
                   <Icon type="briefcase"></Icon> {{user.company}}</span>
                 <span class="icon"
-                      v-show="user.perms.includes('SUB')">
+                      v-show="user.perm && user.perms.includes('SUB')">
                   <Icon type="star"></Icon>
                 </span>
               </div>
@@ -146,7 +146,6 @@ export default {
     return {
       lang: store.state.lang,
       selectedCustomer: '',
-      isLogin: !checkRole('LIST_USERS', store.getters.mode === 'manage'), // show selectSubuser Tab or not
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
       loginForm: {
         username: localStorage.getItem('loginEmail'),
@@ -159,6 +158,13 @@ export default {
   computed: {
     subUserList() {
       return this.$store.state.users || []
+    },
+    isLogin() {
+      if (Object.keys(this.$store.state.current).length === 0) {
+        return true
+      } else {
+        return !checkRole('LIST_USERS', this.$store.getters.mode === 'manage')
+      }
     },
     searchedSubUserList() {
       return this.$store.state.users || []
@@ -227,12 +233,11 @@ export default {
         (item) => reg.test(item.username) || reg.test(item.company),
       )
     },
-    selectSubUser(user) {
+    async selectSubUser(user) {
       const _state = this.$store.state
-      console.log('selectSubUser', this.$store.state)
-      getAccesskey(user.username).then((keys) => {
-        this.switchUser({current: user, perms: user.perms, keys, manager: [_state.current]})
-      })
+      await this.$store.dispatch('setBaseInfo', {current: user})
+      const keys = await getAccesskey(user.username)
+      this.switchUser({perms: user.perms, keys, manager: [_state.current]})
     },
     async toIndex(data, router = '/overview') {
       await this.$store.dispatch('setUserInfo', data)
@@ -245,7 +250,7 @@ export default {
       Vue.config.lang = this.lang
     },
     async switchUser(data, router = '/overview') {
-      this.$store.dispatch('setBaseInfo', data)
+      await this.$store.dispatch('setBaseInfo', data)
       await this.$store.dispatch('cleanState')
 
       let redirect = this.$route.query.redirect // get redirect path
