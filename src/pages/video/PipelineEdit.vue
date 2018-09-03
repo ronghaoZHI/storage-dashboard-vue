@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import user from '@/store/modules/user'
+import store from '@/store'
 import { getTranscoderUrl } from '@/service/API'
 import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
@@ -138,9 +138,7 @@ export default {
       return this.$route.params.id
     },
     username() {
-      return user.state.type === 'admin' && user.state.subUser
-        ? user.state.subUser.username
-        : user.state.username
+      return store.state.current.username
     },
     owerACL() {
       return {

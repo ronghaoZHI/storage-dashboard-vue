@@ -105,7 +105,8 @@ import { getBillTranscoderUrl } from '@/service/API'
 import { time, timesK, date } from '@/service/bucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
-import user from '@/store/modules/user'
+import { checkRole } from 'helper'
+import store from '@/store'
 export default {
   components: {
     chart: ECharts,
@@ -278,8 +279,8 @@ export default {
     getApiURL() {
       let path = ''
       path += '?custom_range=' + this.dateRange
-      if (user.state.type === 'admin') {
-        path += '&customer=' + user.state.subUser.username
+      if (checkRole('SUBUSER')) {
+        path += '&customer=' + store.current.username
       }
       return getBillTranscoderUrl(path)
     },

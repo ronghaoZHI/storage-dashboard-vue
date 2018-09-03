@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import user from '@/store/modules/user'
+import store from '@/store'
 import { transcoder } from '@/service/Aws'
 import legendList from '@/components/legend/legend'
 export default {
@@ -250,9 +250,7 @@ export default {
   },
   computed: {
     username() {
-      return user.state.type === 'admin' && user.state.subUser
-        ? user.state.subUser.username
-        : user.state.username
+      return store.state.current.username
     },
   },
   created() {
