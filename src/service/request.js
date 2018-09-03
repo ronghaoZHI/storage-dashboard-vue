@@ -62,6 +62,9 @@ let http = axios.create()
 // for cros cookie
 http.interceptors.request.use(
   (config) => {
+    // set storage-api token
+    if (store.default && store.default.state) config.headers.common['Authorization'] = store.default.state.token
+
     return requestConf(config)
   },
   (error) => Promise.reject(error),
@@ -86,8 +89,5 @@ http.interceptors.response.use(
   (response) => errorHandle(response.data),
   createError,
 )
-
-// set storage-api token
-if (store.state) http.defaults.headers.common['Authorization'] = store.state.token
 
 export default http
