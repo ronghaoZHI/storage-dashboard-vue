@@ -115,7 +115,8 @@
   </div>
 </template>
 <script>
-import { loginByUsername, getAccesskey } from 'api/login'
+import { loginByUsername, getAccesskey, getUserInfo } from 'api/login'
+import { getSSOLoginUrl } from 'api/sso'
 import { BOUND_USER } from '@/service/API'
 import { checkRole } from 'helper'
 import store from '@/store'
@@ -156,21 +157,53 @@ export default {
     }
   },
   computed: {
-    subUserList() {
-      return this.$store.state.users || []
+    subUserList: {
+      get() {
+        return this.$store.state.users || []
+      },
+      set() {},
     },
-    isLogin() {
-      if (Object.keys(this.$store.state.current).length === 0) {
-        return true
-      } else {
-        return !checkRole('LIST_USERS', this.$store.getters.mode === 'manage')
-      }
+    isLogin: {
+      get() {
+        if (Object.keys(this.$store.state.current).length === 0) {
+          return true
+        } else {
+          return !this.$store.getters.mode === 'manage'
+        }
+      },
+      set() {},
     },
-    searchedSubUserList() {
-      return this.$store.state.users || []
+    searchedSubUserList: {
+      get() {
+        return this.$store.state.users || []
+      },
+      set() {},
     },
   },
+  mounted() {
+    window.dashboard_conf.onlineMode === 'True' && this.saveToken()
+  },
   methods: {
+    async saveToken() {
+      let _token = this.$route.query.ticket || this.$store.state.token
+
+      if (_token) {
+        try {
+          await this.$store.dispatch('setToken', _token)
+          this.$http.defaults.headers.common['Authorization'] = _token
+          this.getUserInfoByToken()
+        } catch (error) {
+          console.log(error)
+        }
+      } else {
+        window.location = getSSOLoginUrl()
+      }
+    },
+    async getUserInfoByToken() {
+      let res = await getUserInfo()
+      console.log(res)
+      this.setBaseInfo(res)
+    },
     async loginSubmit(name) {
       if (this.formValid(name)) {
         this.$Loading.start()

@@ -12,7 +12,7 @@ const router = new Router({ routes })
 const redirectToLogin = async (to, next) => {
   await store.dispatch('cleanState')
   next({
-    path: window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login',
+    path: '/login',
     ticket: { redirect: to.fullPath },
   })
 }

@@ -131,7 +131,7 @@ const store = new Vuex.Store({
     },
   },
   getters: {
-    mode: (state) => state.manager.length === 0 ? 'normal' : 'manage',
+    mode: (state) => state.manager.length === 0 && state.users.length === 0 ? 'normal' : 'manage',
     menuList: (state) => state.menuList,
   },
   modules: {

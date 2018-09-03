@@ -73,7 +73,7 @@ import Vue from 'vue'
 import { BOUND_USER } from '@/service/API'
 import { repassword } from 'api/login'
 import { clear } from '@/service/Aws'
-import { logout, getCookie, createCookie, checkRole } from 'helper'
+import { logout, getCookie, createCookie } from 'helper'
 import store from '@/store'
 export default {
   data() {
@@ -99,9 +99,11 @@ export default {
   computed: {
     uname() {
       const _state = this.$store.state
-      return this.$store.getters.mode === 'manage' && _state.current
-        ? `${_state.manager[0].username} -- ${_state.current.username}`
-        : _state.current.username
+      if (this.$store.getters.mode === 'manage' && _state.current) {
+        return _state.manager[0] ? `${_state.manager[0].username} -- ${_state.current.username}` : _state.current.username
+      } else {
+        return _state.current.username
+      }
     },
     theme() {
       return this.$store.state.theme
@@ -110,7 +112,7 @@ export default {
       return this.$store.state.miniMenu
     },
     isAdminMode() {
-      return checkRole('LIST_USERS', this.$store.getters.mode === 'manage')
+      return this.$store.getters.mode === 'manage'
     },
   },
   methods: {
@@ -123,8 +125,7 @@ export default {
         let res = await this.$http.get(BOUND_USER)
         this.$store.dispatch('setBaseInfo', { users: res })
         await clear()
-        const bundUserPath =
-          window.dashboard_conf.onlineMode === 'True' ? '/bridge' : '/login'
+        const bundUserPath = '/login'
         this.$router.push(bundUserPath)
       }
     },

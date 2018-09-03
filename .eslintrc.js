@@ -14,6 +14,7 @@ module.exports = {
     indent: 0,
     radix: 0,
     "no-return-assign": 0,
+    "no-empty-function": 0,
     "no-param-reassign": 0,
     "no-extra-boolean-cast": 0,
     "no-new": 0,

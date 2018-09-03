@@ -21,7 +21,6 @@ import OutputEdit from '@/pages/video/OutputEdit'
 import JobList from '@/pages/video/JobList'
 import JobEdit from '@/pages/video/JobEdit'
 import Notfound from '@/pages/404/404'
-import Bridge from '@/pages/bridge/Bridge'
 import Upgrade from '@/pages/upgrade/Upgrade'
 import DataStatistics from '@/pages/video/DataStatistics'
 import PipelineList from '@/pages/video/PipelineList'
@@ -195,11 +194,11 @@ const routes =
         },
         {
           path: '',
-          component: Bridge,
+          component: Login,
         },
         {
           path: '/bridge',
-          component: Bridge,
+          component: Login,
         },
         {
           path: '*',
