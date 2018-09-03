@@ -29,9 +29,10 @@ export function getListSubUser(customer) {
   })
 }
 // user/list/sub_acl?bucket=xxx&customer=xxx
-export function getListSubAcl() {
+export function getListSubAcl(data) {
   return request(group('user/list/sub_acl'), {
     method: 'get',
+    data,
   })
 }
 export function postCreateSub(data, customer) {

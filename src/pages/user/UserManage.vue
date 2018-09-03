@@ -1,13 +1,13 @@
 <template>
   <div class="bsc-user">
     <Button type="primary"
-            v-show="true"
-            @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
+            v-show="canCreateSub"
+            @click="createSubUserModal = true">{{$t("USER.CREATE_SUB_USER")}}</Button>
     <Button type="primary"
             v-show="canCreateUser"
             @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
     <Button type="primary"
-            v-show="true"
+            v-show="canBindUser"
             @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
     <Input v-if="userList.length > 0"
            v-model="searchUserInput"
@@ -28,7 +28,7 @@
       <Form ref="createUserForm"
             :model="createUserForm"
             :rules="userRuleValidate"
-            :label-width="125">
+            :label-width="100">
         <Form-item :label="$t('USER.USER_NAME')"
                    prop="username">
           <Input v-model="createUserForm.username"
@@ -51,7 +51,8 @@
           <span style="position: absolute;right: 10px;">*{{$t("USER.BUSNISS_LICENSE")}}</span>
         </Form-item>
         <Form-item :label="$t('USER.PERMISSON_CONFIG')"
-                   prop="perms">
+                   prop="perms"
+                   v-if="canCreatePerms.length">
           <CheckboxGroup v-model="createUserForm.perms">
             <Checkbox v-for="perm in canCreatePerms" :label="perm" :key="perm"></Checkbox>
           </CheckboxGroup>
@@ -93,8 +94,7 @@
     </Modal>
     <Modal v-model="createSubUserModal"
            :title="$t('USER.CREATE_SUB_USER')"
-           width="600"
-           ok-text="确定(此请求耗时较长，请勿多次尝试)"
+           ok-text="确定"
            @on-ok="createSubUser">
       <div class="section-separator"
            v-show="1">
@@ -106,7 +106,7 @@
       <Form ref="createSubUserForm"
             :model="createSubUserForm"
             :rules="subUserRuleValidate"
-            :label-width="85"
+            :label-width="100"
             v-show="!isEditSubUser">
         <Form-item :label="$t('USER.USER_NAME')"
                    prop="username">
@@ -129,6 +129,7 @@
                  :placeholder="$t('USER.REQUIRE_COMPANY')" />
         </Form-item>
       </Form>
+      <div v-if="0">
       <div class="section-separator">
         <div class="separator-body">
           <span class="separator-icon"></span>
@@ -163,6 +164,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </Modal>
     <Spin size="bigger"
           fix
@@ -170,30 +172,29 @@
   </div>
 </template>
 <script>
-import user from '@/store/modules/user'
+/* eslint-disable */
 import moment from 'moment'
 import {
   BOUND_USER,
   BOUND_USER_SUPERADMIN,
   ALL_USER,
   ALL_USER_SUPERADMIN,
-  SUB_USER,
   BIND_USER,
   BIND_USER_SUPERADMIN,
   UNBIND_USER,
   UNBIND_USER_SUPERADMIN,
-  getSuperSubUserUrl,
 } from '@/service/API'
-import { getListSubAcl, postCreateSub, postRedirectBucket, postUpdateSubAcl, postCreateUser } from 'api/user'
+import { postUnbindUser, getListBoundUser, postBindUser, postCreateSub, postCreateUser, postRedirectBucket, postUpdateSubAcl, getListAllUser } from 'api/user'
 import { checkRole } from 'helper'
-console.log(user.state)
 
 export default {
   data() {
     return {
       self: this,
+      state: this.$store.state,
       userList: [],
       searchUserInput: '',
+      customer: '',
       searchedUserList: [],
       boundUserList: [],
       bucketList: [],
@@ -205,13 +206,8 @@ export default {
       spinShow: true,
       isEditSubUser: false,
       iconSize: 18,
-      isAdmin:
-        (user.state && user.state.type === 'admin' && !isSuper()) ||
-        user.state.type === 'superadmin',
-      isSuperHigh:
-        user.state && user.state.type === 'super' && user.state.super_level === 'high',
       createUserForm: {
-        // test_data default
+        // default test_data
         username: 'test_',
         email: 'test_@qq.com',
         password: '123456',
@@ -222,7 +218,7 @@ export default {
       },
       userRuleValidate: {
         username: [
-          { required: true, message: 'Requires user name', trigger: 'blur' },
+          { required: true, message: 'Requires username', trigger: 'blur' },
         ],
         email: [
           { required: true, message: 'Requires email', trigger: 'blur' },
@@ -253,7 +249,13 @@ export default {
           { required: true, type: 'array', min: 1, message: 'Requires config permssion', trigger: 'change' },
         ],
       },
-      createSubUserForm: initSubUser(),
+      createSubUserForm:{
+        // default test_data
+        username: 'test_',
+        email: 'test_@qq.com',
+        password: '123456',
+        company: 'test',
+      },
       subUserRuleValidate: {
         username: [
           { required: true, message: 'Requires user name', trigger: 'blur' },
@@ -299,7 +301,7 @@ export default {
         ],
       },
       userHeader:
-        user.state && user.state.type === 'superadmin'
+        checkRole('LIST_USERS')
           ? [
               {
                 title: 'User name',
@@ -312,6 +314,12 @@ export default {
                 width: 120,
                 align: 'left',
                 key: 'type',
+              },
+              {
+                title: 'Company',
+                width: 200,
+                align: 'left',
+                key: 'company',
               },
               {
                 title: 'Email',
@@ -355,125 +363,9 @@ export default {
                   )
                 },
               },
-            ]
-          : user.state && user.state.type === 'admin' && !isSuper()
+            ] :
+            checkRole('SUB')
             ? [
-                {
-                  title: 'User name',
-                  width: 150,
-                  align: 'left',
-                  key: 'username',
-                },
-                {
-                  title: 'Type',
-                  width: 120,
-                  align: 'left',
-                  key: 'type',
-                },
-                {
-                  title: 'Company',
-                  width: 200,
-                  align: 'left',
-                  key: 'company',
-                },
-                {
-                  title: 'Email',
-                  width: 200,
-                  align: 'left',
-                  key: 'email',
-                },
-                {
-                  title: 'Creation time',
-                  width: 200,
-                  align: 'left',
-                  render: (h, params) => {
-                    let creationTime = new Date(
-                      parseInt(params.row.ts.toString().substr(0, 13)),
-                    )
-                    const formatTime = moment(creationTime).format(
-                      'YYYY-MM-DD hh:mm:ss',
-                    )
-                    return h('div', [formatTime])
-                  },
-                },
-                {
-                  title: 'Actions',
-                  key: 'actions',
-                  width: 100,
-                  align: 'left',
-                  render: (h, params) => {
-                    return h(
-                      'i-button',
-                      {
-                        props: {
-                          size: 'small',
-                        },
-                        on: {
-                          click: () => {
-                            this.unbindUserConfirm(params.row, params.index)
-                          },
-                        },
-                      },
-                      'Unbind',
-                    )
-                  },
-                },
-              ]
-            : user.state && user.state.type === 'admin' && isSuper()
-              ? [
-                  {
-                    title: 'User name',
-                    width: 150,
-                    align: 'left',
-                    key: 'username',
-                  },
-                  {
-                    title: 'Type',
-                    width: 120,
-                    align: 'left',
-                    key: 'type',
-                  },
-                  {
-                    title: 'Email',
-                    width: 250,
-                    align: 'left',
-                    key: 'email',
-                  },
-                  {
-                    title: 'Acl',
-                    width: 380,
-                    align: 'left',
-                    key: 'acl',
-                    render: (h, params) => {
-                      return params.row.acl
-                        ? Array.map(params.row.acl, (acl) => {
-                            return h(
-                              'Tag',
-                              { props: { type: 'border' } },
-                              `${acl.bucket} - bucket: ${
-                                acl.bucket_acl
-                              } - file: ${acl.file_acl}`,
-                            )
-                          })
-                        : 'No acl'
-                    },
-                  },
-                  {
-                    title: 'Creation time',
-                    width: 200,
-                    align: 'left',
-                    render: (h, params) => {
-                      let creationTime = new Date(
-                        parseInt(params.row.ts.toString().substr(0, 13)),
-                      )
-                      const formatTime = moment(creationTime).format(
-                        'YYYY-MM-DD hh:mm:ss',
-                      )
-                      return h('div', [formatTime])
-                    },
-                  },
-                ]
-              : [
                   {
                     title: 'User name',
                     width: 150,
@@ -494,7 +386,7 @@ export default {
                   },
                   {
                     title: 'Acl',
-                    width: 380,
+                    width: 350,
                     align: 'left',
                     key: 'acl',
                     render: (h, params) => {
@@ -559,6 +451,61 @@ export default {
                       ])
                     },
                   },
+                ] : [
+                  {
+                    title: 'User name',
+                    width: 150,
+                    align: 'left',
+                    key: 'username',
+                  },
+                  {
+                    title: 'Type',
+                    width: 120,
+                    align: 'left',
+                    key: 'type',
+                  },
+                  {
+                    title: 'Email',
+                    width: 250,
+                    align: 'left',
+                    key: 'email',
+                  },
+                  {
+                    title: 'Creation time',
+                    width: 200,
+                    align: 'left',
+                    render: (h, params) => {
+                      let creationTime = new Date(
+                        parseInt(params.row.ts.toString().substr(0, 13)),
+                      )
+                      const formatTime = moment(creationTime).format(
+                        'YYYY-MM-DD hh:mm:ss',
+                      )
+                      return h('div', [formatTime])
+                    },
+                  },
+                  {
+                    title: 'Actions',
+                    key: 'actions',
+                    width: 100,
+                    align: 'left',
+                    render: (h, params) => {
+                      return h(
+                        'i-button',
+                        {
+                          props: {
+                            size: 'small',
+                          },
+                          on: {
+                            click: () => {
+                              this.unbindUserConfirm(params.row, params.index)
+                            },
+                          },
+                        },
+                        'Unbind',
+                      )
+                    },
+                  },
                 ],
     }
   },
@@ -572,40 +519,41 @@ export default {
       return checkRole('SUB')
     },
     canCreatePerms() {
-      return user.state ? user.state.can_create_perms : []
+      return this.state ? this.state.current.can_create_perms : []
     },
     canUseSSOType() {
+      return checkRole('BIND_USER') || checkRole('LIST_USERS')
+    },
+    canBindUser() {
       return checkRole('BIND_USER')
     },
   },
   created() {
-    console.log(user.state)
+    console.log(this.state.users)
     this.getUserList()
   },
   methods: {
     async getUserList() {
       this.$Loading.start()
       this.spinShow = true
+      // customer 用于判断二级用户
+      this.customer = this.$store.state.current.username || ''
+      console.log(checkRole('LIST_USERS'), checkRole('SUB'))
       try {
-        if (this.isAdmin) {
-          this.userList = _.each(
-            await this.$http.get(
-              user.state.type === 'superadmin'
-                ? BOUND_USER_SUPERADMIN
-                : BOUND_USER,
-            ),
-            (user) => {
-              user.type = this.userType(user)
-            },
-          )
-          await this.$Loading.finish()
-          await this.$store.dispatch('setUserInfo', {
-            ...user.state,
-            subUserList: this.userList,
+        if (checkRole('LIST_USERS')) {
+          this.customer && await getListBoundUser()
+          .then((res) => {
+            this.userList = res
+            console.log(this.userList)
           })
-        } else {
+          this.$Loading.finish()
+          this.$store.dispatch('setBaseInfo', {
+            // ...this.state,
+            users: this.userList,
+          })
+        } else if(checkRole('SUB')) {
           let getSubUserURL = isSuper()
-            ? getSuperSubUserUrl(user.state.subUser.username)
+            ? getSuperSubUserUrl(this.state.subUser.username)
             : SUB_USER
           let [res, users] = await Promise.all([
             this.$store.dispatch('getBuckets'),
@@ -614,7 +562,7 @@ export default {
           let buckets = await Promise.all(
             Array.map(res.Buckets, (bucket) => {
               const params = isSuper()
-                ? { bucket: bucket.Name, customer: user.state.subUser.username }
+                ? { bucket: bucket.Name, customer: this.state.subUser.username }
                 : { bucket: bucket.Name }
               this.bucketList = res.Buckets
               return getListSubAcl({ params }).then((acl) => {
@@ -624,7 +572,7 @@ export default {
           )
           this.userList = _.each(users, (user) => {
             user.acl = []
-            user.type = this.userType(user)
+            user.user = this.userType(user)
             _.each(buckets, (bucket) => {
               _.each(bucket.acl, (acl) => {
                 if (
@@ -658,14 +606,8 @@ export default {
       if (this.boundUserList.length === 0) {
         this.spinShow = true
         let [allUser, boundUser] = await Promise.all([
-          this.$http.get(
-            user.state.type === 'superadmin' ? ALL_USER_SUPERADMIN : ALL_USER,
-          ),
-          this.$http.get(
-            user.state.type === 'superadmin'
-              ? BOUND_USER_SUPERADMIN
-              : BOUND_USER,
-          ),
+          getListAllUser(),
+          getListBoundUser(),
         ])
         let boundUserEmailList = []
         _.each(boundUser, (user) => {
@@ -714,11 +656,8 @@ export default {
         await Promise.all(
           Array.map(this.boundUserList, (userinfo) => {
             if (userinfo.selected) {
-              this.$http.post(
-                user.state.type === 'superadmin'
-                  ? BIND_USER_SUPERADMIN
-                  : BIND_USER,
-                { email: userinfo.email },
+              postBindUser({ username: userinfo.username }).then(
+                this.$Message.success('bind succssed!')
               )
               this.searchBindUserInput = ''
               this.boundUserList = []
@@ -734,7 +673,7 @@ export default {
     },
     unbindUserConfirm(user, index) {
       this.$Modal.confirm({
-        content: this.$t('STORAGE.UNBIND_CONFIRMED', { fileName: user.email }),
+        content: this.$t('STORAGE.UNBIND_CONFIRMED', { UserName: user.username }),
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: 'Unbind',
@@ -742,13 +681,8 @@ export default {
       })
     },
     unbindUser(userinfo, index) {
-      this.$http
-        .post(
-          user.state.type === 'superadmin'
-            ? UNBIND_USER_SUPERADMIN
-            : UNBIND_USER,
-          { email: userinfo.email },
-        )
+      this.customer = this.$store.state.current.username || ''
+      postUnbindUser({ username: userinfo.username }, this.customer)
         .then((res) => {
           this.searchBindUserInput = ''
           this.boundUserList = []
@@ -757,36 +691,34 @@ export default {
         })
     },
     createUser() {
-      let self = this
-      this.$refs['createUserForm'].validate((valid) => {
+      //customer 判断二级账号 username
+      this.customer = this.$store.state.current.username || ''
+      this.$refs['createUserForm'].validate(async (valid) => {
         if (valid) {
           this.$Loading.start()
           this.createUserForm.sso_type = parseInt(this.createUserForm.sso_type)
-          postCreateUser(JSON.stringify(self.createUserForm))
-            .then(
-              (res) => {
-                self.createUserForm = {
-                  username: '',
-                  email: '',
-                  password: '',
-                  company: '',
-                  perm_rule: 'rule1',
-                  perms: [],
-                  sso_type: '1',
-                }
-                this.searchUserInput = ''
-                this.getUserList()
-                this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
-                this.$Loading.finish()
-              },
-              (e) => {
-                this.createUserForm.sso_type = `${this.createUserForm.sso_type}`
-                this.$Message.error(e.msg)
-                this.$Loading.error()
-              },
-            )
+          try {
+            await postCreateUser(JSON.stringify(this.createUserForm), this.customer)
+            await postBindUser(JSON.stringify({ username: this.createUserForm.username }, this.customer))
+            this.createUserForm = {
+              username: '',
+              email: '',
+              password: '',
+              company: '',
+              perm_rule: 'rule1',
+              perms: [],
+              sso_type: '1',
+            }
+            this.searchUserInput = ''
+            this.getUserList()
+            this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
+            this.$Loading.finish()
+          } catch(e) {
+            this.createUserForm.sso_type = `${this.createUserForm.sso_type}`
+            this.$Message.error(e.msg)
+            this.$Loading.error()
+          }
         } else {
-          console.log("err")
           this.$Message.error(this.$t('USER.CREATE_INFO'))
         }
       })
@@ -807,14 +739,11 @@ export default {
       })
     },
     async createSubUser() {
-      if (this.isEditSubUser) {
-        this.editSubUser()
-      } else {
         try {
+          console.log(this.createSubUserForm)
           this.$Loading.start()
-          let user = await postCreateSub({
-            ...this.createSubUserForm,
-          })
+          await postCreateSub(JSON.stringify(this.createSubUserForm))
+          let user = await postCreateSub(JSON.stringify(this.createSubUserForm))
           await Promise.all(
             Array.map(this.createSubUserForm.acl, (bucket) => {
               if (
@@ -834,6 +763,12 @@ export default {
               }
             }),
           )
+          this.createSubUserForm = {
+            username: '',
+            email: '',
+            password: '',
+            company: '',
+          }
           this.searchUserInput = ''
           this.getUserList()
           this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
@@ -841,7 +776,6 @@ export default {
           this.$Message.error(this.$t('USER.CREATE_SUB_ERROR'))
           this.$Loading.error()
         }
-      }
     },
     editSubUserModal(user) {
       _.extend(this, {
@@ -898,7 +832,7 @@ export default {
       this.isEditSubUser = false
     },
     userType(user) {
-      let type = user.info.type
+      let type = user.info.user
       return type === 'normal'
         ? this.$t('USER.GENERAL_USER')
         : type === 'sub'
@@ -909,7 +843,6 @@ export default {
     },
   },
 }
-
 const initSubUser = (acls) => {
   return {
     username: '',
@@ -927,12 +860,12 @@ const initSubUser = (acls) => {
 }
 
 const isSuper = () => {
-  const userInfo = user.state.subUser
-    ? user.state.subUserList.filter(
-        (item) => item.username === user.state.subUser.username,
+  const userInfo = this.state.subUser
+    ? this.state.subUserList.filter(
+        (item) => item.username === this.state.subUser.username,
       )
     : undefined
-  return userInfo && userInfo[0].info.type === 'super'
+  return userInfo && userInfo[0].info.user === 'super'
 }
 
 const convertBucketList = (user, bucketList) => {
