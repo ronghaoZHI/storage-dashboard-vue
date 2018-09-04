@@ -1,181 +1,153 @@
-import Layout from '@/components/layout'
-import Overview from '@/pages/overview/Overview'
-import Bucket from '@/pages/bucket/Bucket'
-import File from '@/pages/bucket/File'
-import Dashboard from '@/pages/dashboard/Dashboard'
-import Machine from '@/pages/system/Machine'
-import Group from '@/pages/system/Group'
-import Partition from '@/pages/system/Partition'
-import Traffic from '@/pages/system/Traffic'
-import Keychain from '@/pages/keychain/Keychain'
-import UserManage from '@/pages/user/UserManage'
-import Login from '@/pages/login/Login'
-import Settings from '@/pages/bucket/Settings'
-import PictureStyles from '@/pages/bucket/PictureStyles'
-import EditStyles from '@/pages/bucket/EditStyles'
-import FilePermissions from '@/pages/bucket/FilePermissions'
-import TemplateList from '@/pages/video/TemplateList'
-import TemplateEdit from '@/pages/video/TemplateEdit'
-import OutputList from '@/pages/video/OutputList'
-import OutputEdit from '@/pages/video/OutputEdit'
-import JobList from '@/pages/video/JobList'
-import JobEdit from '@/pages/video/JobEdit'
-import Notfound from '@/pages/404/404'
-import Upgrade from '@/pages/upgrade/Upgrade'
-import DataStatistics from '@/pages/video/DataStatistics'
-import PipelineList from '@/pages/video/PipelineList'
-import PipelineEdit from '@/pages/video/PipelineEdit'
-
 const layoutChild = [
   {
     path: '/overview',
     name: 'overview',
     meta: { title: 'Overview', ali: 'overview' }, // 'ali' => Menu.vue
-    component: Overview,
+    component: () => import('@/pages/overview/Overview'),
   },
   {
     path: '/bucket',
     name: 'bucket',
     meta: { title: 'My storage', ali: 'bucket' },
-    component: Bucket,
+    component: () => import('@/pages/bucket/Bucket'),
   },
   {
     path: '/bucket/:bucket',
     name: 'bucket',
     meta: { title: 'My storage', ali: 'bucket' }, // 'ali' => Menu.vue
-    component: Bucket,
+    component: () => import('@/pages/bucket/Bucket'),
   },
   {
     path: '/bucket/:bucket/prefix/:prefix',
     name: 'file',
     meta: { title: 'My storage', ali: 'bucket' },
-    component: File,
+    component: () => import('@/pages/bucket/File'),
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     meta: { title: 'Dashboard', ali: 'dashboard' },
-    component: Dashboard,
+    component: () => import('@/pages/dashboard/Dashboard'),
   },
   {
     path: '/keychain',
     name: 'keychain',
     meta: { title: 'Keychain', ali: 'keychain' },
-    component: Keychain,
+    component: () => import('@/pages/keychain/Keychain'),
   },
   {
     path: '/bucket/:bucket/bucketSettings/tabName/:tabName',
     name: 'bucketSettings',
     meta: { title: 'Bucket Settings', ali: 'bucket' },
-    component: Settings,
+    component: () => import('@/pages/bucket/Settings'),
   },
   {
     path: '/bucket/:bucket/pictureStyles',
     name: 'pictureStyles',
     meta: { title: 'Picture Styles', ali: 'bucket' },
-    component: PictureStyles,
+    component: () => import('@/pages/bucket/PictureStyles'),
   },
   {
     path: '/bucket/:bucket/pictureStyles/editStyles/ruleName/:ruleName/IS/:IS',
     name: 'editStyles',
     meta: { title: 'Edit Styles', ali: 'bucket' },
-    component: EditStyles,
+    component: () => import('@/pages/bucket/EditStyles'),
   },
   {
     path: '/bucket/:bucket/prefix/:prefix/key/:key/FilePermissions',
     name: 'FilePermissions',
     meta: { title: 'File Permissions', ali: 'bucket' },
-    component: FilePermissions,
+    component: () => import('@/pages/bucket/FilePermissions'),
   },
   {
     path: '/video/template',
     name: 'template',
     meta: { title: 'Video', ali: 'template', parent: 'video' },
-    component: TemplateList,
+    component: () => import('@/pages/video/TemplateList'),
   },
   {
     path: '/video/templateEdit/id/:id',
     name: 'TemplateEdit',
     meta: { title: 'Video', ali: 'template', parent: 'video' },
-    component: TemplateEdit,
+    component: () => import('@/pages/video/TemplateEdit'),
   },
   {
     path: '/video/pipeline',
     name: 'pipeline',
     meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
-    component: PipelineList,
+    component: () => import('@/pages/video/PipelineList'),
   },
   {
     path: '/video/pipelineEdit/id/:id',
     name: 'pipelineEdit',
     meta: { title: 'Video', ali: 'pipeline', parent: 'video' },
-    component: PipelineEdit,
+    component: () => import('@/pages/video/PipelineEdit'),
   },
   {
     path: '/video/output',
     name: 'output',
     meta: { title: 'Video', ali: 'output', parent: 'video' },
-    component: OutputList,
+    component: () => import('@/pages/video/OutputList'),
   },
   {
     path: '/video/outputEdit/bucket/:bucket/id/:id',
     name: 'outputEdit',
     meta: { title: 'Video', ali: 'output', parent: 'video' },
-    component: OutputEdit,
+    component: () => import('@/pages/video/OutputEdit'),
   },
   {
     path: '/video/JobList',
     name: 'job',
     meta: { title: 'Video', ali: 'job', parent: 'video' },
-    component: JobList,
+    component: () => import('@/pages/video/JobList'),
   },
   {
     path: '/video/JobEdit/id/:id',
     name: 'jobEdit',
     meta: { title: 'Video', ali: 'job', parent: 'video' },
-    component: JobEdit,
+    component: () => import('@/pages/video/JobEdit'),
   },
   {
     path: '/video/statistics',
     name: 'statistics',
     meta: { title: 'Video', ali: 'statistics', parent: 'video' },
-    component: DataStatistics,
+    component: () => import('@/pages/video/DataStatistics'),
   },
   {
     path: '/system/machine',
     name: 'machine',
     meta: { title: 'Machine', ali: 'machine', parent: 'system' },
-    component: Machine,
+    component: () => import('@/pages/system/Machine'),
   },
   {
     path: '/system/group',
     name: 'group',
     meta: { title: 'Group', ali: 'group', parent: 'system' },
-    component: Group,
+    component: () => import('@/pages/system/Group'),
   },
   {
     path: '/system/partition',
     name: 'partition',
     meta: { title: 'Partition', ali: 'partition', parent: 'system' },
-    component: Partition,
+    component: () => import('@/pages/system/Partition'),
   },
   {
     path: '/system/traffic',
     name: 'traffic',
     meta: { title: 'Traffic', ali: 'Traffic', parent: 'system' },
-    component: Traffic,
+    component: () => import('@/pages/system/Traffic'),
   },
   {
     path: '/user',
     name: 'user',
     meta: { title: 'User', ali: 'user' },
-    component: UserManage,
+    component: () => import('@/pages/user/UserManage'),
   },
 ]
 
 let upgradeMode = {
   path: '*',
-  component: Upgrade,
+  component: () => import('@/pages/upgrade/Upgrade'),
 }
 
 const routes =
@@ -184,25 +156,25 @@ const routes =
     : [
         {
           path: '/',
-          component: Layout,
+          component: () => import('@/components/layout'),
           meta: { requiresAuth: true },
           children: layoutChild,
         },
         {
           path: '/login',
-          component: Login,
+          component: () => import('@/pages/login/Login'),
         },
         {
           path: '',
-          component: Login,
+          component: () => import('@/pages/login/Login'),
         },
         {
           path: '/bridge',
-          component: Login,
+          component: () => import('@/pages/login/Login'),
         },
         {
           path: '*',
-          component: Notfound,
+          component: () => import('@/pages/404/404'),
         },
       ]
 
