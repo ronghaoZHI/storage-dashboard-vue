@@ -2,7 +2,7 @@ import store from '@/store'
 import iView from 'iview-bsc'
 import { clear } from '@/service/Aws'
 import router from '@/router'
-import { SSO_LOGOUT } from 'api/sso'
+import { ssoLogout } from 'api/sso'
 import createAlert from './createAlert'
 
 export const logout = async (message) => {
@@ -25,7 +25,7 @@ async function dataClearAndLocation() {
   await clear()
 
   if (window.dashboard_conf.onlineMode === 'True') {
-    window.location = SSO_LOGOUT
+    window.location = ssoLogout
   } else {
     router.push({
       path: '/login',
