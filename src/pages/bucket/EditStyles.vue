@@ -757,7 +757,7 @@ export default {
           this.mark = front.mark
           let overlay = front.overlay
           // is mark here
-          if (!!overlay) {
+          if (overlay) {
             let file = await this.readOverlayFile(overlay)
             if (/.+\.json$/.test(overlay)) {
               let fontStyle = JSON.parse(
@@ -867,12 +867,12 @@ export default {
     async seniorPreview() {
       let texts = /.*l_text:(.*):.*/.exec(this.instructions)
       let imgs = this.instructions.split('l_')[1]
-      if (!!texts) {
+      if (texts) {
         let fontName = texts[1] + '.json'
         const file = await this.readOverlayFile(fontName)
         await putOverlayFile(fontName, file)
         this.seniorUrl = getImgxUrl(this.instructions)
-      } else if (!!imgs) {
+      } else if (imgs) {
         let imgName =
           imgs.split(',')[0].length < imgs.split('-')[0].length
             ? imgs.split(',')[0] + '.png'
@@ -1365,6 +1365,7 @@ const mark2Front = (data) => {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 @edit-styles-border-color: #d7dde4;
 @edit-styles-border-blue: #20a0ff;
 

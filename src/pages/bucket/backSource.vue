@@ -538,6 +538,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .@{css-prefix}back-source {
   .button-add-rule {
     margin-bottom: 8px;

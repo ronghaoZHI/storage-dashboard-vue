@@ -10,7 +10,7 @@ import errorLog from './modules/errorLog'
 
 Vue.use(Vuex)
 
-function checkSessionStorage () {
+function checkSessionStorage() {
   let _store = JSON.parse(sessionStorage.getItem('store'))
   if (_store && Object.keys(_store).length > 0) {
     return _store
@@ -131,7 +131,10 @@ const store = new Vuex.Store({
     },
   },
   getters: {
-    mode: (state) => state.manager.length === 0 && state.users.length === 0 ? 'normal' : 'manage',
+    mode: (state) =>
+      state.manager.length === 0 && state.users.length === 0
+        ? 'normal'
+        : 'manage',
     menuList: (state) => state.menuList,
   },
   modules: {

@@ -852,6 +852,7 @@ const convertNewUserItem = (item) => {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}settings {
   .@{css-prefix}layout-toolbar {
     border-bottom: @common-border-dark;

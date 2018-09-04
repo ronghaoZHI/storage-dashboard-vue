@@ -1388,6 +1388,7 @@ const initOptions = ({
 </style>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 @overview-height: 160px;
 
 .dark .@{css-prefix}dashboard {

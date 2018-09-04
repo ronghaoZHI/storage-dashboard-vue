@@ -268,9 +268,12 @@ export default {
     },
     async selectSubUser(user) {
       const _state = this.$store.state
-      await this.$store.dispatch('setBaseInfo', {current: user, manager: [_state.current]})
+      await this.$store.dispatch('setBaseInfo', {
+        current: user,
+        manager: [_state.current],
+      })
       const keys = await getAccesskey(user.username)
-      this.switchUser({perms: user.perms, keys})
+      this.switchUser({ perms: user.perms, keys })
     },
     async toIndex(data, router = '/overview') {
       await this.$store.dispatch('setUserInfo', data)
@@ -279,7 +282,7 @@ export default {
       await this.$store.dispatch('cleanState')
 
       let redirect = this.$route.query.redirect // get redirect path
-      !!redirect ? this.$router.push(redirect) : this.$router.push(router)
+      redirect ? this.$router.push(redirect) : this.$router.push(router)
       Vue.config.lang = this.lang
     },
     async switchUser(data, router = '/overview') {
@@ -287,7 +290,7 @@ export default {
       await this.$store.dispatch('cleanState')
 
       let redirect = this.$route.query.redirect // get redirect path
-      !!redirect ? this.$router.push(redirect) : this.$router.push(router)
+      redirect ? this.$router.push(redirect) : this.$router.push(router)
       Vue.config.lang = this.lang
     },
     changeLang(lang) {
@@ -323,7 +326,7 @@ export default {
     },
     async toUserMange() {
       const keys = await getAccesskey(this.$store.state.current.username)
-      await this.$store.dispatch('setBaseInfo', { keys: keys})
+      await this.$store.dispatch('setBaseInfo', { keys: keys })
       await this.$store.dispatch('cleanState')
       Vue.config.lang = this.lang
       this.$router.push('user')
@@ -332,6 +335,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 @login-card-height: 600px;
 @login-card-width: 900px;
 @login-card-padding: 48px;

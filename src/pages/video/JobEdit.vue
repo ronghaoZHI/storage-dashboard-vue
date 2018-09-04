@@ -1026,6 +1026,7 @@ const shotDefult = {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 @edit-output-item-span: 170px;
 @edit-output-item-margin: 175px;
 @edit-modal-item-span: 155px;

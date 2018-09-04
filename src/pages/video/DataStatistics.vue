@@ -679,6 +679,7 @@ const initNotVideoOptions = (data, typeName, theme) => {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}data-statistics {
   .button-group {
     button {

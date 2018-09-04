@@ -192,8 +192,8 @@
 <script>
 import partitionCard from './PartitionCard'
 import idcCard from './IdcCard'
-import partitionUnused from './partitionUnused'
-import partitionDeleted from './partitionDeleted'
+import partitionUnused from './PartitionUnused'
+import partitionDeleted from './PartitionDeleted'
 import detailModal from './detailModal'
 import bytes from 'bytes'
 import { thousands } from '@/service/bucketService'
@@ -367,13 +367,13 @@ export default {
           key: 'fail',
           width: 75,
           render: (h, params) => {
-            const font = !!params.row.fail
+            const font = params.row.fail
               ? this.$t('SYSTEM.DELETED')
               : this.$t('SYSTEM.NORMAL')
             return h(
               'div',
               {
-                class: !!params.row.fail ? 'redFont' : '',
+                class: params.row.fail ? 'redFont' : '',
               },
               [font],
             )
@@ -503,25 +503,25 @@ export default {
       return this.search.ip.length === 0 ? 'ignore' : this.search.ip
     },
     lowerCapacityMax() {
-      if (!!this.search.max_capacity) {
+      if (this.search.max_capacity) {
         return this.search.max_capacity
       }
       return 10000
     },
     upperCapacityMin() {
-      if (!!this.search.min_capacity) {
+      if (this.search.min_capacity) {
         return this.search.min_capacity
       }
       return 0
     },
     lowerFreeMax() {
-      if (!!this.search.max_free) {
+      if (this.search.max_free) {
         return this.search.max_free
       }
       return 10000
     },
     upperFreeMin() {
-      if (!!this.search.min_free) {
+      if (this.search.min_free) {
         return this.search.min_free
       }
       return 0
@@ -782,7 +782,7 @@ export default {
     },
     usedSetConfirm(index) {
       const readonly = this.partitionList[index].readonly
-      const contentText = !!readonly
+      const contentText = readonly
         ? this.$t('SYSTEM.WRITABLE')
         : this.$t('SYSTEM.READONLY')
       this.$Modal.confirm({
@@ -791,7 +791,7 @@ export default {
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('SYSTEM.WRITABLE_CONFIRM_TITLE'),
         onCancel: () => {
-          this.partitionList[index].readonly = !!readonly ? 0 : 1
+          this.partitionList[index].readonly = readonly ? 0 : 1
           this.partitionList[index].readonly = readonly
         },
         onOk: () => this.usedSet(index),
@@ -801,7 +801,7 @@ export default {
       this.spinShow = true
       this.$Loading.start()
       const oldValue = this.partitionList[index].readonly
-      const newValue = !!oldValue ? 0 : 1
+      const newValue = oldValue ? 0 : 1
       try {
         let params = {
           read_only: newValue,
@@ -868,6 +868,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .@{css-prefix}partition {
   position: relative;
   min-height: calc(100vh - 60px);

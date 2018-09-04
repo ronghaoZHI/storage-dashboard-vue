@@ -385,13 +385,13 @@ export default {
                 item.WatermarkConfig.Height !== 0
                   ? item.WatermarkConfig.Height
                   : '图片高度',
-              Location: !!item.WatermarkConfig.Location
+              Location: item.WatermarkConfig.Location
                 ? this.LocationNames[item.WatermarkConfig.Location]
                 : '右上',
-              LocationHOffset: !!item.WatermarkConfig.LocationHOffset
+              LocationHOffset: item.WatermarkConfig.LocationHOffset
                 ? `${item.WatermarkConfig.LocationHOffset}px`
                 : '0px',
-              LocationVOffset: !!item.WatermarkConfig.LocationVOffset
+              LocationVOffset: item.WatermarkConfig.LocationVOffset
                 ? `${item.WatermarkConfig.LocationVOffset}px`
                 : '0px',
             }
@@ -489,6 +489,7 @@ const watermarkDefault = {
 }
 </script>
 <style lang="less">
+@import '../../styles/index.less';
 .icon-disc {
   padding-left: 5px;
   vertical-align: text-top;

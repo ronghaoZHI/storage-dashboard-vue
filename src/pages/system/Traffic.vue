@@ -251,6 +251,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}traffic {
   .header {
     .search {

@@ -100,7 +100,9 @@ export default {
     uname() {
       const _state = this.$store.state
       if (this.$store.getters.mode === 'manage' && _state.current) {
-        return _state.manager[0] ? `${_state.manager[0].username} -- ${_state.current.username}` : _state.current.username
+        return _state.manager[0]
+          ? `${_state.manager[0].username} -- ${_state.current.username}`
+          : _state.current.username
       } else {
         return _state.current.username
       }
@@ -173,6 +175,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .@{css-prefix}header {
   .layout-header {
     .fb(space-between, center);

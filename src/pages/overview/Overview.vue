@@ -1177,6 +1177,7 @@ const initOptions = ({ dataPart1, dataPart2, theme, oneDayFlag }) => {
 }
 </script>
 <style scoped lang="less">
+@import '../../styles/index.less';
 .@{css-prefix}overview {
   min-width: 1200px;
   .left-section {

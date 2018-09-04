@@ -87,6 +87,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}keychain {
   .section-add-card {
     border-bottom: @common-border-dark;

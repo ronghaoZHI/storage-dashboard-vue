@@ -63,7 +63,8 @@ let http = axios.create()
 http.interceptors.request.use(
   (config) => {
     // set storage-api token
-    if (store.default && store.default.state) config.headers.common['Authorization'] = store.default.state.token
+    if (store.default && store.default.state)
+      config.headers.common['Authorization'] = store.default.state.token
 
     return requestConf(config)
   },

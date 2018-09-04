@@ -395,6 +395,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 @switch-off-color: #aca9a9;
 
 .@{css-prefix}pipeline-list {

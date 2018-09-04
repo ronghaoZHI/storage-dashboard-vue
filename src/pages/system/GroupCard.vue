@@ -210,6 +210,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}group-card {
   .header {
     color: @text-color-dark;

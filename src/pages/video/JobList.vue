@@ -371,6 +371,7 @@ const pipelinesData = {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .quary-name {
   color: @text-color-secondary-dark;
 }

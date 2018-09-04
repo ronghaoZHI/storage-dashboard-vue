@@ -14,12 +14,11 @@ export const getKey = async () => {
   awsKey = store.default.state.keys[0]
   return !isSSOLogin
     ? logout('Login status is invalid')
-    : (awsKey =
-        checkRole('LIST_USERS')
-          ? (awsKey = store.default.state.keys[0])
-          : awsKey && awsKey.accesskey
-            ? awsKey
-            : getAccesskey().then((res) => (awsKey = res[0])))
+    : (awsKey = checkRole('LIST_USERS')
+        ? (awsKey = store.default.state.keys[0])
+        : awsKey && awsKey.accesskey
+          ? awsKey
+          : getAccesskey().then((res) => (awsKey = res[0])))
 }
 
 export const config = async ({

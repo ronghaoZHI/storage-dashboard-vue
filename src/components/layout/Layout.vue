@@ -46,6 +46,7 @@ export default {
 </script>
 
 <style lang="less">
+@import '../../styles/index.less';
 .layout {
   height: 100%;
 }

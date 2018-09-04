@@ -1245,9 +1245,8 @@ const aclConvert2Save = (data) => {
   return saved
 }
 </script>
-<style lang="less">
-</style>
 <style lang="less" scope>
+@import '../../styles/index.less';
 @edit-output-item-span: 205px;
 @edit-output-item-margin: 210px;
 @edit-modal-item-span: 155px;

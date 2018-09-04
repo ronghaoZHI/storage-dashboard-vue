@@ -312,10 +312,10 @@ export default {
       _.each(data, (item) => {
         const itemConvert = this.json2instruction(item)
         ISArry.push(itemConvert.instruction)
-        if (!!itemConvert.overlayFileName) {
+        if (itemConvert.overlayFileName) {
           overlayList.add(itemConvert.overlayFileName)
         }
-        if (!!item.format) {
+        if (item.format) {
           listItem.quality = item.quality || ''
           listItem.format = item.format
         }
@@ -451,6 +451,7 @@ const getURL = async (bucket, key) => {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .layout-bsc-toolbar {
   border-bottom: @common-border-dark;
 }

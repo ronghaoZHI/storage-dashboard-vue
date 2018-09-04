@@ -59,7 +59,7 @@ const listPipelinePage = async (pageToken) => {
       ? await transcoder('listPipelines')
       : await transcoder('listPipelines', { PageToken: pageToken })
     pipeList.push(...res.Pipelines)
-    if (!!res.NextPageToken) {
+    if (res.NextPageToken) {
       await listPipelinePage(res.NextPageToken)
     }
   } catch (error) {
@@ -87,7 +87,7 @@ const getTemplatePage = async (pageToken) => {
     ? await transcoder('listPresets')
     : await transcoder('listPresets', { PageToken: pageToken })
   templateList.push(...res.Presets)
-  if (!!res.NextPageToken) {
+  if (res.NextPageToken) {
     await getTemplatePage(res.NextPageToken)
   }
 }

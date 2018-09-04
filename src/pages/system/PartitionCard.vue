@@ -118,7 +118,7 @@ export default {
   },
   computed: {
     iconColor() {
-      return !!this.myData.fail ? '#f85959' : '#00a854'
+      return this.myData.fail ? '#f85959' : '#00a854'
     },
     myData: {
       get() {
@@ -141,7 +141,7 @@ export default {
           this.data.capacity || this.data.capacity === 0
             ? bytes(this.data.capacity)
             : '--'
-        newData.failFont = !!this.data.fail
+        newData.failFont = this.data.fail
           ? this.$t('SYSTEM.DELETED')
           : this.$t('SYSTEM.NORMAL')
         newData.readonlyFont =
@@ -307,6 +307,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .@{css-prefix}partition-card {
   position: relative;
   .content {

@@ -210,7 +210,7 @@ const keyFilter = (key, prefix) => key.slice(prefix.length)
 
 // shit
 const convertPrefix2Router = (prefix) => {
-  if (!!prefix) {
+  if (prefix) {
     let prefixArray = prefix.split('/')
     let routeArray = []
 

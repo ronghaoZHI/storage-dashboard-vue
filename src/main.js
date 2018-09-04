@@ -40,9 +40,7 @@ Object.keys(messages).forEach(function(lang) {
 Vue.config.lang = getCookie('uc_lang') || 'cn'
 
 new Vue({
-  components: { App },
-  el: '#app',
   store,
   router,
-  template: '<App/>',
-})
+  render: (h) => h(App),
+}).$mount('#app')

@@ -188,8 +188,7 @@ export default {
         await handler('createBucket', { Bucket: this.createBucketValue })
         this.$Message.success(this.$t('STORAGE.ADD_BUCKET_SUCCESS'))
         await this.getBucketList(true)
-        checkRole('SUB') &&
-          this.createRedirectBucket(this.createBucketValue)
+        checkRole('SUB') && this.createRedirectBucket(this.createBucketValue)
         this.createBucketValue = ''
       } else {
         this.$Message.warning(this.$t('STORAGE.ADD_BUCKET_CHECK'))
@@ -242,6 +241,7 @@ const batchDeletion = (list, bucket) => {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 @bucket-hover-background-color: #f5f5f5;
 @bucket-hover-background-color-black: #2e373e;
 @bucket-span-filename-color: #657180;

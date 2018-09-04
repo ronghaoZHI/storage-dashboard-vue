@@ -222,6 +222,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}upload {
   .section-file-upload {
     border: 2px dashed @border-color-dark;

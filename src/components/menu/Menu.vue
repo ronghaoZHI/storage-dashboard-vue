@@ -119,6 +119,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .layout-menu {
   z-index: 100;
   .wh(200px, 100%);

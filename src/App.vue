@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-import loading from '@/components/Loading'
+import loading from '@/components/loading'
 export default {
   name: 'app',
   components: { loading },
@@ -28,6 +28,7 @@ export default {
 }
 </script>
 <style lang="less">
+@import './styles/index.less';
 html,
 body {
   .wh(100%, 100%);

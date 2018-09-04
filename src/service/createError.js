@@ -21,7 +21,10 @@ const codeMessage = {
   504: '网关超时',
 }
 
-const xmlParser = new xml2js.Parser({ explicitArray: false, ignoreAttrs: true })
+const xmlParser = new xml2js.Parser({
+  explicitArray: false,
+  ignoreAttrs: true,
+})
 const xml2json = (data) => {
   let jsonData = {}
   xmlParser.parseString(data, (err, result) => {

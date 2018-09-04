@@ -268,6 +268,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}group {
   .header-card-wrap {
     .fb(fast-start, center);

@@ -8,11 +8,11 @@ import createAlert from './createAlert'
 export const logout = async (message) => {
   message
     ? iView.Modal.error({
-      title: 'Need login',
-      content: `${message},need to login again`,
-      onOk: () => dataClearAndLocation(),
-      okText: 'OK',
-    })
+        title: 'Need login',
+        content: `${message},need to login again`,
+        onOk: () => dataClearAndLocation(),
+        okText: 'OK',
+      })
     : dataClearAndLocation()
 }
 
@@ -62,8 +62,7 @@ export function checkRole(role, checkManager = false) {
   if (Array.isArray(perm) && typeof role === 'string') {
     return perm.includes(role)
   } else if (Array.isArray(perm) && Array.isArray(role)) {
-    return new Set(perm.concat(role)).size <
-      perm.length + role.length
+    return new Set(perm.concat(role)).size < perm.length + role.length
   } else {
     createAlert('权限字段错误')
     return false

@@ -233,6 +233,7 @@ const getURL = async (bucket, file, prefix) => {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .@{css-prefix}picture-preview {
   -moz-user-select: none;
   -webkit-user-select: none;

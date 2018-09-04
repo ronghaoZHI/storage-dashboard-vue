@@ -514,7 +514,7 @@ export default {
           this.template = res.Preset
           this.template.Video.FixedGOP = res.Preset.Video.FixedGOP === 'true'
           this.template.FastStart = res.Preset.FastStart === 'true'
-          this.template.WatermarkConfig = !!res.Preset.WatermarkConfig
+          this.template.WatermarkConfig = res.Preset.WatermarkConfig
             ? res.Preset.WatermarkConfig
             : watermarkConfigDefault
           this.auxiliary = convert2Front(res.Preset)

@@ -151,6 +151,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import '../../styles/index.less';
 .dark .@{css-prefix}machine-card {
   border: @common-border-dark;
   color: #c0ccda;

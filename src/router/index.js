@@ -37,8 +37,9 @@ router.beforeEach((to, from, next) => {
         ? next(
             !from.name && !to.name
               ? {
-                  path:
-                    checkRole('SUB', store.getters.mode === 'manage') ? '/bucket' : '/overview',
+                  path: checkRole('SUB', store.getters.mode === 'manage')
+                    ? '/bucket'
+                    : '/overview',
                 }
               : {},
           )

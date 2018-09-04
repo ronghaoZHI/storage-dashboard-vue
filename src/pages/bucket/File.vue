@@ -16,45 +16,45 @@
     </div>
     <Row class="toolbar-nav">
       <Col span="10">
-      <div>
-        <Button type="primary"
-                v-show="canUpload"
-                @click="openUploadModal">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
-        <Button type="primary"
-                v-show="canUpload"
-                @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
-        <!-- <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button> -->
-        <Tooltip content="功能维护，暂停使用"
-                 placement="bottom">
+        <div>
           <Button type="primary"
-                  disabled>{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
-        </Tooltip>
-        <Button @click="batchDeleteFileConfirm"
-                :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
-        <Button type="primary"
-                v-if="!showSearch"
-                @click="showSearch = true">查找文件</Button>
-        <transition name="slide-fade">
-          <div class="section-search"
-               v-if="showSearch">
-            <span class="bsc-input">
-              <input type="text"
-                     class="input-append-before"
-                     disabled
-                     :value="prefix" />
-              <input type="text"
-                     @focus="searchInputFocus = true"
-                     v-model="searchValue" />
-              <Button type="text"
-                      size="small"
-                      @click="searchFile(searchValue)">
-                <Icon type="search"
-                      :size="iconSize"></Icon>
-              </Button>
-            </span>
-          </div>
-        </transition>
-      </div>
+                  v-show="canUpload"
+                  @click="openUploadModal">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
+          <Button type="primary"
+                  v-show="canUpload"
+                  @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
+          <!-- <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button> -->
+          <Tooltip content="功能维护，暂停使用"
+                  placement="bottom">
+            <Button type="primary"
+                    disabled>{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
+          </Tooltip>
+          <Button @click="batchDeleteFileConfirm"
+                  :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
+          <Button type="primary"
+                  v-if="!showSearch"
+                  @click="showSearch = true">查找文件</Button>
+          <transition name="slide-fade">
+            <div class="section-search"
+                v-if="showSearch">
+              <span class="bsc-input">
+                <input type="text"
+                      class="input-append-before"
+                      disabled
+                      :value="prefix" />
+                <input type="text"
+                      @focus="searchInputFocus = true"
+                      v-model="searchValue" />
+                <Button type="text"
+                        size="small"
+                        @click="searchFile(searchValue)">
+                  <Icon type="search"
+                        :size="iconSize"></Icon>
+                </Button>
+              </span>
+            </div>
+          </transition>
+        </div>
       </Col>
       <Col span="14"
            style="text-align:right">
@@ -925,6 +925,7 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/index.less';
 @layout-bsc-toolbar-border-bottom-color: #f2f1f6;
 @bsc-input-border-color: #d7dde4;
 @input-append-before-background-color: #f5f7f9;
