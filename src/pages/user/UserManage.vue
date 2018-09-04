@@ -453,12 +453,6 @@ export default {
                     key: 'username',
                   },
                   {
-                    title: 'Type',
-                    width: 120,
-                    align: 'left',
-                    key: 'type',
-                  },
-                  {
                     title: 'Email',
                     width: 250,
                     align: 'left',
@@ -523,47 +517,43 @@ export default {
     },
   },
   created() {
-    console.log(this.state)
     this.getUserList()
   },
   methods: {
     async getUserList() {
       this.$Loading.start()
       this.spinShow = true
-      // customer 用于判断二级用户
-      this.customer = this.$store.state.current.username || ''
-      console.log(checkRole('LIST_USERS'), checkRole('SUB'), this.customer)
+      this.customer = this.$store.getters.mode === 'manage' ? this.$store.state.current.username : ''
       try {
         if (checkRole('LIST_USERS')) {
-          this.customer && await getListBoundUser()
+          await getListBoundUser(this.customer)
           .then((res) => {
             this.userList = res
           })
           this.$Loading.finish()
           this.$store.dispatch('setBaseInfo', {
-            // ...this.state,
             users: this.userList,
           })
         } else if(checkRole('SUB')) {
-          let [user, bucket] = await Promise.all([getListSubUser(this.customer), this.$store.getters.buckets])
-          console.log(user)
-          console.log(bucket)
+          const [users, Bucket] = [await getListSubUser(this.customer), await this.$store.getters.buckets || []]
+          await this.$store.dispatch('setBaseInfo', {
+            users: users,
+          })
           let buckets = await Promise.all(
-            Array.map(Bucket, (bucket) => {
-              const params = { bucket: bucket.Name, customer: this.customer }
-              this.bucketList = res.Buckets
-              return getListSubAcl({ params }).then((acl) => {
-                return { bucket: bucket.Name, acl: acl }
+              Bucket.map((bucket) => {
+              this.bucketList = users.Buckets
+              return getListSubAcl(this.customer, bucket.Name).then((res) => {
+                return { bucket: bucket.Name, acl: res }
               })
             }),
           )
-          this.userList = _.each(user.data, (user) => {
+          this.userList = await _.each(users, (user) => {
             user.acl = []
-            user.user = this.userType(user)
+            user.type = this.userType(user)
             _.each(buckets, (bucket) => {
               _.each(bucket.acl, (acl) => {
                 if (
-                  user.email === acl.email &&
+                  user.username === acl.username &&
                   (acl.bucket_acl.length !== 0 || acl.file_acl.length !== 0)
                 ) {
                   user.acl.push({
@@ -650,7 +640,7 @@ export default {
               )
             }
           }),
-        ).then((res) => console.log(res), (err) => console.error(err))
+        )
         this.searchBindUserInput = ''
         this.boundUserList = []
         this.searchUserInput = ''
@@ -670,7 +660,6 @@ export default {
       })
     },
     unbindUser(userinfo, index) {
-      this.customer = this.$store.state.current.username || ''
       postUnbindUser({ username: userinfo.username }, this.customer)
         .then((res) => {
           this.searchBindUserInput = ''
@@ -680,8 +669,6 @@ export default {
         })
     },
     createUser() {
-      //customer 判断二级账号 username
-      this.customer = this.$store.state.current.username || ''
       this.$refs['createUserForm'].validate(async (valid) => {
         if (valid) {
           this.$Loading.start()
@@ -729,10 +716,8 @@ export default {
     },
     async createSubUser() {
         try {
-          console.log(this.createSubUserForm)
           this.$Loading.start()
           let user = await postCreateSub({ ...this.createSubUserForm }, this.customer)
-          console.log(user)
           await Promise.all(
             Array.map(this.createSubUserForm.acl, (bucket) => {
               if (
@@ -821,7 +806,6 @@ export default {
       this.isEditSubUser = false
     },
     userType(user) {
-
       return this.$t('USER.SUB_USER')
     },
   },
