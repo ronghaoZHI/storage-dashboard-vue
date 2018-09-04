@@ -56,7 +56,6 @@
       "@vue/prettier"
     ],
     "rules": {
-      "no-console": 0,
       "radix": 0,
       "no-return-assign": 0,
       "no-empty-function": 0,

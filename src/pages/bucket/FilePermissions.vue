@@ -66,7 +66,6 @@ export default {
         }
         this.owner = res.Owner.ID
       } catch (error) {
-        console.log(error)
         this.$Message.error(this.$t('STORAGE.GET_PERMISSION_FAILED'))
       }
       this.$Loading.finish()

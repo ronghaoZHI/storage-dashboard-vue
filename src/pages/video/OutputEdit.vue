@@ -904,22 +904,18 @@ export default {
       }
     },
     async newTranscode() {
-      try {
-        this.$Loading.start()
-        let trans = await getTranscodes(this.inputBucket)
-        const newTrans = this.convert2Save(this.transcode)
-        newTrans.id =
-          Date.now() +
-          Math.random()
-            .toString()
-            .slice(-6)
-        trans.push(newTrans)
-        await putBucketPolicy(this.inputBucket, trans)
-        this.$router.push({ name: 'output' })
-        this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
-      } catch (error) {
-        console.log(error)
-      }
+      this.$Loading.start()
+      let trans = await getTranscodes(this.inputBucket)
+      const newTrans = this.convert2Save(this.transcode)
+      newTrans.id =
+        Date.now() +
+        Math.random()
+          .toString()
+          .slice(-6)
+      trans.push(newTrans)
+      await putBucketPolicy(this.inputBucket, trans)
+      this.$router.push({ name: 'output' })
+      this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
     },
     async alterTranscode() {
       try {
@@ -937,7 +933,6 @@ export default {
         this.$router.push({ name: 'output' })
         this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
       } catch (error) {
-        console.log(error)
         this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
       }
     },
@@ -969,7 +964,6 @@ export default {
         this.$router.push({ name: 'output' })
         this.$Message.success(this.$t('VIDEO.SET_UP_SUCCESSFULLY'))
       } catch (error) {
-        console.log(error)
         this.$Message.error(this.$t('VIDEO.SET_UP_FAILED'))
       }
     },

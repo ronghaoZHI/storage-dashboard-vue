@@ -670,7 +670,6 @@ export default {
         })
         this.bucketList = [...res.Buckets]
       } catch (error) {
-        console.log(error)
         this.$Message.error(this.$t('DASHBOARD.GET_BUCKET_FAILED'))
       }
     },
@@ -715,7 +714,6 @@ export default {
         })
         this.spinShow = false
       } catch (error) {
-        console.log(error)
         if (
           error.msg &&
           error.msg.message &&
@@ -904,35 +902,23 @@ export default {
       return getBillUrl(path)
     },
     async getBucketAcl(name) {
-      try {
-        return await handler('getBucketAcl', {
-          Bucket: name,
-        })
-      } catch (error) {
-        console.log(error)
-      }
+      return await handler('getBucketAcl', {
+        Bucket: name,
+      })
     },
     async getBucketSource(name) {
       let rule = {
         action: 'list',
         bucket: name,
       }
-      try {
-        return await postRetrieve(rule, store.state.current.username)
-      } catch (error) {
-        console.log(error)
-      }
+      return await postRetrieve(rule, store.state.current.username)
     },
     async getAccessList(name) {
       const params = {
         action: 'get',
         bucket: name,
       }
-      try {
-        return await postAccess(params, store.state.current.username)
-      } catch (error) {
-        console.log(error)
-      }
+      return await postAccess(params, store.state.current.username)
     },
     convertAccess(bucket, access) {
       let blackIPs = [

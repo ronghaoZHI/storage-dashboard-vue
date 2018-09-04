@@ -225,7 +225,6 @@ export default {
         this.spinShow = false
         this.$Loading.finish()
       } catch (error) {
-        console.log(error)
         this.spinShow = false
         this.$Loading.error()
       }

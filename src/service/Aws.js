@@ -61,7 +61,7 @@ export const handler = async (
     const s3 = await getS3({ timeout, host, s3ForcePathStyle })
     return new Promise((resolve, reject) =>
       s3[method](params, (error, data) => {
-        error && iView.Message.error(error.message, 5) && console.log(error)
+        error && iView.Message.error(error.message, 5)
         return error ? reject(error) : resolve(data)
       }),
     )
@@ -95,7 +95,6 @@ export const transcoder = async (
       }),
     )
   } catch (error) {
-    console.error(error)
     return Promise.reject(error)
   }
 }

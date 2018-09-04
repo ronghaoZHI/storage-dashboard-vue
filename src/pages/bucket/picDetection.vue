@@ -161,14 +161,10 @@ export default {
           picAdult: unionBucket,
         },
       }
-      try {
-        await handler('putBucketPolicy', {
-          Bucket: this.adultPolify.isolate_bucket,
-          Policy: JSON.stringify(union),
-        })
-      } catch (error) {
-        console.error('putUnionPolicy', error)
-      }
+      await handler('putBucketPolicy', {
+        Bucket: this.adultPolify.isolate_bucket,
+        Policy: JSON.stringify(union),
+      })
     },
   },
 }

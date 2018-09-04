@@ -217,7 +217,6 @@ export default {
         this.nextPageToken = res.NextPageToken
         this.$Loading.finish()
       } catch (error) {
-        console.log(error)
         this.$Loading.error()
       }
     },

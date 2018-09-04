@@ -917,7 +917,6 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
     )
     return isDownload ? url : isAllUser ? url.split('?')[0] : url
   } catch (error) {
-    console.log(error)
     this.$Loading.error()
     return Promise.reject(error)
   }

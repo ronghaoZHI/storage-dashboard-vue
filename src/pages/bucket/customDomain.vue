@@ -94,7 +94,6 @@ export default {
           return { domain }
         })
       } catch (error) {
-        console.log(error)
         this.noDataText = `${this.$t('PUBLIC.GET_LIST_FAIL')} ${error.msg}`
         this.$Message.error(this.$t('PUBLIC.GET_LIST_FAIL'))
       }
@@ -111,29 +110,21 @@ export default {
       })
     },
     async deleteDomain(row) {
-      try {
-        await this.$http.delete(`${CUSTOM_DOMAIN}/${this.bucket}`, {
-          params: { custom_domain: row.domain },
-        })
-        this.listData.splice(row._index, 1)
-        this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
-      } catch (error) {
-        console.log(error)
-      }
+      await this.$http.delete(`${CUSTOM_DOMAIN}/${this.bucket}`, {
+        params: { custom_domain: row.domain },
+      })
+      this.listData.splice(row._index, 1)
+      this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
     },
     async addDomain() {
       if (this.inputCheck) {
-        try {
-          await this.$http.post(`${CUSTOM_DOMAIN}/${this.bucket}`, {
-            custom_domain: this.newDomain,
-          })
-          this.listData.push({ domain: this.newDomain })
-          this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
-          this.createModal = false
-          this.newDomain = ''
-        } catch (error) {
-          console.log(error)
-        }
+        await this.$http.post(`${CUSTOM_DOMAIN}/${this.bucket}`, {
+          custom_domain: this.newDomain,
+        })
+        this.listData.push({ domain: this.newDomain })
+        this.$Message.success(this.$t('PUBLIC.OPTIONS_SUCCESS'))
+        this.createModal = false
+        this.newDomain = ''
       } else {
         this.$Message.error(this.$t('SETTINGS.INVALID_DOMAIN'))
       }

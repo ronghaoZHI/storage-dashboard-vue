@@ -201,13 +201,9 @@ export default {
       })
     },
     async getBucketAcl(name) {
-      try {
-        return await handler('getBucketAcl', {
-          Bucket: name
-        })
-      } catch (error) {
-        console.log(error)
-      }
+      return await handler('getBucketAcl', {
+        Bucket: name,
+      })
     },
     async createRedirectBucket(newBucket) {
       const subUsers = await this.$http.get(SUB_USER)

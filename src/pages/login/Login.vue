@@ -188,13 +188,9 @@ export default {
       let _token = this.$route.query.ticket || this.$store.state.token
 
       if (_token) {
-        try {
-          await this.$store.dispatch('setToken', _token)
-          this.$http.defaults.headers.common['Authorization'] = _token
-          this.getUserInfoByToken()
-        } catch (error) {
-          console.log(error)
-        }
+        await this.$store.dispatch('setToken', _token)
+        this.$http.defaults.headers.common['Authorization'] = _token
+        this.getUserInfoByToken()
       } else {
         window.location = getSSOLoginUrl()
       }

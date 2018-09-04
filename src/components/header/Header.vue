@@ -141,16 +141,11 @@ export default {
         this.$Message.error(this.$t('NAV.PASSWORD_CHECK'))
         return false
       }
-      try {
-        await repassword({
-          email: store.state.current.email,
-          password: this.rePasswordForm.password,
-        })
-        logout()
-      } catch (error) {
-        console.log(error)
-        this.$Message.error(this.$t('NAV.CHANGE_PASSWORD_FAILED'))
-      }
+      await repassword({
+        email: store.state.current.email,
+        password: this.rePasswordForm.password,
+      })
+      logout()
     },
     openDoc() {
       window.open('http://doc.bscstorage.com')

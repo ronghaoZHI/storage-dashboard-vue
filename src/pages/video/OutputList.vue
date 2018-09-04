@@ -368,7 +368,6 @@ export default {
         this.policyFront.splice(index, 1)
         this.$Message.success(this.$t('VIDEO.DELETED_SUCCESSFULLY'))
       } catch (error) {
-        console.log(error)
         this.$Message.error(this.$t('VIDEO.FAILED_TO_DELETE'))
       }
     },

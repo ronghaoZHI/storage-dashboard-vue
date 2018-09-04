@@ -43,7 +43,6 @@ const hasPermission = (role, route) => {
 const getRole = () => {
   // if user's type is subuser, 'user.state.perm'.length === 0
   const perm = store ? store.state.perms : []
-  console.log('getRole', perm)
   if (Array.isArray(perm)) {
     return perm.length > 0 ? perm : ['SUBUSER']
   } else {
@@ -100,7 +99,6 @@ const store = new Vuex.Store({
     async getBuckets({ commit, state }, forceUpdate = false) {
       if (Object.keys(state.buckets).length === 0 || forceUpdate) {
         let buckets = await handler('listBuckets')
-        console.log({ buckets: buckets })
         commit('SET_VALUES', { buckets: buckets })
         return buckets
       } else {
@@ -129,7 +127,6 @@ const store = new Vuex.Store({
     },
     SET_VALUES(state, data) {
       const _state = Object.assign(state, data)
-      console.log(state.Buckets, _state.Buckets, data)
       sessionStorage.setItem('store', JSON.stringify(_state))
       state = _state
     },

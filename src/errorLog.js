@@ -10,7 +10,7 @@ Vue.config.errorHandler = function(err, vm, info) {
         info,
         url: window.location.href,
       })
-      console.error(err, info)
+      console.error(err, info) // eslint-disable-line no-console
     })
   }
 }

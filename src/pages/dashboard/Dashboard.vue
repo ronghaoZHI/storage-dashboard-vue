@@ -416,7 +416,6 @@ export default {
             this.spinShow = false
           })
         } catch (error) {
-          console.log(error)
           this.spinShow = false
           this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
         }
@@ -462,7 +461,6 @@ export default {
               this.spinBandwidthShow = false
             })
         } catch (error) {
-          console.log(error)
           this.spinBandwidthShow = false
           this.$Message.warning(this.$t('STORAGE.GET_DATA_ERROR'))
         }
@@ -699,7 +697,6 @@ export default {
           )
           this.spinShow = false
         } catch (error) {
-          console.log(error)
           this.spinShow = false
           if (
             error.msg &&

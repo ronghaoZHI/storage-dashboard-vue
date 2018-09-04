@@ -68,7 +68,6 @@ export default {
         this.$Loading.finish()
       } catch (error) {
         this.$Loading.error()
-        console.log(error)
       }
     },
     async deleteKeychain(accesskey) {
@@ -80,7 +79,6 @@ export default {
         this.$Loading.finish()
       } catch (error) {
         this.$Loading.error()
-        console.log(error)
       }
     },
   },

@@ -54,7 +54,6 @@ export default {
         this.$Loading.finish()
         this.$Message.success(this.$t('SYSTEM.SUCCESS'))
       } catch (error) {
-        console.log(error)
         this.$Loading.error()
         this.$Message.error(this.$t('SYSTEM.FAILURE'))
       }

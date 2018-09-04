@@ -103,23 +103,18 @@ export default {
                   isUpload: false,
                 })
               })
-            : target.file(
-                (item) => {
-                  binding.value.fileList.push({
-                    name: path + item.name,
-                    lastModifiedDate: moment(item.lastModifiedDate).format(
-                      'YYYY-MM-DD HH:mm',
-                    ),
-                    size: bytes(item.size),
-                    progress: 0,
-                    file: item,
-                    isUpload: false,
-                  })
-                },
-                (error) => {
-                  console.log(error)
-                },
-              )
+            : target.file((item) => {
+                binding.value.fileList.push({
+                  name: path + item.name,
+                  lastModifiedDate: moment(item.lastModifiedDate).format(
+                    'YYYY-MM-DD HH:mm',
+                  ),
+                  size: bytes(item.size),
+                  progress: 0,
+                  file: item,
+                  isUpload: false,
+                })
+              })
         }
       },
     },
