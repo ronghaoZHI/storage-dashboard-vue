@@ -94,7 +94,7 @@
 </template>
 <script>
 import { GROUP_MOVE, GROUP_READ_ONLY } from '@/service/API'
-import { bytes, thousands } from '@/service/bucketService'
+import { bytes, thousands } from '@/service/BucketService'
 import detailModal from './detailModal'
 export default {
   components: { detailModal },

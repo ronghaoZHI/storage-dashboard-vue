@@ -711,7 +711,7 @@ export default {
       }
       return true
     },
-    async createJob(job) {
+    async createJob() {
       let saved = await this.convert2Save(this.job)
       try {
         this.$Loading.start()

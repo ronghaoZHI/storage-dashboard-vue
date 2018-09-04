@@ -102,7 +102,7 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { getBillTranscoderUrl } from '@/service/API'
-import { time, timesK, date } from '@/service/bucketService'
+import { time, timesK, date } from '@/service/BucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
 import { checkRole } from 'helper'
@@ -151,10 +151,10 @@ export default {
     },
   },
   watch: {
-    dateSelect(to, from) {
+    dateSelect(to) {
       to[0] && this.getInitData()
     },
-    theme(to, from) {
+    theme(to) {
       this.toggleTheme(to)
     },
   },
@@ -205,7 +205,7 @@ export default {
               this.theme,
             )
           }),
-        ]).then((res) => {
+        ]).then(() => {
           this.exportData = []
           _.each(
             this.overviewData.video_transcoding.map((data) => data[0]),
@@ -493,7 +493,7 @@ const initOverviewOptions = (data, theme) => {
   themeLineOptions.xAxis.interval = 86400000 * n
   let newOptions = _.defaultsDeep({}, themeLineOptions, {
     tooltip: {
-      formatter: function(params, ticket, callback) {
+      formatter: function(params) {
         let res = '时间：' + date(params[0].value[0])
         _.each(params, function(item) {
           res +=
@@ -563,7 +563,7 @@ const initVideoOptions = (data, theme) => {
   themeLineOptions.xAxis.interval = 86400000 * n
   let newOptions = _.defaultsDeep({}, themeLineOptions, {
     tooltip: {
-      formatter: function(params, ticket, callback) {
+      formatter: function(params) {
         let res = '时间：' + date(params[0].value[0])
         _.each(params, function(item) {
           res +=
@@ -641,7 +641,7 @@ const initNotVideoOptions = (data, typeName, theme) => {
   themeLineOptions.xAxis.interval = 86400000 * n
   let newOptions = _.defaultsDeep({}, themeLineOptions, {
     tooltip: {
-      formatter: function(params, ticket, callback) {
+      formatter: function(params) {
         let res = '时间：' + date(params[0].value[0])
         _.each(params, function(item) {
           res +=

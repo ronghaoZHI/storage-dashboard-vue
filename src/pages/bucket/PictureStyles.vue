@@ -58,7 +58,7 @@
 
 <script>
 import { getS3, handler } from '@/service/Aws'
-import { prefix, Utf8ArrayToStr } from '@/service/bucketService'
+import { prefix, Utf8ArrayToStr } from '@/service/BucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
 import iView from 'iview-bsc'
@@ -424,7 +424,7 @@ export default {
     },
     uploadSuccess(fileName) {
       const file = { Key: this.prefix + fileName }
-      this.getObject(file).then((res) => {
+      this.getObject(file).then(() => {
         this.showUploadModal = false
       })
     },

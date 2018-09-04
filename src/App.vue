@@ -13,7 +13,7 @@ export default {
   directives: {
     // remove the default drop and drag actions
     drop: {
-      bind: function(el) {
+      bind: function() {
         let doc = document.getElementsByTagName('body')[0]
         doc.ondrop = (e) => e.preventDefault()
         doc.ondragleave = (e) => e.preventDefault()

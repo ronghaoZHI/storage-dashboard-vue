@@ -128,7 +128,7 @@ const timesK = (t, digit = 1) => {
 
   return number + ' ' + units[exponent]
 }
-const timesSpliteUnits = (t, digit = 1, isFloat = false) => {
+const timesSpliteUnits = (t, digit = 1) => {
   let times = t
   if (typeof times !== 'number') {
     times = parseFloat(times)

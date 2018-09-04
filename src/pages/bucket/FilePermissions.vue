@@ -24,7 +24,7 @@
 </template>
 <script>
 import { handler } from '@/service/Aws'
-import { convertPrefix2Router } from '@/service/bucketService'
+import { convertPrefix2Router } from '@/service/BucketService'
 import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
   components: { fileAcl },

@@ -174,11 +174,11 @@ export default {
     },
   },
   watch: {
-    read_only(to, from) {
+    read_only() {
       this.cleanParams()
       this.getGroupList(false, true)
     },
-    showChart(to, from) {
+    showChart(to) {
       this.getSortedGroupList(this.groupList, to)
     },
   },
@@ -186,10 +186,10 @@ export default {
     this.getGroupList()
   },
   methods: {
-    tabToggle(index, ref) {
+    tabToggle(index) {
       this.showChart = index
     },
-    async getGroupList(isAppend = false, cleanParams = false) {
+    async getGroupList(isAppend = false) {
       if (this.searchValueError) {
         this.$Message.warning(this.$t('SYSTEM.GROUP_ID_SEARCH_INFO'))
         return
@@ -235,7 +235,7 @@ export default {
         group.cpu = 0
         group.ioutil = 0
         group.space = 0
-        _.forIn(group.partition, (partition, kes) => {
+        _.forIn(group.partition, (partition) => {
           if (partition.cpu > group.cpu) group.cpu = partition.cpu
           if (partition.ioutil > group.ioutil) group.ioutil = partition.ioutil
           if (partition.used_rate > group.space)

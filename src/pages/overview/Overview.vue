@@ -335,7 +335,7 @@ import {
   dateTimeYear,
   bytesSpliteUnits,
   timesSpliteUnits,
-} from '@/service/bucketService'
+} from '@/service/BucketService'
 export default {
   components: {
     chart: ECharts,
@@ -631,7 +631,7 @@ export default {
     },
   },
   watch: {
-    theme(to, from) {
+    theme() {
       this.$refs['capacityLine'].chart.resize()
       this.$refs['trafficLine'].chart.resize()
       this.$refs['requestLine'].chart.resize()
@@ -836,7 +836,7 @@ export default {
         params: { bucket: data.Name },
       })
     },
-    gotoVideoTemplate(data) {
+    gotoVideoTemplate() {
       this.$router.push({ name: 'template' })
     },
     gotoBucket() {
@@ -1137,7 +1137,7 @@ const initOptions = ({ dataPart1, dataPart2, theme, oneDayFlag }) => {
     },
     series: seriesArray,
     tooltip: {
-      formatter: function(params, ticket, callback) {
+      formatter: function(params) {
         let res =
           '时间：' +
           (oneDayFlag

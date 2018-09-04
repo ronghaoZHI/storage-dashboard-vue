@@ -68,7 +68,7 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-router.afterEach((to, from, next) => {
+router.afterEach(() => {
   iView.LoadingBar.finish()
   iView.Message.destroy()
 })

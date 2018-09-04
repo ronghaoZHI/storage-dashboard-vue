@@ -366,7 +366,7 @@ export default {
     },
   },
   watch: {
-    requestHeader(to, from) {
+    requestHeader(to) {
       let index = to.indexOf(':')
       this.requestHeaderFormatError =
         index > 0

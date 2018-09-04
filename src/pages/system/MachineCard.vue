@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-import { bytes } from '@/service/bucketService'
+import { bytes } from '@/service/BucketService'
 import partitionNode from './PartitionNode'
 export default {
   components: {
@@ -82,7 +82,7 @@ export default {
   directives: {
     cloBtn: {
       bind: function(el) {
-        $(el).click((e) => {
+        $(el).click(() => {
           $(el)
             .toggleClass('dn')
             .siblings('.card-network')
@@ -94,7 +94,7 @@ export default {
     },
     openBtn: {
       bind: function(el) {
-        $(el).click((e) => {
+        $(el).click(() => {
           $(el)
             .toggleClass('dn')
             .siblings('.card-network')

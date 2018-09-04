@@ -254,7 +254,7 @@ export default {
         this.$Loading.error()
       }
     },
-    async createJob(job) {
+    async createJob() {
       try {
         this.$Loading.start()
         await transcoder('createJob', createData)

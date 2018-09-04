@@ -82,7 +82,7 @@ export default {
       },
       deep: true,
     },
-    'adultPolify.enabled'(to, from) {
+    'adultPolify.enabled'(to) {
       to ? this.putUnionPolicy(this.bucket) : this.putUnionPolicy('')
     },
   },

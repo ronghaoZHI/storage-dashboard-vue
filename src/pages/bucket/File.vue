@@ -177,7 +177,7 @@
 <script>
 import picturePreview from '@/components/picturePreview/picturePreview'
 import { getS3, handler } from '@/service/Aws'
-import { bytes, keyFilter, convertPrefix2Router } from '@/service/bucketService'
+import { bytes, keyFilter, convertPrefix2Router } from '@/service/BucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
 import upload from '@/components/upload/upload'
 import Clipboard from 'clipboard'

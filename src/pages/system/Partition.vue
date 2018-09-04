@@ -196,7 +196,7 @@ import partitionUnused from './PartitionUnused'
 import partitionDeleted from './PartitionDeleted'
 import detailModal from './detailModal'
 import bytes from 'bytes'
-import { thousands } from '@/service/bucketService'
+import { thousands } from '@/service/BucketService'
 import {
   PARTITION_IDC_LIST,
   PARTITION_USED_LIST,

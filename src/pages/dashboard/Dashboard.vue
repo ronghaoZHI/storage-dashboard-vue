@@ -237,7 +237,7 @@ import {
   bytesSpliteUnits,
   bpsSpliteUnits,
   timesSpliteUnits,
-} from '@/service/bucketService'
+} from '@/service/BucketService'
 import Csv from './csv'
 import fileSaver from 'file-saver'
 export default {
@@ -308,10 +308,10 @@ export default {
     },
   },
   watch: {
-    dateSelect(to, from) {
+    dateSelect(to) {
       to[0] && this.getInitData()
     },
-    theme(to, from) {
+    theme() {
       let url =
         formatDate(this.dateSelect[1]) < this.dateDivided ? 'old' : 'oldAndNew'
       this.setOptions(url)
@@ -384,7 +384,7 @@ export default {
                 _.extend(this, res)
                 this.setOptions('old')
               }),
-          ]).then((res) => {
+          ]).then(() => {
             // export data old
             this.exportData = []
             _.each(
@@ -1167,7 +1167,7 @@ const initBandwidthOptions = ({
     },
     series: seriesArray,
     tooltip: {
-      formatter: function(params, ticket, callback) {
+      formatter: function(params) {
         let res = '时间：' + dateTimeYear(params[0].value[0])
         _.each(params, function(item) {
           res +=
@@ -1335,7 +1335,7 @@ const initOptions = ({
     },
     series: seriesArray,
     tooltip: {
-      formatter: function(params, ticket, callback) {
+      formatter: function(params) {
         let res =
           '时间：' +
           (newOneDayFlag

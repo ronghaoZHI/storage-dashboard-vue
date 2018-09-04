@@ -232,7 +232,7 @@ export default {
           token: res.token,
           perms: res.perms,
         })
-        .then((state) => {
+        .then(() => {
           checkRole('LIST_USERS')
             ? this.adminMode(res)
             : checkRole('OPS')

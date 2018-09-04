@@ -95,7 +95,7 @@ const store = new Vuex.Store({
       commit('SET_BUCKETS', {})
       commit('REFRESH_MENU')
     },
-    setBaseInfo({ commit, state }, data) {
+    setBaseInfo({ commit }, data) {
       commit('SET_VALUES', data)
     },
   },

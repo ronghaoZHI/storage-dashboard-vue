@@ -36,7 +36,7 @@
 </template>
 <script>
 import { PARTITION_UNUSED_ADD } from '@/service/API'
-import { bytes } from '@/service/bucketService'
+import { bytes } from '@/service/BucketService'
 export default {
   props: ['data'],
   data() {

@@ -76,7 +76,7 @@
   </div>
 </template>
 <script>
-import { bytes } from '@/service/bucketService'
+import { bytes } from '@/service/BucketService'
 import store from '@/store'
 export default {
   props: ['data'],

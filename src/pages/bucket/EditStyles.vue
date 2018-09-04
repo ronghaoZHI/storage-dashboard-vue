@@ -554,7 +554,7 @@
 </template>
 <script>
 import { handler, getS3 } from '@/service/Aws'
-import { prefix } from '@/service/bucketService'
+import { prefix } from '@/service/BucketService'
 import upload from '@/components/upload/upload'
 import styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview-bsc'
@@ -724,13 +724,13 @@ export default {
   },
   watch: {
     general: {
-      handler: function(val, oldVal) {
+      handler: function() {
         this.autoSaveAndPreview()
       },
       deep: true,
     },
     mark: {
-      handler: function(val, oldVal) {
+      handler: function() {
         this.autoSaveAndPreview()
       },
       deep: true,

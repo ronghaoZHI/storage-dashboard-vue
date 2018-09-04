@@ -93,7 +93,7 @@ export default {
     }
   },
   watch: {
-    width(to, from) {
+    width(to) {
       to >= 5000
         ? $('.actions-icon:eq(0)').addClass('disable')
         : $('.actions-icon:eq(0)').removeClass('disable')
@@ -120,7 +120,7 @@ export default {
             .addClass('big-picture-show-box')
             .removeClass('picture-show-box')
     },
-    height(to, from) {
+    height(to) {
       this.width < $('.picture-show-box, .big-picture-show-box').width() &&
       to < $('.picture-show-box, .big-picture-show-box').height()
         ? $('.picture-show-box, .big-picture-show-box')

@@ -82,7 +82,7 @@
 </template>
 <script>
 import detailModal from './detailModal'
-import { bytes, thousands } from '@/service/bucketService'
+import { bytes, thousands } from '@/service/BucketService'
 import {
   PARTITION_USED_MOVE,
   PARTITION_USED_SET,
@@ -206,7 +206,7 @@ export default {
   },
   watch: {
     data: {
-      handler(to, from) {
+      handler(to) {
         this.waitingCard =
           to.is_del === 1 || (!to.not_moving && to.group_num !== 0)
             ? 'bsc-waiting-card'

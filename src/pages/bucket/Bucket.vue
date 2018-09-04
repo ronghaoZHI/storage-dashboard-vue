@@ -57,7 +57,7 @@
 </template>
 <script>
 import { handler } from '@/service/Aws'
-import { removeItemFromArray } from '@/service/bucketService'
+import { removeItemFromArray } from '@/service/BucketService'
 import moment from 'moment'
 import { checkRole } from 'helper'
 import store from '@/store'
@@ -83,7 +83,7 @@ export default {
     },
   },
   watch: {
-    createBucketValue(to, from) {
+    createBucketValue(to) {
       this.inputCheck = !(to.length >= 3)
     }
   },
@@ -111,7 +111,7 @@ export default {
           })
         })
       } else {
-        this.bucketList = _.forEach(buckets.Buckets, (item, index) => {
+        this.bucketList = _.forEach(buckets.Buckets, (item) => {
           item.CreationDate = moment(item.CreationDate).format(
             'YYYY-MM-DD HH:mm'
           )
@@ -141,7 +141,7 @@ export default {
           ? batchDeletion(buckets.Contents, bucket.Name)
           : Promise.resolve()
         // the bucket has cache when the objects just deleted
-        response.then((res) => {
+        response.then(() => {
           setTimeout(() => {
             handler('deleteBucket', { Bucket: bucket.Name })
           }, 1000)

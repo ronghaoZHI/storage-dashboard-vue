@@ -138,7 +138,7 @@ export default {
         this.$Message.error(this.$t('SETTINGS.INVALID_DOMAIN'))
       }
     },
-    newDomainTest(value) {
+    newDomainTest() {
       this.inputCheck = /^[a-zA-Z\d-]{0,63}(\.[a-zA-Z\d-]{0,63})+$/.test(
         this.newDomain,
       )

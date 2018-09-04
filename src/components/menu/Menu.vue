@@ -89,7 +89,7 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
+    $route(to) {
       this.activeName = to.meta.ali
       this.openName = to.meta.parent ? [to.meta.parent] : []
     },

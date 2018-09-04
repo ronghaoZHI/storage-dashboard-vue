@@ -36,7 +36,7 @@
 <script>
 import { getS3 } from '@/service/Aws'
 import moment from 'moment'
-import { bytes } from '@/service/bucketService'
+import { bytes } from '@/service/BucketService'
 export default {
   name: 'Upload',
   directives: {
@@ -49,7 +49,7 @@ export default {
             entry && traverseFileTree(entry)
           })
         }
-        el.onclick = (e) => {
+        el.onclick = () => {
           let fileInput = el.children[0]
           // click events bubble up the ancestry tree and the change event will trigge twice
           // fileInput.onclick((e,false) => e.stopPropagation()) not work ...
@@ -166,7 +166,7 @@ export default {
     }
   },
   watch: {
-    fileList(to, from) {
+    fileList(to) {
       if (to.length > 0) {
         to.forEach((file) => {
           if (!file.isUpload) {
@@ -176,11 +176,10 @@ export default {
               (this.checkFileType && this.validation.test(file.name))
             ) {
               this.uploadFile(file).then(
-                (res) => {
+                () => {
                   this.$emit('uploadSuccess', file.name)
                 },
-                (e) => {
-                  console.log(e)
+                () => {
                   this.$Message.error(
                     this.$t('STORAGE.UPLOAD_FAILED', { fileName: file.name }),
                     5,
