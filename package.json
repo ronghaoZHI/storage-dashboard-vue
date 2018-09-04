@@ -1,6 +1,8 @@
 {
-  "name": "vue-cli-test",
-  "version": "0.1.0",
+  "name": "storage-dashboard",
+  "version": "0.2.0",
+  "description": "CWN Dashboard",
+  "author": "@baishancloud.com",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
