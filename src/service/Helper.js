@@ -21,15 +21,13 @@ export const isSSOLogin = () => {
 }
 
 async function dataClearAndLocation() {
-  const _store = store.default || store
-  await _store.dispatch('logout')
+  await store.dispatch('logout')
   await clear()
 
   if (window.dashboard_conf.onlineMode === 'True') {
     window.location = SSO_LOGOUT
   } else {
-    const _router = router.default || router
-    _router.push({
+    router.push({
       path: '/login',
       query: { redirect: router.fullPath },
     })
@@ -57,8 +55,7 @@ export function getCookie(name) {
 }
 
 export function checkRole(role, checkManager = false) {
-  const _store = store.default || store
-  const perm = checkManager ? _store.state.manager[0].perms : _store.state.perms
+  const perm = checkManager ? store.state.manager[0].perms : store.state.perms
   if (Array.isArray(perm) && typeof role === 'string') {
     return perm.includes(role)
   } else if (Array.isArray(perm) && Array.isArray(role)) {
@@ -91,8 +88,8 @@ export function sentMessage(message, stak = '') {
             {
               title: 'store',
               value: JSON.stringify({
-                token: store.default.state.token,
-                user: store.default.state.user,
+                token: store.state.token,
+                user: store.state.user,
               }),
               short: false,
             },

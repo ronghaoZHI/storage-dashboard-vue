@@ -11,4 +11,7 @@ module.exports = {
       .set('helper', resolve('src/service/Helper.js'))
       .set('querystring', 'querystring-browser')
   },
+  devServer: {
+    disableHostCheck: true,
+  },
 }
