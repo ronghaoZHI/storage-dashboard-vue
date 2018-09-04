@@ -2,10 +2,10 @@
   <div class="bsc-user">
     <Button type="primary"
             v-show="canCreateSub"
-            @click="createSubUserModal = true">{{$t("USER.CREATE_SUB_USER")}}</Button>
+            @click="openCreateSubUserModal = true">{{$t("USER.CREATE_SUB_USER")}}</Button>
     <Button type="primary"
             v-show="canCreateUser"
-            @click="createUserModal = true">{{$t("USER.CREATE_USER")}}</Button>
+            @click="openCreateUserModal">{{$t("USER.CREATE_USER")}}</Button>
     <Button type="primary"
             v-show="canBindUser"
             @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
@@ -106,7 +106,7 @@
       <Form ref="createSubUserForm"
             :model="createSubUserForm"
             :rules="subUserRuleValidate"
-            :label-width="100"
+            :label-width="100" 
             v-show="!isEditSubUser">
         <Form-item :label="$t('USER.USER_NAME')"
                    prop="username">
@@ -129,7 +129,7 @@
                  :placeholder="$t('USER.REQUIRE_COMPANY')" />
         </Form-item>
       </Form>
-      <div v-if="0">
+      <div v-if="0">  
       <div class="section-separator">
         <div class="separator-body">
           <span class="separator-icon"></span>
@@ -164,7 +164,7 @@
           </tr>
         </tbody>
       </table>
-      </div>
+      </div>    
     </Modal>
     <Spin size="bigger"
           fix
@@ -184,7 +184,7 @@ import {
   UNBIND_USER,
   UNBIND_USER_SUPERADMIN,
 } from '@/service/API'
-import { postUnbindUser, getListBoundUser, postBindUser, postCreateSub, postCreateUser, postRedirectBucket, postUpdateSubAcl, getListAllUser } from 'api/user'
+import { postUnbindUser, getListBoundUser, postBindUser, postCreateSub, postCreateUser, postRedirectBucket, postUpdateSubAcl, getListAllUser, getListSubUser, getListSubAcl } from 'api/user'
 import { checkRole } from 'helper'
 
 export default {
@@ -208,8 +208,8 @@ export default {
       iconSize: 18,
       createUserForm: {
         // default test_data
-        username: 'test_',
-        email: 'test_@qq.com',
+        username: `test_${parseInt(Math.random()*1000)}`,
+        email: `test_${parseInt(Math.random()*1000)}@qq.com`,
         password: '123456',
         company: 'test',
         perms: [],
@@ -251,8 +251,8 @@ export default {
       },
       createSubUserForm:{
         // default test_data
-        username: 'test_',
-        email: 'test_@qq.com',
+        username: `test_${parseInt(Math.random()*1000)}`,
+        email: `test_${parseInt(Math.random()*1000)}@qq.com`,
         password: '123456',
         company: 'test',
       },
@@ -308,12 +308,6 @@ export default {
                 width: 150,
                 align: 'left',
                 key: 'username',
-              },
-              {
-                title: 'Type',
-                width: 120,
-                align: 'left',
-                key: 'type',
               },
               {
                 title: 'Company',
@@ -529,7 +523,7 @@ export default {
     },
   },
   created() {
-    console.log(this.state.users)
+    console.log(this.state)
     this.getUserList()
   },
   methods: {
@@ -538,13 +532,12 @@ export default {
       this.spinShow = true
       // customer 用于判断二级用户
       this.customer = this.$store.state.current.username || ''
-      console.log(checkRole('LIST_USERS'), checkRole('SUB'))
+      console.log(checkRole('LIST_USERS'), checkRole('SUB'), this.customer)
       try {
         if (checkRole('LIST_USERS')) {
           this.customer && await getListBoundUser()
           .then((res) => {
             this.userList = res
-            console.log(this.userList)
           })
           this.$Loading.finish()
           this.$store.dispatch('setBaseInfo', {
@@ -552,25 +545,19 @@ export default {
             users: this.userList,
           })
         } else if(checkRole('SUB')) {
-          let getSubUserURL = isSuper()
-            ? getSuperSubUserUrl(this.state.subUser.username)
-            : SUB_USER
-          let [res, users] = await Promise.all([
-            this.$store.dispatch('getBuckets'),
-            this.$http.get(getSubUserURL),
-          ])
+          let [user, bucket] = await Promise.all([getListSubUser(this.customer), this.$store.getters.buckets])
+          console.log(user)
+          console.log(bucket)
           let buckets = await Promise.all(
-            Array.map(res.Buckets, (bucket) => {
-              const params = isSuper()
-                ? { bucket: bucket.Name, customer: this.state.subUser.username }
-                : { bucket: bucket.Name }
+            Array.map(Bucket, (bucket) => {
+              const params = { bucket: bucket.Name, customer: this.customer }
               this.bucketList = res.Buckets
               return getListSubAcl({ params }).then((acl) => {
                 return { bucket: bucket.Name, acl: acl }
               })
             }),
           )
-          this.userList = _.each(users, (user) => {
+          this.userList = _.each(user.data, (user) => {
             user.acl = []
             user.user = this.userType(user)
             _.each(buckets, (bucket) => {
@@ -598,8 +585,10 @@ export default {
       } catch (error) {
         this.$Loading.error()
         this.spinShow = false
-        console.log(error)
       }
+    },
+    openCreateUserModal() {
+      this.createUserModal = true
     },
     async openBindUserModal() {
       this.bindUserModal = true
@@ -611,14 +600,14 @@ export default {
         ])
         let boundUserEmailList = []
         _.each(boundUser, (user) => {
-          boundUserEmailList.push(user.email)
+          boundUserEmailList.push(user.username)
         })
         _.each(allUser, (user) => {
-          if (boundUserEmailList.indexOf(user.email) >= 0) {
+          user.selected = false
+          if (boundUserEmailList.indexOf(user.username) >= 0) {
             user.show = false
           } else {
             user.show = true
-            user.selected = false
           }
         })
         this.searchBindUserList = this.boundUserList = allUser
@@ -654,18 +643,18 @@ export default {
       this.$Loading.start()
       try {
         await Promise.all(
-          Array.map(this.boundUserList, (userinfo) => {
+          this.boundUserList.map((userinfo) => {
             if (userinfo.selected) {
               postBindUser({ username: userinfo.username }).then(
                 this.$Message.success('bind succssed!')
               )
-              this.searchBindUserInput = ''
-              this.boundUserList = []
-              this.searchUserInput = ''
-              this.getUserList()
             }
           }),
         ).then((res) => console.log(res), (err) => console.error(err))
+        this.searchBindUserInput = ''
+        this.boundUserList = []
+        this.searchUserInput = ''
+        this.getUserList()
         this.$Loading.finish()
       } catch (error) {
         this.$Loading.error()
@@ -673,7 +662,7 @@ export default {
     },
     unbindUserConfirm(user, index) {
       this.$Modal.confirm({
-        content: this.$t('STORAGE.UNBIND_CONFIRMED', { UserName: user.username }),
+        content: this.$t('STORAGE.UNBIND_CONFIRMED', { fileName: user.username }),
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: 'Unbind',
@@ -698,8 +687,8 @@ export default {
           this.$Loading.start()
           this.createUserForm.sso_type = parseInt(this.createUserForm.sso_type)
           try {
-            await postCreateUser(JSON.stringify(this.createUserForm), this.customer)
-            await postBindUser(JSON.stringify({ username: this.createUserForm.username }, this.customer))
+            await postCreateUser({ ...this.createUserForm }, this.customer)
+            await postBindUser({ username: this.createUserForm.username }, this.customer)
             this.createUserForm = {
               username: '',
               email: '',
@@ -742,8 +731,8 @@ export default {
         try {
           console.log(this.createSubUserForm)
           this.$Loading.start()
-          await postCreateSub(JSON.stringify(this.createSubUserForm))
-          let user = await postCreateSub(JSON.stringify(this.createSubUserForm))
+          let user = await postCreateSub({ ...this.createSubUserForm }, this.customer)
+          console.log(user)
           await Promise.all(
             Array.map(this.createSubUserForm.acl, (bucket) => {
               if (
@@ -832,23 +821,17 @@ export default {
       this.isEditSubUser = false
     },
     userType(user) {
-      let type = user.info.user
-      return type === 'normal'
-        ? this.$t('USER.GENERAL_USER')
-        : type === 'sub'
-          ? this.$t('USER.SUB_USER')
-          : type === 'admin'
-            ? this.$t('USER.ADMIN')
-            : this.$t('USER.SUPER_USER')
+
+      return this.$t('USER.SUB_USER')
     },
   },
 }
 const initSubUser = (acls) => {
   return {
-    username: '',
-    email: '',
-    password: '',
-    company: '',
+    username: `test_${parseInt(Math.random()*1000)}`,
+    email: `test_${parseInt(Math.random()*1000)}@qq.com`,
+    password: '123456',
+    company: 'test',
     acl: acls || [
       {
         bucket: '',
