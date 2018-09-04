@@ -8,7 +8,15 @@ const VERSION_TRANSCODER = '/2012-09-25/'
 export const group = (url, customer = false, bucket = false) =>
   `${HTTP_VERSION}${HOST.apiHost}${VERSION}${url}${
     customer ? '?customer=' + store.state.current.username : ''
-  }${bucket ? '&bucket=' + bucket : ''}`
+  }${
+    customer
+      ? bucket
+        ? '&bucket=' + bucket
+        : ''
+      : bucket
+        ? '?bucket=' + bucket
+        : ''
+  }`
 export const groupTranscoder = (url) =>
   `${HTTP_VERSION}${HOST.transcoderHOST}${VERSION_TRANSCODER}${url}`
 export const groupImgx = (url) => `${HTTP_VERSION}${HOST.imgxHOST}${url}`
