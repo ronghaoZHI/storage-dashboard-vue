@@ -201,7 +201,6 @@ export default {
     },
     async getUserInfoByToken() {
       let res = await getUserInfo()
-      console.log(res)
       this.setBaseInfo(res)
     },
     async loginSubmit(name) {

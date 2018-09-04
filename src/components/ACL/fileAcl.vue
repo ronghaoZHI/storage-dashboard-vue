@@ -191,7 +191,6 @@
 </template>
 
 <script>
-import user from '@/store/modules/user'
 export default {
   props: {
     aclData: {
@@ -233,7 +232,7 @@ export default {
       return name === '' || !(Read || ReadAcp || WriteAcp)
     },
     username() {
-      return user.state.username
+      return this.$store.state.current.username
     },
     tableStyle() {
       return this.width ? { width: `${this.width}px` } : {}

@@ -1,12 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { handler } from '@/service/Aws'
 import { getCookie } from 'helper'
 import createAlert from '@/service/createAlert'
 import menu from '../service/menu'
-
-import bucket from './modules/bucket'
-import user from './modules/user'
-import errorLog from './modules/errorLog'
 
 Vue.use(Vuex)
 
@@ -26,6 +23,8 @@ function checkSessionStorage() {
       users: [], // admin user bound user
       keys: [], // keys for aws sdk
       perms: [], // permission
+      buckets: {},
+      logs: [],
     }
   }
 }
@@ -92,11 +91,24 @@ const store = new Vuex.Store({
       commit('LOGOUT')
     },
     cleanState({ commit }) {
-      commit('SET_BUCKETS', {})
+      commit('SET_VALUES', { buckets: {} })
       commit('REFRESH_MENU')
     },
     setBaseInfo({ commit }, data) {
       commit('SET_VALUES', data)
+    },
+    async getBuckets({ commit, state }, forceUpdate = false) {
+      if (Object.keys(state.buckets).length === 0 || forceUpdate) {
+        let buckets = await handler('listBuckets')
+        console.log({ buckets: buckets })
+        commit('SET_VALUES', { buckets: buckets })
+        return buckets
+      } else {
+        return state.buckets
+      }
+    },
+    addErrorLog({ commit }, log) {
+      commit('ADD_ERROR_LOG', log)
     },
   },
   mutations: {
@@ -117,6 +129,7 @@ const store = new Vuex.Store({
     },
     SET_VALUES(state, data) {
       const _state = Object.assign(state, data)
+      console.log(state.Buckets, _state.Buckets, data)
       sessionStorage.setItem('store', JSON.stringify(_state))
       state = _state
     },
@@ -129,6 +142,9 @@ const store = new Vuex.Store({
       state.keys = []
       Object.keys(state.current).forEach((k) => Vue.delete(state.current, k))
     },
+    ADD_ERROR_LOG: (state, log) => {
+      state.logs.push(log)
+    },
   },
   getters: {
     mode: (state) =>
@@ -136,11 +152,9 @@ const store = new Vuex.Store({
         ? 'normal'
         : 'manage',
     menuList: (state) => state.menuList,
-  },
-  modules: {
-    bucket,
-    user,
-    errorLog,
+    buckets(state) {
+      return state.buckets.Buckets
+    },
   },
 })
 

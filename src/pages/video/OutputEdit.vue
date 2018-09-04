@@ -370,7 +370,6 @@ import {
   getTranscodes,
   getTemplateInfo,
 } from '@/pages/video/data'
-import user from '@/store/modules/user'
 import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
   components: { fileAcl },
@@ -670,7 +669,7 @@ export default {
       return this.$route.params.id
     },
     username() {
-      return user.state.username
+      return this.$store.state.current.username
     },
     owerACL() {
       return {
