@@ -1,15 +1,18 @@
 <template>
   <div class="bsc-user">
     <Button type="primary"
+            style="marginRight:5px"
             v-show="canCreateSub"
             @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
     <Button type="primary"
             v-show="canCreateUser"
+            style="marginRight:5px"
             @click="openCreateUserModal">{{$t("USER.CREATE_USER")}}</Button>
     <Button type="primary"
             v-show="canBindUser"
+            style="marginRight:5px"
             @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
-    <Input v-if="userList.length > 0"
+    <Input v-if="userList.length>0"
            v-model="searchUserInput"
            @on-change="handleSearchUser"
            placeholder="search here"
@@ -182,6 +185,7 @@ import {
   getListAllUser,
   getListSubUser,
   getListSubAcl,
+  postRemoveUser,
 } from 'api/user'
 import { checkRole } from 'helper'
 
@@ -305,7 +309,7 @@ export default {
           },
         ],
       },
-      userHeader: checkRole('LIST_USERS')
+      userHeader: checkRole('WRITE_USER')
         ? [
             {
               title: 'User name',
@@ -321,7 +325,7 @@ export default {
             },
             {
               title: 'Email',
-              width: 200,
+              width: 250,
               align: 'left',
               key: 'email',
             },
@@ -342,27 +346,46 @@ export default {
             {
               title: 'Actions',
               key: 'actions',
-              width: 100,
-              align: 'left',
+              width: 150,
+              align: 'center',
               render: (h, params) => {
-                return h(
-                  'i-button',
-                  {
-                    props: {
-                      size: 'small',
-                    },
-                    on: {
-                      click: () => {
-                        this.unbindUserConfirm(params.row, params.index)
+                return [
+                  h(
+                    'i-button',
+                    {
+                      props: {
+                        size: 'small',
+                      },
+                      style: {
+                        marginRight: '5px',
+                      },
+                      on: {
+                        click: () => {
+                          this.unbindUserConfirm(params.row, params.index)
+                        },
                       },
                     },
-                  },
-                  'Unbind',
-                )
+                    'Unbind',
+                  ),
+                  h(
+                    'i-button',
+                    {
+                      props: {
+                        size: 'small',
+                      },
+                      on: {
+                        click: () => {
+                          this.removeUserConfirm(params.row, params.index)
+                        },
+                      },
+                    },
+                    'Remove',
+                  ),
+                ]
               },
             },
           ]
-        : checkRole('SUB')
+        : checkRole('LIST_USERS')
           ? [
               {
                 title: 'User name',
@@ -371,35 +394,16 @@ export default {
                 key: 'username',
               },
               {
-                title: 'Type',
-                width: 120,
+                title: 'Company',
+                width: 200,
                 align: 'left',
-                key: 'type',
+                key: 'company',
               },
               {
                 title: 'Email',
                 width: 200,
                 align: 'left',
                 key: 'email',
-              },
-              {
-                title: 'Acl',
-                width: 350,
-                align: 'left',
-                key: 'acl',
-                render: (h, params) => {
-                  return params.row.acl.length > 0
-                    ? params.row.acl.map((acl) => {
-                        return h(
-                          'Tag',
-                          { props: { type: 'border' } },
-                          `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
-                            acl.file_acl
-                          }`,
-                        )
-                      })
-                    : h('Tag', 'No acl')
-                },
               },
               {
                 title: 'Creation time',
@@ -421,99 +425,168 @@ export default {
                 width: 100,
                 align: 'left',
                 render: (h, params) => {
-                  return h('div', [
-                    h(
-                      'i-button',
-                      {
-                        props: {
-                          size: 'small',
-                        },
-                        class: {
-                          'mar-r-5': true,
-                        },
-                        on: {
-                          click: () => {
-                            this.editSubUserModal(params.row, params.index)
-                          },
+                  return h(
+                    'i-button',
+                    {
+                      props: {
+                        size: 'small',
+                      },
+                      on: {
+                        click: () => {
+                          this.unbindUserConfirm(params.row, params.index)
                         },
                       },
-                      [
-                        h('Icon', {
-                          props: {
-                            type: 'compose',
-                            size: this.iconSize,
-                          },
-                        }),
-                      ],
-                    ),
-                  ])
+                    },
+                    'Unbind',
+                  )
                 },
               },
             ]
-          : [
-              {
-                title: 'User name',
-                width: 150,
-                align: 'left',
-                key: 'username',
-              },
-              {
-                title: 'Email',
-                width: 250,
-                align: 'left',
-                key: 'email',
-              },
-              {
-                title: 'Creation time',
-                width: 200,
-                align: 'left',
-                render: (h, params) => {
-                  let creationTime = new Date(
-                    parseInt(params.row.ts.toString().substr(0, 13)),
-                  )
-                  const formatTime = moment(creationTime).format(
-                    'YYYY-MM-DD hh:mm:ss',
-                  )
-                  return h('div', [formatTime])
+          : checkRole('SUB') && checkRole('WRITE_USER', true)
+            ? [
+                {
+                  title: 'User name',
+                  width: 150,
+                  align: 'left',
+                  key: 'username',
                 },
-              },
-              {
-                title: 'Acl',
-                width: 350,
-                align: 'left',
-                key: 'acl',
-                render: (h, params) => {
-                  return params.row.acl.length > 0
-                    ? params.row.acl.map((acl) => {
-                        return h(
-                          'Tag',
-                          { props: { type: 'border' } },
-                          `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
-                            acl.file_acl
-                          }`,
-                        )
-                      })
-                    : h('Tag', 'No acl')
+                {
+                  title: 'Email',
+                  width: 200,
+                  align: 'left',
+                  key: 'email',
                 },
-              },
-            ],
+                {
+                  title: 'Acl',
+                  width: 350,
+                  align: 'left',
+                  key: 'acl',
+                  render: (h, params) => {
+                    return params.row.acl.length > 0
+                      ? params.row.acl.map((acl) => {
+                          return h(
+                            'Tag',
+                            { props: { type: 'border' } },
+                            `${acl.bucket} - bucket: ${
+                              acl.bucket_acl
+                            } - file: ${acl.file_acl}`,
+                          )
+                        })
+                      : h('Tag', 'No acl')
+                  },
+                },
+                {
+                  title: 'Creation time',
+                  width: 200,
+                  align: 'left',
+                  render: (h, params) => {
+                    let creationTime = new Date(
+                      parseInt(params.row.ts.toString().substr(0, 13)),
+                    )
+                    const formatTime = moment(creationTime).format(
+                      'YYYY-MM-DD hh:mm:ss',
+                    )
+                    return h('div', [formatTime])
+                  },
+                },
+                {
+                  title: 'Actions',
+                  key: 'actions',
+                  width: 100,
+                  align: 'left',
+                  render: (h, params) => {
+                    return h('div', [
+                      h(
+                        'i-button',
+                        {
+                          props: {
+                            size: 'small',
+                          },
+                          class: {
+                            'mar-r-5': true,
+                          },
+                          on: {
+                            click: () => {
+                              this.editSubUserModal(params.row, params.index)
+                            },
+                          },
+                        },
+                        [
+                          h('Icon', {
+                            props: {
+                              type: 'compose',
+                              size: this.iconSize,
+                            },
+                          }),
+                        ],
+                      ),
+                    ])
+                  },
+                },
+              ]
+            : [
+                {
+                  title: 'User name',
+                  width: 150,
+                  align: 'left',
+                  key: 'username',
+                },
+                {
+                  title: 'Email',
+                  width: 200,
+                  align: 'left',
+                  key: 'email',
+                },
+                {
+                  title: 'Acl',
+                  width: 350,
+                  align: 'left',
+                  key: 'acl',
+                  render: (h, params) => {
+                    return params.row.acl.length > 0
+                      ? params.row.acl.map((acl) => {
+                          return h(
+                            'Tag',
+                            { props: { type: 'border' } },
+                            `${acl.bucket} - bucket: ${
+                              acl.bucket_acl
+                            } - file: ${acl.file_acl}`,
+                          )
+                        })
+                      : h('Tag', 'No acl')
+                  },
+                },
+                {
+                  title: 'Creation time',
+                  width: 200,
+                  align: 'left',
+                  render: (h, params) => {
+                    let creationTime = new Date(
+                      parseInt(params.row.ts.toString().substr(0, 13)),
+                    )
+                    const formatTime = moment(creationTime).format(
+                      'YYYY-MM-DD hh:mm:ss',
+                    )
+                    return h('div', [formatTime])
+                  },
+                },
+              ],
     }
   },
   watched: {},
   computed: {
     canCreateUser() {
-      return this.state.manager.length > 0
-        ? this.state.manager[0].perms.includes('WRITE_USER') &&
-            checkRole('CREATE_USER')
+      return this.$store.state.manager.length
+        ? checkRole('WRITE_USER', true) && checkRole('CREATE_USER')
         : checkRole('CREATE_USER')
     },
     canCreateSub() {
-      return this.state.manager.length > 0
-        ? this.state.manager[0].perms.includes('WRITE_USER') && checkRole('SUB')
+      return this.$store.state.manager.length
+        ? checkRole('WRITE_USER', true) && checkRole('SUB')
         : checkRole('SUB')
     },
     canCreatePerms() {
-      return this.state ? this.state.current.can_create_perms : []
+      return this.$store.state ? this.$store.state.current.can_create_perms : []
     },
     canUseSSOType() {
       return checkRole('BIND_USER') || checkRole('LIST_USERS')
@@ -529,8 +602,9 @@ export default {
     async getUserList() {
       this.$Loading.start()
       this.spinShow = true
-      this.customer =
-        this.state.manager.length > 0 ? this.$store.state.current.username : ''
+      this.customer = this.$store.state.manager.length
+        ? this.$store.state.current.username
+        : ''
       try {
         if (checkRole('LIST_USERS')) {
           await getListBoundUser(this.customer).then((res) => {
@@ -540,14 +614,12 @@ export default {
           this.$store.dispatch('setBaseInfo', {
             users: this.userList,
           })
+          this.$Loading.finish()
         } else if (checkRole('SUB')) {
           const [users, bucket] = [
             await getListSubUser(this.customer),
             (await this.$store.getters.buckets) || [],
           ]
-          await this.$store.dispatch('setBaseInfo', {
-            users: users,
-          })
           this.bucketList = bucket
           let buckets = await Promise.all(
             bucket.map((bucket) => {
@@ -556,9 +628,8 @@ export default {
               })
             }),
           )
-          this.userList = await _.each(users, (user) => {
+          this.userList = _.each(users, (user) => {
             user.acl = []
-            user.type = this.userType(user)
             _.each(buckets, (bucket) => {
               _.each(bucket.acl, (acl) => {
                 if (
@@ -576,6 +647,9 @@ export default {
                 }
               })
             })
+          })
+          this.$store.dispatch('setBaseInfo', {
+            users: users,
           })
           this.$Loading.finish()
         }
@@ -644,21 +718,42 @@ export default {
         await Promise.all(
           this.boundUserList.map((userinfo) => {
             if (userinfo.selected) {
-              postBindUser({ username: userinfo.username }).then(
-                this.$Message.success('bind succssed!'),
-              )
+              postBindUser({ username: userinfo.username }).then((res) => {
+                this.$Message.success('bind succssed!')
+                this.searchedUserList = [res, ...this.userList]
+              })
             }
           }),
         ).then()
         this.searchBindUserInput = ''
         this.boundUserList = []
         this.searchUserInput = ''
-        this.getUserList()
         this.$Loading.finish()
       } catch (error) {
         this.$Loading.error()
       }
     },
+    /*** just for test ***/
+    removeUserConfirm(user, index) {
+      this.$Modal.confirm({
+        content: `确定要删除 ${user.username} 账号吗？`,
+        okText: this.$t('PUBLIC.CONFIRMED'),
+        cancelText: this.$t('PUBLIC.CANCLE'),
+        title: 'Remove',
+        onOk: () => this.removeBindUser(user, index),
+      })
+    },
+    removeBindUser(userinfo) {
+      postRemoveUser({ username: userinfo.username }, this.customer).then(
+        () => {
+          this.searchBindUserInput = ''
+          this.boundUserList = []
+          this.searchUserInput = ''
+          this.getUserList()
+        },
+      )
+    },
+    /******    *****/
     unbindUserConfirm(user, index) {
       this.$Modal.confirm({
         content: this.$t('STORAGE.UNBIND_CONFIRMED', {
@@ -687,10 +782,12 @@ export default {
           this.createUserForm.sso_type = parseInt(this.createUserForm.sso_type)
           try {
             await postCreateUser({ ...this.createUserForm }, this.customer)
-            await postBindUser(
-              { username: this.createUserForm.username },
-              this.customer,
-            )
+            checkRole('BIND_USER')
+              ? await postBindUser(
+                  { username: this.createUserForm.username },
+                  this.customer,
+                )
+              : ''
             this.createUserForm = {
               username: '',
               email: '',
@@ -836,10 +933,6 @@ export default {
       }
       this.isEditSubUser = false
     },
-    userType() {
-      // 需要判断 是否是 sub 子账号
-      return this.$t('USER.SUB_USER')
-    },
   },
 }
 const initSubUser = (acls) => {
@@ -857,15 +950,6 @@ const initSubUser = (acls) => {
     ],
   }
 }
-
-// const isSuper = () => {
-//   const userInfo = this.state.subUser
-//     ? this.state.subUserList.filter(
-//         (item) => item.username === this.state.subUser.username,
-//       )
-//     : undefined
-//   return userInfo && userInfo[0].info.user === 'super'
-// }
 
 const convertBucketList = (user, bucketList) => {
   if (user.acl.length !== bucketList.length) {

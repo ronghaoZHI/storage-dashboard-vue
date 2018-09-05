@@ -28,7 +28,6 @@ export function getListSubUser(customer) {
     method: 'get',
   })
 }
-// user/list/sub_acl?bucket=xxx&customer=xxx
 export function getListSubAcl(customer, bucket) {
   return request(group('user/list/sub_acl', customer, bucket), {
     method: 'get',
