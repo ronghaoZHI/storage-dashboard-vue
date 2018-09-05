@@ -10,14 +10,12 @@ module.exports = {
       .set('api', resolve('src/api'))
       .set('helper', resolve('src/service/Helper.js'))
       .set('querystring', 'querystring-browser')
-    config.optimization.splitChunks({ chunks: 'all' })
     config.output.chunkFilename('[name].bundle.js')
 
     config.when(
       process.env.NODE_ENV === 'production',
       (config) => config.output.chunkFilename('[contenthash].bundle.js'),
       (config) => config.performance.hints(false),
-      (config) => config.optimization.splitChunks({ chunks: 'all' }),
     )
   },
   devServer: {

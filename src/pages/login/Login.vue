@@ -348,7 +348,7 @@ export default {
 .@{css-prefix}login {
   .wh(100%, 100%);
   .fb(center, center);
-  background: url('../../assets/login-bg.png') no-repeat;
+  background: #a1c2d0 no-repeat;
   background-size: cover;
 
   .card-login {
