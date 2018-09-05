@@ -137,7 +137,7 @@ const convertGrants = (grants) => {
         convertPermission(gropItemsDefault[0], grant.Permission)
         gropItemsDefault[0].GranteeOrigin = grant.Grantee
       } else if (
-        grant.Grantee.Type === 'CanonicalUser' ||
+        grant.Grantee.Type === 'Group' &&
         (grant.Grantee.URI &&
           grant.Grantee.URI ===
             'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')

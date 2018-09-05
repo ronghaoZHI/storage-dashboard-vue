@@ -193,7 +193,7 @@ Vue.filter('userType', (Grantee) => {
   ) {
     return 'All Users'
   } else if (
-    Grantee.Type === 'CanonicalUser' ||
+    Grantee.Type === 'Group' &&
     (Grantee.URI &&
       Grantee.URI === 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
   ) {

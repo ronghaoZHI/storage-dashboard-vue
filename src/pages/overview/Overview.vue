@@ -865,7 +865,7 @@ export default {
             )
           }
         } else if (
-          grant.Grantee.Type === 'CanonicalUser' ||
+          grant.Grantee.Type === 'Group' &&
           (grant.Grantee.URI &&
             grant.Grantee.URI ===
               'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')

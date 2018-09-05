@@ -151,7 +151,7 @@
             <tr v-for="(item,index) in UserACLList"
                 :key="item.Grantee.ID">
               <td>
-                {{item.Grantee | userType}}
+                {{item.Grantee.ID}}
               </td>
               <td>
                 <Checkbox :disabled="owner == item.Grantee.ID"
@@ -797,7 +797,7 @@ const convertGrants = (grants) => {
       ) {
         convertPermission(gropItemsDefault[0], grant.Permission)
       } else if (
-        grant.Grantee.Type === 'CanonicalUser' ||
+        grant.Grantee.Type === 'Group' &&
         (grant.Grantee.URI &&
           grant.Grantee.URI ===
             'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
