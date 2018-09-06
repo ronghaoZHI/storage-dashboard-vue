@@ -55,7 +55,16 @@ export function getCookie(name) {
 }
 
 export function checkRole(role, checkManager = false) {
-  const perm = checkManager ? store.state.manager[0].perms : store.state.perms
+  function checkManagerFunc() {
+    if (store.state.manager.length > 0) {
+      return store.state.manager[0].perms
+    } else {
+      createAlert('无 Manager 字段')
+      return false
+    }
+  }
+
+  const perm = checkManager ? checkManagerFunc() : store.state.perms
   if (Array.isArray(perm) && typeof role === 'string') {
     return perm.includes(role)
   } else if (Array.isArray(perm) && Array.isArray(role)) {
