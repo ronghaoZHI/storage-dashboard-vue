@@ -3,7 +3,6 @@ import { HOST } from './HOST'
 import AWS from 'aws-sdk'
 import { getAccesskey } from 'api/login'
 import store from '@/store'
-import { checkRole } from 'helper'
 import { logout, isSSOLogin } from '@/service/Helper'
 
 let awsKey = {}
@@ -14,11 +13,12 @@ export const getKey = async () => {
   awsKey = store.state.keys[0]
   return !isSSOLogin
     ? logout('Login status is invalid')
-    : (awsKey = checkRole('LIST_USERS')
-        ? (awsKey = store.state.keys[0])
-        : awsKey && awsKey.accesskey
-          ? awsKey
-          : getAccesskey().then((res) => (awsKey = res[0])))
+    : (awsKey =
+        store.getters.mode === 'manage'
+          ? (awsKey = store.state.keys[0])
+          : awsKey && awsKey.accesskey
+            ? awsKey
+            : getAccesskey().then((res) => (awsKey = res[0])))
 }
 
 export const config = async ({

@@ -36,11 +36,7 @@ router.beforeEach((to, from, next) => {
       store.state.token
         ? next(
             !from.name && !to.name
-              ? {
-                  path: checkRole('SUB', store.getters.mode === 'manage')
-                    ? '/bucket'
-                    : '/overview',
-                }
+              ? { path: checkRole('SUB') ? '/bucket' : '/overview' }
               : {},
           )
         : redirectToLogin(to, next)

@@ -70,7 +70,6 @@
 </template>
 <script>
 import Vue from 'vue'
-import { BOUND_USER } from '@/service/API'
 import { repassword } from 'api/login'
 import { clear } from '@/service/Aws'
 import { logout, getCookie, createCookie } from 'helper'
@@ -100,7 +99,8 @@ export default {
     uname() {
       const _state = this.$store.state
       if (this.$store.getters.mode === 'manage' && _state.current) {
-        return _state.manager[0]
+        return _state.manager[0] &&
+          _state.manager[0].username !== _state.current.username
           ? `${_state.manager[0].username} -- ${_state.current.username}`
           : _state.current.username
       } else {
@@ -124,11 +124,9 @@ export default {
       } else if (name === 'rePasssword') {
         this.rePasswordModal = true
       } else if (name === 'selectSubUser') {
-        let res = await this.$http.get(BOUND_USER)
-        this.$store.dispatch('setBaseInfo', { users: res })
         await clear()
-        const bundUserPath = '/login'
-        this.$router.push(bundUserPath)
+        await this.$store.dispatch('cleanState')
+        this.$router.push('login')
       }
     },
     getCDNUrl() {

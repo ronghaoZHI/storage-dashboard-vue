@@ -117,7 +117,7 @@
 <script>
 import { loginByUsername, getAccesskey, getUserInfo } from 'api/login'
 import { getSSOLoginUrl } from 'api/sso'
-import { BOUND_USER } from '@/service/API'
+import { getListSubUser, getListBoundUser } from 'api/user'
 import { checkRole } from 'helper'
 import store from '@/store'
 import Vue from 'vue'
@@ -162,6 +162,10 @@ export default {
         return this.$store.state.users || []
       },
       set() {},
+    },
+    isSub() {
+      const currentPerms = this.$store.state.current.perms
+      return currentPerms === null || currentPerms.length === 0
     },
     isLogin: {
       get() {
@@ -228,7 +232,7 @@ export default {
           perms: res.perms,
         })
         .then(() => {
-          checkRole('LIST_USERS')
+          checkRole(['LIST_USERS', 'SUB'])
             ? this.adminMode(res)
             : checkRole('OPS')
               ? this.toIndex(res, '/system/group')
@@ -238,7 +242,9 @@ export default {
     async adminMode(data) {
       await this.$store.dispatch('setToken', data.token)
       this.$http.defaults.headers.common['Authorization'] = data.token
-      let res = await this.$http.get(BOUND_USER)
+      let res = checkRole('LIST_USERS')
+        ? await getListBoundUser()
+        : await getListSubUser()
       if (res.length > 0) {
         this.subUserList = res
         this.searchedSubUserList = res
@@ -265,27 +271,30 @@ export default {
       const _state = this.$store.state
       await this.$store.dispatch('setBaseInfo', {
         current: user,
-        manager: [_state.current],
+        manager: [..._state.manager, _state.current],
+        perms: user.perms || [],
       })
       const keys = await getAccesskey(user.username)
-      this.switchUser({ perms: user.perms, keys })
+      await this.$store.dispatch('setBaseInfo', {
+        keys,
+      })
+      this.switchUser()
     },
     async toIndex(data, router = '/overview') {
-      await this.$store.dispatch('setUserInfo', data)
+      await this.$store.dispatch('setBaseInfo', data)
       await this.$store.dispatch('setToken', data.token)
       this.$http.defaults.headers.common['Authorization'] = data.token
       await this.$store.dispatch('cleanState')
 
-      let redirect = this.$route.query.redirect // get redirect path
-      redirect ? this.$router.push(redirect) : this.$router.push(router)
+      this.$router.push(this.isSub ? '/bucket' : router)
       Vue.config.lang = this.lang
     },
-    async switchUser(data, router = '/overview') {
-      await this.$store.dispatch('setBaseInfo', data)
+    async switchUser(data = {}, router = '/overview') {
+      Object.keys(data).length > 0 &&
+        (await this.$store.dispatch('setBaseInfo', data))
       await this.$store.dispatch('cleanState')
 
-      let redirect = this.$route.query.redirect // get redirect path
-      redirect ? this.$router.push(redirect) : this.$router.push(router)
+      this.$router.push(this.isSub ? '/bucket' : router)
       Vue.config.lang = this.lang
     },
     changeLang(lang) {
@@ -320,6 +329,12 @@ export default {
       localStorage.setItem('keepEmail', this.keepEmail)
     },
     async toUserMange() {
+      const _state = this.$store.state
+      _state.manager.length > 0 &&
+        (await this.$store.dispatch('setBaseInfo', {
+          current: _state.manager[0],
+          perms: _state.manager[0].perms,
+        }))
       const keys = await getAccesskey(this.$store.state.current.username)
       await this.$store.dispatch('setBaseInfo', { keys: keys })
       await this.$store.dispatch('cleanState')

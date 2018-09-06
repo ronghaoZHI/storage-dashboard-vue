@@ -131,7 +131,6 @@ const store = new Vuex.Store({
       state = _state
     },
     LOGOUT(state) {
-      sessionStorage.removeItem('user')
       sessionStorage.removeItem('store')
       sessionStorage.removeItem('token')
       state.token = ''
