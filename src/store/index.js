@@ -42,7 +42,7 @@ const hasPermission = (role, route) => {
 
 const getRole = () => {
   // if user's type is subuser, 'user.state.perm'.length === 0
-  const perm = store ? store.state.perms : []
+  const perm = store ? store.state.perms || [] : []
   if (Array.isArray(perm)) {
     return perm.length > 0 ? perm : ['SUBUSER']
   } else {
@@ -136,6 +136,7 @@ const store = new Vuex.Store({
       state.token = ''
       state.manager = []
       state.keys = []
+      state.users = []
       Object.keys(state.current).forEach((k) => Vue.delete(state.current, k))
     },
     ADD_ERROR_LOG: (state, log) => {

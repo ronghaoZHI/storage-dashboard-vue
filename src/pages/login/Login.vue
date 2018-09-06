@@ -229,7 +229,7 @@ export default {
         .dispatch('setBaseInfo', {
           current: res,
           token: res.token,
-          perms: res.perms,
+          perms: res.perms || [],
         })
         .then(() => {
           checkRole(['LIST_USERS', 'SUB'])

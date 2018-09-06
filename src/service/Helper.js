@@ -64,7 +64,7 @@ export function checkRole(role, checkManager = false) {
     }
   }
 
-  const perm = checkManager ? checkManagerFunc() : store.state.perms
+  const perm = checkManager ? checkManagerFunc() : store.state.perms || []
   if (Array.isArray(perm) && typeof role === 'string') {
     return perm.includes(role)
   } else if (Array.isArray(perm) && Array.isArray(role)) {
