@@ -241,6 +241,7 @@ export default {
     },
     async adminMode(data) {
       await this.$store.dispatch('setToken', data.token)
+      this.$store.dispatch('setBaseInfo', { manager: [data] })
       this.$http.defaults.headers.common['Authorization'] = data.token
       let res = checkRole('LIST_USERS')
         ? await getListBoundUser()
