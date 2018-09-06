@@ -60,7 +60,7 @@ export function checkRole(role, checkManager = false) {
       return store.state.manager[0].perms
     } else {
       createAlert('无 Manager 字段')
-      return false
+      return []
     }
   }
 

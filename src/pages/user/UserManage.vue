@@ -12,7 +12,7 @@
             v-show="canBindUser"
             style="marginRight:5px"
             @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
-    <Input v-if="userList.length>0"
+    <Input v-if="userList.length"
            v-model="searchUserInput"
            @on-change="handleSearchUser"
            placeholder="search here"
@@ -193,7 +193,6 @@ export default {
   data() {
     return {
       self: this,
-      state: this.$store.state,
       userList: [],
       searchUserInput: '',
       customer: '',
@@ -586,7 +585,9 @@ export default {
         : checkRole('SUB')
     },
     canCreatePerms() {
-      return this.$store.state ? this.$store.state.current.can_create_perms : []
+      return this.$store.state
+        ? this.$store.state.current.can_create_perms || []
+        : []
     },
     canUseSSOType() {
       return checkRole('BIND_USER') || checkRole('LIST_USERS')
@@ -720,7 +721,7 @@ export default {
             if (userinfo.selected) {
               postBindUser({ username: userinfo.username }).then((res) => {
                 this.$Message.success('bind succssed!')
-                this.searchedUserList = [res, ...this.userList]
+                this.searchedUserList = [res, ...this.searchedUserList]
               })
             }
           }),
