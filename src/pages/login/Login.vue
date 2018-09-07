@@ -3,7 +3,7 @@
        @keyup.enter="loginSubmit('loginForm')">
     <div class="card-login">
       <div class="tab-login"
-           v-if="isLogin">
+           v-if="!showSelectUser">
         <div class="header">
           <img src="../../assets/logo.png"
                alt="logo" />
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="tab-register"
-           v-if="!isLogin">
+           v-if="showSelectUser">
         <div class="header">
           <img src="../../assets/logo.png"
                alt="logo" />
@@ -167,13 +167,9 @@ export default {
       const currentPerms = this.$store.state.current.perms
       return currentPerms === null || currentPerms.length === 0
     },
-    isLogin: {
+    showSelectUser: {
       get() {
-        if (Object.keys(this.$store.state.current).length === 0) {
-          return true
-        } else {
-          return !this.$store.getters.mode === 'manage'
-        }
+        return this.$store.getters.mode === 'manage'
       },
       set() {},
     },
@@ -249,7 +245,7 @@ export default {
       if (res.length > 0) {
         this.subUserList = res
         this.searchedSubUserList = res
-        this.isLogin = false
+        this.showSelectUser = false
         this.$store.dispatch('setBaseInfo', {
           users: res,
         })

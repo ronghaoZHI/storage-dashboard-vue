@@ -9,7 +9,7 @@ const codeMessage = {
   202: '一个请求已经进入后台排队（异步任务）',
   204: '删除数据成功。',
   400: '发出的请求有错误，服务器没有进行新建或修改数据,的操作。',
-  401: '抱歉，您貌似还没有登录',
+  401: '抱歉，貌似您的登录信息有误 不存在的记录，服务器没有进行操作',
   403: '抱歉，您没有权限访问该页面',
   404: '发出的请求针对的是不存在的记录，服务器没有进行操作',
   406: '请求的格式不可得。',
@@ -35,7 +35,6 @@ const xml2json = (data) => {
 
 export default function createError(responseError) {
   let [code, errorMsg, response] = ['', '', {}]
-
   // 请求已经发送，并且服务器有返回
   if (responseError.response || responseError.status) {
     response = responseError.response || responseError
@@ -54,7 +53,7 @@ export default function createError(responseError) {
           realBody.error_message ||
           realBody.msg ||
           realBody.description
-        const errorCode = realBody.code || realBody.code
+        const errorCode = realBody.code
 
         if (msg) {
           errorMsg = msg
@@ -113,10 +112,12 @@ export default function createError(responseError) {
       codeMessage[code] || response.statusText || `抱歉，当前请求异常(${code})`
   }
 
-  sentMessage(errorMsg, responseError)
+  sentMessage(errorMsg, responseError.data || responseError)
   iView.Notice.error({
-    title: `请求错误 ${code}`,
-    desc: errorMsg,
+    title: '请求错误',
+    render: (h) => {
+      return h('span', [codeMessage[code], h('p', `// ${errorMsg}`)])
+    },
   })
 
   const error = new Error(errorMsg)
