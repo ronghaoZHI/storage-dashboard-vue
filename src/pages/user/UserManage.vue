@@ -1,29 +1,57 @@
 <template>
   <div class="bsc-user">
     <Button type="primary"
-            style="marginRight:5px"
+            style="marginRight:2px"
             v-show="canCreateSub"
             @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
     <Button type="primary"
             v-show="canCreateUser"
-            style="marginRight:5px"
+            style="marginRight:2px"
             @click="openCreateUserModal">{{$t("USER.CREATE_USER")}}</Button>
     <Button type="primary"
             v-show="canBindUser"
-            style="marginRight:5px"
+            style="marginRight:2px"
             @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
-    <Input v-if="userList.length"
+    <Input v-if="userList.length || subUserList.length"
            v-model="searchUserInput"
            @on-change="handleSearchUser"
            placeholder="search here"
            style="width:300px" />
     <Table class="table"
-           :show-header="true"
-           :stripe="true"
-           :context="self"
-           :columns="userHeader"
-           :data="searchedUserList"
-           :no-data-text="$t('USER.NO_USER')"></Table>
+      v-if="!canShowTab"
+      :show-header="true"
+      :stripe="true"
+      :context="self"
+      :columns="userHeader"
+      :data="searchedUserList"
+      :no-data-text="$t('USER.NO_USER')"></Table>
+    <Tabs size="small"
+          v-model="tabName"
+          v-if="canShowTab"
+          @on-click="tabChange"
+          style="marginTop:10px"
+          :animated="false">
+      <Tab-pane :label="$t('USER.SUB_USER_MANAGE')"
+                name="subUser">
+        <Table class="table"
+              :show-header="true"
+              :stripe="true"
+              :context="self"
+              :columns="subUserHeader"
+              :data="searchedSubUserList"
+              :no-data-text="$t('USER.NO_USER')"></Table>
+      </Tab-pane>
+      <Tab-pane :label="$t('USER.USER_MANAGE')"
+                name="user">
+         <Table class="table"
+              :show-header="true"
+              :stripe="true"
+              :context="self"
+              :columns="userHeader"
+              :data="searchedUserList"
+              :no-data-text="$t('USER.NO_USER')"></Table>
+      </Tab-pane>
+     </Tabs>
     <Modal v-model="createUserModal"
            :title="$t('USER.CREATE_USER')"
            @on-ok="createUser"
@@ -193,9 +221,14 @@ export default {
   data() {
     return {
       self: this,
+      subUserList: [],
       userList: [],
+      tabName: 'subUser',
+      activeName: '',
+      passiveNames: [],
       searchUserInput: '',
       customer: '',
+      searchedSubUserList: [],
       searchedUserList: [],
       boundUserList: [],
       bucketList: [],
@@ -308,6 +341,136 @@ export default {
           },
         ],
       },
+      subUserHeader:
+        checkRole('SUB') && checkRole('WRITE_USER', true)
+          ? [
+              {
+                title: 'User name',
+                width: 150,
+                align: 'left',
+                key: 'username',
+              },
+              {
+                title: 'Email',
+                width: 200,
+                align: 'left',
+                key: 'email',
+              },
+              {
+                title: 'Acl',
+                width: 350,
+                align: 'left',
+                key: 'acl',
+                render: (h, params) => {
+                  return params.row.acl.length > 0
+                    ? params.row.acl.map((acl) => {
+                        return h(
+                          'Tag',
+                          { props: { type: 'border' } },
+                          `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
+                            acl.file_acl
+                          }`,
+                        )
+                      })
+                    : h('Tag', 'No acl')
+                },
+              },
+              {
+                title: 'Creation time',
+                width: 200,
+                align: 'left',
+                render: (h, params) => {
+                  let creationTime = new Date(
+                    parseInt(params.row.ts.toString().substr(0, 13)),
+                  )
+                  const formatTime = moment(creationTime).format(
+                    'YYYY-MM-DD hh:mm:ss',
+                  )
+                  return h('div', [formatTime])
+                },
+              },
+              {
+                title: 'Actions',
+                key: 'actions',
+                width: 100,
+                align: 'left',
+                render: (h, params) => {
+                  return h('div', [
+                    h(
+                      'i-button',
+                      {
+                        props: {
+                          size: 'small',
+                        },
+                        class: {
+                          'mar-r-5': true,
+                        },
+                        on: {
+                          click: () => {
+                            this.editSubUserModal(params.row, params.index)
+                          },
+                        },
+                      },
+                      [
+                        h('Icon', {
+                          props: {
+                            type: 'compose',
+                            size: this.iconSize,
+                          },
+                        }),
+                      ],
+                    ),
+                  ])
+                },
+              },
+            ]
+          : [
+              {
+                title: 'User name',
+                width: 150,
+                align: 'left',
+                key: 'username',
+              },
+              {
+                title: 'Email',
+                width: 200,
+                align: 'left',
+                key: 'email',
+              },
+              {
+                title: 'Acl',
+                width: 350,
+                align: 'left',
+                key: 'acl',
+                render: (h, params) => {
+                  return params.row.acl.length > 0
+                    ? params.row.acl.map((acl) => {
+                        return h(
+                          'Tag',
+                          { props: { type: 'border' } },
+                          `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
+                            acl.file_acl
+                          }`,
+                        )
+                      })
+                    : h('Tag', 'No acl')
+                },
+              },
+              {
+                title: 'Creation time',
+                width: 200,
+                align: 'left',
+                render: (h, params) => {
+                  let creationTime = new Date(
+                    parseInt(params.row.ts.toString().substr(0, 13)),
+                  )
+                  const formatTime = moment(creationTime).format(
+                    'YYYY-MM-DD hh:mm:ss',
+                  )
+                  return h('div', [formatTime])
+                },
+              },
+            ],
       userHeader: checkRole('WRITE_USER')
         ? [
             {
@@ -384,7 +547,8 @@ export default {
               },
             },
           ]
-        : checkRole('LIST_USERS')
+        : checkRole('LIST_USERS') ||
+          (checkRole('READ_USER') && checkRole('BIND_USER', true))
           ? [
               {
                 title: 'User name',
@@ -574,13 +738,20 @@ export default {
   },
   watched: {},
   computed: {
+    canShowTab() {
+      return checkRole('SUB') && checkRole('READ_USER')
+    },
     canCreateUser() {
-      return this.$store.state.manager.length
+      return this.$store.state.manager &&
+        this.$store.state.manager[0].username !==
+          this.$store.state.current.username
         ? checkRole('WRITE_USER', true) && checkRole('CREATE_USER')
         : checkRole('CREATE_USER')
     },
     canCreateSub() {
-      return this.$store.state.manager.length
+      return this.$store.state.manager &&
+        this.$store.state.manager[0].username !==
+          this.$store.state.current.username
         ? checkRole('WRITE_USER', true) && checkRole('SUB')
         : checkRole('SUB')
     },
@@ -593,7 +764,11 @@ export default {
       return checkRole('BIND_USER') || checkRole('LIST_USERS')
     },
     canBindUser() {
-      return checkRole('BIND_USER')
+      return this.$store.state.manager &&
+        this.$store.state.manager[0].username !==
+          this.$store.state.current.username
+        ? checkRole('READ_USER', true) && checkRole('READ_USER')
+        : checkRole('READ_USER')
     },
   },
   created() {
@@ -603,9 +778,12 @@ export default {
     async getUserList() {
       this.$Loading.start()
       this.spinShow = true
-      this.customer = this.$store.state.manager.length
-        ? this.$store.state.current.username
-        : ''
+      this.customer =
+        this.$store.state.manager &&
+        this.$store.state.manager[0].username !==
+          this.$store.state.current.username
+          ? this.$store.state.current.username
+          : ''
       try {
         if (checkRole('LIST_USERS')) {
           await getListBoundUser(this.customer).then((res) => {
@@ -629,7 +807,7 @@ export default {
               })
             }),
           )
-          this.userList = _.each(users, (user) => {
+          this.subUserList = _.each(users, (user) => {
             user.acl = []
             _.each(buckets, (bucket) => {
               _.each(bucket.acl, (acl) => {
@@ -654,6 +832,7 @@ export default {
           })
           this.$Loading.finish()
         }
+        this.searchedSubUserList = this.subUserList
         this.searchedUserList = this.userList
         this.spinShow = false
       } catch (error) {
@@ -670,7 +849,7 @@ export default {
         this.spinShow = true
         let [allUser, boundUser] = await Promise.all([
           getListAllUser(),
-          getListBoundUser(),
+          getListBoundUser(this.customer),
         ])
         let boundUserEmailList = []
         _.each(boundUser, (user) => {
@@ -690,7 +869,7 @@ export default {
     },
     handleSearchUser() {
       if (!this.searchUserInput) {
-        this.searchedUserList = this.userList
+        this.searchedUserList = this.userList || this.subUserList
         return
       }
       let searchArr = this.searchUserInput.split('')
@@ -714,18 +893,22 @@ export default {
       )
     },
     async bindUser() {
+      this.passiveNames = []
+      this.activeName = this.$store.state.current.username
       this.$Loading.start()
       try {
-        await Promise.all(
-          this.boundUserList.map((userinfo) => {
-            if (userinfo.selected) {
-              postBindUser({ username: userinfo.username }).then((res) => {
-                this.$Message.success('bind succssed!')
-                this.searchedUserList = [res, ...this.searchedUserList]
-              })
-            }
-          }),
-        ).then()
+        this.boundUserList.map((userinfo) => {
+          if (userinfo.selected) {
+            this.passiveNames = [...this.passiveNames, userinfo.username]
+          }
+        })
+        await postBindUser({
+          active_name: this.activeName,
+          passive_names: this.passiveNames,
+        }).then((res) => {
+          this.searchedUserList = [...res, ...this.searchedUserList]
+          this.$Message.success('bind succssed!')
+        })
         this.searchBindUserInput = ''
         this.boundUserList = []
         this.searchUserInput = ''
@@ -813,18 +996,19 @@ export default {
       })
     },
     openCreateSubUserModal() {
+      const acls = subUserAcls(
+        this.bucketList.map((bucket) => {
+          return {
+            bucket: bucket.Name,
+            bucket_acl_obj: { READ: false, WRITE: false },
+            file_acl_obj: { READ: false },
+          }
+        }),
+      )
       _.extend(this, {
         isEditSubUser: false,
         createSubUserModal: true,
-        createSubUserForm: initSubUser(
-          this.bucketList.map((bucket) => {
-            return {
-              bucket: bucket.Name,
-              bucket_acl_obj: { READ: false, WRITE: false },
-              file_acl_obj: { READ: false },
-            }
-          }),
-        ),
+        createSubUserForm: { ...this.createSubUserForm, ...acls },
       })
     },
     async createSubUser() {
@@ -866,7 +1050,6 @@ export default {
             company: '',
           }
           this.searchUserInput = ''
-          this.getUserList()
           this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
         } catch (error) {
           this.$Message.error(this.$t('USER.CREATE_SUB_ERROR'))
@@ -934,14 +1117,13 @@ export default {
       }
       this.isEditSubUser = false
     },
+    tabChange() {
+      return ''
+    },
   },
 }
-const initSubUser = (acls) => {
+const subUserAcls = (acls) => {
   return {
-    username: '',
-    email: '',
-    password: '',
-    company: '',
     acl: acls || [
       {
         bucket: '',
