@@ -211,9 +211,8 @@ export default {
             this.setBaseInfo(res)
             this.$Loading.finish()
           },
-          (error) => {
+          () => {
             this.$Loading.error()
-            this.$Message.error(error)
           },
         )
       } else {
