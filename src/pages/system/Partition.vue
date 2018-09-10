@@ -198,15 +198,15 @@ import detailModal from './detailModal'
 import bytes from 'bytes'
 import { thousands } from '@/service/BucketService'
 import {
-  PARTITION_IDC_LIST,
-  PARTITION_USED_LIST,
-  PARTITION_USED_DETAIL,
-  PARTITION_UNUSED_LIST,
-  PARTITION_DELETED_LIST,
-  PARTITION_USED_MOVE,
-  PARTITION_USED_SET,
-  PARTITION_USED_DELETED,
-} from '@/service/API'
+  getPartitionIdcList,
+  getPartitionUsedList,
+  getPartitionUsedDetail,
+  getPartitionUnusedList,
+  getPartitionDeletedList,
+  postPartitionUsedMove,
+  postPartitionUsedSet,
+  postPartitionUsedDelete,
+} from 'api/system'
 export default {
   components: {
     partitionCard,
@@ -647,7 +647,7 @@ export default {
       this.spinContent = true
       this.$Loading.start()
       try {
-        let listData = await this.$http.get(PARTITION_IDC_LIST)
+        let listData = await getPartitionIdcList()
         this.idcList = Object.entries(listData).map((item) => {
           let objItem = {}
           objItem.idc = item[0]
@@ -670,9 +670,7 @@ export default {
         const params = {
           partition_id: id,
         }
-        this.usedDetail = await this.$http.get(PARTITION_USED_DETAIL, {
-          params,
-        })
+        this.usedDetail = await getPartitionUsedDetail(params)
         this.spinGroup = false
         this.$Loading.finish()
       } catch (error) {
@@ -684,7 +682,6 @@ export default {
       this.spinContent = true
       this.$Loading.start()
       try {
-        const listURL = PARTITION_USED_LIST
         const params = {
           order_by: this.showChart,
           idc: this.search.idc,
@@ -695,7 +692,7 @@ export default {
           page: this.pageCount,
           count: 20,
         }
-        let listData = await this.$http.get(listURL, { params })
+        let listData = await getPartitionUsedList(params)
         this.partitionList = listData.partition || []
         this.partitionList.map((item) => {
           item.disabled = false
@@ -715,7 +712,6 @@ export default {
       this.spinContent = true
       this.$Loading.start()
       try {
-        const listURL = PARTITION_UNUSED_LIST
         const params = {
           idc: this.search.idc,
           media_type: this.search.media_type,
@@ -735,7 +731,7 @@ export default {
           page: this.pageCount,
           count: 20,
         }
-        let unusedData = await this.$http.get(listURL, { params })
+        let unusedData = await getPartitionUnusedList(params)
         this.unusedList = unusedData.partition || []
         this.listNum = unusedData.total_count || 0
         this.pageTotal = unusedData.total_count
@@ -753,8 +749,7 @@ export default {
       this.spinContent = true
       this.$Loading.start()
       try {
-        const listURL = PARTITION_DELETED_LIST
-        let deletedData = await this.$http.get(listURL)
+        let deletedData = await getPartitionDeletedList()
         this.deletedList = typeof deletedData === 'string' ? [] : deletedData
         this.spinContent = false
         this.$Loading.finish()
@@ -807,7 +802,7 @@ export default {
           read_only: newValue,
           partition_id: this.partitionList[index].partition_id,
         }
-        await this.$http.post(PARTITION_USED_SET, params)
+        await postPartitionUsedSet(params)
         this.partitionList[index].readonly = newValue
         this.spinShow = false
         this.$Loading.finish()
@@ -826,7 +821,7 @@ export default {
         let params = {
           partition_id: this.partitionList[index].partition_id,
         }
-        await this.$http.post(PARTITION_USED_MOVE, params)
+        await postPartitionUsedMove(params)
         this.partitionList[index].disabled = true
         this.spinShow = false
         this.$Loading.finish()
@@ -853,7 +848,7 @@ export default {
         let params = {
           partition_id: this.partitionList[index].partition_id,
         }
-        await this.$http.post(PARTITION_USED_DELETED, params)
+        await postPartitionUsedDelete(params)
         this.partitionList[index].disabled = true
         this.spinShow = false
         this.$Loading.finish()

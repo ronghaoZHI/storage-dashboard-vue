@@ -9,35 +9,6 @@ const groupTranscoder = (url) =>
   HTTP_VERSION + HOST.transcoderHOST + VERSION_TRANSCODER + url
 const groupImgx = (url) => HTTP_VERSION + HOST.imgxHOST + url
 
-export const REDIRECT_BUCKET = group('superuser/redirect/bucket')
-export const NODE = group('node/list')
-export const PARTITION = group('list/partition')
-export const SUB_USER = group('user/list/sub')
-export const CREATE_SUB_USER = group('user/create/sub_user')
-export const SUB_USER_ACL = group('user/list/sub_acl')
-export const UPDATE_SUB_USER_ACL = group('user/update/sub_acl')
-export const CREATE_USER = group('user/create/user')
-export const BOUND_USER = group('user/list/bound_user')
-export const ALL_USER = group('user/list/user')
-export const BIND_USER = group('user/bind/user')
-export const UNBIND_USER = group('user/unbind/user')
-
-export const GROUP_LIST = group('group/list')
-export const GROUP_MOVE = group('group/move')
-export const GROUP_READ_ONLY = group('group/read_only')
-
-export const TRAFFIC_LIST = group('traffic/list')
-
-export const PARTITION_IDC_LIST = group('partition/used/stats')
-export const PARTITION_USED_DETAIL = group('partition/used/detail')
-export const PARTITION_USED_LIST = group('partition/used/list')
-export const PARTITION_USED_SET = group('partition/used/set')
-export const PARTITION_USED_MOVE = group('partition/used/move')
-export const PARTITION_USED_DELETED = group('partition/used/delete')
-export const PARTITION_UNUSED_LIST = group('partition/unused/list')
-export const PARTITION_UNUSED_ADD = group('partition/unused/add')
-export const PARTITION_DELETED_LIST = group('partition/deleted/list')
-
 export const FETCH_404 = group('retrieve')
 export const ACCESS_LIST = group('access')
 

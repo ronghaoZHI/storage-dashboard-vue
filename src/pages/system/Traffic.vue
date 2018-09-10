@@ -52,7 +52,7 @@
   </div>
 </template>
 <script>
-import { TRAFFIC_LIST } from '@/service/API'
+import { getTrafficList } from 'api/system'
 import legendList from '@/components/legend/legend'
 export default {
   components: {
@@ -185,7 +185,7 @@ export default {
       this.spinShow = true
       this.$Loading.start()
       try {
-        let trafficData = await this.$http.get(TRAFFIC_LIST)
+        let trafficData = await getTrafficList()
         this.trafficListAll = this.convert2Front(trafficData)
         if (!isRefresh) this.trafficList = this.trafficListAll
         this.spinShow = false

@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import { PARTITION_UNUSED_ADD } from '@/service/API'
+import { postPartitionUsedAdd } from 'api/system'
 import { bytes } from '@/service/BucketService'
 export default {
   props: ['data'],
@@ -46,7 +46,7 @@ export default {
     async unusedAdd(index) {
       this.$Loading.start()
       try {
-        await this.$http.post(PARTITION_UNUSED_ADD, {
+        await postPartitionUsedAdd({
           ip: this.data[index].ips[0],
           path: this.data[index].path,
         })

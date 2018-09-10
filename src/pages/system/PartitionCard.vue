@@ -84,10 +84,10 @@
 import detailModal from './detailModal'
 import { bytes, thousands } from '@/service/BucketService'
 import {
-  PARTITION_USED_MOVE,
-  PARTITION_USED_SET,
-  PARTITION_USED_DELETED,
-} from '@/service/API'
+  postPartitionUsedMove,
+  postPartitionUsedSet,
+  postPartitionUsedDelete,
+} from 'api/system'
 
 export default {
   components: { detailModal },
@@ -244,7 +244,7 @@ export default {
           read_only: newWrite ? 0 : 1,
           partition_id: this.myData.partition_id,
         }
-        await this.$http.post(PARTITION_USED_SET, params)
+        await postPartitionUsedSet(params)
         this.spinShow = false
         this.$Loading.finish()
         this.$Message.success(this.$t('SYSTEM.SUCCESS'))
@@ -262,7 +262,7 @@ export default {
         let params = {
           partition_id: this.myData.partition_id,
         }
-        await this.$http.post(PARTITION_USED_MOVE, params)
+        await postPartitionUsedMove(params)
         this.waitingCard = 'bsc-waiting-card'
         this.spinShow = false
         this.$Loading.finish()
@@ -289,7 +289,7 @@ export default {
         let params = {
           partition_id: this.myData.partition_id,
         }
-        await this.$http.post(PARTITION_USED_DELETED, params)
+        await postPartitionUsedDelete(params)
         this.myData.is_del = 1
         this.waitingCard = 'bsc-waiting-card'
         this.spinShow = false

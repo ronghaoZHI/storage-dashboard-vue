@@ -93,7 +93,7 @@
   </div>
 </template>
 <script>
-import { GROUP_MOVE, GROUP_READ_ONLY } from '@/service/API'
+import { postGroupMove, postGroupReadOnly } from 'api/system'
 import { bytes, thousands } from '@/service/BucketService'
 import detailModal from './detailModal'
 export default {
@@ -181,7 +181,7 @@ export default {
     async migrate(partition) {
       try {
         this.$Loading.start()
-        await this.$http.post(GROUP_MOVE, {
+        await postGroupMove({
           group_id: this.data.group_id,
           src_partition_id: partition.partition_id,
         })
@@ -194,7 +194,7 @@ export default {
     async setReadOnly() {
       try {
         this.$Loading.start()
-        await this.$http.post(GROUP_READ_ONLY, {
+        await postGroupReadOnly({
           group_id: this.data.group_id,
         })
         this.data.readonly = 1

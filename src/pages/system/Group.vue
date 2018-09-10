@@ -131,7 +131,7 @@
   </div>
 </template>
 <script>
-import { GROUP_LIST } from '@/service/API'
+import { getGroupList } from 'api/system'
 import groupCard from './GroupCard'
 import legendList from '@/components/legend/legend'
 export default {
@@ -197,17 +197,15 @@ export default {
       try {
         this.spinShow = true
         this.$Loading.start()
-        let groupData = await this.$http.get(GROUP_LIST, {
-          params: {
-            start_group_id: isAppend
-              ? this.nextGroupId
-              : this.searchType === 'group_id' && !!this.searchValue
-                ? parseInt(this.searchValue.replace(/\s+/g, ''))
-                : 0,
-            [this.searchType]: this.searchValue.replace(/\s+/g, '') || 'ignore',
-            count: this.pageCount,
-            read_only: this.read_only,
-          },
+        let groupData = await getGroupList({
+          start_group_id: isAppend
+            ? this.nextGroupId
+            : this.searchType === 'group_id' && !!this.searchValue
+              ? parseInt(this.searchValue.replace(/\s+/g, ''))
+              : 0,
+          [this.searchType]: this.searchValue.replace(/\s+/g, '') || 'ignore',
+          count: this.pageCount,
+          read_only: this.read_only,
         })
         this.nextGroupId = groupData.next_group_id
         if (groupData.group) {

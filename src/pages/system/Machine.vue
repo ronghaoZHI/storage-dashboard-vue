@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import { NODE } from '@/service/API'
+import { getNodeList } from 'api/system'
 import machineCard from './MachineCard'
 export default {
   components: {
@@ -29,7 +29,7 @@ export default {
       this.spinShow = true
       this.$Loading.start()
       try {
-        this.machineList = await this.$http.get(NODE)
+        this.machineList = await getNodeList()
         this.spinShow = false
         this.$Loading.finish()
       } catch (error) {

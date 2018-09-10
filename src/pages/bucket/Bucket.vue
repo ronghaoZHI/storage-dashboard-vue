@@ -61,7 +61,7 @@ import { removeItemFromArray } from '@/service/BucketService'
 import moment from 'moment'
 import { checkRole } from 'helper'
 import store from '@/store'
-import { SUB_USER, REDIRECT_BUCKET } from '@/service/API'
+import { getListSubUser, postRedirectBucket } from 'api/user'
 
 export default {
   data() {
@@ -206,10 +206,10 @@ export default {
       })
     },
     async createRedirectBucket(newBucket) {
-      const subUsers = await this.$http.get(SUB_USER)
+      const subUsers = await getListSubUser()
       await Promise.all(
         Array.map(subUsers, (user) => {
-          return this.$http.post(REDIRECT_BUCKET, {
+          return postRedirectBucket({
             original: newBucket,
             email: user.email,
             redirect:
