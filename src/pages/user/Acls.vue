@@ -39,14 +39,12 @@ export default {
   name: 'Acls',
   props: {
     aclsData: {
-      acl: [],
+      type: Object,
+      default: function() {
+        return { acl: [] }
+      },
     },
   },
-  data() {
-    return {}
-  },
-  created: {},
-  methods: {},
 }
 </script>
 <style lang="less" scoped>
