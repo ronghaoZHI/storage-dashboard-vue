@@ -127,8 +127,7 @@
            :title="$t('USER.CREATE_SUB_USER')"
            ok-text="确定(请勿多次尝试)"
            @on-ok="createSubUser">
-      <div class="section-separator"
-           v-show="!isEditSubUser">
+      <div class="section-separator">
         <div class="separator-body">
           <span class="separator-icon"></span>
           <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
@@ -137,8 +136,7 @@
       <Form ref="createSubUserForm"
             :model="createSubUserForm"
             :rules="subUserRuleValidate"
-            :label-width="110" 
-            v-show="!isEditSubUser">
+            :label-width="110" >
         <Form-item :label="$t('USER.USER_NAME')"
                    prop="username">
           <Input v-model="createSubUserForm.username"
@@ -160,40 +158,13 @@
                  :placeholder="$t('USER.REQUIRE_COMPANY')" />
         </Form-item>
       </Form>
-      <div class="section-separator">
-        <div class="separator-body">
-          <span class="separator-icon"></span>
-          <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
-        </div>
-      </div>
-      <table class="table-bucket-acl">
-        <thead>
-          <tr>
-            <th>{{$t("USER.BUCKET_NAME")}}</th>
-            <th>{{$t("USER.BUCKET_PERMISSON")}}</th>
-            <th>{{$t("USER.FILE_PERMISSON")}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="createSubUserForm.acl.length === 0">
-            <td>No Buckets</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr v-else
-              v-for="row in createSubUserForm.acl"
-              :key="row.bucket">
-            <td>{{row.bucket}}</td>
-            <td>
-              <Checkbox v-model="row.bucket_acl_obj.READ">{{$t("USER.READ")}}</Checkbox>
-              <Checkbox v-model="row.bucket_acl_obj.WRITE">{{$t("USER.WRITE")}}</Checkbox>
-            </td>
-            <td>
-              <Checkbox v-model="row.file_acl_obj.READ">{{$t("USER.READ")}}</Checkbox>
-            </td>
-          </tr>
-        </tbody>
-      </table>   
+      <Acls :aclsData = subUserAclForm> </Acls>
+    </Modal>
+    <Modal v-model="openEditSubUserModal"
+           title="编辑子账号"
+           ok-text="确定(请勿多次尝试)"
+           @on-ok="editSubUser">
+      <Acls :aclsData = subUserAclForm> </Acls>
     </Modal>
     <Spin size="bigger"
           fix
@@ -201,6 +172,7 @@
   </div>
 </template>
 <script>
+import Acls from './Acls.vue'
 import createAlert from '@/service/createAlert'
 import moment from 'moment'
 import {
@@ -239,7 +211,10 @@ export default {
       searchBindUserInput: '',
       searchBindUserList: [],
       spinShow: true,
-      isEditSubUser: false,
+      openEditSubUserModal: false,
+      subUserAclForm: {
+        acl: [],
+      },
       iconSize: 18,
       createUserForm: {
         // default test_data
@@ -1067,102 +1042,88 @@ export default {
       })
     },
     openCreateSubUserModal() {
-      const acls = subUserAcls(
-        this.bucketList.map((bucket) => {
-          return {
-            bucket: bucket.Name,
-            bucket_acl_obj: { READ: false, WRITE: false },
-            file_acl_obj: { READ: false },
-          }
-        }),
-      )
-      _.extend(this, {
-        isEditSubUser: false,
-        createSubUserModal: true,
-        createSubUserForm: { ...this.createSubUserForm, ...acls },
-      })
+      this.createSubUserModal = true
+      this.subUserAclForm = initSubUserAcls(this.bucketList)
+      this.createSubUserForm = {
+        ...this.createSubUserForm,
+        ...this.subUserAclForm,
+      }
     },
     async createSubUser() {
-      if (this.isEditSubUser) {
-        this.editSubUser()
-      } else {
-        try {
-          this.$Loading.start()
-          let user = await postCreateSub(
-            { ...this.createSubUserForm },
-            this.customer,
-          ).then((res) => {
-            return (this.createSubUserForm = {
-              ...this.createSubUserForm,
-              ...res,
-            })
-          })
-          await Promise.all(
-            this.createSubUserForm.acl.map((bucket) => {
-              if (
-                convertObject2Array(bucket.bucket_acl_obj).length > 0 ||
-                convertObject2Array(bucket.file_acl_obj).length > 0
-              ) {
-                return postRedirectBucket(
-                  {
-                    original: bucket.bucket,
-                    username: user.username,
-                    redirect:
-                      bucket.bucket +
-                      '-' +
-                      user.username.replace(/\W|_/g, '').toLowerCase(),
-                    bucket_acl: convertObject2Array(bucket.bucket_acl_obj),
-                    file_acl: convertObject2Array(bucket.file_acl_obj),
-                  },
-                  this.customer,
-                )
-              }
-            }),
-          )
-          this.createSubUserForm = {
+      try {
+        this.$Loading.start()
+        let user = await postCreateSub(
+          { ...this.createSubUserForm },
+          this.customer,
+        ).then((res) => {
+          return (this.createSubUserForm = {
             ...this.createSubUserForm,
-            username: '',
-            email: '',
-            password: '',
-            company: '',
-          }
-          this.getUserList()
-          this.searchUserInput = ''
-          this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
-        } catch (error) {
-          this.$Message.error(this.$t('USER.CREATE_SUB_ERROR'))
-          this.$Loading.error()
+            ...res,
+          })
+        })
+        await Promise.all(
+          this.createSubUserForm.acl.map((bucket) => {
+            if (
+              convertObject2Array(bucket.bucket_acl_obj).length > 0 ||
+              convertObject2Array(bucket.file_acl_obj).length > 0
+            ) {
+              return postRedirectBucket(
+                {
+                  original: bucket.bucket,
+                  username: user.username,
+                  redirect:
+                    bucket.bucket +
+                    '-' +
+                    user.username.replace(/\W|_/g, '').toLowerCase(),
+                  bucket_acl: convertObject2Array(bucket.bucket_acl_obj),
+                  file_acl: convertObject2Array(bucket.file_acl_obj),
+                },
+                this.customer,
+              )
+            }
+          }),
+        )
+        this.createSubUserForm = {
+          ...this.createSubUserForm,
+          username: '',
+          email: '',
+          password: '',
+          company: '',
         }
+        this.getUserList()
+        this.searchUserInput = ''
+        this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
+      } catch (error) {
+        this.$Message.error(this.$t('USER.CREATE_SUB_ERROR'))
+        this.$Loading.error()
       }
     },
     editSubUserModal(user) {
-      _.extend(this, {
-        isEditSubUser: true,
-        createSubUserModal: true,
-        createSubUserForm:
-          user.acl.length > 0
-            ? convertBucketList(user, this.bucketList)
-            : _.extend(user, {
-                acl: this.bucketList.map((bucket) => {
-                  return {
-                    bucket: bucket.Name,
-                    bucket_acl_obj: { READ: false, WRITE: false },
-                    file_acl_obj: { READ: false },
-                    redirect: false,
-                  }
-                }),
-              }),
-      })
+      this.subUserAclForm = { ...initSubUserAcls(this.bucketList) }
+      this.openEditSubUserModal = true
+      user.acl.length > 0
+        ? (this.subUserAclForm = convertBucketList(user, this.bucketList))
+        : (this.subUserAclForm = {
+            ...user,
+            acl: this.bucketList.map((bucket) => {
+              return {
+                bucket: bucket.Name,
+                bucket_acl_obj: { READ: false, WRITE: false },
+                file_acl_obj: { READ: false },
+                redirect: false,
+              }
+            }),
+          })
     },
     async editSubUser() {
       try {
         this.$Loading.start()
         await Promise.all(
-          this.createSubUserForm.acl.map((acl) => {
+          this.subUserAclForm.acl.map((acl) => {
             return acl.redirect
               ? postUpdateSubAcl(
                   {
-                    username: this.createSubUserForm.username,
+                    username: this.subUserAclForm.username,
                     bucket: acl.bucket,
                     bucket_acl: convertObject2Array(acl.bucket_acl_obj),
                     file_acl: convertObject2Array(acl.file_acl_obj),
@@ -1171,12 +1132,12 @@ export default {
                 )
               : postRedirectBucket(
                   {
-                    username: this.createSubUserForm.username,
+                    username: this.subUserAclForm.username,
                     original: acl.bucket,
                     redirect:
                       acl.bucket +
                       '-' +
-                      this.createSubUserForm.username
+                      this.subUserAclForm.username
                         .replace(/\W|_/g, '')
                         .toLowerCase(),
                     bucket_acl: convertObject2Array(acl.bucket_acl_obj),
@@ -1193,14 +1154,24 @@ export default {
         this.$Message.error(this.$t('USER.UPDATE_SUB_ERROR'))
         this.$Loading.error()
       }
-      this.isEditSubUser = false
+      // this.isEditSubUser = false
     },
     tabChange() {
       return ''
     },
   },
+  components: {
+    Acls,
+  },
 }
-const subUserAcls = (acls) => {
+const initSubUserAcls = (bucketList = []) => {
+  const acls = bucketList.map((bucket) => {
+    return {
+      bucket: bucket.Name,
+      bucket_acl_obj: { READ: false, WRITE: false },
+      file_acl_obj: { READ: false },
+    }
+  })
   return {
     acl: acls || [
       {
