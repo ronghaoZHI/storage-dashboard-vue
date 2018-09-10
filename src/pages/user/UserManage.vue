@@ -342,136 +342,135 @@ export default {
           },
         ],
       },
-      subUserHeader:
-        checkRole('SUB') && checkRole('WRITE_USER', true)
-          ? [
-              {
-                title: 'User name',
-                width: 150,
-                align: 'left',
-                key: 'username',
+      subUserHeader: checkRole('SUB')
+        ? [
+            {
+              title: 'User name',
+              width: 150,
+              align: 'left',
+              key: 'username',
+            },
+            {
+              title: 'Email',
+              width: 200,
+              align: 'left',
+              key: 'email',
+            },
+            {
+              title: 'Acl',
+              width: 350,
+              align: 'left',
+              key: 'acl',
+              render: (h, params) => {
+                return params.row.acl.length > 0
+                  ? params.row.acl.map((acl) => {
+                      return h(
+                        'Tag',
+                        { props: { type: 'border' } },
+                        `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
+                          acl.file_acl
+                        }`,
+                      )
+                    })
+                  : h('Tag', 'No acl')
               },
-              {
-                title: 'Email',
-                width: 200,
-                align: 'left',
-                key: 'email',
+            },
+            {
+              title: 'Creation time',
+              width: 200,
+              align: 'left',
+              render: (h, params) => {
+                let creationTime = new Date(
+                  parseInt(params.row.ts.toString().substr(0, 13)),
+                )
+                const formatTime = moment(creationTime).format(
+                  'YYYY-MM-DD hh:mm:ss',
+                )
+                return h('div', [formatTime])
               },
-              {
-                title: 'Acl',
-                width: 350,
-                align: 'left',
-                key: 'acl',
-                render: (h, params) => {
-                  return params.row.acl.length > 0
-                    ? params.row.acl.map((acl) => {
-                        return h(
-                          'Tag',
-                          { props: { type: 'border' } },
-                          `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
-                            acl.file_acl
-                          }`,
-                        )
-                      })
-                    : h('Tag', 'No acl')
-                },
-              },
-              {
-                title: 'Creation time',
-                width: 200,
-                align: 'left',
-                render: (h, params) => {
-                  let creationTime = new Date(
-                    parseInt(params.row.ts.toString().substr(0, 13)),
-                  )
-                  const formatTime = moment(creationTime).format(
-                    'YYYY-MM-DD hh:mm:ss',
-                  )
-                  return h('div', [formatTime])
-                },
-              },
-              {
-                title: 'Actions',
-                key: 'actions',
-                width: 100,
-                align: 'left',
-                render: (h, params) => {
-                  return h('div', [
-                    h(
-                      'i-button',
-                      {
-                        props: {
-                          size: 'small',
-                        },
-                        class: {
-                          'mar-r-5': true,
-                        },
-                        on: {
-                          click: () => {
-                            this.editSubUserModal(params.row, params.index)
-                          },
+            },
+            {
+              title: 'Actions',
+              key: 'actions',
+              width: 100,
+              align: 'left',
+              render: (h, params) => {
+                return h('div', [
+                  h(
+                    'i-button',
+                    {
+                      props: {
+                        size: 'small',
+                      },
+                      class: {
+                        'mar-r-5': true,
+                      },
+                      on: {
+                        click: () => {
+                          this.editSubUserModal(params.row, params.index)
                         },
                       },
-                      [
-                        h('Icon', {
-                          props: {
-                            type: 'compose',
-                            size: this.iconSize,
-                          },
-                        }),
-                      ],
-                    ),
-                  ])
-                },
+                    },
+                    [
+                      h('Icon', {
+                        props: {
+                          type: 'compose',
+                          size: this.iconSize,
+                        },
+                      }),
+                    ],
+                  ),
+                ])
               },
-            ]
-          : [
-              {
-                title: 'User name',
-                width: 150,
-                align: 'left',
-                key: 'username',
+            },
+          ]
+        : [
+            {
+              title: 'User name',
+              width: 150,
+              align: 'left',
+              key: 'username',
+            },
+            {
+              title: 'Email',
+              width: 200,
+              align: 'left',
+              key: 'email',
+            },
+            {
+              title: 'Acl',
+              width: 350,
+              align: 'left',
+              key: 'acl',
+              render: (h, params) => {
+                return params.row.acl.length > 0
+                  ? params.row.acl.map((acl) => {
+                      return h(
+                        'Tag',
+                        { props: { type: 'border' } },
+                        `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
+                          acl.file_acl
+                        }`,
+                      )
+                    })
+                  : h('Tag', 'No acl')
               },
-              {
-                title: 'Email',
-                width: 200,
-                align: 'left',
-                key: 'email',
+            },
+            {
+              title: 'Creation time',
+              width: 200,
+              align: 'left',
+              render: (h, params) => {
+                let creationTime = new Date(
+                  parseInt(params.row.ts.toString().substr(0, 13)),
+                )
+                const formatTime = moment(creationTime).format(
+                  'YYYY-MM-DD hh:mm:ss',
+                )
+                return h('div', [formatTime])
               },
-              {
-                title: 'Acl',
-                width: 350,
-                align: 'left',
-                key: 'acl',
-                render: (h, params) => {
-                  return params.row.acl.length > 0
-                    ? params.row.acl.map((acl) => {
-                        return h(
-                          'Tag',
-                          { props: { type: 'border' } },
-                          `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
-                            acl.file_acl
-                          }`,
-                        )
-                      })
-                    : h('Tag', 'No acl')
-                },
-              },
-              {
-                title: 'Creation time',
-                width: 200,
-                align: 'left',
-                render: (h, params) => {
-                  let creationTime = new Date(
-                    parseInt(params.row.ts.toString().substr(0, 13)),
-                  )
-                  const formatTime = moment(creationTime).format(
-                    'YYYY-MM-DD hh:mm:ss',
-                  )
-                  return h('div', [formatTime])
-                },
-              },
-            ],
+            },
+          ],
       userHeader: checkRole('WRITE_USER')
         ? [
             {
@@ -641,7 +640,7 @@ export default {
                   },
                 },
               ]
-            : checkRole('SUB') && checkRole('WRITE_USER', true)
+            : checkRole('SUB')
               ? [
                   {
                     title: 'User name',
@@ -899,13 +898,13 @@ export default {
           getListAllUser(),
           getListBoundUser(this.customer),
         ])
-        let boundUserEmailList = []
+        let boundUserLists = []
         _.each(boundUser, (user) => {
-          boundUserEmailList.push(user.username)
+          boundUserLists.push(user.username)
         })
         _.each(allUser, (user) => {
           user.selected = false
-          if (boundUserEmailList.indexOf(user.username) >= 0) {
+          if (boundUserLists.indexOf(user.username) >= 0) {
             user.show = false
           } else {
             user.show = true
@@ -917,12 +916,23 @@ export default {
     },
     handleSearchUser() {
       if (!this.searchUserInput) {
-        this.searchedUserList = this.userList || this.subUserList
+        this.searchedUserList = this.userList
+        this.searchedSubUserList = this.subUserList
         return
       }
-      let searchArr = this.searchUserInput.split('')
+      this.searchedSubUserList = this.filterUser(
+        this.searchUserInput,
+        this.subUserList,
+      )
+      this.searchedUserList = this.filterUser(
+        this.searchUserInput,
+        this.userList,
+      )
+    },
+    filterUser(searchUserInput = [], list = []) {
+      let searchArr = searchUserInput.split('')
       let reg = new RegExp(searchArr.join('.*'))
-      this.searchedUserList = this.userList.filter(
+      return list.filter(
         (item) =>
           reg.test(item.email) ||
           reg.test(item.username) ||
@@ -953,10 +963,10 @@ export default {
         await postBindUser({
           active_name: this.activeName,
           passive_names: this.passiveNames,
-        }).then((res) => {
-          this.searchedUserList = [...res, ...this.searchedUserList]
+        }).then(() => {
           this.$Message.success('bind succssed!')
         })
+        this.getUserList()
         this.searchBindUserInput = ''
         this.boundUserList = []
         this.searchUserInput = ''
@@ -1022,7 +1032,10 @@ export default {
           try {
             this.activeName = this.$store.state.current.username
             this.passiveNames = [this.createUserForm.username]
-            await postCreateUser({ ...this.createUserForm }, this.customer)
+            await postCreateUser(
+              { ...this.createUserForm },
+              this.customer,
+            ).then()
             checkRole('BIND_USER')
               ? await postBindUser({
                   active_name: this.activeName,
@@ -1030,6 +1043,7 @@ export default {
                 })
               : ''
             this.createUserForm = {
+              ...this.createUserForm,
               username: '',
               email: '',
               password: '',
@@ -1038,8 +1052,8 @@ export default {
               perms: [],
               sso_type: '1',
             }
-            this.searchUserInput = ''
             this.getUserList()
+            this.searchUserInput = ''
             this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
             this.$Loading.finish()
           } catch (e) {
@@ -1077,7 +1091,12 @@ export default {
           let user = await postCreateSub(
             { ...this.createSubUserForm },
             this.customer,
-          )
+          ).then((res) => {
+            return (this.createSubUserForm = {
+              ...this.createSubUserForm,
+              ...res,
+            })
+          })
           await Promise.all(
             this.createSubUserForm.acl.map((bucket) => {
               if (
@@ -1101,6 +1120,7 @@ export default {
             }),
           )
           this.createSubUserForm = {
+            ...this.createSubUserForm,
             username: '',
             email: '',
             password: '',
