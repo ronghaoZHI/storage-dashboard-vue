@@ -1,15 +1,17 @@
 import { group } from './util'
 import request from '@/service/request'
 
-export function getNodeList() {
+export function getNodeList(params) {
   return request(group('node/list'), {
     method: 'get',
+    params,
   })
 }
 
-export function getGroupList() {
+export function getGroupList(params) {
   return request(group('group/list'), {
     method: 'get',
+    params,
   })
 }
 
@@ -27,15 +29,17 @@ export function postGroupReadOnly(params) {
   })
 }
 
-export function getTrafficList() {
+export function getTrafficList(params) {
   return request(group('traffic/list'), {
     method: 'get',
+    params,
   })
 }
 
-export function getPartitionIdcList() {
+export function getPartitionIdcList(params) {
   return request(group('partition/used/stats'), {
     method: 'get',
+    params,
   })
 }
 
@@ -46,9 +50,10 @@ export function getPartitionUnusedList(params) {
   })
 }
 
-export function getPartitionDeletedList() {
+export function getPartitionDeletedList(params) {
   return request(group('partition/deleted/list'), {
     method: 'get',
+    params,
   })
 }
 
@@ -59,9 +64,10 @@ export function getPartitionUsedDetail(params) {
   })
 }
 
-export function getPartitionUsedList() {
+export function getPartitionUsedList(params) {
   return request(group('partition/used/list'), {
     method: 'get',
+    params,
   })
 }
 
