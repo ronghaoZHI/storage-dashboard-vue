@@ -188,7 +188,7 @@ export default {
       })
     },
     rowClick(item) {
-      this.selectedBucket = this.selectedBucket === item ? {} : item
+      this.selectedBucket = item
     },
     async addBucket() {
       this.createBucketModal = false
