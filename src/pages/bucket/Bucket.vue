@@ -35,7 +35,6 @@
     <div class="bsc-flex-section">
       <div class="bucket"
            v-bind:class="{'bucket-selected': bucket.selected}"
-           v-cbutton
            v-for="bucket in bucketList"
            :key="bucket.Name"
            @click="rowClick(bucket)"
@@ -64,18 +63,6 @@ import userStore from '@/store/modules/user'
 import { SUB_USER, REDIRECT_BUCKET } from '@/service/API'
 
 export default {
-  directives: {
-    cbutton: {
-      bind: function(el) {
-        $(el).click(() => {
-          $(el).toggleClass('bucket-selected')
-          Array.from($(el).siblings()).forEach((node) => {
-            node !== el && $(node).removeClass('bucket-selected')
-          })
-        })
-      }
-    }
-  },
   data() {
     return {
       createBucketValue: '',
@@ -189,6 +176,9 @@ export default {
     },
     rowClick(item) {
       this.selectedBucket = item
+      this.bucketList.forEach(bucket => {
+        bucket.selected = bucket === item
+      })
     },
     async addBucket() {
       this.createBucketModal = false
