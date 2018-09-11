@@ -92,3 +92,44 @@ export function postPartitionUsedAdd(params) {
     params,
   })
 }
+
+export function postFetch404(data) {
+  return request(group('retrieve'), {
+    method: 'post',
+    data,
+  })
+}
+
+export function postAccessList(data) {
+  return request(group('access'), {
+    method: 'post',
+    data,
+  })
+}
+
+export function postAddService(data) {
+  return request(group('user/add/service'), {
+    method: 'post',
+    data,
+  })
+}
+
+export function getCustomDomain(url = '') {
+  return request(group(`custom_domain/${url}`), {
+    method: 'get',
+  })
+}
+
+export function deleteCustomDomain(url = '', data) {
+  return request(group(`custom_domain/${url}`), {
+    method: 'delete',
+    data,
+  })
+}
+
+export function postCustomDomain(url = '', data) {
+  return request(group(`custom_domain/${url}`), {
+    method: 'post',
+    data,
+  })
+}

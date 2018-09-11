@@ -352,7 +352,7 @@ import {
   getSS,
 } from '@/pages/video/data'
 import { handler } from '@/service/Aws'
-import { getTranscoderUrl } from '@/service/API'
+import { postTranscoderUrl } from 'api/bill'
 export default {
   data() {
     return {
@@ -715,7 +715,7 @@ export default {
       let saved = await this.convert2Save(this.job)
       try {
         this.$Loading.start()
-        await this.$http.post(getTranscoderUrl('jobs'), saved)
+        await postTranscoderUrl('jobs', saved)
         this.$Loading.finish()
         this.$Message.success(this.$t('VIDEO.CREATED'))
         this.$router.push({ name: 'job' })

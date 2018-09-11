@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { FETCH_404 } from '@/service/API'
+import { postFetch404 } from 'api/system'
 import legendList from '@/components/legend/legend'
 export default {
   components: { legendList },
@@ -385,7 +385,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        this.fetchRuleList = await this.$http.post(FETCH_404, rule)
+        this.fetchRuleList = await postFetch404(rule)
         this.$Loading.finish()
       } catch (error) {
         this.$Loading.error()
@@ -445,7 +445,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        await this.$http.post(FETCH_404, rule)
+        await postFetch404(rule)
         !isEdit
           ? this.$Message.success(this.$t('STORAGE.CREATE_SUCCESS'))
           : this.$Message.success(this.$t('STORAGE.SET_SUCCESS'))
@@ -467,7 +467,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        await this.$http.post(FETCH_404, rule)
+        await postFetch404(rule)
         const active = this.fetchRuleList[row._index].is_active
         if (this.fetchRuleList.length > 1) {
           this.fetchRuleList.forEach((value) => (value.is_active = 0))
@@ -524,7 +524,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        await this.$http.post(FETCH_404, rule)
+        await postFetch404(rule)
         this.fetchRuleList.splice(row._index, 1)
         this.$Loading.finish()
         this.$Message.success(this.$t('STORAGE.DELETE_SUCCESS'))

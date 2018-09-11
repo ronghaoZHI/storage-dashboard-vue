@@ -103,7 +103,7 @@
 
 <script>
 import store from '@/store'
-import { getTranscoderUrl } from '@/service/API'
+import { getTranscoderUrl, postTranscoderUrl, putTranscoderUrl } from 'api/bill'
 import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
   components: { fileAcl },
@@ -162,9 +162,7 @@ export default {
       if (this.pipelineId !== 'none') {
         try {
           this.$Loading.start()
-          let res = await this.$http.get(
-            getTranscoderUrl(`pipelines/${this.pipelineId}`),
-          )
+          let res = await getTranscoderUrl(`pipelines/${this.pipelineId}`)
           await this.convert2Front(res.Pipeline)
           this.$Loading.finish()
         } catch (error) {
@@ -239,14 +237,11 @@ export default {
       try {
         this.$Loading.start()
         if (this.pipelineId === 'none') {
-          await this.$http.post(getTranscoderUrl('pipelines'), params)
+          await postTranscoderUrl('pipelines', params)
           this.$Loading.finish()
           this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
         } else {
-          await this.$http.put(
-            getTranscoderUrl(`pipelines/${this.pipelineId}`),
-            params,
-          )
+          await putTranscoderUrl(`pipelines/${this.pipelineId}`, params)
           this.$Loading.finish()
           this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
         }

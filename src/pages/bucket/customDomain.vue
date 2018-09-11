@@ -22,7 +22,11 @@
   </div>
 </template>
 <script>
-import { CUSTOM_DOMAIN } from '@/service/API'
+import {
+  deleteCustomDomain,
+  postCustomDomain,
+  getCustomDomain,
+} from 'api/system'
 export default {
   data() {
     return {
@@ -89,7 +93,7 @@ export default {
   methods: {
     async getList() {
       try {
-        let res = await this.$http.get(`${CUSTOM_DOMAIN}/${this.bucket}`)
+        let res = await getCustomDomain(`${this.bucket}`)
         this.listData = res.map((domain) => {
           return { domain }
         })
@@ -110,7 +114,7 @@ export default {
       })
     },
     async deleteDomain(row) {
-      await this.$http.delete(`${CUSTOM_DOMAIN}/${this.bucket}`, {
+      await deleteCustomDomain(`${this.bucket}`, {
         params: { custom_domain: row.domain },
       })
       this.listData.splice(row._index, 1)
@@ -118,7 +122,7 @@ export default {
     },
     async addDomain() {
       if (this.inputCheck) {
-        await this.$http.post(`${CUSTOM_DOMAIN}/${this.bucket}`, {
+        await postCustomDomain(`${this.bucket}`, {
           custom_domain: this.newDomain,
         })
         this.listData.push({ domain: this.newDomain })

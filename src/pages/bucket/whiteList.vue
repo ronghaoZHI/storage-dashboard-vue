@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import { ACCESS_LIST, ADD_SERVICE } from '@/service/API'
+import { postAddService, postAccessList } from 'api/system'
 import linkTable from './linkTable'
 export default {
   components: { linkTable },
@@ -70,7 +70,7 @@ export default {
         bucket: this.bucket,
       }
       try {
-        let listData = await this.$http.post(ACCESS_LIST, params)
+        let listData = await postAccessList(params)
         this.enabled = listData.enabled
         this.whiteList = []
         this.blackList = []
@@ -96,13 +96,13 @@ export default {
     async listEnabled() {
       if (this.enabled) {
         const params = { service: 'access_control' }
-        await this.$http.post(ADD_SERVICE, params)
+        await postAddService(params)
       }
       const params = {
         action: this.enabled ? 'enable' : 'disable',
         bucket: this.bucket,
       }
-      await this.$http.post(ACCESS_LIST, params)
+      await postAccessList(params)
     },
     async accessSet() {
       this.$Loading.start()
@@ -115,7 +115,7 @@ export default {
         bucket: this.bucket,
       }
       try {
-        await this.$http.post(ACCESS_LIST, params)
+        await postAccessList(params)
         this.$Loading.finish()
         this.$Message.success(this.$t('SETTINGS.SAVED'))
       } catch (error) {

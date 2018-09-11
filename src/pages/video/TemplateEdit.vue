@@ -325,7 +325,7 @@
 </template>
 <script>
 import { transcoder } from '@/service/Aws'
-import { getTranscoderUrl } from '@/service/API'
+import { putTranscoderUrl, postTranscoderUrl } from 'api/bill'
 
 export default {
   data() {
@@ -490,14 +490,11 @@ export default {
       try {
         this.$Loading.start()
         if (this.templateId === 'none') {
-          await this.$http.post(getTranscoderUrl('presets'), template)
+          await postTranscoderUrl('presets', template)
           this.$Message.success(this.$t('VIDEO.CREATED_SUCCESSFULLY'))
         } else {
           delete template.Id
-          await this.$http.put(
-            getTranscoderUrl(`presets/${this.templateId}`),
-            template,
-          )
+          await putTranscoderUrl(`presets/${this.templateId}`, template)
           this.$Message.success(this.$t('VIDEO.UPDATED_SUCCESSFULLY'))
         }
         this.$Loading.finish()

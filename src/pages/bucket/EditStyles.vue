@@ -559,7 +559,7 @@ import upload from '@/components/upload/upload'
 import styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview-bsc'
 import encoding from 'text-encoding'
-import { IMGX_PREVIEW } from '@/service/API'
+import { getImgxPreviewUrl } from 'api/bill'
 import bscBreadcrumb from '@/components/breadcrumb'
 import {
   allFontList,
@@ -1077,7 +1077,7 @@ const putOverlayFile = async (name, body) => {
   )
 }
 const getImgxUrl = (IS) => {
-  return IMGX_PREVIEW + IS + '/dashboard.jpg?' + Date.now()
+  return getImgxPreviewUrl + IS + '/dashboard.jpg?' + Date.now()
 }
 const general2Save = (data) => {
   let saved = {}

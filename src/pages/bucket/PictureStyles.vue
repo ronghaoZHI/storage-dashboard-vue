@@ -62,7 +62,7 @@ import { prefix, Utf8ArrayToStr } from '@/service/BucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
 import iView from 'iview-bsc'
-import { IMGX_PREVIEW } from '@/service/API'
+import { getImgxPreviewUrl } from 'api/bill'
 import bscBreadcrumb from '@/components/breadcrumb'
 export default {
   components: { upload, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item },
@@ -388,7 +388,8 @@ export default {
         })
         await Promise.all(promises)
       }
-      this.clipUrl = IMGX_PREVIEW + style.IS + '/dashboard.jpg?' + Date.now()
+      this.clipUrl =
+        getImgxPreviewUrl + style.IS + '/dashboard.jpg?' + Date.now()
       this.selectedStyleName = style.ruleName
       this.showImageModal = true
       this.$Loading.finish()
