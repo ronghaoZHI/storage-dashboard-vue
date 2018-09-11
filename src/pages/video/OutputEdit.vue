@@ -1018,7 +1018,6 @@ export default {
         null,
         undefined
       )
-
       if (!this.auxiliary.MP) {
         delete saved.master_playlist
       }
@@ -1092,10 +1091,10 @@ export default {
           } else {
             this.groupACLList[1] = item
           }
-          this.groupACLList = _.cloneDeep(this.groupACLList)
         } else {
           this.userACLList.push(item)
         }
+        if (this.groupACLList.length === 0) this.groupACLList = _.cloneDeep(groupACLListDefult)
       })
     },
     validateRegular(rule, value, callback) {
