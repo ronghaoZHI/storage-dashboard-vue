@@ -79,7 +79,7 @@ export default {
     },
     isSubUser() {
       return userStore.state.type === 'sub'
-    }
+    },
   },
   watch: {
     createBucketValue(to, from) {
@@ -119,7 +119,7 @@ export default {
       this.bucketList = _.forEach(this.bucketList, (item, index) => {
         item.selected = this.bucket ? item.Name === this.bucket : index === 0
       })
-      this.selectedBucket =
+      this.selectedBucket = this.$route.params.bucket && this.bucketList ? this.bucketList.filter(bucket => bucket.Name === this.$route.params.bucket)[0] :
         this.bucketList && this.bucketList.length > 0 ? this.bucketList[0] : {}
     },
     deleteBucketConfirm() {
