@@ -71,7 +71,7 @@ export default {
       inputCheck: false,
       bucketList: [],
       selectedBucket: {},
-      iconSize: 18
+      iconSize: 18,
     }
   },
   computed: {
@@ -85,7 +85,7 @@ export default {
   watch: {
     createBucketValue(to) {
       this.inputCheck = !(to.length >= 3)
-    }
+    },
   },
   created() {
     this.getBucketList()
@@ -103,7 +103,7 @@ export default {
                   grant.Permission === 'READ')
               ) {
                 item.CreationDate = moment(item.CreationDate).format(
-                  'YYYY-MM-DD HH:mm'
+                  'YYYY-MM-DD HH:mm',
                 )
                 this.bucketList.push(item)
               }
@@ -113,15 +113,21 @@ export default {
       } else {
         this.bucketList = _.forEach(buckets.Buckets, (item) => {
           item.CreationDate = moment(item.CreationDate).format(
-            'YYYY-MM-DD HH:mm'
+            'YYYY-MM-DD HH:mm',
           )
         })
       }
       this.bucketList = _.forEach(this.bucketList, (item, index) => {
         item.selected = this.bucket ? item.Name === this.bucket : index === 0
       })
-      this.selectedBucket = this.$route.params.bucket && this.bucketList ? this.bucketList.filter(bucket => bucket.Name === this.$route.params.bucket)[0] :
-        this.bucketList && this.bucketList.length > 0 ? this.bucketList[0] : {}
+      this.selectedBucket =
+        this.$route.params.bucket && this.bucketList
+          ? this.bucketList.filter(
+              (bucket) => bucket.Name === this.$route.params.bucket,
+            )[0]
+          : this.bucketList && this.bucketList.length > 0
+            ? this.bucketList[0]
+            : {}
     },
     deleteBucketConfirm() {
       const item = this.selectedBucket
@@ -130,7 +136,7 @@ export default {
         okText: this.$t('PUBLIC.CONFIRMED'),
         cancelText: this.$t('PUBLIC.CANCLE'),
         title: this.$t('PUBLIC.DELETE'),
-        onOk: () => this.deleteBucket(item)
+        onOk: () => this.deleteBucket(item),
       })
     },
     async deleteBucket(bucket) {
@@ -154,7 +160,7 @@ export default {
           document.querySelector('.bsc-flex-section').childNodes,
           (node) => {
             node.classList.remove('bucket-selected')
-          }
+          },
         )
         this.$Loading.finish()
       } catch (error) {
@@ -165,19 +171,19 @@ export default {
       const bucket = this.selectedBucket
       this.$router.push({
         name: 'bucketSettings',
-        params: { bucket: bucket.Name, tabName: 'permission' }
+        params: { bucket: bucket.Name, tabName: 'permission' },
       })
     },
     goPictureStyles() {
       const bucket = this.selectedBucket
       this.$router.push({
         name: 'pictureStyles',
-        params: { bucket: bucket.Name }
+        params: { bucket: bucket.Name },
       })
     },
     rowClick(item) {
       this.selectedBucket = item
-      this.bucketList.forEach(bucket => {
+      this.bucketList.forEach((bucket) => {
         bucket.selected = bucket === item
       })
     },
@@ -197,7 +203,7 @@ export default {
     dbClick(item) {
       this.$router.push({
         name: 'file',
-        params: { bucket: item.Name, prefix: 'noprefix' }
+        params: { bucket: item.Name, prefix: 'noprefix' },
       })
     },
     async getBucketAcl(name) {
@@ -217,12 +223,12 @@ export default {
               '-' +
               user.username.replace(/\W|_/g, '').toLowerCase(),
             bucket_acl: ['READ_ACP'],
-            file_acl: ['READ_ACP']
+            file_acl: ['READ_ACP'],
           })
-        })
+        }),
       )
-    }
-  }
+    },
+  },
 }
 
 const batchDeletion = (list, bucket) => {
@@ -230,9 +236,9 @@ const batchDeletion = (list, bucket) => {
     Array.map(list, function(item) {
       return handler('deleteObject', {
         Bucket: bucket,
-        Key: item.Key || item.Prefix
+        Key: item.Key || item.Prefix,
       })
-    })
+    }),
   )
 }
 </script>

@@ -151,7 +151,11 @@ const timesSpliteUnits = (t, digit = 1) => {
   return [number, units[exponent]]
 }
 const date = (value, type = 'YMD') => {
-  let date = new Date(moment(value).tz("Asia/Shanghai").format())
+  let date = new Date(
+    moment(value)
+      .tz('Asia/Shanghai')
+      .format(),
+  )
   let texts = [
     date.getFullYear(),
     checkDate(date.getMonth() + 1),
@@ -164,14 +168,22 @@ const date = (value, type = 'YMD') => {
 }
 
 const dateTime = (value) => {
-  let date = new Date(moment(value).tz("Asia/Shanghai").format())
+  let date = new Date(
+    moment(value)
+      .tz('Asia/Shanghai')
+      .format(),
+  )
   let dateTexts = [checkDate(date.getMonth() + 1), checkDate(date.getDate())]
   let timeTexts = [checkDate(date.getHours()), checkDate(date.getMinutes())]
   return dateTexts.join('-') + ' ' + timeTexts.join(':')
 }
 
 const dateTimeYear = (value) => {
-  let date = new Date(moment(value).tz("Asia/Shanghai").format())
+  let date = new Date(
+    moment(value)
+      .tz('Asia/Shanghai')
+      .format(),
+  )
   let dateTexts = [
     date.getFullYear(),
     checkDate(date.getMonth() + 1),

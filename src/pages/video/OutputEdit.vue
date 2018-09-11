@@ -1087,7 +1087,8 @@ export default {
         } else {
           this.userACLList.push(item)
         }
-        if (this.groupACLList.length === 0) this.groupACLList = _.cloneDeep(groupACLListDefult)
+        if (this.groupACLList.length === 0)
+          this.groupACLList = _.cloneDeep(groupACLListDefult)
       })
     },
     validateRegular(rule, value, callback) {
