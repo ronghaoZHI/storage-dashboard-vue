@@ -77,10 +77,11 @@ export default {
   },
   computed: {
     canShowPicture() {
-      return (
-        checkRole('IMGX') ||
-        (checkRole('IMGX') && checkRole('WRITE_USER', true))
-      )
+      return this.$store.state.manager.length &&
+        this.$store.state.manager[0].username !==
+          this.$store.state.current.username
+        ? checkRole('IMGX') && checkRole('WRITE_USER', true)
+        : checkRole('IMGX')
     },
     bucket() {
       return this.$route.params.bucket || ''
