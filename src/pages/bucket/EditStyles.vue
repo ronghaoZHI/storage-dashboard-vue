@@ -393,13 +393,13 @@
                   </div>
                   <!--font_size-->
                   <ColorPickerInput v-model="fontStyle.font_color"
-                                    style="display:inline" />{{fontStyle.font_color}}
+                                    style="display:inline" />
                   <!--fontColor-->
                 </div>
                 <div class="form-item">
                   <span class="form-label">{{$t("STORAGE.BACKGROUBD")}} : </span>
                   <ColorPickerInput v-model="fontStyle.background"
-                                    style="display:inline" />{{fontStyle.background}}
+                                    style="display:inline" />
                   <!--fontbackColor-->
                 </div>
                 <!--fontBack-->
