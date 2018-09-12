@@ -18,6 +18,7 @@
                  :disabled="!!selectedBucket.Name"
                  placement="top">
           <Button class="button-bsc-add-bucket"
+                  v-show=canShowPicture
                   :disabled="!selectedBucket.Name"
                   type="primary"
                   @click="goPictureStyles()">{{$t("STORAGE.PIC_STYLE")}}</Button>
@@ -75,6 +76,12 @@ export default {
     }
   },
   computed: {
+    canShowPicture() {
+      return (
+        checkRole('IMGX') ||
+        (checkRole('IMGX') && checkRole('WRITE_USER', true))
+      )
+    },
     bucket() {
       return this.$route.params.bucket || ''
     },
