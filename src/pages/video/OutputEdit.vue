@@ -50,8 +50,11 @@
       </div>
       <div class="form-item">
         <span class="form-label">{{$t('VIDEO.INPUT_BUCKET')}} : </span>
-        <Select v-model="inputBucket"
+        <Select :prepend="true"
+                v-model="inputBucket"
                 class="line-width">
+          <Icon slot="prepend"
+                type="ios-folder"></Icon>
           <Option v-for="bucket in bucketList"
                   :value="bucket"
                   :key="bucket">{{bucket}}</Option>
@@ -74,11 +77,14 @@
       </div>
       <div class="form-item">
         <span class="form-label">{{$t('VIDEO.OUTPUT_BUCKET')}} : </span>
-        <Select v-model="transcode.output_bucket"
+        <Select :prepend="true"
+                v-model="transcode.output_bucket"
                 class="line-width">
           <Option v-for="bucket in bucketList"
                   :value="bucket"
                   :key="bucket">{{bucket}}</Option>
+          <Icon slot="prepend"
+                type="ios-folder"></Icon>
         </Select>
       </div>
       <div class="form-item">
@@ -153,16 +159,18 @@
         <Input v-model="transcode.success_callback_url"
                :placeholder="$t('VIDEO.TRANSCODING_SUCCESSFUL_CALLBACK_URL')"
                class="line-width"
-               style="display:inline-table;" />
+               style="display:inline-table;">
         <span slot="prepend">http://</span>
+        </Input>
       </div>
       <div class="form-item">
         <span class="form-label">{{$t('VIDEO.TRANSCODING_FAILED_CALLBACK_URL')}} : </span>
         <Input v-model="transcode.failure_callback_url"
                :placeholder="$t('VIDEO.TRANSCODING_FAILED_CALLBACK_URL')"
                class="line-width"
-               style="display:inline-table;" />
+               style="display:inline-table;">
         <span slot="prepend">http://</span>
+        </Input>
       </div>
     </div>
     <div class="separator-line"></div>

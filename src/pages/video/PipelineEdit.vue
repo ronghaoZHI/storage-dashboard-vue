@@ -79,16 +79,18 @@
           <Input v-model="pipeline.SuccessCallbackUrl"
                  :placeholder="$t('VIDEO.ACCEPT_JOB_SUCCESS_CALLBACK_URL_INFO')"
                  class="line-width"
-                 style="display:inline-table;" />
-          <span slot="prepend">http://</span>
+                 style="display:inline-table;">
+            <span slot="prepend">http://</span>
+          </Input>
         </div>
         <div class="form-item">
           <span class="form-label">{{$t('VIDEO.ACCEPT_JOB_FAILURE_CALLBACK_URL')}} : </span>
           <Input v-model="pipeline.FailureCallbackUrl"
                  :placeholder="$t('VIDEO.ACCEPT_JOB_FAILURE_CALLBACK_URL_INFO')"
                  class="line-width"
-                 style="display:inline-table;" />
-          <span slot="prepend">http://</span>
+                 style="display:inline-table;">
+            <span slot="prepend">http://</span>
+          </Input>
         </div>
       </div>
       <div class="separator-line"></div>
