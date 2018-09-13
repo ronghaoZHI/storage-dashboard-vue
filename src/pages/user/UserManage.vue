@@ -318,7 +318,7 @@ export default {
         ],
       },
       subUserHeader:
-        checkRole('SUB') && checkRole('WRITE_USER', true)
+        checkRole('WRITE_USER', true) && checkRole('SUB')
           ? [
               {
                 title: 'User name',
@@ -867,9 +867,6 @@ export default {
         await getListSubUser(this.customer),
         (await this.$store.getters.buckets) || [],
       ]
-      this.$store.dispatch('setBaseInfo', {
-        users,
-      })
       this.bucketList = bucket
       let buckets = await Promise.all(
         bucket.map((bucket) => {
@@ -917,9 +914,18 @@ export default {
           this.searchedUserList = this.userList = await getListBoundUser(
             this.customer,
           )
+          this.$store.dispatch('setBaseInfo', {
+            ...this.subUserList,
+            ...this.userList.map((user) => {
+              return { ...user, type: 1 }
+            }),
+          })
           this.$Loading.finish()
         } else if (checkRole('SUB')) {
           this.searchedUserList = this.userList = await this.getSubUsersList()
+          this.$store.dispatch('setBaseInfo', {
+            ...this.userList,
+          })
           this.$Loading.finish()
         }
         this.spinShow = false

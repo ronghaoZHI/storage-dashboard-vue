@@ -98,7 +98,7 @@
                 <span class="info">
                   <Icon type="briefcase"></Icon> {{user.company}}</span>
                 <span class="icon"
-                      v-show="user.perm && user.perms.includes('SUB')">
+                      v-show="user.type && user.type===1">
                   <Icon type="star"></Icon>
                 </span>
               </div>
@@ -154,6 +154,7 @@ export default {
       },
       showPassword: false,
       searchSubUserInput: '',
+      searchedSubUserList: [],
     }
   },
   computed: {
@@ -173,15 +174,10 @@ export default {
       },
       set() {},
     },
-    searchedSubUserList: {
-      get() {
-        return this.$store.state.users || []
-      },
-      set() {},
-    },
   },
   mounted() {
     window.dashboard_conf.onlineMode === 'True' && this.saveToken()
+    this.searchedSubUserList = this.subUserList
   },
   methods: {
     async saveToken() {
@@ -240,7 +236,14 @@ export default {
       this.$http.defaults.headers.common['Authorization'] = data.token
       let res = checkRole('LIST_USERS')
         ? await getListBoundUser()
-        : await getListSubUser()
+        : checkRole('READ_USER')
+          ? [
+              ...(await getListSubUser()),
+              ...(await getListBoundUser().map((user) => {
+                return { ...user, type: 1 }
+              })),
+            ]
+          : await getListSubUser()
       if (res.length > 0) {
         this.subUserList = res
         this.searchedSubUserList = res
