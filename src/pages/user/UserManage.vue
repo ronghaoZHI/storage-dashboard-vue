@@ -418,6 +418,8 @@ export default {
                   title: 'Creation time',
                   width: 200,
                   align: 'left',
+                  sortable: true,
+                  key: 'ts',
                   render: (h, params) => {
                     let creationTime = new Date(
                       parseInt(params.row.ts.toString().substr(0, 13)),
@@ -499,6 +501,8 @@ export default {
                   title: 'Creation time',
                   width: 200,
                   align: 'left',
+                  sortable: true,
+                  key: 'ts',
                   render: (h, params) => {
                     let creationTime = new Date(
                       parseInt(params.row.ts.toString().substr(0, 13)),
@@ -553,6 +557,8 @@ export default {
               title: 'Creation time',
               width: 200,
               align: 'left',
+              sortable: true,
+              key: 'ts',
               render: (h, params) => {
                 let creationTime = new Date(
                   parseInt(params.row.ts.toString().substr(0, 13)),
@@ -630,6 +636,8 @@ export default {
                 title: 'Creation time',
                 width: 200,
                 align: 'left',
+                sortable: true,
+                key: 'ts',
                 render: (h, params) => {
                   let creationTime = new Date(
                     parseInt(params.row.ts.toString().substr(0, 13)),
@@ -687,6 +695,8 @@ export default {
                   title: 'Creation time',
                   width: 200,
                   align: 'left',
+                  sortable: true,
+                  key: 'ts',
                   render: (h, params) => {
                     let creationTime = new Date(
                       parseInt(params.row.ts.toString().substr(0, 13)),
@@ -735,6 +745,8 @@ export default {
                     title: 'Creation time',
                     width: 200,
                     align: 'left',
+                    sortable: true,
+                    key: 'ts',
                     render: (h, params) => {
                       let creationTime = new Date(
                         parseInt(params.row.ts.toString().substr(0, 13)),
@@ -816,6 +828,8 @@ export default {
                     title: 'Creation time',
                     width: 200,
                     align: 'left',
+                    sortable: true,
+                    key: 'ts',
                     render: (h, params) => {
                       let creationTime = new Date(
                         parseInt(params.row.ts.toString().substr(0, 13)),
