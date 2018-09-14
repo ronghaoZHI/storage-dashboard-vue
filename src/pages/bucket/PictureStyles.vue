@@ -62,7 +62,7 @@ import { prefix, Utf8ArrayToStr } from '@/service/BucketService'
 import { I2J, previewAccessKey, previewSecretKey } from './Consts'
 import upload from '@/components/upload/upload'
 import iView from 'iview-bsc'
-import { getImgxPreviewUrl } from 'api/bill'
+import { getImgxPreviewUrl } from 'api'
 import bscBreadcrumb from '@/components/breadcrumb'
 export default {
   components: { upload, bscBreadcrumb, bscBreadcrumbItem: bscBreadcrumb.Item },

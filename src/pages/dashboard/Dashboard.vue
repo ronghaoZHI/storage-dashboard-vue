@@ -223,7 +223,7 @@ import requests from '../../assets/dashboard/requests.svg'
 import requestsDark from '../../assets/dashboard/requests-dark.svg'
 import files from '../../assets/dashboard/files.svg'
 import filesDark from '../../assets/dashboard/files-dark.svg'
-import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from 'api/bill'
+import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from 'api'
 import store from '@/store'
 import { checkRole } from 'helper'
 import {

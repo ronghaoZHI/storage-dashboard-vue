@@ -70,7 +70,7 @@
 </template>
 <script>
 import Vue from 'vue'
-import { repassword } from 'api/login'
+import { repassword } from 'api'
 import { clear } from '@/service/Aws'
 import { logout, getCookie, createCookie } from 'helper'
 import store from '@/store'

@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import { postPartitionUsedAdd } from 'api/system'
+import { postPartitionUsedAdd } from 'api'
 import { bytes } from '@/service/BucketService'
 export default {
   props: ['data'],

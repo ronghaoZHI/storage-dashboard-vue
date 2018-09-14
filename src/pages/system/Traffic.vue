@@ -52,7 +52,7 @@
   </div>
 </template>
 <script>
-import { getTrafficList } from 'api/system'
+import { getTrafficList } from 'api'
 import legendList from '@/components/legend/legend'
 export default {
   components: {

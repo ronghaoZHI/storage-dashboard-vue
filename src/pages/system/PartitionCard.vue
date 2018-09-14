@@ -87,7 +87,7 @@ import {
   postPartitionUsedMove,
   postPartitionUsedSet,
   postPartitionUsedDelete,
-} from 'api/system'
+} from 'api'
 
 export default {
   components: { detailModal },

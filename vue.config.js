@@ -3,11 +3,11 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 module.exports = {
-  lintOnSave: false,
+  lintOnSave: true,
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@', resolve('src'))
-      .set('api', resolve('src/api'))
+      .set('api$', resolve('src/api/index.js'))
       .set('helper', resolve('src/service/Helper.js'))
       .set('querystring', 'querystring-browser')
     config.output.chunkFilename('[name].bundle.js')

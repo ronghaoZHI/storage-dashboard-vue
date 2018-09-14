@@ -105,7 +105,7 @@
 
 <script>
 import store from '@/store'
-import { getTranscoderUrl, postTranscoderUrl, putTranscoderUrl } from 'api/bill'
+import { getTranscoderUrl, postTranscoderUrl, putTranscoderUrl } from 'api'
 import fileAcl from '@/components/ACL/fileAcl.vue'
 export default {
   components: { fileAcl },

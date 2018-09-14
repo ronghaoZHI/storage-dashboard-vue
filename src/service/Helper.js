@@ -2,7 +2,7 @@ import store from '@/store'
 import iView from 'iview-bsc'
 import { clear } from '@/service/Aws'
 import router from '@/router'
-import { ssoLogout } from 'api/sso'
+import { ssoLogout } from 'api'
 import createAlert from './createAlert'
 
 export const logout = async (message) => {

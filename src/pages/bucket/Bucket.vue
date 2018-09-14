@@ -62,7 +62,7 @@ import { removeItemFromArray } from '@/service/BucketService'
 import moment from 'moment'
 import { checkRole } from 'helper'
 import store from '@/store'
-import { getListSubUser, postRedirectBucket } from 'api/user'
+import { getListSubUser, postRedirectBucket } from 'api'
 
 export default {
   data() {

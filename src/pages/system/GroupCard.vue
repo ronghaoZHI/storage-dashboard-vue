@@ -93,7 +93,7 @@
   </div>
 </template>
 <script>
-import { postGroupMove, postGroupReadOnly } from 'api/system'
+import { postGroupMove, postGroupReadOnly } from 'api'
 import { bytes, thousands } from '@/service/BucketService'
 import detailModal from './detailModal'
 export default {

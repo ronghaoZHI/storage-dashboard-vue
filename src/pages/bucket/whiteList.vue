@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import { postAddService, postAccessList } from 'api/system'
+import { postAddService, postAccessList } from 'api'
 import linkTable from './linkTable'
 export default {
   components: { linkTable },

@@ -325,7 +325,7 @@
 </template>
 <script>
 import { transcoder } from '@/service/Aws'
-import { putTranscoderUrl, postTranscoderUrl } from 'api/bill'
+import { putTranscoderUrl, postTranscoderUrl } from 'api'
 
 export default {
   data() {

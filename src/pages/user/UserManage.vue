@@ -187,7 +187,7 @@ import {
   getListSubUser,
   getListSubAcl,
   postRemoveUser,
-} from 'api/user'
+} from 'api'
 import { checkRole } from 'helper'
 
 export default {

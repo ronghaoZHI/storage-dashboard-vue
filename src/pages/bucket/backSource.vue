@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { postFetch404 } from 'api/system'
+import { postFetch404 } from 'api'
 import legendList from '@/components/legend/legend'
 export default {
   components: { legendList },

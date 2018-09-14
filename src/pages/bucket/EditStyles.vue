@@ -559,7 +559,7 @@ import upload from '@/components/upload/upload'
 import styleList from '@/pages/bucket/PictureStyles'
 import iView from 'iview-bsc'
 import encoding from 'text-encoding'
-import { getImgxPreviewUrl } from 'api/bill'
+import { getImgxPreviewUrl } from 'api'
 import bscBreadcrumb from '@/components/breadcrumb'
 import {
   allFontList,

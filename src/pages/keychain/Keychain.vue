@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import { getAccesskey, postAccesskey, deleteAccesskey } from 'api/login'
+import { getAccesskey, postAccesskey, deleteAccesskey } from 'api'
 import { clear } from '@/service/Aws'
 import keychainCard from './KeychainCard'
 import store from '@/store'

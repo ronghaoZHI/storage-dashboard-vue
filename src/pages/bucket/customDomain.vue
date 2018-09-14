@@ -22,11 +22,7 @@
   </div>
 </template>
 <script>
-import {
-  deleteCustomDomain,
-  postCustomDomain,
-  getCustomDomain,
-} from 'api/system'
+import { deleteCustomDomain, postCustomDomain, getCustomDomain } from 'api'
 export default {
   data() {
     return {

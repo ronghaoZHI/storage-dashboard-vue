@@ -115,9 +115,14 @@
   </div>
 </template>
 <script>
-import { loginByUsername, getAccesskey, getUserInfo } from 'api/login'
-import { getSSOLoginUrl } from 'api/sso'
-import { getListSubUser, getListBoundUser } from 'api/user'
+import {
+  loginByUsername,
+  getAccesskey,
+  getUserInfo,
+  getListSubUser,
+  getListBoundUser,
+  getSSOLoginUrl,
+} from 'api'
 import { checkRole } from 'helper'
 import store from '@/store'
 import Vue from 'vue'

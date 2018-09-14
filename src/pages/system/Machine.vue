@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import { getNodeList } from 'api/system'
+import { getNodeList } from 'api'
 import machineCard from './MachineCard'
 export default {
   components: {

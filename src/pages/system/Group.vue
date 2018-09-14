@@ -131,7 +131,7 @@
   </div>
 </template>
 <script>
-import { getGroupList } from 'api/system'
+import { getGroupList } from 'api'
 import groupCard from './GroupCard'
 import legendList from '@/components/legend/legend'
 export default {

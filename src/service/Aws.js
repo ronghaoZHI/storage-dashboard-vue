@@ -1,7 +1,7 @@
 import iView from 'iview-bsc'
 import { HOST } from './HOST'
 import AWS from 'aws-sdk'
-import { getAccesskey } from 'api/login'
+import { getAccesskey } from 'api'
 import store from '@/store'
 import { logout, isSSOLogin } from '@/service/Helper'
 

@@ -352,7 +352,7 @@ import {
   getSS,
 } from '@/pages/video/data'
 import { handler } from '@/service/Aws'
-import { postTranscoderUrl } from 'api/bill'
+import { postTranscoderUrl } from 'api'
 export default {
   data() {
     return {
