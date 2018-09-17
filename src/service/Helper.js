@@ -25,7 +25,7 @@ async function dataClearAndLocation() {
   await clear()
 
   if (window.dashboard_conf.onlineMode === 'True') {
-    window.location = ssoLogout
+    await ssoLogout()
   } else {
     router.push({
       path: '/login',

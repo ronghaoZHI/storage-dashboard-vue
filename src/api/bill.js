@@ -1,12 +1,6 @@
 import { group, groupTranscoder, groupImgx } from './util'
 import request from '@/service/request'
 
-export function loginByUsername(data) {
-  return request(group('auth/login'), {
-    method: 'post',
-    data,
-  })
-}
 export function getBillTranscoderUrl(url = '') {
   return group(`bill/transcode${url}`)
 }

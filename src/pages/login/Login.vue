@@ -52,6 +52,24 @@
                       :size="18"></Icon>
               </span>
             </div>
+            <div class="checkCode" v-show="needCheckCode">
+              <span>
+                <Icon type="unlocked"
+                      :size="18"></Icon>
+              </span>
+              <input v-bfocus
+                     class="input-checkCode"
+                     oninvalid="setCustomValidity('Requires')"
+                     onchange="try{setCustomValidity('')}catch(e){}"
+                     type="text"
+                     v-model="loginForm.checkCode"
+                     required
+                     minlength="4"
+                     placeholder="checkcode" />
+              <span @click="changeCheckCode">
+               <img style="width:100px;height:35px" :src="checkCodeUrl" alt="验证码">
+              </span>
+            </div>
             <div class="keep">
               <input type="checkbox"
                      v-model="keepEmail"
@@ -121,7 +139,9 @@ import {
   getUserInfo,
   getListSubUser,
   getListBoundUser,
-  getSSOLoginUrl,
+  postCheckLogin,
+  postLoginSSO,
+  getCheckCodeUrl,
 } from 'api'
 import { checkRole } from 'helper'
 import store from '@/store'
@@ -150,6 +170,8 @@ export default {
   },
   data() {
     return {
+      checkCodeUrl: getCheckCodeUrl(),
+      needCheckCode: true,
       lang: store.state.lang,
       selectedCustomer: '',
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
@@ -181,44 +203,67 @@ export default {
     },
   },
   mounted() {
-    window.dashboard_conf.onlineMode === 'True' && this.saveToken()
     this.searchedSubUserList = this.subUserList
   },
   methods: {
-    async saveToken() {
-      let _token = this.$route.query.ticket || this.$store.state.token
-
-      if (_token) {
-        await this.$store.dispatch('setToken', _token)
-        this.$http.defaults.headers.common['Authorization'] = _token
-        this.getUserInfoByToken()
-      } else {
-        window.location = getSSOLoginUrl()
-      }
-    },
-    async getUserInfoByToken() {
-      let res = await getUserInfo()
-      this.setBaseInfo(res)
-    },
     async loginSubmit(name) {
       if (this.formValid(name)) {
         this.$Loading.start()
-        // save user email
-        this.keepEmail
-          ? localStorage.setItem('loginEmail', this.loginForm.username)
-          : localStorage.setItem('loginEmail', '')
-        loginByUsername({ ...this.loginForm }).then(
-          (res) => {
-            this.setBaseInfo(res)
-            this.$Loading.finish()
-          },
-          () => {
-            this.$Loading.error()
-          },
-        )
+        try {
+          this.keepEmail
+            ? localStorage.setItem('loginEmail', this.loginForm.username)
+            : localStorage.setItem('loginEmail', '')
+          window.dashboard_conf.onlineMode === 'True'
+            ? this.loginBySSO()
+            : loginByUsername({
+                username: this.loginForm.username,
+                password: this.loginForm.password,
+              }).then((res) => {
+                this.setBaseInfo(res)
+              })
+          this.$Loading.finish()
+        } catch (error) {
+          this.$Loading.error()
+        }
       } else {
         this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
       }
+    },
+    changeCheckCode() {
+      this.checkCodeUrl = getCheckCodeUrl()
+    },
+    async loginBySSO() {
+      let _token = this.$store.state.token
+      if (!_token) {
+        _token = await this.getTiketSSO()
+      }
+      await this.$store.dispatch('setToken', _token)
+      this.$http.defaults.headers.common['Authorization'] = _token
+      this.setBaseInfo({
+        ...(await getUserInfo()),
+        token: _token,
+      })
+    },
+    async getTiketSSO() {
+      const data = {
+        appId: window.dashboard_conf.appID,
+        captcha: this.loginForm.checkCode,
+        name: this.loginForm.username,
+        pwd: this.loginForm.password,
+        keepLogin: false,
+        language: 1,
+      }
+      try {
+        let { isLogin } = {
+          ...(await postCheckLogin()),
+        }
+        let { ticket } = !isLogin
+          ? {
+              ...(await postLoginSSO(data)),
+            }
+          : ''
+        return ticket
+      } catch (error) {}
     },
     setBaseInfo(res) {
       this.$store
@@ -350,8 +395,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '../../styles/index.less';
-@login-card-height: 600px;
-@login-card-width: 900px;
+@login-card-width: 950px;
 @login-card-padding: 48px;
 @login-card-bg: #2e373e;
 @login-card-language-select-background: #384549;
@@ -372,7 +416,7 @@ export default {
 
   .card-login {
     position: relative;
-    .wh(@login-card-width, @login-card-height);
+    width: @login-card-width;
     background-color: @login-card-bg;
     padding: 40px @login-card-padding;
 
@@ -469,7 +513,8 @@ export default {
 
         .form-login {
           .email,
-          .password {
+          .password,
+          .checkCode {
             margin: 0 auto;
             padding-bottom: 14px;
             .fb(flex-start, flex-end, flex);
@@ -507,7 +552,6 @@ export default {
             input {
               flex: 6;
             }
-
             & > span:last-child {
               cursor: pointer;
             }
@@ -516,7 +560,14 @@ export default {
               color: @primary-color;
             }
           }
-
+          .checkCode {
+            input {
+              flex: 6;
+            }
+          }
+          & > span:last-child {
+            cursor: pointer;
+          }
           .input-focus {
             border-bottom: 2px solid @primary-color;
 
@@ -594,8 +645,7 @@ export default {
       }
 
       .footer {
-        position: absolute;
-        bottom: 36px;
+        margin-top: 100px;
         width: @login-card-width - (2 * @login-card-padding);
         color: @login-card-login-text-color;
         font-size: 14px;

@@ -1,4 +1,4 @@
-import { group } from './util'
+import { group, groupSSO } from './util'
 import request from '@/service/request'
 
 export function updateUser(data) {
@@ -8,14 +8,41 @@ export function updateUser(data) {
   })
 }
 
-export function getSSOLoginUrl() {
-  return `https://uc.baishancloud.com/web/user/checkLogin?language=1&appId=${
-    window.dashboard_conf.appID
-  }`
+export function postCheckLogin() {
+  return request(groupSSO('app/user/checkLogin'), {
+    method: 'post',
+    data: {
+      appId: window.dashboard_conf.appID,
+    },
+  })
+}
+
+export function postLoginSSO(data) {
+  return request(groupSSO('app/user/login'), {
+    method: 'post',
+    data,
+  })
+}
+
+export function getCheckCodeUrl() {
+  return groupSSO(`captcha?t=${new Date().toString()}`)
+}
+
+export function getCheckSms(data) {
+  return request(groupSSO('app/smscode/check'), {
+    method: 'get',
+    data,
+  })
+}
+
+export function getSendSms() {
+  return request(groupSSO('app/smscode/send'), {
+    method: 'get',
+  })
 }
 
 export function ssoLogout() {
-  return `https://uc.portal.baishancloud.com/web/user/logout?language=1&appId=${
-    window.dashboard_conf.appID
-  }`
+  return request(groupSSO('app/user/logout'), {
+    method: 'get',
+  })
 }
