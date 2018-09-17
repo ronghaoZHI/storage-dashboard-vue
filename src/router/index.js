@@ -27,7 +27,6 @@ const hasPermission = (to) => {
 }
 
 router.beforeEach((to, from, next) => {
-  iView.LoadingBar.start()
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // check role
     if (hasPermission) {
@@ -65,7 +64,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(() => {
-  iView.LoadingBar.finish()
   iView.Message.destroy()
 })
 
