@@ -23,10 +23,8 @@ export const isSSOLogin = () => {
 async function dataClearAndLocation() {
   await store.dispatch('logout')
   await clear()
-
   if (window.dashboard_conf.onlineMode === 'True') {
-    await ssoLogout()
-  } else {
+    ssoLogout()
     router.push({
       path: '/login',
       query: { redirect: router.fullPath },

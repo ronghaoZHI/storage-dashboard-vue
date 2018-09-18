@@ -32,14 +32,19 @@ async function getTranscodeUrlConfig(config) {
   config.withCredentials = false
   return config
 }
-
+function getSSOUrlConfig(config) {
+  config.withCredentials = true
+  return config
+}
 async function requestConf(config) {
   // transcoder url ? getTranscoderUrlConfig : isLogin(SSO) ? next : login
   return /transcoder-ss\.bscstorage\.com/.test(config.url)
     ? getTranscodeUrlConfig(config)
-    : isSSOLogin
-      ? config
-      : logout('Login status is invalid')
+    : /test-sso\..bs58i\.baishancloud\.com/.test(config.url)
+      ? getSSOUrlConfig(config)
+      : isSSOLogin
+        ? config
+        : logout('Login status is invalid')
 }
 
 let http = axios.create()
@@ -49,7 +54,6 @@ http.interceptors.request.use(
   (config) => {
     // set storage-api token
     if (store.state) config.headers.common['Authorization'] = store.state.token
-
     return requestConf(config)
   },
   (error) => Promise.reject(error),

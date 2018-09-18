@@ -63,7 +63,7 @@
                      onchange="try{setCustomValidity('')}catch(e){}"
                      type="text"
                      v-model="loginForm.checkCode"
-                     required
+                     :required=requiredCode
                      minlength="4"
                      placeholder="checkcode" />
               <span @click="changeCheckCode">
@@ -168,10 +168,20 @@ export default {
       },
     },
   },
+  mounted() {
+    if (window.dashboard_conf.onlineMode === 'True') {
+      ;[this.needCheckCode, this.requiredCode] = [true, true]
+    } else {
+      ;[this.needCheckCode, this.requiredCode] = [false, false]
+    }
+    this.searchedSubUserList = this.subUserList
+  },
   data() {
     return {
       checkCodeUrl: getCheckCodeUrl(),
       needCheckCode: true,
+      requiredCode: true,
+      openSmsModel: true,
       lang: store.state.lang,
       selectedCustomer: '',
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
@@ -202,9 +212,6 @@ export default {
       set() {},
     },
   },
-  mounted() {
-    this.searchedSubUserList = this.subUserList
-  },
   methods: {
     async loginSubmit(name) {
       if (this.formValid(name)) {
@@ -214,7 +221,7 @@ export default {
             ? localStorage.setItem('loginEmail', this.loginForm.username)
             : localStorage.setItem('loginEmail', '')
           window.dashboard_conf.onlineMode === 'True'
-            ? this.loginBySSO()
+            ? await this.loginBySSO()
             : loginByUsername({
                 username: this.loginForm.username,
                 password: this.loginForm.password,
@@ -228,9 +235,6 @@ export default {
       } else {
         this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
       }
-    },
-    changeCheckCode() {
-      this.checkCodeUrl = getCheckCodeUrl()
     },
     async loginBySSO() {
       let _token = this.$store.state.token
@@ -304,6 +308,9 @@ export default {
       } else {
         this.switchUser(data, 'user')
       }
+    },
+    changeCheckCode() {
+      this.checkCodeUrl = getCheckCodeUrl()
     },
     handleSearchSubUser() {
       if (!this.searchSubUserInput) {
