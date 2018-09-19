@@ -243,12 +243,12 @@ export default {
     loginBySms() {
       getCheckSms(parseInt(this.smscode)).then(
         (res) => {
-          let { ticket } = { ...res }
+          let { ticket } = res
           this.ticket = ticket
           this.saveToken()
         },
         async (err) => {
-          let { message, code } = { ...err }
+          let { message, code } = err
           if (code === -4001) {
             this.smsTextTip = message
             ;[this.openSmsModel, this.sending, this.smscode] = [
@@ -262,7 +262,6 @@ export default {
               checkCode: '',
             }
           } else if (code === -1) {
-            this.smsTextTip = message
             this.openSmsModel = true
             this.smscode = ''
           }
@@ -272,7 +271,7 @@ export default {
     sendSms() {
       this.sending = true
       getSendSms().then((err) => {
-        let { message, code } = { ...err }
+        let { message, code } = err
         if (code && message) {
           this.sending = false
         }
@@ -338,7 +337,7 @@ export default {
         if (!isLogin) {
           await postLoginSSO(data).then(
             (res) => {
-              let { ticket } = { ...res }
+              let { ticket } = res
               this.ticket = ticket
               this.saveToken()
             },
@@ -391,8 +390,7 @@ export default {
             ]
           : await getListSubUser()
       if (res.length > 0) {
-        this.subUserList = res
-        this.searchedSubUserList = res
+        this.searchedSubUserList = this.subUserList = res
         this.showSelectUser = false
         this.$store.dispatch('setBaseInfo', {
           users: res,

@@ -1134,10 +1134,7 @@ export default {
         this.$Loading.start()
         let user = (this.createSubUserForm = {
           ...this.createSubUserForm,
-          ...(await postCreateSub(
-            { ...this.createSubUserForm },
-            this.customer,
-          )),
+          ...(await postCreateSub(this.createSubUserForm, this.customer)),
         })
         await Promise.all(
           this.createSubUserForm.acl.map((bucket) => {
