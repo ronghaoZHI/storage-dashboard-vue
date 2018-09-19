@@ -306,10 +306,12 @@ export default {
       if (_token) {
         await this.$store.dispatch('setToken', _token)
         this.$http.defaults.headers.common['Authorization'] = _token
-        this.setBaseInfo({
+        await this.setBaseInfo({
           ...(await getUserInfo()),
           token: _token,
         })
+        const keys = await getAccesskey(this.$store.state.current.username)
+        await this.$store.dispatch('setBaseInfo', { keys: keys })
       } else {
         this.getTiketSSO()
       }
