@@ -9,6 +9,7 @@
       <keychain-card v-for="(key) in data"
                      :keychain="key"
                      :work="data.length === 1"
+                     :isAdmin="isAdmin"
                      v-on:deleteKey="deleteKeychain"
                      :key="key.ts"></keychain-card>
     </div>
@@ -35,7 +36,12 @@ export default {
   },
   computed: {
     isAdmin() {
-      return this.$store.getters.mode === 'manage'
+      const _state = this.$store.state
+      return (
+        this.$store.getters.mode === 'manage' &&
+        _state.manager[0] &&
+        _state.manager[0].username !== _state.current.username
+      )
     },
   },
   created() {

@@ -5,7 +5,7 @@ window.dashboard_conf = {
   awsHost: '47.93.3.45',
   ssoHost: 'test-sso.bs58i.baishancloud.com',
   transcoderHOST: 'transcoder-ss.bscstorage.com',
-  onlineMode: 'True',
+  onlineMode: 'False',
   upgradeMode: 'False',
   appID: '6',
   previewAk: 'acc_drdrxp',

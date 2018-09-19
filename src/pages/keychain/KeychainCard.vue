@@ -42,12 +42,7 @@ export default {
       },
     },
   },
-  props: ['keychain', 'work'],
-  data() {
-    return {
-      isAdmin: this.$store.getters.mode === 'manage',
-    }
-  },
+  props: ['keychain', 'work', 'isAdmin'],
   methods: {
     copy() {
       this.$Message.success(this.$t('STORAGE.COPIED'))
