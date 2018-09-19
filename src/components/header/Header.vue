@@ -126,7 +126,7 @@ export default {
       } else if (name === 'selectSubUser') {
         await clear()
         await this.$store.dispatch('cleanState')
-        this.$router.push('login')
+        this.$router.push({ name: 'login' })
       }
     },
     getCDNUrl() {
