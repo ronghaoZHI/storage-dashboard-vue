@@ -675,7 +675,7 @@ export default {
             Key: this.prefix + this.selectedFileKey,
           })
           this.renameKey = ''
-          this.getData()
+          await this.getData()
         } catch (error) {
           this.$Loading.error()
         }
@@ -708,8 +708,8 @@ export default {
           Key: this.prefix + this.createFolderValue + '/',
           Body: '',
         })
+        await this.getData()
         this.$Message.success(this.$t('STORAGE.ADD_FOLDER_SUCCESS'))
-        this.getData()
       } catch (error) {
         this.$Message.error(this.$t('STORAGE.ADD_FOLDER_FAILED'))
       }
@@ -783,9 +783,9 @@ export default {
             Key: this.prefix + file.Key,
           })
         } else {
-          this.deleteFolders(file)
+          await this.deleteFolders(file)
         }
-        this.getData()
+        await this.getData()
         this.$Message.success(
           this.$t('STORAGE.DELETE_FILES_SUCCESS', { fileName: file.Key }),
         )
@@ -853,8 +853,8 @@ export default {
         repliceAllString(prefix, '/', '%2F')
       )
     },
-    uploadModalClose() {
-      this.getData()
+    async uploadModalClose() {
+      await this.getData()
       this.$refs.upload.clearFiles()
     },
     async checkCanUpload() {
