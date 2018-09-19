@@ -917,7 +917,7 @@ export default {
           this.searchedUserList = this.userList = await getListBoundUser(
             this.customer,
           )
-          this.$store.dispatch('setBaseInfo', {
+          await this.$store.dispatch('setBaseInfo', {
             users: this.userList,
           })
           this.$Loading.finish()
@@ -926,17 +926,18 @@ export default {
           this.searchedUserList = this.userList = await getListBoundUser(
             this.customer,
           )
-          this.$store.dispatch('setBaseInfo', {
-            ...this.subUserList,
-            ...this.userList.map((user) => {
-              return { ...user, type: 1 }
-            }),
+          await this.$store.dispatch('setBaseInfo', {
+            users: this.subUserList.concat(
+              await this.userList.map((user) => {
+                return { ...user, type: 1 }
+              }),
+            ),
           })
           this.$Loading.finish()
         } else if (checkRole('SUB')) {
           this.searchedUserList = this.userList = await this.getSubUsersList()
-          this.$store.dispatch('setBaseInfo', {
-            ...this.userList,
+          await this.$store.dispatch('setBaseInfo', {
+            users: this.userList,
           })
           this.$Loading.finish()
         }
