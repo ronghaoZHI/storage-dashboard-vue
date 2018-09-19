@@ -29,6 +29,10 @@ export const messages = {
         'Baishan cloud storage Dashborad domain name has been switched to the current domain name, the original domain name will be offline in the near future processing, please save',
     },
     LOGIN: {
+      CHECKCODE: 'checkcode',
+      USERNAME: 'email / username',
+      USERPWD: 'password',
+      LANGUAGE: 'Language',
       TITLE: 'LOGIN',
       EMAILL: 'email',
       EMAILL_ALERT: 'Please input your email',
@@ -40,7 +44,7 @@ export const messages = {
       LOGIN_FAILED: 'Login failed',
       VALIDATE_FAILED: 'Input validate failed',
       LOGIN_AGAIN: 'Need to login again',
-      KEEP_EMAIL: 'Remember my email',
+      KEEP_EMAIL: 'Remember email / username',
       USER_MANAGE: 'User management',
     },
     NAV: {
@@ -933,6 +937,10 @@ export const messages = {
         '白山云存储 Dashborad 域名已经切换至当前域名,原域名将在不久后做下线处理,请您及时保存',
     },
     LOGIN: {
+      CHECKCODE: '验证码',
+      USERPWD: '密码',
+      USERNAME: '邮箱/用户名',
+      LANGUAGE: '语 言',
       TITLE: '登 录',
       EMAILL: '邮箱地址',
       EMAILL_ALERT: '请输入邮箱',
@@ -944,7 +952,7 @@ export const messages = {
       LOGIN_FAILED: '登录失败',
       VALIDATE_FAILED: '验证失败',
       LOGIN_AGAIN: '请重新登录',
-      KEEP_EMAIL: '记住邮箱',
+      KEEP_EMAIL: '记住邮箱/用户名',
       USER_MANAGE: '用户管理',
     },
     NAV: {

@@ -7,7 +7,7 @@
         <div class="header">
           <img src="../../assets/logo.png"
                alt="logo" />
-          <span>Language</span>
+          <span>{{$t("LOGIN.LANGUAGE")}}</span>
           <div class="select-language">
             <div class="border-triangle-external"></div>
             <div class="border-triangle"></div>
@@ -30,7 +30,7 @@
                      v-model="loginForm.username"
                      required
                      autofocus
-                     placeholder="email / username" />
+                     :placeholder="$t('LOGIN.USERNAME')" />
             </div>
             <div class="password">
               <span>
@@ -45,7 +45,7 @@
                      v-model="loginForm.password"
                      required
                      minlength="6"
-                     placeholder="password" />
+                     :placeholder="$t('LOGIN.USERPWD')" />
               <span @click="showPw"
                     :class="{ showPw:showPassword }">
                 <Icon type="eye"
@@ -65,7 +65,7 @@
                      v-model="loginForm.checkCode"
                      :required=requiredCode
                      minlength="4"
-                     placeholder="checkcode" />
+                     :placeholder="$t('LOGIN.CHECKCODE')" />
               <span @click.stop="changeCheckCode">
                <img style="width:100px;height:35px" :src="checkCodeUrl" alt="验证码">
               </span>
@@ -140,7 +140,7 @@
         <Input size="large"
                type="text"
                v-model="smscode"
-               maxlength="6"
+               :maxlength=6
                autofocus
                placeholder="message number"
                style="margin-top:40px;width:360px;height:50px;display:block" />
@@ -212,7 +212,7 @@ export default {
       selectedCustomer: '',
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
       loginForm: {
-        username: localStorage.getItem('loginEmail') || 'zhironghao',
+        username: localStorage.getItem('loginEmail'),
         password: '',
         checkCode: '',
       },
@@ -290,8 +290,10 @@ export default {
             : loginByUsername({
                 username: this.loginForm.username,
                 password: this.loginForm.password,
-              }).then((res) => {
-                this.setBaseInfo(res)
+              }).then(async (res) => {
+                await this.setBaseInfo(res)
+                let keys = await getAccesskey()
+                await this.$store.dispatch('setBaseInfo', { keys: keys })
               })
           this.$Loading.finish()
         } catch (error) {
@@ -310,7 +312,7 @@ export default {
           ...(await getUserInfo()),
           token: _token,
         })
-        const keys = await getAccesskey(this.$store.state.current.username)
+        const keys = await getAccesskey()
         await this.$store.dispatch('setBaseInfo', { keys: keys })
       } else {
         this.getTiketSSO()

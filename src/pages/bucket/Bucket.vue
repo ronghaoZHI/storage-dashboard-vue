@@ -222,7 +222,7 @@ export default {
     async createRedirectBucket(newBucket) {
       const subUsers = await getListSubUser()
       await Promise.all(
-        Array.map(subUsers, (user) => {
+        subUsers.map((user) => {
           return postRedirectBucket({
             original: newBucket,
             email: user.email,
@@ -241,7 +241,7 @@ export default {
 
 const batchDeletion = (list, bucket) => {
   return Promise.all(
-    Array.map(list, function(item) {
+    list.map(function(item) {
       return handler('deleteObject', {
         Bucket: bucket,
         Key: item.Key || item.Prefix,

@@ -157,10 +157,9 @@ export default {
         'active',
       )
       this.pictureUrlList = await Promise.all(
-        Array.map(
-          this.fileList.filter((file) => file.isImage && file.isImage === true),
-          (imageFile) => getURL(this.bucket, imageFile, this.prefix),
-        ),
+        this.fileList
+          .filter((file) => file.isImage && file.isImage === true)
+          .map((imageFile) => getURL(this.bucket, imageFile, this.prefix)),
       )
     },
     changePicture(item, index) {

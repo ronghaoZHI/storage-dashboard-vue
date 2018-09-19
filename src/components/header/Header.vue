@@ -151,6 +151,7 @@ export default {
     toggleLanguage(bol) {
       let lang = bol ? 'cn' : 'en'
       Vue.config.lang = lang
+      this.$store.state.lang = lang
       createCookie('uc_lang', lang)
     },
     async toggleTheme() {

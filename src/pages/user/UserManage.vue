@@ -217,11 +217,10 @@ export default {
       },
       iconSize: 18,
       createUserForm: {
-        // default test_data
-        username: `test_${parseInt(Math.random() * 1000)}`,
-        email: `test_${parseInt(Math.random() * 1000)}@qq.com`,
-        password: '123456',
-        company: 'test',
+        username: '',
+        email: '',
+        password: '',
+        company: '',
         perms: [],
         perm_rule: 'rule1',
         sso_type: '1',
@@ -266,11 +265,10 @@ export default {
         ],
       },
       createSubUserForm: {
-        // default test_data
-        username: `test_${parseInt(Math.random() * 1000)}`,
-        email: `test_${parseInt(Math.random() * 1000)}@qq.com`,
-        password: '123456',
-        company: 'test',
+        username: '',
+        email: '',
+        password: '',
+        company: '',
         acl: [],
       },
       subUserRuleValidate: {
@@ -1270,7 +1268,7 @@ const initSubUserAcls = (bucketList = []) => {
 
 const convertBucketList = (user, bucketList) => {
   if (user.acl.length !== bucketList.length) {
-    let bucketNameArray = Array.map(user.acl, (bucket) => {
+    let bucketNameArray = user.acl.map((bucket) => {
       return bucket.bucket
     })
     _.each(bucketList, (bucket) => {

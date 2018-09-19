@@ -25,11 +25,11 @@ async function dataClearAndLocation() {
   await clear()
   if (window.dashboard_conf.onlineMode === 'True') {
     ssoLogout()
-    router.push({
-      path: '/login',
-      query: { redirect: router.fullPath },
-    })
   }
+  router.push({
+    path: '/login',
+    query: { redirect: router.fullPath },
+  })
 }
 
 export function createCookie(name, value) {

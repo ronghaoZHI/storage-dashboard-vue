@@ -829,13 +829,13 @@ export default {
     async batchDelete() {
       let self = this
       await Promise.all(
-        Array.map(self.selectedFileList, (file) => self.deleteFile(file)),
+        self.selectedFileList.map((file) => self.deleteFile(file)),
       )
     },
     async batchDownload() {
       let self = this
       await Promise.all(
-        Array.map(self.selectedFileList, (file) => self.downloadFile(file)),
+        self.selectedFileList.map((file) => self.downloadFile(file)),
       )
     },
     openFolder(item) {
