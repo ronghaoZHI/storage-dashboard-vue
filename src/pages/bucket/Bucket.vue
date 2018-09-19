@@ -225,7 +225,7 @@ export default {
         subUsers.map((user) => {
           return postRedirectBucket({
             original: newBucket,
-            email: user.email,
+            username: user.username,
             redirect:
               newBucket +
               '-' +
