@@ -66,7 +66,7 @@
                      :required=requiredCode
                      minlength="4"
                      placeholder="checkcode" />
-              <span @click="changeCheckCode">
+              <span @click.stop="changeCheckCode">
                <img style="width:100px;height:35px" :src="checkCodeUrl" alt="验证码">
               </span>
             </div>
@@ -130,6 +130,26 @@
         </div>
       </div>
     </div>
+    <Modal v-model="openSmsModel"
+           title="验证信息"
+           ok-text="确定"
+           @on-ok="loginBySms"
+           :styles="{top:'330px',width:'450px'}">
+      <div class="sms-model-wrap">
+        <span style="font-size:1.1em;display:block;">{{ smsTextTip }}</span>
+        <Input size="large"
+               type="text"
+               v-model="smscode"
+               maxlength="6"
+               autofocus
+               placeholder="message number"
+               style="margin-top:40px;width:360px;height:50px;display:block" />
+        <span style="margin-top:20px;font-size:1.1em;display:block;">没有收到手机短信验证码？请尝试  
+          <a v-show="sending">发送中...</a>
+          <a v-show="!sending" @click.stop="sendSms">再次发送</a>
+        </span>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -142,6 +162,8 @@ import {
   postCheckLogin,
   postLoginSSO,
   getCheckCodeUrl,
+  getCheckSms,
+  getSendSms,
 } from 'api'
 import { checkRole } from 'helper'
 import store from '@/store'
@@ -169,25 +191,30 @@ export default {
     },
   },
   mounted() {
+    this.searchedSubUserList = this.subUserList
     if (window.dashboard_conf.onlineMode === 'True') {
       ;[this.needCheckCode, this.requiredCode] = [true, true]
     } else {
       ;[this.needCheckCode, this.requiredCode] = [false, false]
     }
-    this.searchedSubUserList = this.subUserList
   },
   data() {
     return {
+      smscode: '',
+      ticket: '',
+      sending: false,
+      smsTextTip: '',
       checkCodeUrl: getCheckCodeUrl(),
       needCheckCode: true,
       requiredCode: true,
-      openSmsModel: true,
+      openSmsModel: false,
       lang: store.state.lang,
       selectedCustomer: '',
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
       loginForm: {
-        username: localStorage.getItem('loginEmail'),
+        username: localStorage.getItem('loginEmail') || 'zhironghao',
         password: '',
+        checkCode: '',
       },
       showPassword: false,
       searchSubUserInput: '',
@@ -213,6 +240,44 @@ export default {
     },
   },
   methods: {
+    loginBySms() {
+      getCheckSms(parseInt(this.smscode)).then(
+        (res) => {
+          let { ticket } = { ...res }
+          this.ticket = ticket
+          this.saveToken()
+        },
+        async (err) => {
+          let { message, code } = { ...err }
+          if (code === -4001) {
+            this.smsTextTip = message
+            ;[this.openSmsModel, this.sending, this.smscode] = [
+              false,
+              false,
+              '',
+            ]
+            await this.changeCheckCode()
+            this.loginForm = {
+              ...this.loginForm,
+              checkCode: '',
+            }
+          } else if (code === -1) {
+            this.smsTextTip = message
+            this.openSmsModel = true
+            this.smscode = ''
+          }
+        },
+      )
+    },
+    sendSms() {
+      this.sending = true
+      getSendSms().then((err) => {
+        let { message, code } = { ...err }
+        if (code && message) {
+          this.sending = false
+        }
+      })
+    },
     async loginSubmit(name) {
       if (this.formValid(name)) {
         this.$Loading.start()
@@ -221,7 +286,7 @@ export default {
             ? localStorage.setItem('loginEmail', this.loginForm.username)
             : localStorage.setItem('loginEmail', '')
           window.dashboard_conf.onlineMode === 'True'
-            ? await this.loginBySSO()
+            ? await this.saveToken()
             : loginByUsername({
                 username: this.loginForm.username,
                 password: this.loginForm.password,
@@ -236,17 +301,18 @@ export default {
         this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
       }
     },
-    async loginBySSO() {
-      let _token = this.$store.state.token
-      if (!_token) {
-        _token = await this.getTiketSSO()
+    async saveToken() {
+      let _token = this.$store.state.token || this.ticket
+      if (_token) {
+        await this.$store.dispatch('setToken', _token)
+        this.$http.defaults.headers.common['Authorization'] = _token
+        this.setBaseInfo({
+          ...(await getUserInfo()),
+          token: _token,
+        })
+      } else {
+        this.getTiketSSO()
       }
-      await this.$store.dispatch('setToken', _token)
-      this.$http.defaults.headers.common['Authorization'] = _token
-      this.setBaseInfo({
-        ...(await getUserInfo()),
-        token: _token,
-      })
     },
     async getTiketSSO() {
       const data = {
@@ -258,16 +324,34 @@ export default {
         language: 1,
       }
       try {
-        let { isLogin } = {
+        let { isLogin, ticket } = {
           ...(await postCheckLogin()),
         }
-        let { ticket } = !isLogin
-          ? {
-              ...(await postLoginSSO(data)),
-            }
-          : ''
-        return ticket
+        if (!isLogin) {
+          await postLoginSSO(data).then(
+            (res) => {
+              let { ticket } = { ...res }
+              this.ticket = ticket
+              this.saveToken()
+            },
+            async (err) => {
+              let { message, code } = err
+              if (code === -4000) {
+                this.smsTextTip = message
+                this.openSmsModel = true
+              } else if (code === -1002) {
+                await this.changeCheckCode()
+              }
+            },
+          )
+        } else {
+          this.ticket = ticket
+          this.saveToken()
+        }
       } catch (error) {}
+    },
+    async changeCheckCode() {
+      this.checkCodeUrl = await getCheckCodeUrl()
     },
     setBaseInfo(res) {
       this.$store
@@ -308,9 +392,6 @@ export default {
       } else {
         this.switchUser(data, 'user')
       }
-    },
-    changeCheckCode() {
-      this.checkCodeUrl = getCheckCodeUrl()
     },
     handleSearchSubUser() {
       if (!this.searchSubUserInput) {

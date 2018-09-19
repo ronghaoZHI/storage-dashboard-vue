@@ -28,11 +28,17 @@ export function getCheckCodeUrl() {
   return groupSSO(`captcha?t=${new Date().toString()}`)
 }
 
-export function getCheckSms(data) {
-  return request(groupSSO('app/smscode/check'), {
-    method: 'get',
-    data,
-  })
+export function getCheckSms(smscode) {
+  return request(
+    groupSSO(
+      `app/smscode/check?appId=${
+        window.dashboard_conf.appID
+      }&smscode=${smscode}`,
+    ),
+    {
+      method: 'get',
+    },
+  )
 }
 
 export function getSendSms() {

@@ -45,7 +45,7 @@ export default function createError(responseError) {
       errorMsg = xml2json(body).Error.Message
     } else if (body && typeof body === 'object') {
       // 有的接口错误描述还被包了一层，所以也尝试解析
-      const realBody = body.data
+      const realBody = body.data || body
       if (realBody && typeof realBody === 'object') {
         const msg =
           realBody.message ||
@@ -85,7 +85,7 @@ export default function createError(responseError) {
       }
     }
 
-    if (!response.code) {
+    if (!code && !response.code) {
       code = response.status
     }
   } else if (responseError.request) {
@@ -121,7 +121,7 @@ export default function createError(responseError) {
   })
 
   const error = new Error(errorMsg)
-  error.name = code
+  error.code = code
   error.message = errorMsg
   error.response = response
 
