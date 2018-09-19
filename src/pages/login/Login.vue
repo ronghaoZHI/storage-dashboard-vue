@@ -165,7 +165,7 @@ import {
   getCheckSms,
   getSendSms,
 } from 'api'
-import { checkRole } from 'helper'
+import { checkRole, logout } from 'helper'
 import store from '@/store'
 import Vue from 'vue'
 export default {
@@ -308,10 +308,14 @@ export default {
       if (_token) {
         await this.$store.dispatch('setToken', _token)
         this.$http.defaults.headers.common['Authorization'] = _token
-        await this.setBaseInfo({
-          ...(await getUserInfo()),
-          token: _token,
-        })
+        try {
+          await this.setBaseInfo({
+            ...(await getUserInfo()),
+            token: _token,
+          })
+        } catch (error) {
+          logout()
+        }
         const keys = await getAccesskey()
         await this.$store.dispatch('setBaseInfo', { keys: keys })
       } else {
