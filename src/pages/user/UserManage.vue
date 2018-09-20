@@ -591,20 +591,21 @@ export default {
                     },
                     'Unbind',
                   ),
-                  h(
-                    'i-button',
-                    {
-                      props: {
-                        size: 'small',
-                      },
-                      on: {
-                        click: () => {
-                          this.removeUserConfirm(params.row, params.index)
-                        },
-                      },
-                    },
-                    'Remove',
-                  ),
+                  // test - delete
+                  // h(
+                  //   'i-button',
+                  //   {
+                  //     props: {
+                  //       size: 'small',
+                  //     },
+                  //     on: {
+                  //       click: () => {
+                  //         this.removeUserConfirm(params.row, params.index)
+                  //       },
+                  //     },
+                  //   },
+                  //   'Remove',
+                  // ),
                 ]
               },
             },
