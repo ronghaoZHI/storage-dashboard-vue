@@ -88,7 +88,7 @@
           </form>
         </div>
         <div class="footer">
-          Copyright © 2015-2017 BaishanCloud. All rights Reserved.
+          Copyright © 2015-{{currentYear}} BaishanCloud. All rights Reserved.
         </div>
       </div>
       <div class="tab-register"
@@ -200,6 +200,7 @@ export default {
   },
   data() {
     return {
+      currentYear: new Date().getFullYear().toString(),
       smscode: '',
       ticket: '',
       sending: false,
