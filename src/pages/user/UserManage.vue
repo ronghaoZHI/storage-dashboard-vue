@@ -18,13 +18,13 @@
            placeholder="search here"
            style="width:300px" />
     <Table class="table"
-      v-if="!canShowTab"
-      :show-header="true"
-      :stripe="true"
-      :context="self"
-      :columns="userHeader"
-      :data="searchedUserList"
-      :no-data-text="$t('USER.NO_USER')"></Table>
+           v-if="!canShowTab"
+           :show-header="true"
+           :stripe="true"
+           :context="self"
+           :columns="userHeader"
+           :data="searchedUserList"
+           :no-data-text="$t('USER.NO_USER')"></Table>
     <Tabs size="small"
           v-model="tabName"
           v-if="canShowTab"
@@ -34,24 +34,24 @@
       <Tab-pane :label="$t('USER.SUB_USER_MANAGE')"
                 name="subUser">
         <Table class="table"
-              :show-header="true"
-              :stripe="true"
-              :context="self"
-              :columns="subUserHeader"
-              :data="searchedSubUserList"
-              :no-data-text="$t('USER.NO_USER')"></Table>
+               :show-header="true"
+               :stripe="true"
+               :context="self"
+               :columns="subUserHeader"
+               :data="searchedSubUserList"
+               :no-data-text="$t('USER.NO_USER')"></Table>
       </Tab-pane>
       <Tab-pane :label="$t('USER.USER_MANAGE')"
                 name="user">
-         <Table class="table"
-              :show-header="true"
-              :stripe="true"
-              :context="self"
-              :columns="userHeader"
-              :data="searchedUserList"
-              :no-data-text="$t('USER.NO_USER')"></Table>
+        <Table class="table"
+               :show-header="true"
+               :stripe="true"
+               :context="self"
+               :columns="userHeader"
+               :data="searchedUserList"
+               :no-data-text="$t('USER.NO_USER')"></Table>
       </Tab-pane>
-     </Tabs>
+    </Tabs>
     <Modal v-model="createUserModal"
            :title="$t('USER.CREATE_USER')"
            @on-ok="createUser"
@@ -85,7 +85,9 @@
                    prop="perms"
                    v-if="canCreatePerms.length">
           <CheckboxGroup v-model="createUserForm.perms">
-            <Checkbox v-for="perm in canCreatePerms" :label="perm" :key="perm"></Checkbox>
+            <Checkbox v-for="perm in canCreatePerms"
+                      :label="perm"
+                      :key="perm"></Checkbox>
           </CheckboxGroup>
         </Form-item>
         <Form-item :label="$t('USER.USER_TYPE')"
@@ -136,7 +138,7 @@
       <Form ref="createSubUserForm"
             :model="createSubUserForm"
             :rules="subUserRuleValidate"
-            :label-width="110" >
+            :label-width="110">
         <Form-item :label="$t('USER.USER_NAME')"
                    prop="username">
           <Input v-model="createSubUserForm.username"
@@ -158,13 +160,13 @@
                  :placeholder="$t('USER.REQUIRE_COMPANY')" />
         </Form-item>
       </Form>
-      <Acls :aclsData = subUserAclForm> </Acls>
+      <Acls :aclsData = subUserAclForm />
     </Modal>
     <Modal v-model="openEditSubUserModal"
            title="编辑子账号"
            ok-text="确定(请勿多次尝试)"
            @on-ok="editSubUser">
-      <Acls :aclsData = subUserAclForm> </Acls>
+      <Acls :aclsData = subUserAclForm />
     </Modal>
     <Spin size="bigger"
           fix
@@ -351,15 +353,7 @@ export default {
                 key: 'acl',
                 render: (h, params) => {
                   return params.row.acl.length > 0
-                    ? params.row.acl.map((acl) => {
-                        return h(
-                          'Tag',
-                          { props: { type: 'border' } },
-                          `${acl.bucket} - bucket: ${acl.bucket_acl} - file: ${
-                            acl.file_acl
-                          }`,
-                        )
-                      })
+                    ? params.row.acl.map((acl) => createAclTags(acl, h))
                     : h('Tag', 'No acl')
                 },
               },
@@ -436,13 +430,7 @@ export default {
                   render: (h, params) => {
                     return params.row.acl.length > 0
                       ? params.row.acl.map((acl) => {
-                          return h(
-                            'Tag',
-                            { props: { type: 'border' } },
-                            `${acl.bucket} - bucket: ${
-                              acl.bucket_acl
-                            } - file: ${acl.file_acl}`,
-                          )
+                          return createAclTags(acl, h)
                         })
                       : h('Tag', 'No acl')
                   },
@@ -519,13 +507,7 @@ export default {
                   render: (h, params) => {
                     return params.row.acl.length > 0
                       ? params.row.acl.map((acl) => {
-                          return h(
-                            'Tag',
-                            { props: { type: 'border' } },
-                            `${acl.bucket} - bucket: ${
-                              acl.bucket_acl
-                            } - file: ${acl.file_acl}`,
-                          )
+                          return createAclTags(acl, h)
                         })
                       : h('Tag', 'No acl')
                   },
@@ -728,15 +710,7 @@ export default {
                     key: 'acl',
                     render: (h, params) => {
                       return params.row.acl.length > 0
-                        ? params.row.acl.map((acl) => {
-                            return h(
-                              'Tag',
-                              { props: { type: 'border' } },
-                              `${acl.bucket} - bucket: ${
-                                acl.bucket_acl
-                              } - file: ${acl.file_acl}`,
-                            )
-                          })
+                        ? params.row.acl.map((acl) => createAclTags(acl, h))
                         : h('Tag', 'No acl')
                     },
                   },
@@ -811,15 +785,7 @@ export default {
                     key: 'acl',
                     render: (h, params) => {
                       return params.row.acl.length > 0
-                        ? params.row.acl.map((acl) => {
-                            return h(
-                              'Tag',
-                              { props: { type: 'border' } },
-                              `${acl.bucket} - bucket: ${
-                                acl.bucket_acl
-                              } - file: ${acl.file_acl}`,
-                            )
-                          })
+                        ? params.row.acl.map((acl) => createAclTags(acl, h))
                         : h('Tag', 'No acl')
                     },
                   },
@@ -1282,6 +1248,27 @@ const convertBucketList = (user, bucketList) => {
     })
   }
   return user
+}
+
+const createAclTags = (acl, h) => {
+  const bucketAcl =
+    acl.bucket_acl.length === 0 ||
+    (acl.bucket_acl.length === 1 && acl.bucket_acl[0] === 'READ_ACP')
+      ? ''
+      : ` - bucket: ${acl.bucket_acl.filter((ac) => ac !== 'READ_ACP')}`
+  const fileAcl =
+    acl.file_acl.length === 0 ||
+    (acl.file_acl.length === 1 && acl.file_acl[0] === 'READ_ACP')
+      ? ''
+      : ` - file: ${acl.file_acl.filter((ac) => ac !== 'READ_ACP')}`
+  return (
+    bucketAcl + fileAcl !== '' &&
+    h(
+      'Tag',
+      { props: { type: 'border' } },
+      `${acl.bucket}${bucketAcl}${fileAcl}`,
+    )
+  )
 }
 
 const convertObject2Array = (object) => {

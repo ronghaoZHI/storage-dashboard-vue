@@ -260,8 +260,8 @@ export const allFontList = [
     label: 'Yuppy SC',
   },
 ]
-export const previewAccessKey = 'acc_drdrxp'
-export const previewSecretKey = '11111111111111111111'
+export const previewAccessKey = window.dashboard_conf.previewAk
+export const previewSecretKey = window.dashboard_conf.previewSk
 export const I2J = {
   c_: 'crop',
   w_: 'width',
