@@ -87,6 +87,14 @@ export function postUpdateUserSSO(data) {
     data,
   })
 }
+export function getRedirectBucketFilesAcl(bucket, customer) {
+  return request(
+    group(`user/get/redirect_bucket_acl?bucket=${bucket}&customer=${customer}`),
+    {
+      method: 'get',
+    },
+  )
+}
 export function postAddService(data, customer) {
   return request(group('user/add/service', customer), {
     method: 'post',

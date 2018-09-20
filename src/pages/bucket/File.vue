@@ -16,45 +16,45 @@
     </div>
     <Row class="toolbar-nav">
       <Col span="10">
-        <div>
+      <div>
+        <Button type="primary"
+                v-show="canUpload"
+                @click="openUploadModal">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
+        <Button type="primary"
+                v-show="canUpload"
+                @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
+        <!-- <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button> -->
+        <Tooltip content="功能维护，暂停使用"
+                 placement="bottom">
           <Button type="primary"
-                  v-show="canUpload"
-                  @click="openUploadModal">{{$t("STORAGE.UPLOAD_FILE")}}</Button>
-          <Button type="primary"
-                  v-show="canUpload"
-                  @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
-          <!-- <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button> -->
-          <Tooltip content="功能维护，暂停使用"
-                  placement="bottom">
-            <Button type="primary"
-                    disabled>{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
-          </Tooltip>
-          <Button @click="batchDeleteFileConfirm"
-                  :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
-          <Button type="primary"
-                  v-if="!showSearch"
-                  @click="showSearch = true">查找文件</Button>
-          <transition name="slide-fade">
-            <div class="section-search"
-                v-if="showSearch">
-              <span class="bsc-input">
-                <input type="text"
-                      class="input-append-before"
-                      disabled
-                      :value="prefix" />
-                <input type="text"
-                      @focus="searchInputFocus = true"
-                      v-model="searchValue" />
-                <Button type="text"
-                        size="small"
-                        @click="searchFile(searchValue)">
-                  <Icon type="search"
-                        :size="iconSize"></Icon>
-                </Button>
-              </span>
-            </div>
-          </transition>
-        </div>
+                  disabled>{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
+        </Tooltip>
+        <Button @click="batchDeleteFileConfirm"
+                :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
+        <Button type="primary"
+                v-if="!showSearch"
+                @click="showSearch = true">查找文件</Button>
+        <transition name="slide-fade">
+          <div class="section-search"
+               v-if="showSearch">
+            <span class="bsc-input">
+              <input type="text"
+                     class="input-append-before"
+                     disabled
+                     :value="prefix" />
+              <input type="text"
+                     @focus="searchInputFocus = true"
+                     v-model="searchValue" />
+              <Button type="text"
+                      size="small"
+                      @click="searchFile(searchValue)">
+                <Icon type="search"
+                      :size="iconSize"></Icon>
+              </Button>
+            </span>
+          </div>
+        </transition>
+      </div>
       </Col>
       <Col span="14"
            style="text-align:right">
@@ -182,6 +182,7 @@ import bscBreadcrumb from '@/components/breadcrumb'
 import upload from '@/components/upload/upload'
 import Clipboard from 'clipboard'
 import store from '@/store'
+import { getRedirectBucketFilesAcl } from 'api'
 import { checkRole } from 'helper'
 import legendList from '@/components/legend/legend'
 import moment from 'moment'
@@ -222,6 +223,7 @@ export default {
       createFolderValue: '',
       selectedFileKey: '',
       showSearch: false,
+      showFileDownloadPreview: true,
       renameKey: '',
       selectedFileList: [],
       legendList: [
@@ -380,6 +382,7 @@ export default {
                         {
                           props: {
                             size: 'small',
+                            disabled: !this.showFileDownloadPreview,
                           },
                           on: {
                             click: () => {
@@ -418,6 +421,7 @@ export default {
                         {
                           props: {
                             size: 'small',
+                            disabled: !this.showFileDownloadPreview,
                           },
                           on: {
                             click: () => {
@@ -454,6 +458,7 @@ export default {
                         {
                           props: {
                             size: 'small',
+                            disabled: !this.showFileDownloadPreview,
                           },
                           on: {
                             click: () => {
@@ -489,7 +494,9 @@ export default {
                         'i-button',
                         {
                           props: {
-                            disabled: params.row && !params.row.isImage,
+                            disabled:
+                              (params.row && !params.row.isImage) ||
+                              !this.showFileDownloadPreview,
                             size: 'small',
                           },
                           on: {
@@ -616,6 +623,7 @@ export default {
   created() {
     this.getData()
     this.checkCanUpload()
+    this.hasFileReadAcl()
   },
   methods: {
     async getData(nextMarker, searchValue = '') {
@@ -653,6 +661,16 @@ export default {
       } catch (error) {
         this.spinShow = false
         this.$Loading.error()
+      }
+    },
+    async hasFileReadAcl() {
+      if (checkRole('SUBUSER')) {
+        let acls = await getRedirectBucketFilesAcl(
+          this.bucket,
+          this.$store.state.current.username,
+        )
+        this.showFileDownloadPreview =
+          acls && Array.isArray(acls.file_acl) && acls.file_acl.includes('READ')
       }
     },
     async rename() {
