@@ -288,7 +288,7 @@ const batchDeletion = (list, bucket) => {
     margin-bottom: 0;
 
     button {
-      margin-right: 1px;
+      margin-right: 4px;
     }
   }
 

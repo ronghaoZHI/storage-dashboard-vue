@@ -952,7 +952,7 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
     border-bottom: @common-border;
 
     button {
-      margin-right: 1px;
+      margin-right: 4px;
     }
   }
 
