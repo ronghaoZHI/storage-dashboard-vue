@@ -23,11 +23,10 @@
         <Button type="primary"
                 v-show="canUpload"
                 @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
-        <!-- <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button> -->
-        <Tooltip content="功能维护，暂停使用"
+        <Tooltip v-if="canUseBatchDownload"
+                content="页面提醒是否允许自动下载时，点击允许"
                  placement="bottom">
-          <Button type="primary"
-                  disabled>{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
+          <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
         </Tooltip>
         <Button @click="batchDeleteFileConfirm"
                 :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
@@ -613,6 +612,9 @@ export default {
     imageModalTitle() {
       return this.selectedFileKey || this.$t('STORAGE.NO_TITLE')
     },
+    canUseBatchDownload() {
+      return true
+    },
   },
   watch: {
     // the fileList array need refresh when the $route value changed
@@ -852,9 +854,9 @@ export default {
     },
     async batchDownload() {
       let self = this
-      await Promise.all(
-        self.selectedFileList.map((file) => self.downloadFile(file)),
-      )
+      for (let file of self.selectedFileList) {
+        await this.downloadFile(file)
+      }
     },
     openFolder(item) {
       this.searchValue = ''
