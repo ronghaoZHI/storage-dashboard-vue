@@ -66,7 +66,7 @@
                      minlength="4"
                      :placeholder="$t('LOGIN.CHECKCODE')" />
               <span @click.stop="changeCheckCode">
-               <img style="width:100px;height:35px" :src="checkCodeUrl" alt="验证码">
+               <img class="checkCodeImg" :src="checkCodeUrl" alt="验证码">
               </span>
             </div>
             <div class="keep">
@@ -140,13 +140,16 @@
            :styles="{top:'330px',width:'450px'}">
       <div class="sms-model-wrap">
         <span style="font-size:1.1em;display:block;">{{ smsTextTip }}</span>
-        <Input size="large"
-               type="text"
-               v-model="smscode"
-               :maxlength=6
-               autofocus
-               placeholder="message number"
-               style="margin-top:40px;width:360px;height:50px;display:block" />
+        <div style="line-height:55px;margin-top:40px;padding-top:5px;">
+          <span style="display:inline-block;font-size:14px;">验证码：</span>
+          <Input size="large"
+                type="text"
+                v-model="smscode"
+                :maxlength=6
+                autofocus
+                placeholder="message number"
+                style="width:300px;height:40px;display:inline-block" />
+        </div>
         <span style="margin-top:20px;font-size:1.1em;display:block;">没有收到手机短信验证码？请尝试  
           <a v-show="sending">发送中...</a>
           <a v-show="!sending" @click.stop="sendSms">再次发送</a>
@@ -660,6 +663,13 @@ export default {
           input {
             flex: 6;
           }
+          .checkCodeImg {
+            width: 90px;
+            height: 33px;
+            position: absolute;
+            transform: translate(-90%, -90%);
+            cursor: pointer;
+          }
         }
         & > span:last-child {
           cursor: pointer;
@@ -678,7 +688,7 @@ export default {
           height: 20px;
           width: @login-card-login-input-width;
           font-size: 14px;
-          padding-left: 170px;
+          // padding-left: 170px;
           color: #8492a6;
           input[type='checkbox'] {
             display: none;
@@ -702,6 +712,7 @@ export default {
 
           & > label {
             cursor: pointer;
+            float: right;
           }
         }
 
