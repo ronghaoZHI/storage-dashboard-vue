@@ -501,7 +501,7 @@ export default {
 @login-card-login-text-color: #8492a6;
 @login-card-login-input-invalid-text-color: #d75000;
 @login-card-login-input-width: 320px;
-@login-card-register-item-width: 180px;
+@login-card-register-item-width: 200px;
 @login-card-register-item-height: 80px;
 @login-card-register-text-color: #c0ccda;
 @login-card-register-input-backgrand: #414d56;
@@ -510,7 +510,8 @@ export default {
 .@{css-prefix}login {
   .wh(100%, 100%);
   .fb(center, center);
-  background: #a1c2d0 no-repeat;
+  // background: #a1c2d0 no-repeat;
+  background: @login-bg no-repeat;
   background-size: cover;
   .tab-login {
     .wh(100%, 100%);
@@ -772,23 +773,26 @@ export default {
   .card-login {
     .tab-register {
       position: relative;
-      width: @login-card-width;
+      width: 880px;
       background-color: @login-card-bg;
-      padding: 40px @login-card-padding;
+      padding: 20px;
       .header {
+        position: relative;
+        left: 8px;
         height: 60px;
+        width: 824px;
         border-bottom: 1px solid #52626d;
 
         & > img {
           position: absolute;
-          left: @login-card-padding;
+          left: 0px;
         }
 
         & > a {
           .sc(18px, @primary-color);
           position: absolute;
-          top: @login-card-padding;
-          right: @login-card-padding;
+          top: 6px;
+          right: 0px;
           cursor: pointer;
         }
       }
@@ -798,9 +802,6 @@ export default {
         overflow-y: auto;
 
         .body {
-          width: 100%;
-          padding: 10px 0 0 12px;
-
           .card-wrap {
             display: inline-flex;
             flex-direction: row;
@@ -808,6 +809,7 @@ export default {
             justify-content: flex-start;
             align-items: flex-start;
             width: 100%;
+            overflow-y: auto;
           }
 
           .card-user {
@@ -819,7 +821,7 @@ export default {
             background-color: @login-card-register-input-backgrand;
             border-radius: @common-radius;
             .sc(16px, #fff);
-            margin: 8px 6px;
+            margin: 15px 0px 0px 8px;
             cursor: pointer;
 
             &:hover {
