@@ -21,8 +21,7 @@
                 ref="loginForm">
             <div class="email">
               <span>
-                <Icon type="email"
-                      :size="18"></Icon>
+                <Icon type="ios-person" :size="18"></Icon>
               </span>
               <input v-bfocus
                      type="text"
@@ -53,8 +52,7 @@
             </div>
             <div class="checkCode" v-show="needCheckCode">
               <span>
-                <Icon type="unlocked"
-                      :size="18"></Icon>
+                <Icon type="key" :size="18"></Icon>
               </span>
               <input v-bfocus
                      class="input-checkCode"
