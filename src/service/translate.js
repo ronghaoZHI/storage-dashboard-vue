@@ -30,7 +30,7 @@ export const messages = {
     },
     LOGIN: {
       CHECKCODE: 'checkcode',
-      USERNAME: 'email / username',
+      USERNAME: 'username',
       USERPWD: 'password',
       LANGUAGE: 'Language',
       TITLE: 'LOGIN',
@@ -44,7 +44,7 @@ export const messages = {
       LOGIN_FAILED: 'Login failed',
       VALIDATE_FAILED: 'Input validate failed',
       LOGIN_AGAIN: 'Need to login again',
-      KEEP_EMAIL: 'Remember email / username',
+      KEEP_EMAIL: 'Remember username',
       USER_MANAGE: 'User management',
     },
     NAV: {
@@ -939,7 +939,7 @@ export const messages = {
     LOGIN: {
       CHECKCODE: '验证码',
       USERPWD: '密码',
-      USERNAME: '邮箱/用户名',
+      USERNAME: '用户名',
       LANGUAGE: '语 言',
       TITLE: '登 录',
       EMAILL: '邮箱地址',
@@ -952,7 +952,7 @@ export const messages = {
       LOGIN_FAILED: '登录失败',
       VALIDATE_FAILED: '验证失败',
       LOGIN_AGAIN: '请重新登录',
-      KEEP_EMAIL: '记住邮箱/用户名',
+      KEEP_EMAIL: '记住用户名',
       USER_MANAGE: '用户管理',
     },
     NAV: {
