@@ -1,8 +1,7 @@
 <template>
   <div class="bsc-login"
        @keyup.enter="loginSubmit('loginForm')">
-    <div class="card-login">
-      <div class="tab-login"
+     <div class="tab-login"
            v-if="!showSelectUser">
         <div class="header">
           <img src="../../assets/logo.png"
@@ -88,9 +87,13 @@
           </form>
         </div>
         <div class="footer">
-          Copyright © 2015-{{currentYear}} BaishanCloud. All rights Reserved.
+          <div class="foot-text">
+            Copyright © 2015-{{currentYear}} BaishanCloud. All rights Reserved.
+          </div>
         </div>
-      </div>
+    </div> 
+
+    <div class="card-login">
       <div class="tab-register"
            v-if="showSelectUser">
         <div class="header">
@@ -496,258 +499,273 @@ export default {
 @login-card-language-select-background: #384549;
 @login-card-login-text-color: #8492a6;
 @login-card-login-input-invalid-text-color: #d75000;
-@login-card-login-input-width: 380px;
+@login-card-login-input-width: 320px;
 @login-card-register-item-width: 180px;
 @login-card-register-item-height: 80px;
 @login-card-register-text-color: #c0ccda;
 @login-card-register-input-backgrand: #414d56;
 @login-card-register-input-backgrand-hover: #52626d;
-
+@login-bg: #04050e;
 .@{css-prefix}login {
   .wh(100%, 100%);
   .fb(center, center);
   background: #a1c2d0 no-repeat;
   background-size: cover;
+  .tab-login {
+    .wh(100%, 100%);
+    background-color: @login-bg;
+    padding: 35px;
+    .header {
+      height: 25px;
 
-  .card-login {
-    position: relative;
-    width: @login-card-width;
-    background-color: @login-card-bg;
-    padding: 40px @login-card-padding;
+      & > img {
+        float: left;
+      }
 
-    .tab-login {
-      .header {
-        height: 25px;
+      & > span {
+        .sc(18px, #fff);
+        font-weight: 500;
+        float: right;
+        cursor: pointer;
+        padding-bottom: 20px;
 
-        & > img {
-          float: left;
+        &:hover + .select-language {
+          display: block;
+        }
+      }
+
+      .select-language {
+        display: none;
+        width: 100px;
+        height: 60px;
+        border: 1px solid @login-card-login-text-color;
+        border-radius: 5px;
+        background-color: @login-card-language-select-background;
+        position: absolute;
+        right: 30px;
+        top: 75px;
+        &:hover {
+          display: block;
+        }
+
+        &:target {
+          display: none;
+        }
+
+        div.border-triangle-external {
+          display: block;
+          position: absolute;
+          left: 60px;
+          top: -21px;
+          width: 0px;
+          height: 0px;
+          border: 10px solid;
+          border-color: transparent transparent @login-card-login-text-color
+            transparent;
+        }
+
+        div.border-triangle {
+          display: block;
+          position: absolute;
+          left: 60px;
+          top: -20px;
+          width: 0px;
+          height: 0px;
+          border: 10px solid;
+          border-color: transparent transparent
+            @login-card-language-select-background transparent;
         }
 
         & > span {
-          .sc(18px, #fff);
-          font-weight: 500;
-          float: right;
-          cursor: pointer;
-          padding-bottom: 20px;
-
-          &:hover + .select-language {
-            display: block;
-          }
-        }
-
-        .select-language {
-          display: none;
           position: relative;
-          left: @login-card-width - 2 * @login-card-padding - 100;
-          top: 40px;
-          width: 100px;
-          height: 60px;
-          border: 1px solid @login-card-login-text-color;
-          border-radius: 5px;
-          background-color: @login-card-language-select-background;
+
+          display: inline-block;
+          .wh(80%, 28px);
+          line-height: 28px;
+          .sc(14px, @login-card-login-text-color);
+          cursor: pointer;
 
           &:hover {
-            display: block;
-          }
-
-          &:target {
-            display: none;
-          }
-
-          div.border-triangle-external {
-            display: block;
-            position: absolute;
-            left: 60px;
-            top: -21px;
-            width: 0px;
-            height: 0px;
-            border: 10px solid;
-            border-color: transparent transparent @login-card-login-text-color
-              transparent;
-          }
-
-          div.border-triangle {
-            display: block;
-            position: absolute;
-            left: 60px;
-            top: -20px;
-            width: 0px;
-            height: 0px;
-            border: 10px solid;
-            border-color: transparent transparent
-              @login-card-language-select-background transparent;
-          }
-
-          & > span {
-            position: relative;
-            top: -34px;
-            display: inline-block;
-            .wh(80%, 28px);
-            line-height: 28px;
-            .sc(14px, @login-card-login-text-color);
-            cursor: pointer;
-
-            &:hover {
-              color: #fff;
-            }
-          }
-
-          & > span:last-child {
-            border-top: 1px solid #424e55;
+            color: #fff;
           }
         }
-      }
 
-      .body {
-        .slogn {
-          display: block;
-          margin-top: 54px;
-          font-size: 24px;
-          font-weight: 500;
+        & > span:last-child {
+          border-top: 1px solid #424e55;
         }
-
-        .form-login {
-          .email,
-          .password,
-          .checkCode {
-            margin: 0 auto;
-            padding-bottom: 14px;
-            .fb(flex-start, flex-end, flex);
-            .wh(@login-card-login-input-width, 80px);
-            border-bottom: 1px solid @login-card-login-text-color;
-
-            & > span {
-              flex: 1;
-            }
-
-            input {
-              height: 24px;
-              .sc(18px, @login-card-login-text-color);
-              background: @login-card-bg;
-              border: 0;
-
-              &:focus {
-                outline-offset: 0;
-                outline: -webkit-focus-ring-color auto 0;
-              }
-            }
-
-            & > input:invalid {
-              color: @login-card-login-input-invalid-text-color;
-            }
-          }
-
-          .email {
-            input {
-              flex: 7;
-            }
-          }
-
-          .password {
-            input {
-              flex: 6;
-            }
-            & > span:last-child {
-              cursor: pointer;
-            }
-
-            .showPw {
-              color: @primary-color;
-            }
-          }
-          .checkCode {
-            input {
-              flex: 6;
-            }
-          }
-          & > span:last-child {
-            cursor: pointer;
-          }
-          .input-focus {
-            border-bottom: 2px solid @primary-color;
-
-            & > span:first-child {
-              color: @primary-color;
-            }
-          }
-
-          .keep {
-            height: 20px;
-            margin-right: @login-card-width / 2 - @login-card-padding -
-              @login-card-login-input-width / 2 + 20px;
-            margin-top: 12px;
-            .sc(14px, @login-card-login-text-color);
-            .fb(flex-end, center, flex);
-
-            input[type='checkbox'] {
-              display: none;
-            }
-
-            input[type='checkbox'] + label span {
-              display: inline-block;
-              width: 19px;
-              height: 19px;
-              margin: -2px 10px 0 0;
-              vertical-align: middle;
-              background: url('../../assets/login-checkbox.png') no-repeat left
-                center;
-              cursor: pointer;
-            }
-
-            input[type='checkbox']:checked + label span {
-              background: url('../../assets/login-checkbox-checked.png')
-                no-repeat left center;
-            }
-
-            & > label {
-              cursor: pointer;
-            }
-          }
-
-          .login {
-            margin-top: 24px;
-
-            a {
-              display: inline-block;
-              line-height: 40px;
-              .wh(280px, 40px);
-              .sc(18px, #fff);
-              cursor: pointer;
-              background: @primary-color;
-              border: 0;
-
-              &:focus {
-                outline-offset: 0;
-                outline: -webkit-focus-ring-color auto 0;
-              }
-
-              &:hover {
-                background-color: #57a3f3;
-                border-color: #57a3f3;
-              }
-            }
-          }
-
-          .register {
-            margin-top: 20px;
-            .sc(14px, #8492a6);
-
-            a {
-              color: @primary-color;
-            }
-          }
-        }
-      }
-
-      .footer {
-        margin-top: 100px;
-        width: @login-card-width - (2 * @login-card-padding);
-        color: @login-card-login-text-color;
-        font-size: 14px;
       }
     }
 
+    .body {
+      min-width: 1210px;
+      .slogn {
+        display: block;
+        margin-top: 7%;
+        font-size: 2.3rem;
+        font-weight: 500;
+      }
+
+      .form-login {
+        min-width: 1210px;
+        margin-top: 30px;
+        .email,
+        .password,
+        .checkCode {
+          margin: 0 auto;
+          padding-bottom: 14px;
+          .fb(flex-start, flex-end, flex);
+          .wh(@login-card-login-input-width, 60px);
+          border-bottom: 1px solid @login-card-login-text-color;
+
+          & > span {
+            flex: 1;
+          }
+
+          input {
+            height: 24px;
+            .sc(18px, @login-card-login-text-color);
+            background: @login-bg;
+            border: 0px;
+            padding: 5px;
+            &:focus {
+              outline-offset: 0;
+              outline: -webkit-focus-ring-color auto 0;
+            }
+          }
+
+          & > input:invalid {
+            color: @login-card-login-input-invalid-text-color;
+          }
+        }
+
+        .email {
+          input {
+            flex: 7;
+          }
+        }
+
+        .password {
+          input {
+            flex: 6;
+          }
+          & > span:last-child {
+            cursor: pointer;
+          }
+
+          .showPw {
+            color: @primary-color;
+          }
+        }
+        .checkCode {
+          input {
+            flex: 6;
+          }
+        }
+        & > span:last-child {
+          cursor: pointer;
+        }
+        .input-focus {
+          border-bottom: 2px solid @primary-color;
+
+          & > span:first-child {
+            color: @primary-color;
+          }
+        }
+
+        .keep {
+          margin: 12px auto 0 auto;
+          clear: both;
+          height: 20px;
+          width: @login-card-login-input-width;
+          font-size: 14px;
+          padding-left: 170px;
+          color: #8492a6;
+          input[type='checkbox'] {
+            display: none;
+          }
+
+          input[type='checkbox'] + label span {
+            display: inline-block;
+            width: 19px;
+            height: 19px;
+            margin: -2px 10px 0 0;
+            vertical-align: middle;
+            background: url('../../assets/login-checkbox.png') no-repeat left
+              center;
+            cursor: pointer;
+          }
+
+          input[type='checkbox']:checked + label span {
+            background: url('../../assets/login-checkbox-checked.png') no-repeat
+              left center;
+          }
+
+          & > label {
+            cursor: pointer;
+          }
+        }
+
+        .login {
+          margin-top: 24px;
+
+          a {
+            display: inline-block;
+            line-height: 33px;
+            .wh(230px, 33px);
+            .sc(18px, #fff);
+            cursor: pointer;
+            background: rgba(32, 160, 255, 0.35);
+            border: 0;
+
+            &:focus {
+              outline-offset: 0;
+              outline: -webkit-focus-ring-color auto 0;
+            }
+
+            &:hover {
+              background-color: rgba(32, 160, 255, 0.45);
+              border-color: rgba(32, 160, 255, 0.45);
+            }
+          }
+        }
+
+        .register {
+          margin-top: 20px;
+          .sc(14px, #8492a6);
+
+          a {
+            color: @primary-color;
+          }
+        }
+      }
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 30%;
+      background-image: url('../../assets/bg_earth.png');
+      background-size: 100%;
+      background-repeat: no-repeat;
+      font-size: 14px;
+      width: 100%;
+      min-width: 1280px;
+      color: @login-card-login-text-color;
+      .foot-text {
+        position: fixed;
+        bottom: 50px;
+        width: 100%;
+        min-width: 1280px;
+      }
+    }
+  }
+  .card-login {
     .tab-register {
+      position: relative;
+      width: @login-card-width;
+      background-color: @login-card-bg;
+      padding: 40px @login-card-padding;
       .header {
         height: 60px;
         border-bottom: 1px solid #52626d;
@@ -760,7 +778,7 @@ export default {
         & > a {
           .sc(18px, @primary-color);
           position: absolute;
-          top: @login-card-padding + 3px;
+          top: @login-card-padding;
           right: @login-card-padding;
           cursor: pointer;
         }
@@ -847,7 +865,7 @@ export default {
 }
 
 input:-webkit-autofill {
-  box-shadow: 0 0 0 1000px @login-card-bg inset !important;
+  box-shadow: 0 0 0 1000px @login-bg inset !important;
   -webkit-text-fill-color: @login-card-login-text-color !important;
 }
 </style>
