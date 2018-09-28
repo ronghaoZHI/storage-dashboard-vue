@@ -28,7 +28,9 @@
                      v-model="loginForm.username"
                      required
                      autofocus
-                     :placeholder="$t('LOGIN.USERNAME')" />
+                     :placeholder="$t('LOGIN.USERNAME')"
+                     minlength="2"
+                     id="username"/>
             </div>
             <div class="password">
               <span>
@@ -43,7 +45,8 @@
                      v-model="loginForm.password"
                      required
                      minlength="6"
-                     :placeholder="$t('LOGIN.USERPWD')" />
+                     :placeholder="$t('LOGIN.USERPWD')"
+                     id="password"/>
               <span @click="showPw"
                     :class="{ showPw:showPassword }">
                 <Icon type="eye"
@@ -267,6 +270,7 @@ export default {
               checkCode: '',
             }
           } else if (code === -1) {
+            this.$Message.error(message)
             this.openSmsModel = true
             this.smscode = ''
           }
@@ -304,7 +308,6 @@ export default {
           this.$Loading.error()
         }
       } else {
-        this.$Message.error(this.$t('LOGIN.VALIDATE_FAILED'))
       }
     },
     async saveToken() {
@@ -352,6 +355,10 @@ export default {
                 this.smsTextTip = message
                 this.openSmsModel = true
               } else if (code === -1002) {
+                this.$Message.error(message)
+                await this.changeCheckCode()
+              } else if (code === -1) {
+                this.$Message.error(message)
                 await this.changeCheckCode()
               }
             },
@@ -467,8 +474,24 @@ export default {
     formValid(name) {
       let isValid = true
       _.each($(this.$refs[name]).find('input'), (input) => {
-        if (!input.validity.valid) {
+        if ($(input).attr('id') === 'username' && !input.validity.valid) {
+          this.$Message.error('请核对用户名')
           isValid = false
+          return isValid
+        } else if (
+          $(input).attr('id') === 'password' &&
+          !input.validity.valid
+        ) {
+          this.$Message.error('请核对密码')
+          isValid = false
+          return isValid
+        } else if (
+          $(input).attr('id') === 'checkCode' &&
+          !input.validity.valid
+        ) {
+          this.$Message.error('请核对验证码')
+          isValid = false
+          return isValid
         }
       })
       return isValid
@@ -598,6 +621,8 @@ export default {
     }
 
     .body {
+      position: relative;
+      z-index: 1;
       min-width: 1210px;
       .slogn {
         display: block;
@@ -750,6 +775,7 @@ export default {
     }
 
     .footer {
+      z-index: 0;
       position: fixed;
       bottom: 0;
       left: 0;
