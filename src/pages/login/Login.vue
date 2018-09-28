@@ -135,7 +135,7 @@
            title="验证信息"
            ok-text="确定"
            @on-ok="loginBySms"
-           :styles="{top:'330px',width:'450px'}">
+           :styles="{top:'330px',width:'385px'}">
       <div class="sms-model-wrap">
         <span class="sms-tip">{{ smsTextTip }}</span>
         <div class="sms-input-wrap">
@@ -212,7 +212,7 @@ export default {
       checkCodeUrl: getCheckCodeUrl(),
       needCheckCode: true,
       requiredCode: true,
-      openSmsModel: 1,
+      openSmsModel: false,
       lang: store.state.lang,
       selectedCustomer: '',
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
@@ -878,17 +878,17 @@ export default {
 }
 .sms-model-wrap {
   .sms-tip {
-    font-size: 1.1em;
+    font-size: 1em;
     display: block;
   }
   .sms-input-wrap {
-    line-height: 55px;
-    margin-top: 20px;
-    padding-top: 5px;
+    line-height: 35px;
+    margin-top: 10px;
+    padding-top: 2px;
 
     & > span {
       display: inline-block;
-      font-size: 12px;
+      font-size: 1.1em;
     }
     .sms-input {
       width: 300px;
@@ -897,8 +897,8 @@ export default {
     }
   }
   .sms-send-tip {
-    margin-top: 20px;
-    font-size: 1.1em;
+    margin-top: 5px;
+    font-size: 1em;
     display: block;
   }
 }
