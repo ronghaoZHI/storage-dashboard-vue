@@ -104,7 +104,7 @@ export default function createError(responseError) {
   }
 
   if (!code) {
-    code = -1
+    code = -10000
   }
 
   if (!errorMsg) {
@@ -112,13 +112,15 @@ export default function createError(responseError) {
       codeMessage[code] || response.statusText || `抱歉，当前请求异常(${code})`
   }
 
-  sentMessage(errorMsg, responseError.data || responseError)
-  iView.Notice.error({
-    title: '请求错误',
-    render: (h) => {
-      return h('span', [codeMessage[code], h('p', `// ${errorMsg}`)])
-    },
-  })
+  if (!(code > -10000 && code < -1)) {
+    sentMessage(errorMsg, responseError.data || responseError)
+    iView.Notice.error({
+      title: '请求错误',
+      render: (h) => {
+        return h('span', [codeMessage[code], h('p', `${errorMsg}`)])
+      },
+    })
+  }
 
   const error = new Error(errorMsg)
   error.code = code
