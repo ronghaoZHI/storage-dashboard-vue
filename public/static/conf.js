@@ -7,7 +7,7 @@ window.dashboard_conf = {
   transcoderHOST: 'transcoder-ss.bscstorage.com',
   onlineMode: 'True',
   upgradeMode: 'False',
-  appID: '6',
+  appID: '9',
   previewAk: 'acc_drdrxp',
   previewSk: '11111111111111111111',
 }

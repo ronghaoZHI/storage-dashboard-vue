@@ -35,6 +35,7 @@
     </div>
     <div class="bsc-flex-section">
       <div class="bucket"
+           v-if="!isNoBuckets"
            v-bind:class="{'bucket-selected': bucket.selected}"
            v-for="bucket in bucketList"
            :key="bucket.Name"
@@ -42,6 +43,7 @@
            v-on:dblclick="dbClick(bucket)">
         <span class="span-filename">{{bucket.Name}}</span>
       </div>
+      <span class="no-bucket">{{$t("STORAGE.NO_BUCKET")}}</span>
     </div>
     <Modal v-model="createBucketModal"
            :title="$t('STORAGE.ADD_BUCKET')"
@@ -68,6 +70,7 @@ export default {
   data() {
     return {
       createBucketValue: '',
+      fetchDone: false,
       createBucketModal: false,
       inputCheck: false,
       bucketList: [],
@@ -89,6 +92,9 @@ export default {
     isSubUser() {
       return checkRole('SUBUSER')
     },
+    isNoBuckets() {
+      return this.fetchDone && this.bucketList && this.bucketList.length === 0
+    },
   },
   watch: {
     createBucketValue(to) {
@@ -101,6 +107,7 @@ export default {
   methods: {
     async getBucketList(forceUpdate = false) {
       const buckets = await this.$store.dispatch('getBuckets', forceUpdate)
+      this.fetchDone = true
       if (this.isSubUser) {
         buckets.Buckets.forEach((item) => {
           this.getBucketAcl(item.Name).then((acl) => {
@@ -277,6 +284,9 @@ const batchDeletion = (list, bucket) => {
 
     .bucket-selected {
       background-color: @bucket-hover-background-color-black;
+    }
+    .no-bucket {
+      color: #f5f5f5;
     }
   }
 }

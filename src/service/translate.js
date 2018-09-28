@@ -85,6 +85,7 @@ export const messages = {
       DELETE_KEY_COM: 'Are you sure you want to delete [{accesskey}] ？',
     },
     STORAGE: {
+      NO_BUCKET: 'No buckets',
       TABLE_BUCKET_NAME: 'Bucket name',
       TOGGLE_THEME: 'Toggle theme',
       BACK_SOURCE: 'Mirror Back Source',
@@ -993,6 +994,7 @@ export const messages = {
       JOB: '任务管理',
     },
     STORAGE: {
+      NO_BUCKET: '当前账户下没有创建 Bucket',
       TABLE_BUCKET_NAME: '空间名',
       TOGGLE_THEME: '切换主题',
       BACK_SOURCE: '镜像回源',
