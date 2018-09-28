@@ -61,7 +61,7 @@
                      type="text"
                      v-model="loginForm.checkCode"
                      :required=requiredCode
-                     minlength="4"
+                     minlength="5"
                      :placeholder="$t('LOGIN.CHECKCODE')" />
               <span @click.stop="changeCheckCode">
                <img class="checkCodeImg" :src="checkCodeUrl" alt="验证码">
