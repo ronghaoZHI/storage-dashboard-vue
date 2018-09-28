@@ -101,7 +101,7 @@
                  v-model="searchSubUserInput"
                  @on-change="handleSearchSubUser"
                  placeholder="search here"
-                 style="width:300px" />
+                 class="search-input"/>
           <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
         </div>
         <div class="wrap">
@@ -137,18 +137,18 @@
            @on-ok="loginBySms"
            :styles="{top:'330px',width:'450px'}">
       <div class="sms-model-wrap">
-        <span style="font-size:1.1em;display:block;">{{ smsTextTip }}</span>
-        <div style="line-height:55px;margin-top:40px;padding-top:5px;">
-          <span style="display:inline-block;font-size:14px;">验证码：</span>
+        <span class="sms-tip">{{ smsTextTip }}</span>
+        <div class="sms-input-wrap">
+          <span style="">验证码：</span>
           <Input size="large"
                 type="text"
                 v-model="smscode"
                 :maxlength=6
                 autofocus
                 placeholder="message number"
-                style="width:300px;height:40px;display:inline-block" />
+                class="sms-input"/>
         </div>
-        <span style="margin-top:20px;font-size:1.1em;display:block;">没有收到手机短信验证码？请尝试  
+        <span class="sms-send-tip">没有收到手机短信验证码？请尝试  
           <a v-show="sending">发送中...</a>
           <a v-show="!sending" @click.stop="sendSms">再次发送</a>
         </span>
@@ -212,7 +212,7 @@ export default {
       checkCodeUrl: getCheckCodeUrl(),
       needCheckCode: true,
       requiredCode: true,
-      openSmsModel: false,
+      openSmsModel: 1,
       lang: store.state.lang,
       selectedCustomer: '',
       keepEmail: JSON.parse(localStorage.getItem('keepEmail')) || false,
@@ -535,7 +535,6 @@ export default {
           display: block;
         }
       }
-
       .select-language {
         display: none;
         width: 100px;
@@ -783,6 +782,9 @@ export default {
         width: 824px;
         border-bottom: 1px solid #52626d;
 
+        .search-input {
+          width: 300px;
+        }
         & > img {
           position: absolute;
           left: 0px;
@@ -874,7 +876,32 @@ export default {
     }
   }
 }
+.sms-model-wrap {
+  .sms-tip {
+    font-size: 1.1em;
+    display: block;
+  }
+  .sms-input-wrap {
+    line-height: 55px;
+    margin-top: 20px;
+    padding-top: 5px;
 
+    & > span {
+      display: inline-block;
+      font-size: 12px;
+    }
+    .sms-input {
+      width: 300px;
+      height: 40px;
+      display: inline-block;
+    }
+  }
+  .sms-send-tip {
+    margin-top: 20px;
+    font-size: 1.1em;
+    display: block;
+  }
+}
 input:-webkit-autofill {
   box-shadow: 0 0 0 1000px @login-bg inset !important;
   -webkit-text-fill-color: @login-card-login-text-color !important;
