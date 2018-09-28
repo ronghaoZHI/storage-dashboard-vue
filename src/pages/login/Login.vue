@@ -65,7 +65,8 @@
                      v-model="loginForm.checkCode"
                      :required=requiredCode
                      minlength="5"
-                     :placeholder="$t('LOGIN.CHECKCODE')" />
+                     :placeholder="$t('LOGIN.CHECKCODE')" 
+                     id="checkCode" />
               <span @click.stop="changeCheckCode">
                <img class="checkCodeImg" :src="checkCodeUrl" alt="验证码">
               </span>
@@ -139,7 +140,7 @@
            ok-text="确定"
            @on-ok="loginBySms"
            :styles="{top:'330px',width:'385px'}">
-      <div class="sms-model-wrap">
+      <div class="sms-model-wrap" @keyup.enter="loginBySms()">
         <span class="sms-tip">{{ smsTextTip }}</span>
         <div class="sms-input-wrap">
           <span style="">验证码：</span>
@@ -249,6 +250,7 @@ export default {
   },
   methods: {
     loginBySms() {
+      this.openSmsModel = false
       getCheckSms(parseInt(this.smscode)).then(
         (res) => {
           let { ticket } = res
