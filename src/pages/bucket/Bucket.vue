@@ -43,7 +43,7 @@
            v-on:dblclick="dbClick(bucket)">
         <span class="span-filename">{{bucket.Name}}</span>
       </div>
-      <span class="no-bucket">{{$t("STORAGE.NO_BUCKET")}}</span>
+      <span v-if="isNoBuckets" class="no-bucket">{{$t("STORAGE.NO_BUCKET")}}</span>
     </div>
     <Modal v-model="createBucketModal"
            :title="$t('STORAGE.ADD_BUCKET')"
