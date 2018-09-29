@@ -640,21 +640,20 @@ export default {
         .password,
         .checkCode {
           margin: 0 auto;
-          padding-bottom: 14px;
+          padding-bottom: 10px;
           .fb(flex-start, flex-end, flex);
           .wh(@login-card-login-input-width, 60px);
           border-bottom: 1px solid @login-card-login-text-color;
-
+          line-height: 1;
           & > span {
             flex: 1;
           }
 
           input {
-            height: 24px;
             .sc(18px, @login-card-login-text-color);
             background: @login-bg;
             border: 0px;
-            padding: 5px;
+            padding: 5px 5px 0 5px;
             &:focus {
               outline-offset: 0;
               outline: -webkit-focus-ring-color auto 0;
