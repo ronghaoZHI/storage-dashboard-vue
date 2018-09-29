@@ -39,8 +39,6 @@
               </span>
               <input v-bfocus
                      class="input-password"
-                     oninvalid="setCustomValidity('Requires 6 characters')"
-                     onchange="try{setCustomValidity('')}catch(e){}"
                      type="password"
                      v-model="loginForm.password"
                      required
@@ -59,8 +57,6 @@
               </span>
               <input v-bfocus
                      class="input-checkCode"
-                     oninvalid="setCustomValidity('Requires')"
-                     onchange="try{setCustomValidity('')}catch(e){}"
                      type="text"
                      v-model="loginForm.checkCode"
                      :required=requiredCode
@@ -167,7 +163,6 @@ import {
   getUserInfo,
   getListSubUser,
   getListBoundUser,
-  postCheckLogin,
   postLoginSSO,
   getCheckCodeUrl,
   getCheckSms,
@@ -340,36 +335,25 @@ export default {
         keepLogin: false,
         language: 1,
       }
-      try {
-        let { isLogin, ticket } = {
-          ...(await postCheckLogin()),
-        }
-        if (!isLogin) {
-          await postLoginSSO(data).then(
-            (res) => {
-              let { ticket } = res
-              this.ticket = ticket
-              this.saveToken()
-            },
-            async (err) => {
-              let { message, code } = err
-              if (code === -4000) {
-                this.smsTextTip = message
-                this.openSmsModel = true
-              } else if (code === -1002) {
-                this.$Message.error(message)
-                await this.changeCheckCode()
-              } else if (code === -1) {
-                this.$Message.error(message)
-                await this.changeCheckCode()
-              }
-            },
-          )
-        } else {
+      await postLoginSSO(data).then(
+        (res) => {
+          let { ticket } = res
           this.ticket = ticket
           this.saveToken()
-        }
-      } catch (error) {}
+        },
+        async (err) => {
+          let { message, code } = err
+          await this.changeCheckCode()
+          if (code === -4000) {
+            this.smsTextTip = message
+            this.openSmsModel = true
+          } else if (code === -1002) {
+            this.$Message.error(message)
+          } else if (code === -1) {
+            this.$Message.error(message)
+          }
+        },
+      )
     },
     async changeCheckCode() {
       this.checkCodeUrl = await getCheckCodeUrl()
