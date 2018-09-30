@@ -53,7 +53,9 @@ let http = axios.create()
 http.interceptors.request.use(
   (config) => {
     // set storage-api token
-    if (store.state) config.headers.common['Authorization'] = store.state.token
+    if (store.state && !/test-sso\.bs58i\.baishancloud\.com/.test(config.url)) {
+      config.headers.common['Authorization'] = store.state.token
+    }
     return requestConf(config)
   },
   (error) => Promise.reject(error),

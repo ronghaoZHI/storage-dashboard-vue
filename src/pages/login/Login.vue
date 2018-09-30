@@ -1,6 +1,7 @@
 <template>
   <div class="bsc-login"
        @keyup.enter="loginSubmit('loginForm')">
+     <Spin size="large" fix v-if="spinShow"></Spin>
      <div class="tab-login"
            v-if="!showSelectUser">
         <div class="header">
@@ -51,7 +52,7 @@
                       :size="18"></Icon>
               </span>
             </div>
-            <div class="checkCode" v-show="needCheckCode">
+            <div class="checkCode" v-if="needCheckCode">
               <span>
                 <Icon type="key" :size="18"></Icon>
               </span>
@@ -59,7 +60,7 @@
                      class="input-checkCode"
                      type="text"
                      v-model="loginForm.checkCode"
-                     :required=requiredCode
+                     :required=needCheckCode
                      minlength="5"
                      :placeholder="$t('LOGIN.CHECKCODE')" 
                      id="checkCode" />
@@ -167,6 +168,7 @@ import {
   getCheckCodeUrl,
   getCheckSms,
   getSendSms,
+  postCheckLogin,
 } from 'api'
 import { checkRole, logout } from 'helper'
 import store from '@/store'
@@ -193,24 +195,15 @@ export default {
       },
     },
   },
-  mounted() {
-    this.searchedSubUserList = this.subUserList
-    if (window.dashboard_conf.onlineMode === 'True') {
-      ;[this.needCheckCode, this.requiredCode] = [true, true]
-    } else {
-      ;[this.needCheckCode, this.requiredCode] = [false, false]
-    }
-  },
   data() {
     return {
+      spinShow: false,
       currentYear: new Date().getFullYear().toString(),
       smscode: '',
-      ticket: '',
       sending: false,
       smsTextTip: '',
-      checkCodeUrl: getCheckCodeUrl(),
-      needCheckCode: true,
-      requiredCode: true,
+      needCheckCode: false,
+      checkCodeUrl: '',
       openSmsModel: false,
       lang: store.state.lang,
       selectedCustomer: '',
@@ -224,6 +217,21 @@ export default {
       searchSubUserInput: '',
       searchedSubUserList: [],
     }
+  },
+  async created() {
+    this.spinShow = true
+    if (window.dashboard_conf.onlineMode === 'False') {
+      this.$store.state.needCheckCode = false
+    }
+    let { isLogin, captcha, ticket } = {
+      ...(await postCheckLogin()),
+    }
+    ticket && (await this.$store.dispatch('setBaseInfo', { token: ticket }))
+    this.needCheckCode = captcha
+    captcha && (await this.changeCheckCode())
+    isLogin ? await this.getInfo() : {}
+    this.searchedSubUserList = this.subUserList
+    this.spinShow = false
   },
   computed: {
     subUserList: {
@@ -249,7 +257,7 @@ export default {
       getCheckSms(parseInt(this.smscode)).then(
         (res) => {
           let { ticket } = res
-          this.ticket = ticket
+          this.$store.state.token = ticket
           this.saveToken()
         },
         async (err) => {
@@ -308,37 +316,49 @@ export default {
       }
     },
     async saveToken() {
-      let _token = this.$store.state.token || this.ticket
+      let _token = this.$store.state.token
       if (_token) {
-        await this.$store.dispatch('setToken', _token)
-        this.$http.defaults.headers.common['Authorization'] = _token
-        try {
-          await this.setBaseInfo({
-            ...(await getUserInfo()),
-            token: _token,
-          })
-        } catch (error) {
-          logout()
-        }
-        const keys = await getAccesskey()
-        await this.$store.dispatch('setBaseInfo', { keys: keys })
+        this.setInfo(_token)
       } else {
         this.getTiketSSO()
       }
     },
+    async getInfo() {
+      let _token = this.$store.state.token
+      if (!_token) {
+        return
+      } else {
+        this.setInfo(_token)
+      }
+    },
+    async setInfo(_token) {
+      await this.$store.dispatch('setToken', _token)
+      try {
+        await this.setBaseInfo({
+          ...(await getUserInfo()),
+          token: _token,
+        })
+      } catch (error) {
+        logout()
+      }
+      const keys = await getAccesskey()
+      await this.$store.dispatch('setBaseInfo', { keys: keys })
+    },
     async getTiketSSO() {
       const data = {
         appId: window.dashboard_conf.appID,
-        captcha: this.loginForm.checkCode,
         name: this.loginForm.username,
         pwd: this.loginForm.password,
         keepLogin: false,
         language: 1,
       }
+      this.needCheckCode
+        ? Object.assign(data, { captcha: this.loginForm.checkCode })
+        : data
       await postLoginSSO(data).then(
         (res) => {
           let { ticket } = res
-          this.ticket = ticket
+          this.$store.state.token = ticket
           this.saveToken()
         },
         async (err) => {
@@ -348,6 +368,7 @@ export default {
             this.smsTextTip = message
             this.openSmsModel = true
           } else if (code === -1002) {
+            this.needCheckCode = true
             this.$Message.error(message)
           } else if (code === -1) {
             this.$Message.error(message)
@@ -358,7 +379,7 @@ export default {
     async changeCheckCode() {
       this.checkCodeUrl = await getCheckCodeUrl()
     },
-    setBaseInfo(res) {
+    async setBaseInfo(res) {
       this.$store
         .dispatch('setBaseInfo', {
           current: res,
@@ -376,7 +397,6 @@ export default {
     async adminMode(data) {
       await this.$store.dispatch('setToken', data.token)
       this.$store.dispatch('setBaseInfo', { manager: [data] })
-      this.$http.defaults.headers.common['Authorization'] = data.token
       let res = checkRole('LIST_USERS')
         ? await getListBoundUser()
         : checkRole('READ_USER')
@@ -424,7 +444,6 @@ export default {
     async toIndex(data, router = '/overview') {
       await this.$store.dispatch('setBaseInfo', data)
       await this.$store.dispatch('setToken', data.token)
-      this.$http.defaults.headers.common['Authorization'] = data.token
       await this.$store.dispatch('cleanState')
 
       this.$router.push(this.isSub ? '/bucket' : router)

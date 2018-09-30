@@ -2,8 +2,16 @@ import store from '@/store'
 import iView from 'iview-bsc'
 import { clear } from '@/service/Aws'
 import router from '@/router'
-import { ssoLogout } from 'api'
+import { ssoLogout, postCheckLogin } from 'api'
 import createAlert from './createAlert'
+
+export const isLogin = async () => {
+  let { isLogin, ticket } = {
+    ...(await postCheckLogin()),
+  }
+  ticket && (await this.$store.dispatch('setBaseInfo', { token: ticket }))
+  return isLogin
+}
 
 export const logout = async (message) => {
   message

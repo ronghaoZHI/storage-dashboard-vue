@@ -3,8 +3,7 @@ import Router from 'vue-router'
 import routes from './routerItem'
 import iView from 'iview-bsc'
 import store from '@/store'
-import { checkRole } from 'helper'
-import { postCheckLogin } from 'api'
+import { checkRole, isLogin } from 'helper'
 
 Vue.use(Router)
 
@@ -25,13 +24,6 @@ const hasPermission = (to) => {
     meta: { show: true },
   }
   return _.some(store.getters.menuList, router)
-}
-const isLogin = async () => {
-  let { isLogin, ticket } = {
-    ...(await postCheckLogin()),
-  }
-  store.state.token = ticket
-  return isLogin
 }
 
 router.beforeEach((to, from, next) => {
