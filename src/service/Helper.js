@@ -9,7 +9,7 @@ export const isLogin = async () => {
   let { isLogin, ticket } = {
     ...(await postCheckLogin()),
   }
-  ticket && (await this.$store.dispatch('setBaseInfo', { token: ticket }))
+  ticket && (await store.dispatch('setBaseInfo', { token: ticket }))
   return isLogin
 }
 
