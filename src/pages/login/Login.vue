@@ -267,7 +267,7 @@ export default {
         (res) => {
           let { ticket } = res
           this.$store.state.token = ticket
-          this.saveToken()
+          return this.saveToken()
         },
         async (err) => {
           let { message, code } = err
@@ -368,7 +368,7 @@ export default {
         (res) => {
           let { ticket } = res
           this.$store.state.token = ticket
-          this.saveToken()
+          return this.saveToken()
         },
         async (err) => {
           let { message, code } = err
