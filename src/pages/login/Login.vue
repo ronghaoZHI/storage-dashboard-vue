@@ -219,11 +219,12 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    if (window.dashboard_conf.onlineMode !== 'False') {
-      next((vm) => !from.name && vm.initCheck())
-    } else {
-      next()
-    }
+    next(
+      (vm) =>
+        window.dashboard_conf.onlineMode !== 'False' &&
+        !from.name &&
+        vm.initCheck(),
+    )
   },
   created() {
     if (window.dashboard_conf.onlineMode === 'False') {
