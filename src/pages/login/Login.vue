@@ -221,7 +221,7 @@ export default {
   async created() {
     this.spinShow = true
     if (window.dashboard_conf.onlineMode === 'False') {
-      this.$store.state.needCheckCode = false
+      this.needCheckCode = false
     }
     let { isLogin, captcha, ticket } = {
       ...(await postCheckLogin()),
