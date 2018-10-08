@@ -218,20 +218,18 @@ export default {
       searchedSubUserList: [],
     }
   },
-  async created() {
-    this.spinShow = true
+  beforeRouteEnter(to, from, next) {
+    if (window.dashboard_conf.onlineMode !== 'False') {
+      next((vm) => !from.name && vm.initCheck())
+    } else {
+      next()
+    }
+  },
+  created() {
     if (window.dashboard_conf.onlineMode === 'False') {
       this.needCheckCode = false
     }
-    let { isLogin, captcha, ticket } = {
-      ...(await postCheckLogin()),
-    }
-    ticket && (await this.$store.dispatch('setBaseInfo', { token: ticket }))
-    this.needCheckCode = captcha
-    captcha && (await this.changeCheckCode())
-    isLogin ? await this.getInfo() : {}
     this.searchedSubUserList = this.subUserList
-    this.spinShow = false
   },
   computed: {
     subUserList: {
@@ -252,6 +250,17 @@ export default {
     },
   },
   methods: {
+    async initCheck() {
+      this.spinShow = true
+      let { isLogin, captcha, ticket } = await postCheckLogin()
+      this.needCheckCode = captcha
+      await Promise.all([
+        ticket && this.$store.dispatch('setBaseInfo', { token: ticket }),
+        captcha && this.changeCheckCode(),
+        isLogin && this.getInfo(),
+      ])
+      this.spinShow = false
+    },
     loginBySms() {
       this.openSmsModel = false
       getCheckSms(parseInt(this.smscode)).then(

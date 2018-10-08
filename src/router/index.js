@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import routes from './routerItem'
 import iView from 'iview-bsc'
 import store from '@/store'
-import { checkRole, isLogin } from 'helper'
+import { checkRole } from 'helper'
 
 Vue.use(Router)
 
@@ -27,41 +27,36 @@ const hasPermission = (to) => {
 }
 
 router.beforeEach((to, from, next) => {
-  if (to.name != 'login') {
-    isLogin() ? next() : redirectToLogin(to, next)
-    if (to.matched.some((record) => record.meta.requiresAuth)) {
-      // check role
-      if (hasPermission) {
-        // !from.name && !to.name => url === 'cwn.xxxxxx/#/'
-        // check this router is trigger from other website or not
-        store.state.token
-          ? next(
-              !from.name && !to.name
-                ? { path: checkRole('SUB') ? '/bucket' : '/overview' }
-                : {},
-            )
-          : redirectToLogin(to, next)
-      } else {
-        iView.Message.error({
-          content: '当前账户没有访问此功能的权限',
-          duration: 10,
-          closable: true,
-          render: (h) => {
-            return h(
-              'a',
-              {
-                on: {
-                  click: () => redirectToLogin(to, next),
-                },
-              },
-              '重新登录',
-            )
-          },
-        })
-        iView.LoadingBar.finish()
-      }
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    // check role
+    if (hasPermission) {
+      // !from.name && !to.name => url === 'cwn.xxxxxx/#/'
+      // check this router is trigger from other website or not
+      store.state.token
+        ? next(
+            !from.name && !to.name
+              ? { path: checkRole('SUB') ? '/bucket' : '/overview' }
+              : {},
+          )
+        : redirectToLogin(to, next)
     } else {
-      next()
+      iView.Message.error({
+        content: '当前账户没有访问此功能的权限',
+        duration: 10,
+        closable: true,
+        render: (h) => {
+          return h(
+            'a',
+            {
+              on: {
+                click: () => redirectToLogin(to, next),
+              },
+            },
+            '重新登录',
+          )
+        },
+      })
+      iView.LoadingBar.finish()
     }
   } else {
     next()
