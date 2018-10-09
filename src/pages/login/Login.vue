@@ -847,6 +847,7 @@ export default {
       .wrap {
         height: 460px;
         overflow-y: auto;
+        margin-right: -8px;
 
         .body {
           .card-wrap {
