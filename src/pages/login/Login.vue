@@ -5,7 +5,7 @@
      <div class="tab-login"
            v-if="!showSelectUser">
         <div class="header">
-          <img src="../../assets/logo.png"
+          <img src="../../assets/portal_logo.png"
                alt="logo" />
           <span>{{$t("LOGIN.LANGUAGE")}}</span>
           <div class="select-language">
@@ -554,16 +554,19 @@ export default {
   .tab-login {
     .wh(100%, 100%);
     background-color: @login-bg;
+    background-image: url(../../assets/bg_sky.jpg);
+    background-size: 100%, 100%;
     padding: 35px;
     .header {
-      height: 25px;
+      height: 1.6vw;
 
       & > img {
         float: left;
+        height: 1.6vw;
       }
 
       & > span {
-        .sc(18px, #fff);
+        .sc(1vw, #737e8c);
         font-weight: 500;
         float: right;
         cursor: pointer;
@@ -640,15 +643,17 @@ export default {
       z-index: 1;
       min-width: 1210px;
       .slogn {
+        color: #b1bbc9;
         display: block;
-        margin-top: 7%;
+        margin-top: 5%;
         font-size: 2.3rem;
         font-weight: 500;
+        line-height: 2;
       }
 
       .form-login {
         min-width: 1210px;
-        margin-top: 30px;
+        margin-top: 15px;
         .email,
         .password,
         .checkCode {
@@ -663,7 +668,7 @@ export default {
           }
 
           input {
-            .sc(18px, @login-card-login-text-color);
+            .sc(16px, @login-card-login-text-color);
             background: @login-bg;
             border: 0px;
             padding: 5px 5px 0 5px;
@@ -758,8 +763,8 @@ export default {
 
           a {
             display: inline-block;
-            line-height: 33px;
-            .wh(230px, 33px);
+            line-height: 36px;
+            .wh(210px, 36px);
             .sc(18px, #fff);
             cursor: pointer;
             background: rgba(32, 160, 255, 0.35);
