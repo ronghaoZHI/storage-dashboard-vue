@@ -252,15 +252,19 @@ export default {
   },
   methods: {
     async initCheck() {
-      this.spinShow = true
-      let { isLogin, captcha, ticket } = await postCheckLogin()
-      this.needCheckCode = captcha
-      await Promise.all([
-        ticket && this.$store.dispatch('setBaseInfo', { token: ticket }),
-        captcha && this.changeCheckCode(),
-        isLogin && this.getInfo(),
-      ])
-      this.spinShow = false
+      try {
+        this.spinShow = true
+        let { isLogin, captcha, ticket } = await postCheckLogin()
+        this.needCheckCode = captcha
+        await Promise.all([
+          ticket && this.$store.dispatch('setBaseInfo', { token: ticket }),
+          captcha && this.changeCheckCode(),
+          isLogin && this.getInfo(),
+        ])
+        this.spinShow = false
+      } catch (error) {
+        this.spinShow = false
+      }
     },
     loginBySms() {
       this.openSmsModel = false
