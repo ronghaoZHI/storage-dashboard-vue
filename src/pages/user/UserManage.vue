@@ -219,15 +219,7 @@ export default {
         acl: [],
       },
       iconSize: 18,
-      createUserForm: {
-        username: '',
-        email: '',
-        password: '',
-        company: '',
-        perms: ['BASE'],
-        perm_rule: 'rule1',
-        sso_type: '1',
-      },
+      createUserForm: initUserInfo(),
       userRuleValidate: {
         username: [
           { required: true, message: 'Requires username', trigger: 'blur' },
@@ -267,13 +259,7 @@ export default {
           },
         ],
       },
-      createSubUserForm: {
-        username: '',
-        email: '',
-        password: '',
-        company: '',
-        acl: [],
-      },
+      createSubUserForm: initSubUserInfo(),
       subUserRuleValidate: {
         username: [
           { required: true, message: 'Requires user name', trigger: 'blur' },
@@ -1058,16 +1044,7 @@ export default {
               passive_names: this.passiveNames,
             })
           : ''
-        this.createUserForm = {
-          ...this.createUserForm,
-          username: '',
-          email: '',
-          password: '',
-          company: '',
-          perm_rule: 'rule1',
-          perms: ['BASE'],
-          sso_type: '1',
-        }
+        this.createUserForm = initUserInfo()
         this.getUserList()
         this.searchUserInput = ''
         this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
@@ -1115,13 +1092,7 @@ export default {
             }
           }),
         )
-        this.createSubUserForm = {
-          ...this.createSubUserForm,
-          username: '',
-          email: '',
-          password: '',
-          company: '',
-        }
+        this.createSubUserForm = initSubUserInfo()
         this.getUserList()
         this.searchUserInput = ''
         this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
@@ -1259,6 +1230,23 @@ const createAclTags = (acl, h) => {
     )
   )
 }
+
+const initUserInfo = () => ({
+  username: '',
+  email: '',
+  password: '',
+  company: '',
+  perm_rule: 'rule1',
+  perms: ['BASE'],
+  sso_type: '1',
+})
+const initSubUserInfo = () => ({
+  username: '',
+  email: '',
+  password: '',
+  company: '',
+  acl: [],
+})
 
 const convertObject2Array = (object) => {
   if (!object) {
