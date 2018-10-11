@@ -123,10 +123,13 @@
                 </span>
               </div>
             </div>
-            <div v-if="subUserList.length <= 0"
+            <div v-if="subUserList.length === 0 && !this.userFetching"
                  class="warning"
                  @click="toUserMange()">暂无绑定用户,
               <span>点击绑定或新增用户</span>
+            </div>
+            <div v-else-if="this.userFetching" class="warning">
+              <Spin size="large" fix></Spin>
             </div>
           </div>
         </div>
@@ -214,6 +217,7 @@ export default {
         checkCode: '',
       },
       showPassword: false,
+      userFetching: false,
       searchSubUserInput: '',
       searchedSubUserList: [],
     }
@@ -409,18 +413,25 @@ export default {
         })
     },
     async adminMode(data) {
-      await this.$store.dispatch('setToken', data.token)
-      this.$store.dispatch('setBaseInfo', { manager: [data] })
-      let res = checkRole('LIST_USERS')
-        ? await getListBoundUser()
-        : checkRole('READ_USER')
-          ? [
-              ...(await getListSubUser()),
-              ...(await getListBoundUser().map((user) => {
-                return { ...user, type: 1 }
-              })),
-            ]
-          : await getListSubUser()
+      let res
+      try {
+        this.userFetching = true
+        await this.$store.dispatch('setToken', data.token)
+        this.$store.dispatch('setBaseInfo', { manager: [data] })
+        res = checkRole('LIST_USERS')
+          ? await getListBoundUser()
+          : checkRole('READ_USER')
+            ? [
+                ...(await getListSubUser()),
+                ...(await getListBoundUser().map((user) => {
+                  return { ...user, type: 1 }
+                })),
+              ]
+            : await getListSubUser()
+        this.userFetching = false
+      } catch (error) {
+        this.userFetching = false
+      }
       if (res.length > 0) {
         this.searchedSubUserList = this.subUserList = res
         this.showSelectUser = false
@@ -915,6 +926,7 @@ export default {
 
           .warning {
             .sc(16px, #fff);
+            text-align: center;
 
             span {
               color: @primary-color;

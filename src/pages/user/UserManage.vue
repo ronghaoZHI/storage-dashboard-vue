@@ -31,16 +31,6 @@
           @on-click="tabChange"
           style="marginTop:10px"
           :animated="false">
-      <Tab-pane :label="$t('USER.SUB_USER_MANAGE')"
-                name="subUser">
-        <Table class="table"
-               :show-header="true"
-               :stripe="true"
-               :context="self"
-               :columns="subUserHeader"
-               :data="searchedSubUserList"
-               :no-data-text="$t('USER.NO_USER')"></Table>
-      </Tab-pane>
       <Tab-pane :label="$t('USER.USER_MANAGE')"
                 name="user">
         <Table class="table"
@@ -51,10 +41,20 @@
                :data="searchedUserList"
                :no-data-text="$t('USER.NO_USER')"></Table>
       </Tab-pane>
+      <Tab-pane :label="$t('USER.SUB_USER_MANAGE')"
+                name="subUser">
+        <Table class="table"
+               :show-header="true"
+               :stripe="true"
+               :context="self"
+               :columns="subUserHeader"
+               :data="searchedSubUserList"
+               :no-data-text="$t('USER.NO_USER')"></Table>
+      </Tab-pane>
     </Tabs>
     <Modal v-model="createUserModal"
            :title="$t('USER.CREATE_USER')"
-           @on-ok="createUser"
+           @on-ok="createUserCheck"
            @on-cancel="createBucketValue = ''">
       <Form ref="createUserForm"
             :model="createUserForm"
@@ -87,6 +87,7 @@
           <CheckboxGroup v-model="createUserForm.perms">
             <Checkbox v-for="perm in canCreatePerms"
                       :label="perm"
+                      :disabled="perm === 'BASE'"
                       :key="perm"></Checkbox>
           </CheckboxGroup>
         </Form-item>
@@ -160,13 +161,13 @@
                  :placeholder="$t('USER.REQUIRE_COMPANY')" />
         </Form-item>
       </Form>
-      <Acls :aclsData = subUserAclForm />
+      <Acls :aclsData=subUserAclForm />
     </Modal>
     <Modal v-model="openEditSubUserModal"
            title="编辑子账号"
            ok-text="确定(请勿多次尝试)"
            @on-ok="editSubUser">
-      <Acls :aclsData = subUserAclForm />
+      <Acls :aclsData=subUserAclForm />
     </Modal>
     <Spin size="bigger"
           fix
@@ -223,7 +224,7 @@ export default {
         email: '',
         password: '',
         company: '',
-        perms: [],
+        perms: ['BASE'],
         perm_rule: 'rule1',
         sso_type: '1',
       },
@@ -573,21 +574,6 @@ export default {
                     },
                     'Unbind',
                   ),
-                  // test - delete
-                  // h(
-                  //   'i-button',
-                  //   {
-                  //     props: {
-                  //       size: 'small',
-                  //     },
-                  //     on: {
-                  //       click: () => {
-                  //         this.removeUserConfirm(params.row, params.index)
-                  //       },
-                  //     },
-                  //   },
-                  //   'Remove',
-                  // ),
                 ]
               },
             },
@@ -1021,7 +1007,6 @@ export default {
         },
       )
     },
-    /******    *****/
     unbindUserConfirm(user, index) {
       this.$Modal.confirm({
         content: this.$t('STORAGE.UNBIND_CONFIRMED', {
@@ -1050,44 +1035,48 @@ export default {
         createAlert(`unBindUser ${userinfo.username} error`)
       }
     },
-    createUser() {
-      this.$refs['createUserForm'].validate(async (valid) => {
+    createUserCheck() {
+      this.$refs['createUserForm'].validate((valid) => {
         if (valid) {
-          this.$Loading.start()
-          this.createUserForm.sso_type = parseInt(this.createUserForm.sso_type)
-          try {
-            this.activeName = this.$store.state.current.username
-            this.passiveNames = [this.createUserForm.username]
-            await postCreateUser({ ...this.createUserForm }, this.customer)
-            checkRole('BIND_USER')
-              ? await postBindUser({
-                  active_name: this.activeName,
-                  passive_names: this.passiveNames,
-                })
-              : ''
-            this.createUserForm = {
-              ...this.createUserForm,
-              username: '',
-              email: '',
-              password: '',
-              company: '',
-              perm_rule: 'rule1',
-              perms: [],
-              sso_type: '1',
-            }
-            this.getUserList()
-            this.searchUserInput = ''
-            this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
-            this.$Loading.finish()
-          } catch (e) {
-            this.createUserForm.sso_type = `${this.createUserForm.sso_type}`
-            this.$Message.error(e.msg)
-            this.$Loading.error()
-          }
+          this.createUser()
         } else {
           this.$Message.error(this.$t('USER.CREATE_INFO'))
+          setTimeout(() => (this.createUserModal = true), 5)
         }
       })
+    },
+    async createUser() {
+      this.$Loading.start()
+      this.createUserForm.sso_type = parseInt(this.createUserForm.sso_type)
+      try {
+        this.activeName = this.$store.state.current.username
+        this.passiveNames = [this.createUserForm.username]
+        await postCreateUser({ ...this.createUserForm }, this.customer)
+        checkRole('BIND_USER')
+          ? await postBindUser({
+              active_name: this.activeName,
+              passive_names: this.passiveNames,
+            })
+          : ''
+        this.createUserForm = {
+          ...this.createUserForm,
+          username: '',
+          email: '',
+          password: '',
+          company: '',
+          perm_rule: 'rule1',
+          perms: ['BASE'],
+          sso_type: '1',
+        }
+        this.getUserList()
+        this.searchUserInput = ''
+        this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
+        this.$Loading.finish()
+      } catch (e) {
+        this.createUserForm.sso_type = `${this.createUserForm.sso_type}`
+        this.$Message.error(e.msg)
+        this.$Loading.error()
+      }
     },
     openCreateSubUserModal() {
       this.createSubUserModal = true
