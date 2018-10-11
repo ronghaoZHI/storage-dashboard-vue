@@ -1,96 +1,103 @@
 <template>
   <div class="bsc-login"
        @keyup.enter="loginSubmit('loginForm')">
-     <Spin size="large" fix v-if="spinShow"></Spin>
-     <div class="tab-login"
-           v-if="!showSelectUser">
-        <div class="header">
-          <img src="../../assets/portal_logo.png"
-               alt="logo" />
-          <span>{{$t("LOGIN.LANGUAGE")}}</span>
-          <div class="select-language">
-            <div class="border-triangle-external"></div>
-            <div class="border-triangle"></div>
-            <span @click="changeLang('en')">English</span>
-            <span @click="changeLang('cn')">中文</span>
+    <Spin size="large"
+          fix
+          v-if="spinShow"></Spin>
+    <div class="tab-login"
+         v-if="!showSelectUser">
+      <div class="header">
+        <img src="../../assets/portal_logo.png"
+             alt="logo" />
+        <span>{{$t("LOGIN.LANGUAGE")}}</span>
+        <div class="select-language">
+          <div class="border-triangle-external"></div>
+          <div class="border-triangle"></div>
+          <span @click="changeLang('en')">English</span>
+          <span @click="changeLang('cn')">中文</span>
+        </div>
+      </div>
+      <div class="body">
+        <span class="slogn">WELCOME TO<br />THE BAISHANCLOUD DIGITAL WORLD</span>
+        <form class="form-login"
+              v-model="loginForm"
+              ref="loginForm">
+          <div class="email">
+            <span>
+              <Icon type="ios-person"
+                    :size="18"></Icon>
+            </span>
+            <input v-bfocus
+                   type="text"
+                   v-model="loginForm.username"
+                   required
+                   autofocus
+                   :placeholder="$t('LOGIN.USERNAME')"
+                   minlength="2"
+                   id="username" />
           </div>
-        </div>
-        <div class="body">
-          <span class="slogn">WELCOME TO<br/>THE BAISHANCLOUD DIGITAL WORLD</span>
-          <form class="form-login"
-                v-model="loginForm"
-                ref="loginForm">
-            <div class="email">
-              <span>
-                <Icon type="ios-person" :size="18"></Icon>
-              </span>
-              <input v-bfocus
-                     type="text"
-                     v-model="loginForm.username"
-                     required
-                     autofocus
-                     :placeholder="$t('LOGIN.USERNAME')"
-                     minlength="2"
-                     id="username"/>
-            </div>
-            <div class="password">
-              <span>
-                <Icon type="unlocked"
-                      :size="18"></Icon>
-              </span>
-              <input v-bfocus
-                     class="input-password"
-                     type="password"
-                     v-model="loginForm.password"
-                     required
-                     minlength="6"
-                     :placeholder="$t('LOGIN.USERPWD')"
-                     id="password"/>
-              <span @click="showPw"
-                    :class="{ showPw:showPassword }">
-                <Icon type="eye"
-                      :size="18"></Icon>
-              </span>
-            </div>
-            <div class="checkCode" v-if="needCheckCode">
-              <span>
-                <Icon type="key" :size="18"></Icon>
-              </span>
-              <input v-bfocus
-                     class="input-checkCode"
-                     type="text"
-                     v-model="loginForm.checkCode"
-                     :required=needCheckCode
-                     minlength="5"
-                     :placeholder="$t('LOGIN.CHECKCODE')" 
-                     id="checkCode" />
-              <span @click.stop="changeCheckCode">
-               <img class="checkCodeImg" :src="checkCodeUrl" alt="验证码">
-              </span>
-            </div>
-            <div class="keep">
-              <input type="checkbox"
-                     v-model="keepEmail"
-                     @click="keep"
-                     id="bsc-checkbox" />
-              <label for="bsc-checkbox">
-                <span></span>{{$t("LOGIN.KEEP_EMAIL")}}</label>
-            </div>
-            <div class="login">
-              <a @click.stop="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</a>
-            </div>
-            <div class="register dn">
-              没有账号？
-              <a>立即申请</a>
-            </div>
-          </form>
-        </div>
-        <div class="footer">
-          <div class="foot-text">
-            Copyright © 2015-{{currentYear}} BaishanCloud. All rights Reserved.
+          <div class="password">
+            <span>
+              <Icon type="unlocked"
+                    :size="18"></Icon>
+            </span>
+            <input v-bfocus
+                   class="input-password"
+                   type="password"
+                   v-model="loginForm.password"
+                   required
+                   minlength="6"
+                   :placeholder="$t('LOGIN.USERPWD')"
+                   id="password" />
+            <span @click="showPw"
+                  :class="{ showPw:showPassword }">
+              <Icon type="eye"
+                    :size="18"></Icon>
+            </span>
           </div>
+          <div class="checkCode"
+               v-if="needCheckCode">
+            <span>
+              <Icon type="key"
+                    :size="18"></Icon>
+            </span>
+            <input v-bfocus
+                   class="input-checkCode"
+                   type="text"
+                   v-model="loginForm.checkCode"
+                   :required=needCheckCode
+                   minlength="5"
+                   :placeholder="$t('LOGIN.CHECKCODE')"
+                   id="checkCode" />
+            <span @click.stop="changeCheckCode">
+              <img class="checkCodeImg"
+                   :src="checkCodeUrl"
+                   alt="验证码">
+            </span>
+          </div>
+          <div class="keep">
+            <input type="checkbox"
+                   v-model="keepEmail"
+                   @click="keep"
+                   id="bsc-checkbox" />
+            <label for="bsc-checkbox">
+              <span></span>{{$t("LOGIN.KEEP_EMAIL")}}</label>
+          </div>
+          <div class="login">
+            <a @click.stop="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</a>
+          </div>
+          <div class="register dn">
+            没有账号？
+            <a>立即申请</a>
+          </div>
+        </form>
+      </div>
+      <div class="footer">
+        <div class="foot-text">
+          Copyright © 2015-{{currentYear}} BaishanCloud. All rights Reserved.
         </div>
-    </div> 
+      </div>
+    </div>
 
     <div class="card-login">
       <div class="tab-register"
@@ -102,7 +109,7 @@
                  v-model="searchSubUserInput"
                  @on-change="handleSearchSubUser"
                  placeholder="search here"
-                 class="search-input"/>
+                 class="search-input" />
           <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
         </div>
         <div class="wrap">
@@ -114,9 +121,11 @@
                    :key="user.ts"
                    @click="selectSubUser(user)">
                 <span class="info">
-                  <Icon type="person"></Icon> {{user.username}}</span>
+                  <Icon type="person"></Icon> {{user.username}}
+                </span>
                 <span class="info">
-                  <Icon type="briefcase"></Icon> {{user.company}}</span>
+                  <Icon type="briefcase"></Icon> {{user.company}}
+                </span>
                 <span class="icon"
                       v-show="user.type && user.type===1">
                   <Icon type="star"></Icon>
@@ -128,8 +137,10 @@
                  @click="toUserMange()">暂无绑定用户,
               <span>点击绑定或新增用户</span>
             </div>
-            <div v-else-if="this.userFetching" class="warning">
-              <Spin size="large" fix></Spin>
+            <div v-else-if="this.userFetching"
+                 class="warning">
+              <Spin size="large"
+                    fix></Spin>
             </div>
           </div>
         </div>
@@ -140,21 +151,23 @@
            ok-text="确定"
            @on-ok="loginBySms"
            :styles="{top:'330px',width:'385px'}">
-      <div class="sms-model-wrap" @keyup.enter="loginBySms()">
+      <div class="sms-model-wrap"
+           @keyup.enter="loginBySms()">
         <span class="sms-tip">{{ smsTextTip }}</span>
         <div class="sms-input-wrap">
           <span style="">验证码：</span>
           <Input size="large"
-                type="text"
-                v-model="smscode"
-                :maxlength=6
-                autofocus
-                placeholder="message number"
-                class="sms-input"/>
+                 type="text"
+                 v-model="smscode"
+                 :maxlength=6
+                 autofocus
+                 placeholder="message number"
+                 class="sms-input" />
         </div>
-        <span class="sms-send-tip">没有收到手机短信验证码？请尝试  
+        <span class="sms-send-tip">没有收到手机短信验证码？请尝试
           <a v-show="sending">发送中...</a>
-          <a v-show="!sending" @click.stop="sendSms">再次发送</a>
+          <a v-show="!sending"
+             @click.stop="sendSms">再次发送</a>
         </span>
       </div>
     </Modal>
@@ -167,6 +180,7 @@ import {
   getUserInfo,
   getListSubUser,
   getListBoundUser,
+  getListAllUser,
   postLoginSSO,
   getCheckCodeUrl,
   getCheckSms,
@@ -405,7 +419,7 @@ export default {
           perms: res.perms || [],
         })
         .then(() => {
-          checkRole(['LIST_USERS', 'SUB'])
+          checkRole(['LIST_USERS', 'SUB', 'BIND_USER'])
             ? this.adminMode(res)
             : checkRole('OPS')
               ? this.toIndex(res, '/system/group')
@@ -419,15 +433,17 @@ export default {
         await this.$store.dispatch('setToken', data.token)
         this.$store.dispatch('setBaseInfo', { manager: [data] })
         res = checkRole('LIST_USERS')
-          ? await getListBoundUser()
-          : checkRole('READ_USER')
-            ? [
-                ...(await getListSubUser()),
-                ...(await getListBoundUser().map((user) => {
-                  return { ...user, type: 1 }
-                })),
-              ]
-            : await getListSubUser()
+          ? await getListAllUser()
+          : checkRole('BIND_USER')
+            ? await getListBoundUser()
+            : checkRole('READ_USER')
+              ? [
+                  ...(await getListSubUser()),
+                  ...(await getListBoundUser().map((user) => {
+                    return { ...user, type: 1 }
+                  })),
+                ]
+              : await getListSubUser()
         this.userFetching = false
       } catch (error) {
         this.userFetching = false
