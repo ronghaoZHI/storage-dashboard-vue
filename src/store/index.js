@@ -148,6 +148,9 @@ const store = new Vuex.Store({
       state.manager.length !== 0 || state.users.length !== 0
         ? 'manage'
         : 'normal',
+    isSameUser: (state) =>
+      state.manager.length > 1 &&
+      state.current.username === state.manager[0].username,
     menuList: (state) => state.menuList,
     buckets(state) {
       return state.buckets.Buckets

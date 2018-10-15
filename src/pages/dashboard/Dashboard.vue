@@ -225,7 +225,6 @@ import files from '../../assets/dashboard/files.svg'
 import filesDark from '../../assets/dashboard/files-dark.svg'
 import { getBillOldUrl, getBillUrl, getBillBandwidthUrl } from 'api'
 import store from '@/store'
-import { checkRole } from 'helper'
 import {
   bytes,
   bps,
@@ -907,7 +906,10 @@ export default {
       if (this.selectedBucket && this.selectedBucket !== 'All Buckets') {
         path += '&bucket=' + this.selectedBucket
       }
-      if (checkRole('SUBUSER')) {
+      if (
+        this.$store.getters.mode === 'manage' &&
+        !this.$store.getters.isSameUser
+      ) {
         path += '&customer=' + store.state.current.username
       }
       return url === 'new'

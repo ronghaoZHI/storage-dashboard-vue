@@ -323,7 +323,6 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import { getBillUrl, postAccess, postRetrieve } from 'api'
 import { handler } from '@/service/Aws'
-import { checkRole } from 'helper'
 import store from '@/store'
 import {
   bytes,
@@ -895,7 +894,10 @@ export default {
     },
     getApiURL() {
       let path = '?custom_range=' + this.dateRange
-      if (checkRole('SUBUSER')) {
+      if (
+        this.$store.getters.mode === 'manage' &&
+        !this.$store.getters.isSameUser
+      ) {
         path += '&customer=' + store.state.current.username
       }
       return getBillUrl(path)
