@@ -84,7 +84,9 @@
               <span></span>{{$t("LOGIN.KEEP_EMAIL")}}</label>
           </div>
           <div class="login">
-            <a @click.stop="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</a>
+            <Button class="login-button"
+                    :loading="isSubmiting"
+                    @click.stop="loginSubmit('loginForm')">{{$t("LOGIN.BUTTON_LOGIN")}}</Button>
           </div>
           <div class="register dn">
             没有账号？
@@ -217,6 +219,7 @@ export default {
       spinShow: false,
       currentYear: new Date().getFullYear().toString(),
       smscode: '',
+      isSubmiting: false,
       sending: false,
       smsTextTip: '',
       needCheckCode: false,
@@ -325,24 +328,23 @@ export default {
     },
     async loginSubmit(name) {
       if (this.formValid(name)) {
-        this.$Loading.start()
+        this.keepEmail
+          ? localStorage.setItem('loginEmail', this.loginForm.username)
+          : localStorage.setItem('loginEmail', '')
         try {
-          this.keepEmail
-            ? localStorage.setItem('loginEmail', this.loginForm.username)
-            : localStorage.setItem('loginEmail', '')
+          this.isSubmiting = true
           window.dashboard_conf.onlineMode === 'True'
-            ? await this.saveToken()
+            ? this.saveToken()
             : loginByUsername({
                 username: this.loginForm.username,
                 password: this.loginForm.password,
               }).then(async (res) => {
                 await this.setBaseInfo(res)
                 let keys = await getAccesskey()
-                await this.$store.dispatch('setBaseInfo', { keys: keys })
+                return this.$store.dispatch('setBaseInfo', { keys: keys })
               })
-          this.$Loading.finish()
         } catch (error) {
-          this.$Loading.error()
+          this.isSubmiting = false
         }
       } else {
       }
@@ -350,9 +352,9 @@ export default {
     async saveToken() {
       let _token = this.$store.state.token
       if (_token) {
-        this.setInfo(_token)
+        return this.setInfo(_token)
       } else {
-        this.getTiketSSO()
+        return this.getTicketSSO()
       }
     },
     async getInfo() {
@@ -360,7 +362,7 @@ export default {
       if (!_token) {
         return
       } else {
-        this.setInfo(_token)
+        return this.setInfo(_token)
       }
     },
     async setInfo(_token) {
@@ -370,13 +372,14 @@ export default {
           ...(await getUserInfo()),
           token: _token,
         })
+        const keys = await getAccesskey()
+        await this.$store.dispatch('setBaseInfo', { keys: keys })
       } catch (error) {
         logout()
       }
-      const keys = await getAccesskey()
-      await this.$store.dispatch('setBaseInfo', { keys: keys })
     },
-    async getTiketSSO() {
+    async getTicketSSO() {
+      console.log(this.isSubmiting)
       const data = {
         appId: window.dashboard_conf.appID,
         name: this.loginForm.username,
@@ -387,7 +390,7 @@ export default {
       this.needCheckCode
         ? Object.assign(data, { captcha: this.loginForm.checkCode })
         : data
-      await postLoginSSO(data).then(
+      return await postLoginSSO(data).then(
         (res) => {
           let { ticket } = res
           this.$store.state.token = ticket
@@ -792,14 +795,13 @@ export default {
         .login {
           margin-top: 24px;
 
-          a {
-            display: inline-block;
-            line-height: 36px;
+          .login-button {
             .wh(210px, 36px);
             .sc(18px, #fff);
             cursor: pointer;
             background: rgba(32, 160, 255, 0.35);
             border: 0;
+            border-radius: 0;
 
             &:focus {
               outline-offset: 0;
