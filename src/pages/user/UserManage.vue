@@ -506,7 +506,7 @@ export default {
       this.spinShow = true
       this.customer = isSubCount(this) ? this.$store.state.current.username : ''
       try {
-        if (checkRole('LIST_USERS', 'BIND_USER')) {
+        if (checkRole(['LIST_USERS', 'BIND_USER'])) {
           this.searchedUserList = this.userList = checkRole('LIST_USERS')
             ? await getListAllUser()
             : await getListBoundUser(this.customer)

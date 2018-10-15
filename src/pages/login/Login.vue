@@ -379,7 +379,6 @@ export default {
       }
     },
     async getTicketSSO() {
-      console.log(this.isSubmiting)
       const data = {
         appId: window.dashboard_conf.appID,
         name: this.loginForm.username,
@@ -397,6 +396,7 @@ export default {
           return this.saveToken()
         },
         async (err) => {
+          this.isSubmiting = false
           let { message, code } = err
           await this.changeCheckCode()
           if (code === -4000) {
@@ -408,6 +408,7 @@ export default {
           } else if (code === -1) {
             this.$Message.error(message)
           }
+          return Promise.reject(err)
         },
       )
     },
