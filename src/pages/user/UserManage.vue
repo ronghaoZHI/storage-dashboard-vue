@@ -429,8 +429,10 @@ export default {
     },
     canBindUser() {
       return isSubCount(this)
-        ? checkRole('BIND_USER', true) && checkRole('READ_USER')
-        : checkRole('BIND_USER')
+        ? checkRole('BIND_USER', true) &&
+            checkRole('LIST_USERS', true) &&
+            checkRole('READ_USER')
+        : checkRole('BIND_USER') && checkRole('LIST_USERS')
     },
     userHeader() {
       let headers = [this.username, this.email, this.creation]
