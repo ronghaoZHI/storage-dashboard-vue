@@ -17,7 +17,7 @@ export const group = (url, customer = false, bucket = false) =>
         ? '?bucket=' + bucket
         : ''
   }`
-export const groupSSO = (url) => `${HTTP_VERSION}${HOST.ssoHost}/web/${url}`
+export const groupSSO = (url) => `${HOST.ssoHost}/web/${url}`
 export const groupTranscoder = (url) =>
   `${HTTP_VERSION}${HOST.transcoderHOST}${VERSION_TRANSCODER}${url}`
 export const groupImgx = (url) => `${HTTP_VERSION}${HOST.imgxHOST}${url}`

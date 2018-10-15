@@ -7,5 +7,5 @@ export const HOST = {
     window.dashboard_conf.transcoderHOST || 'transcoder-ss.bscstorage.com',
   policyHOST: 'policy-ss.bscstorage.com',
   imgxHOST: 'imgx-ss.bscstorage.com',
-  ssoHost: 'test-sso.bs58i.baishancloud.com',
+  ssoHost: 'https://uc.portal.baishancloud.com',
 }
