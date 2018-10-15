@@ -342,7 +342,7 @@ export default {
         align: 'left',
         key: 'acl',
         render: (h, params) => {
-          return params.row.acl.length > 0
+          return params.row.acl && params.row.acl.length > 0
             ? params.row.acl.map((acl) => createAclTags(acl, h))
             : h('Tag', 'No acl')
         },
@@ -429,10 +429,8 @@ export default {
     },
     canBindUser() {
       return isSubCount(this)
-        ? checkRole('BIND_USER', true) &&
-            checkRole('LIST_USERS', true) &&
-            checkRole('READ_USER')
-        : checkRole('BIND_USER') && checkRole('LIST_USERS')
+        ? checkRole('BIND_USER', true) && checkRole('READ_USER')
+        : checkRole('BIND_USER')
     },
     userHeader() {
       let headers = [this.username, this.email, this.creation]

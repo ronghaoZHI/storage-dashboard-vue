@@ -375,6 +375,7 @@ export default {
         const keys = await getAccesskey()
         await this.$store.dispatch('setBaseInfo', { keys: keys })
       } catch (error) {
+        this.$Message.error(error.message)
         logout()
       }
     },
