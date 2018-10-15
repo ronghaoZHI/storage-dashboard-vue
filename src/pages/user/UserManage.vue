@@ -95,8 +95,8 @@
                    prop="sso_type"
                    v-show="canUseSSOType">
           <Radio-group v-model="createUserForm.sso_type">
-            <Radio label="1">Customer</Radio>
-            <Radio label="2">Staff</Radio>
+            <Radio label="2">Customer</Radio>
+            <Radio label="1">Staff</Radio>
           </Radio-group>
         </Form-item>
       </Form>
@@ -895,7 +895,7 @@ const initUserInfo = () => ({
   company: '',
   perm_rule: 'rule1',
   perms: ['BASE'],
-  sso_type: '1',
+  sso_type: '2',
 })
 const initSubUserInfo = () => ({
   username: '',
