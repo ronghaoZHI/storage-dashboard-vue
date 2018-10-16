@@ -162,10 +162,10 @@ const store = new Vuex.Store({
       state.current.username === state.manager[0].username,
     menuList: (state) => state.menuList,
     buckets(state) {
-      return state.buckets.Buckets
+      return state.buckets.Buckets || []
     },
     users: (state) => {
-      return state.users
+      return state.users || []
     },
   },
 })

@@ -463,13 +463,13 @@ export default {
     },
   },
   created() {
-    this.getUserList()
+    this.getUserList(false)
   },
   methods: {
-    async getSubUsersList(userList = [], sameuser = false) {
+    async getSubUsersList(userList, sameUser = false) {
       await this.$store.dispatch('getBuckets')
-      const users = sameuser ? userList : await getListSubUser(this.customer)
-      const bucket = (await this.$store.getters.buckets) || []
+      const users = sameUser ? userList : await getListSubUser(this.customer)
+      const bucket = await this.$store.getters.buckets
       this.bucketList = bucket
       let buckets = await Promise.all(
         bucket.map((bucket) => {
@@ -499,7 +499,7 @@ export default {
         })
       })
     },
-    async getUserList(update = false) {
+    async getUserList(update = true) {
       this.$Loading.start()
       this.spinShow = true
       this.customer = isSubCount(this) ? this.$store.state.current.username : ''
@@ -622,7 +622,7 @@ export default {
         }).then(() => {
           this.$Message.success('bind succssed!')
         })
-        this.getUserList(true)
+        this.getUserList()
         this.searchBindUserInput = ''
         this.boundUserList = []
         this.searchUserInput = ''
@@ -647,7 +647,7 @@ export default {
           this.searchBindUserInput = ''
           this.boundUserList = []
           this.searchUserInput = ''
-          this.getUserList(true)
+          this.getUserList()
         },
       )
     },
@@ -675,7 +675,7 @@ export default {
           this.searchBindUserInput = ''
           this.boundUserList = []
           this.searchUserInput = ''
-          this.getUserList(true)
+          this.getUserList()
         })
       } catch (e) {
         this.spinShow = false
@@ -706,7 +706,7 @@ export default {
             })
           : ''
         this.createUserForm = initUserInfo()
-        this.getUserList(true)
+        this.getUserList()
         this.searchUserInput = ''
         this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
         this.$Loading.finish()
@@ -754,7 +754,7 @@ export default {
           }),
         )
         this.createSubUserForm = initSubUserInfo()
-        this.getUserList(true)
+        this.getUserList()
         this.searchUserInput = ''
         this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
       } catch (error) {
@@ -812,7 +812,7 @@ export default {
           }),
         )
         this.searchUserInput = ''
-        await this.getUserList(true)
+        await this.getUserList()
         this.$Message.success(this.$t('USER.UPDATE_SUB_SUCCESS'))
       } catch (error) {
         this.$Message.error(this.$t('USER.UPDATE_SUB_ERROR'))
