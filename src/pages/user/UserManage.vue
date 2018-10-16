@@ -466,12 +466,10 @@ export default {
     this.getUserList()
   },
   methods: {
-    async getSubUsersList() {
+    async getSubUsersList(userList = [], sameuser = false) {
       await this.$store.dispatch('getBuckets')
-      const [users, bucket] = [
-        await getListSubUser(this.customer),
-        (await this.$store.getters.buckets) || [],
-      ]
+      const users = sameuser ? userList : await getListSubUser(this.customer)
+      const bucket = (await this.$store.getters.buckets) || []
       this.bucketList = bucket
       let buckets = await Promise.all(
         bucket.map((bucket) => {
@@ -501,37 +499,44 @@ export default {
         })
       })
     },
-    async getUserList() {
+    async getUserList(update = false) {
       this.$Loading.start()
       this.spinShow = true
       this.customer = isSubCount(this) ? this.$store.state.current.username : ''
+      const isSameUser = this.$store.getters.isSameUser
+      if (isSameUser) {
+        await this.$store.dispatch('getUsers', update)
+      }
+      const users = this.$store.getters.users
       try {
         if (checkRole(['LIST_USERS', 'BIND_USER'])) {
-          this.searchedUserList = this.userList = checkRole('LIST_USERS')
-            ? await getListAllUser()
-            : await getListBoundUser(this.customer)
-          await this.$store.dispatch('setBaseInfo', {
-            users: this.userList,
-          })
+          isSameUser
+            ? (this.searchedUserList = this.userList = users)
+            : (this.searchedUserList = this.userList = checkRole('LIST_USERS')
+                ? await getListAllUser()
+                : await getListBoundUser(this.customer))
           this.$Loading.finish()
         } else if (checkRole('SUB') && checkRole('READ_USER')) {
-          this.searchedSubUserList = this.subUserList = await this.getSubUsersList()
-          this.searchedUserList = this.userList = await getListBoundUser(
-            this.customer,
-          )
-          await this.$store.dispatch('setBaseInfo', {
-            users: this.subUserList.concat(
-              await this.userList.map((user) => {
-                return { ...user, type: 1 }
-              }),
-            ),
-          })
+          if (isSameUser) {
+            this.searchedUserList = this.userList = users.filter(
+              (user) => user.type === 1,
+            )
+            this.searchedSubUserList = this.subUserList = await this.getSubUsersList(
+              users.filter((user) => user.type === 0),
+              isSameUser,
+            )
+          } else {
+            this.searchedSubUserList = this.subUserList = await this.getSubUsersList()
+            this.searchedUserList = this.userList = await getListBoundUser(
+              this.customer,
+            )
+          }
           this.$Loading.finish()
         } else if (checkRole('SUB')) {
-          this.searchedUserList = this.userList = await this.getSubUsersList()
-          await this.$store.dispatch('setBaseInfo', {
-            users: this.userList,
-          })
+          this.searchedUserList = this.userList = await this.getSubUsersList(
+            users,
+            isSameUser,
+          )
           this.$Loading.finish()
         }
         this.spinShow = false
@@ -618,7 +623,7 @@ export default {
         }).then(() => {
           this.$Message.success('bind succssed!')
         })
-        this.getUserList()
+        this.getUserList(true)
         this.searchBindUserInput = ''
         this.boundUserList = []
         this.searchUserInput = ''
@@ -643,7 +648,7 @@ export default {
           this.searchBindUserInput = ''
           this.boundUserList = []
           this.searchUserInput = ''
-          this.getUserList()
+          this.getUserList(true)
         },
       )
     },
@@ -671,7 +676,7 @@ export default {
           this.searchBindUserInput = ''
           this.boundUserList = []
           this.searchUserInput = ''
-          this.getUserList()
+          this.getUserList(true)
         })
       } catch (e) {
         this.spinShow = false
@@ -702,7 +707,7 @@ export default {
             })
           : ''
         this.createUserForm = initUserInfo()
-        this.getUserList()
+        this.getUserList(true)
         this.searchUserInput = ''
         this.$Message.success(this.$t('USER.CREATE_SUCCESS'))
         this.$Loading.finish()
@@ -750,7 +755,7 @@ export default {
           }),
         )
         this.createSubUserForm = initSubUserInfo()
-        this.getUserList()
+        this.getUserList(true)
         this.searchUserInput = ''
         this.$Message.success(this.$t('USER.CREATE_SUB_SUCCESS'))
       } catch (error) {
@@ -808,7 +813,7 @@ export default {
           }),
         )
         this.searchUserInput = ''
-        await this.getUserList()
+        await this.getUserList(true)
         this.$Message.success(this.$t('USER.UPDATE_SUB_SUCCESS'))
       } catch (error) {
         this.$Message.error(this.$t('USER.UPDATE_SUB_ERROR'))

@@ -180,9 +180,6 @@ import {
   loginByUsername,
   getAccesskey,
   getUserInfo,
-  getListSubUser,
-  getListBoundUser,
-  getListAllUser,
   postLoginSSO,
   getCheckCodeUrl,
   getCheckSms,
@@ -256,7 +253,7 @@ export default {
   computed: {
     subUserList: {
       get() {
-        return this.$store.state.users || []
+        return this.$store.getters.users || []
       },
       set() {},
     },
@@ -437,18 +434,7 @@ export default {
         this.userFetching = true
         await this.$store.dispatch('setToken', data.token)
         this.$store.dispatch('setBaseInfo', { manager: [data] })
-        res = checkRole('LIST_USERS')
-          ? await getListAllUser()
-          : checkRole('BIND_USER')
-            ? await getListBoundUser()
-            : checkRole('READ_USER')
-              ? [
-                  ...(await getListSubUser()),
-                  ...(await getListBoundUser().map((user) => {
-                    return { ...user, type: 1 }
-                  })),
-                ]
-              : await getListSubUser()
+        res = await this.$store.dispatch('getUsers')
         this.userFetching = false
       } catch (error) {
         this.userFetching = false
@@ -456,9 +442,6 @@ export default {
       if (res.length > 0) {
         this.searchedSubUserList = this.subUserList = res
         this.showSelectUser = false
-        this.$store.dispatch('setBaseInfo', {
-          users: res,
-        })
       } else {
         this.switchUser(data, 'user')
       }

@@ -2,7 +2,12 @@ import store from '@/store'
 import iView from 'iview-bsc'
 import { clear } from '@/service/Aws'
 import router from '@/router'
-import { ssoLogout } from 'api'
+import {
+  ssoLogout,
+  getListSubUser,
+  getListBoundUser,
+  getListAllUser,
+} from 'api'
 import createAlert from './createAlert'
 
 export const logout = async (message) => {
@@ -75,6 +80,23 @@ export function checkRole(role, checkManager = false) {
     createAlert('权限字段错误')
     return false
   }
+}
+
+export async function getUsers() {
+  return checkRole('LIST_USERS')
+    ? await getListAllUser()
+    : checkRole('BIND_USER')
+      ? await getListBoundUser()
+      : checkRole('READ_USER') && checkRole('SUB')
+        ? [
+            ...(await getListSubUser().map((user) => {
+              return { ...user, type: 0 }
+            })),
+            ...(await getListBoundUser().map((user) => {
+              return { ...user, type: 1 }
+            })),
+          ]
+        : await getListSubUser()
 }
 
 export function sentMessage(message, stak = '') {

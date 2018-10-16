@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { handler } from '@/service/Aws'
-import { getCookie } from 'helper'
+import { getCookie, getUsers } from 'helper'
 import createAlert from '@/service/createAlert'
 import menu from '../service/menu'
 
@@ -108,6 +108,15 @@ const store = new Vuex.Store({
     addErrorLog({ commit }, log) {
       commit('ADD_ERROR_LOG', log)
     },
+    async getUsers({ commit, state }, update = false) {
+      if (Object.keys(state.users).length === 0 || update) {
+        let users = await getUsers()
+        commit('SET_VALUES', { users })
+        return users
+      } else {
+        return state.users
+      }
+    },
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -154,6 +163,9 @@ const store = new Vuex.Store({
     menuList: (state) => state.menuList,
     buckets(state) {
       return state.buckets.Buckets
+    },
+    users: (state) => {
+      return state.users
     },
   },
 })
