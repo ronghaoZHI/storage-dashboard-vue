@@ -99,6 +99,7 @@ export default {
     window.onresize = () => {
       self.toogleTop = `${document.documentElement.clientHeight / 2}px`
     }
+    this.$store.dispatch('refreshMenu')
   },
   methods: {
     goRouter(link) {

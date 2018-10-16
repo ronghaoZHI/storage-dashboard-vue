@@ -16,7 +16,7 @@ function checkSessionStorage() {
       token: sessionStorage.getItem('token'),
       theme: sessionStorage.getItem('theme') || 'dark',
       lang: getCookie('uc_lang') || 'cn',
-      menuList: getMenuList(),
+      menuList: [],
       miniMenu: false,
       current: {}, // current user
       manager: [], // admin user list.
@@ -149,7 +149,7 @@ const store = new Vuex.Store({
         ? 'manage'
         : 'normal',
     isSameUser: (state) =>
-      state.manager.length > 1 &&
+      state.manager.length > 0 &&
       state.current.username === state.manager[0].username,
     menuList: (state) => state.menuList,
     buckets(state) {
