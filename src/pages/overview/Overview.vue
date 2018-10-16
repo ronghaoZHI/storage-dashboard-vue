@@ -151,9 +151,12 @@
             <div class="file-ruler-card-body">
               <p>{{$t('OVERVIEW.PIC_SERVICE_INFO')}}</p>
             </div>
-            <div class="file-ruler-card-hover">
+            <div v-show="canUseIMG" class="file-ruler-card-hover">
               <Button type="primary"
                       @click="showPictureModal = true">{{$t('OVERVIEW.MORE')}}</Button>
+            </div>
+            <div v-show="!canUseIMG" class="file-ruler-card-hover phone">
+              <p class="waiting">{{$t('OVERVIEW.CONTACT_BUSINESS')}}</p>
             </div>
           </div>
           <div class="file-ruler-card">
@@ -170,9 +173,12 @@
             <div class="file-ruler-card-body">
               <p>{{$t('OVERVIEW.VIDEO_SERICE_INFO')}}</p>
             </div>
-            <div class="file-ruler-card-hover">
+            <div v-show="canUseTrans" class="file-ruler-card-hover">
               <Button type="primary"
                       @click="gotoVideoTemplate">{{$t('OVERVIEW.MORE')}}</Button>
+            </div>
+            <div v-show="!canUsetrans" class="file-ruler-card-hover phone">
+              <p class="waiting">{{$t('OVERVIEW.CONTACT_BUSINESS')}}</p>
             </div>
           </div>
         </div>
@@ -324,6 +330,7 @@ import 'echarts/lib/component/title'
 import { getBillUrl, postAccess, postRetrieve } from 'api'
 import { handler } from '@/service/Aws'
 import store from '@/store'
+import { checkRole } from 'helper'
 import {
   bytes,
   times,
@@ -615,6 +622,12 @@ export default {
     }
   },
   computed: {
+    canUseIMG() {
+      return checkRole('IMGX')
+    },
+    canUseTrans() {
+      return checkRole('TRANSCODE')
+    },
     dateRange() {
       return formatDate(this.thisMonth[0]) + '-' + formatDate(this.thisMonth[1])
     },
