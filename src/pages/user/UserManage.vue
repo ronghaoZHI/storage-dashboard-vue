@@ -507,22 +507,21 @@ export default {
       if (isSameUser) {
         await this.$store.dispatch('getUsers', update)
       }
-      const users = this.$store.getters.users
       try {
         if (checkRole(['LIST_USERS', 'BIND_USER'])) {
           isSameUser
-            ? (this.searchedUserList = this.userList = users)
+            ? (this.searchedUserList = this.userList = this.$store.getters.users)
             : (this.searchedUserList = this.userList = checkRole('LIST_USERS')
                 ? await getListAllUser()
                 : await getListBoundUser(this.customer))
           this.$Loading.finish()
         } else if (checkRole('SUB') && checkRole('READ_USER')) {
           if (isSameUser) {
-            this.searchedUserList = this.userList = users.filter(
+            this.searchedUserList = this.userList = this.$store.getters.users.filter(
               (user) => user.type === 1,
             )
             this.searchedSubUserList = this.subUserList = await this.getSubUsersList(
-              users.filter((user) => user.type === 0),
+              this.$store.getters.users.filter((user) => user.type === 0),
               isSameUser,
             )
           } else {
@@ -534,7 +533,7 @@ export default {
           this.$Loading.finish()
         } else if (checkRole('SUB')) {
           this.searchedUserList = this.userList = await this.getSubUsersList(
-            users,
+            this.$store.getters.users,
             isSameUser,
           )
           this.$Loading.finish()
