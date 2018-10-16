@@ -177,7 +177,7 @@
               <Button type="primary"
                       @click="gotoVideoTemplate">{{$t('OVERVIEW.MORE')}}</Button>
             </div>
-            <div v-show="!canUsetrans" class="file-ruler-card-hover phone">
+            <div v-show="!canUseTrans" class="file-ruler-card-hover phone">
               <p class="waiting">{{$t('OVERVIEW.CONTACT_BUSINESS')}}</p>
             </div>
           </div>
