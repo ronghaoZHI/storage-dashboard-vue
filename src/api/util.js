@@ -6,7 +6,7 @@ const VERSION = '/v2/'
 const VERSION_TRANSCODER = '/2012-09-25/'
 
 export const group = (url, customer = false, bucket = false) =>
-  `${HTTP_VERSION}${HOST.apiHost}/api${VERSION}${url}${
+  `${HTTP_VERSION}${location.host}/api${VERSION}${url}${
     customer ? '?customer=' + store.state.current.username : ''
   }${
     customer
