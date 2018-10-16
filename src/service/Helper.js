@@ -99,7 +99,6 @@ export function sentMessage(message, stak = '') {
             {
               title: 'store',
               value: JSON.stringify({
-                token: store.state.token,
                 user: store.state.user,
               }),
               short: false,
@@ -120,7 +119,7 @@ export function sentMessage(message, stak = '') {
       ],
     }
     fetch(
-      'https://hooks.slack.com/services/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',
+      'https://hooks.slack.com/services/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',
       {
         method: 'post',
         body: JSON.stringify(msg),
