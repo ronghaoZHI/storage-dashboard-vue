@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import moment from 'moment-timezone'
 
 const time = (time, digit = 1) => {
@@ -199,24 +198,6 @@ const checkDate = (value) => {
 
 const removeItemFromArray = (array, item) =>
   array.splice(array.indexOf(item), 1)
-
-Vue.filter('userType', (Grantee) => {
-  if (
-    Grantee.URI &&
-    Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers'
-  ) {
-    return 'All Users'
-  } else if (
-    Grantee.Type === 'Group' &&
-    (Grantee.URI &&
-      Grantee.URI ===
-        'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
-  ) {
-    return 'Auth Users'
-  } else if (Grantee.ID) {
-    return Grantee.ID
-  }
-})
 
 const keyFilter = (key, prefix) => key.slice(prefix.length)
 

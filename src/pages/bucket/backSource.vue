@@ -236,7 +236,7 @@ export default {
         {
           title: this.$t('STORAGE.TABLE_ACTION'),
           key: 'actions',
-          width: '170px',
+          width: '180px',
           render: (h, params) => {
             return h('div', [
               h(
@@ -364,6 +364,9 @@ export default {
     bucket() {
       return this.$route.params.bucket
     },
+    username() {
+      return this.$store.state.current.username || ''
+    },
   },
   watch: {
     requestHeader(to) {
@@ -385,7 +388,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        this.fetchRuleList = await postFetch404(rule)
+        this.fetchRuleList = await postFetch404(rule, this.username)
         this.$Loading.finish()
       } catch (error) {
         this.$Loading.error()
@@ -445,7 +448,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        await postFetch404(rule)
+        await postFetch404(rule, this.username)
         !isEdit
           ? this.$Message.success(this.$t('STORAGE.CREATE_SUCCESS'))
           : this.$Message.success(this.$t('STORAGE.SET_SUCCESS'))
@@ -467,7 +470,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        await postFetch404(rule)
+        await postFetch404(rule, this.username)
         const active = this.fetchRuleList[row._index].is_active
         if (this.fetchRuleList.length > 1) {
           this.fetchRuleList.forEach((value) => (value.is_active = 0))
@@ -524,7 +527,7 @@ export default {
       }
       try {
         this.$Loading.start()
-        await postFetch404(rule)
+        await postFetch404(rule, this.username)
         this.fetchRuleList.splice(row._index, 1)
         this.$Loading.finish()
         this.$Message.success(this.$t('STORAGE.DELETE_SUCCESS'))

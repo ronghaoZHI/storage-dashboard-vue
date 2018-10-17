@@ -527,6 +527,7 @@ export default {
       get() {
         return this.$route.params.tabName || 'permission'
       },
+      set() {},
     },
     originsEmptyError() {
       return this.corsModal.AllowedOrigins.length === 0 && !this.AllowedOrigins
@@ -747,6 +748,25 @@ export default {
         name: 'bucketSettings',
         params: { bucket: this.bucket, tabName: name },
       })
+    },
+  },
+  filters: {
+    userType: (Grantee) => {
+      if (
+        Grantee.URI &&
+        Grantee.URI === 'http://acs.amazonaws.com/groups/global/AllUsers'
+      ) {
+        return 'All Users'
+      } else if (
+        Grantee.Type === 'Group' &&
+        (Grantee.URI &&
+          Grantee.URI ===
+            'http://acs.amazonaws.com/groups/global/AuthenticatedUsers')
+      ) {
+        return 'Auth Users'
+      } else if (Grantee.ID) {
+        return Grantee.ID
+      }
     },
   },
 }

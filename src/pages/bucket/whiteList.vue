@@ -57,6 +57,9 @@ export default {
     bucket() {
       return this.$route.params.bucket
     },
+    username() {
+      return this.$store.state.current.username || ''
+    },
   },
   created() {
     this.getList()
@@ -70,7 +73,7 @@ export default {
         bucket: this.bucket,
       }
       try {
-        let listData = await postAccessList(params)
+        let listData = await postAccessList(params, this.username)
         this.enabled = listData.enabled
         this.whiteList = []
         this.blackList = []
@@ -96,13 +99,13 @@ export default {
     async listEnabled() {
       if (this.enabled) {
         const params = { service: 'access_control' }
-        await postAddService(params)
+        await postAddService(params, this.username)
       }
       const params = {
         action: this.enabled ? 'enable' : 'disable',
         bucket: this.bucket,
       }
-      await postAccessList(params)
+      await postAccessList(params, this.username)
     },
     async accessSet() {
       this.$Loading.start()
@@ -115,7 +118,7 @@ export default {
         bucket: this.bucket,
       }
       try {
-        await postAccessList(params)
+        await postAccessList(params, this.username)
         this.$Loading.finish()
         this.$Message.success(this.$t('SETTINGS.SAVED'))
       } catch (error) {

@@ -95,12 +95,6 @@ export function getRedirectBucketFilesAcl(bucket, customer) {
     },
   )
 }
-export function postAddService(data, customer) {
-  return request(group('user/add/service', customer), {
-    method: 'post',
-    data,
-  })
-}
 export function postRemoveService(data, customer) {
   return request(group('user/remove/service', customer), {
     method: 'post',

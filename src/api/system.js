@@ -99,22 +99,22 @@ export function postPartitionUsedAdd(params) {
   })
 }
 
-export function postFetch404(data) {
-  return request(group('retrieve'), {
+export function postFetch404(data, customer) {
+  return request(group('retrieve', customer), {
     method: 'post',
     data,
   })
 }
 
-export function postAccessList(data) {
-  return request(group('access'), {
+export function postAccessList(data, customer) {
+  return request(group('access', customer), {
     method: 'post',
     data,
   })
 }
 
-export function postAddService(data) {
-  return request(group('user/add/service'), {
+export function postAddService(data, customer) {
+  return request(group('user/add/service', customer), {
     method: 'post',
     data,
   })
