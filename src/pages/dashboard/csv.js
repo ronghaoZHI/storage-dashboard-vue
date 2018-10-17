@@ -1,6 +1,6 @@
 // https://github.com/Terminux/react-csv-downloader/blob/master/src/lib/csv.js
 
-const newLine = '\r\n'
+const newLine = '\n'
 
 export default function csv(columns, datas, separator = ',', noHeader = false) {
   let columnOrder = []

@@ -927,12 +927,13 @@ export default {
     },
     exportCsv() {
       let content = Csv(_.keys(this.exportData[0]), this.exportData, ',')
-      let file = new File(
-        Array.from(content),
+      let blob = new Blob([content], {
+        type: 'text/csv;charset=utf-8',
+      })
+      fileSaver.saveAs(
+        blob,
         store.state.current.username + '-' + this.dateRange + '.csv',
-        { type: 'text/csv;charset=utf-8' },
       )
-      fileSaver.saveAs(file)
     },
   },
 }
