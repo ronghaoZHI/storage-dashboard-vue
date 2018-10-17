@@ -23,9 +23,7 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new PrerenderSPAPlugin({
-        // Required - The path to the webpack-outputted app to prerender.
         staticDir: path.join(__dirname, 'dist'),
-        // Required - Routes to render.
         routes: ['/login', '/bridge'],
       }),
     ],
@@ -33,6 +31,15 @@ module.exports = {
   devServer: {
     disableHostCheck: true,
     compress: true,
+    proxy: {
+      '/api': {
+        target: 'http://dashboardapi-rrs.cwn.baishancloud.com:9090',
+        changeOrigin: true,
+        pathRewrite: function(path) {
+          return path.replace('/api', '')
+        },
+      },
+    },
   },
   productionSourceMap: false,
 }

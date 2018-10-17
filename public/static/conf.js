@@ -1,7 +1,6 @@
 // shit
 window.domain = 'baishancloud.com'
 window.dashboard_conf = {
-  apiHost: 'dashboardapi-rrs.cwn.baishancloud.com:9090',
   awsHost: 'rrs.bscstorage.com',
   transcoderHOST: 'transcoder-ss.bscstorage.com',
   onlineMode: 'True',
