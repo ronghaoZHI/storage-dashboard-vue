@@ -33,7 +33,7 @@ module.exports = {
     compress: true,
     proxy: {
       '/api': {
-        target: 'http://dashboardapi-rrs.cwn.baishancloud.com:9090',
+        target: 'http://dashboardapi-ss.cwn.baishancloud.com:9090',
         changeOrigin: true,
         pathRewrite: function(path) {
           return path.replace('/api', '')
