@@ -403,6 +403,8 @@ export default {
           } else if (code === -1002) {
             this.needCheckCode = true
             this.$Message.error(message)
+          } else if (code === -1003) {
+            this.$Message.error(message)
           } else if (code === -1) {
             this.$Message.error(message)
           }
