@@ -71,13 +71,15 @@ const getTemplateInfo = async () => {
   templateList = []
   await getTemplatePage()
   let [templateContainer, templateName, templateVideoCodec] = [[], [], []]
-  templateList.forEach((item) => {
-    templateContainer[item.Id] = item.Container
-  })
-  templateList.forEach((item) => {
-    templateName[item.Id] = item.Name
-    templateVideoCodec[item.Id] = item.Video.Codec
-  })
+  templateList.length > 0 &&
+    templateList.forEach((item) => {
+      templateContainer[item.Id] = item.Container
+    })
+  templateList.length > 0 &&
+    templateList.forEach((item) => {
+      templateName[item.Id] = item.Name
+      templateVideoCodec[item.Id] = item.Video.Codec
+    })
   return { templateList, templateContainer, templateVideoCodec, templateName }
 }
 
@@ -86,7 +88,7 @@ const getTemplatePage = async (pageToken) => {
   let res = !pageToken
     ? await transcoder('listPresets')
     : await transcoder('listPresets', { PageToken: pageToken })
-  templateList.push(...res.Presets)
+  Array.isArray(res.Presets) && templateList.push(...res.Presets)
   if (res.NextPageToken) {
     await getTemplatePage(res.NextPageToken)
   }
