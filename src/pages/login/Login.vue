@@ -187,6 +187,7 @@ import {
   postCheckLogin,
 } from 'api'
 import { checkRole, logout } from 'helper'
+import { clear } from '@/service/Aws'
 import store from '@/store'
 import Vue from 'vue'
 export default {
@@ -237,12 +238,12 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    next(
-      (vm) =>
-        window.dashboard_conf.onlineMode !== 'False' &&
+    next((vm) => {
+      window.dashboard_conf.onlineMode !== 'False' &&
         !from.name &&
         vm.initCheck(),
-    )
+        from.name && vm.clearSubUserState()
+    })
   },
   created() {
     if (window.dashboard_conf.onlineMode === 'False') {
@@ -471,6 +472,10 @@ export default {
         keys,
       })
       this.switchUser()
+    },
+    async clearSubUserState() {
+      await clear()
+      await this.$store.dispatch('cleanState')
     },
     async toIndex(data, router = '/overview') {
       await this.$store.dispatch('setBaseInfo', data)
