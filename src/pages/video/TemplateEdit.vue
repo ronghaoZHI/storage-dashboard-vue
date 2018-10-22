@@ -298,14 +298,30 @@
         </div>
         <div class="padding-setting">
           <div class="form-item">
-            <span class="form-label">水平偏移 : </span>
+            <Tooltip placement="top-end">
+              <span class="form-label">水平偏移 :  
+                <Icon type="ios-help-outline"></Icon>
+              </span>
+              <div slot="content">
+                <p>{{$t('VIDEO.TIPS')}}</p>
+                <p>{{$t('VIDEO.OFFSET_X_TIPS')}}</p>
+              </div>
+            </Tooltip>
             <div class="input-text-box">
               <InputNumber v-model="template.WatermarkConfig.LocationHOffset"></InputNumber>
               <span>px</span>
             </div>
           </div>
           <div class="form-item">
-            <span class="form-label">垂直偏移 : </span>
+            <Tooltip placement="top-end">
+              <span class="form-label">垂直偏移 : 
+                <Icon type="ios-help-outline"></Icon>
+              </span>
+              <div slot="content">
+                <p>{{$t('VIDEO.TIPS')}}</p>
+                <p>{{$t('VIDEO.OFFSET_Y_TIPS')}}</p>
+              </div>
+            </Tooltip>
             <div class="input-text-box">
               <InputNumber v-model="template.WatermarkConfig.LocationVOffset"></InputNumber>
               <span>px</span>

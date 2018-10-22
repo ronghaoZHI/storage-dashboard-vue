@@ -646,6 +646,11 @@ export const messages = {
       POSITION: 'Location',
       OFFSET_X: 'LocationHOffset',
       OFFSET_Y: 'LocationVOffset',
+      TIPS: 'Values ​​are integers in pixels;',
+      OFFSET_X_TIPS:
+        'positive numbers indicate offsets to the right and negative numbers indicate offsets to the left.',
+      OFFSET_Y_TIPS:
+        'positive numbers indicate downward offsets and negative numbers indicate upward offsets.',
       TEMPLATE_NAME_TABLE: 'Name',
       CONF: 'Configuration',
       WH_UNALTERED: 'Calculate by resolution',
@@ -1536,6 +1541,9 @@ export const messages = {
       POSITION: '位置',
       OFFSET_X: '水平偏移',
       OFFSET_Y: '垂直偏移',
+      TIPS: '数值是整数型，单位是像素；',
+      OFFSET_X_TIPS: '正数表示往右偏移，负数表示往左偏移。',
+      OFFSET_Y_TIPS: '正数表示往下偏移，负数表示往上偏移。',
       WH_UNALTERED: '根据分辨率计算',
       OUTPUTKEY_REQUIRED: '请填写输出文件名',
       SHOTKEY_REQUIRED: '请填写输出文件名后缀',
