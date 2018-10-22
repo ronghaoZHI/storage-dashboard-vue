@@ -1077,7 +1077,7 @@ const putOverlayFile = async (name, body) => {
   )
 }
 const getImgxUrl = (IS) => {
-  return getImgxPreviewUrl + IS + '/dashboard.jpg?' + Date.now()
+  return getImgxPreviewUrl() + IS + '/dashboard.jpg?' + Date.now()
 }
 const general2Save = (data) => {
   let saved = {}
