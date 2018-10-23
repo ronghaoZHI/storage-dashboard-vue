@@ -162,8 +162,7 @@ export const messages = {
       WRITE: 'Write',
       SAVE_PERMISSIONS: 'Save permissions changes',
       SEARCH_FILE: 'Search file',
-      DELETE_CONFIRMED:
-        'Are you sure you want to delete [{fileName}] ？(If the folder contains more files, the delete operation takes a long time)',
+      DELETE_CONFIRMED: 'Are you sure you want to delete [{fileName}] ？',
       UNBIND_CONFIRMED: 'Are you sure you want to unbind [{fileName}] ？',
       DELETE_FILES_CONFIRMED:
         'Are you sure you want to delete the selected files?(If the folder contains more files, the delete operation takes a long time)',
@@ -1073,8 +1072,7 @@ export const messages = {
       WRITE: '写入',
       SAVE_PERMISSIONS: '确认修改',
       SEARCH_FILE: '查找文件',
-      DELETE_CONFIRMED:
-        '确定要删除 [{fileName}] 吗？(如果删除包含文件较多的文件夹时，删除操作耗时较长)',
+      DELETE_CONFIRMED: '确定要删除 [{fileName}] 吗？',
       UNBIND_CONFIRMED: '确定要解绑 [{fileName}] 吗？',
       DELETE_FILES_CONFIRMED:
         '确定删除选中的文件吗？(如果包含文件较多的文件夹时，删除操作耗时较长)',

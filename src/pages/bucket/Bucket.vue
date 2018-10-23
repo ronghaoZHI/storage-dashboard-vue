@@ -157,16 +157,8 @@ export default {
     async deleteBucket(bucket) {
       try {
         this.$Loading.start()
-        let buckets = await handler('listObjects', { Bucket: bucket.Name })
-        let response = (await buckets.Contents.length)
-          ? batchDeletion(buckets.Contents, bucket.Name)
-          : Promise.resolve()
-        // the bucket has cache when the objects just deleted
-        response.then(() => {
-          setTimeout(() => {
-            handler('deleteBucket', { Bucket: bucket.Name })
-          }, 1000)
-        })
+        await handler('deleteBucket', { Bucket: bucket.Name })
+        await this.$store.dispatch('getBuckets', true)
         // the bucket list also has cache ...
         removeItemFromArray(this.bucketList, bucket)
 
@@ -244,17 +236,6 @@ export default {
       )
     },
   },
-}
-
-const batchDeletion = (list, bucket) => {
-  return Promise.all(
-    list.map(function(item) {
-      return handler('deleteObject', {
-        Bucket: bucket,
-        Key: item.Key || item.Prefix,
-      })
-    }),
-  )
 }
 </script>
 <style lang="less" scoped>
