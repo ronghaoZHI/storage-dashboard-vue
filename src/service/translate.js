@@ -493,6 +493,7 @@ export const messages = {
       USER_TYPE: 'User type',
     },
     VIDEO: {
+      PRE_TEMPLATE: 'some pre-template',
       TEMPLATE_NAME_REQUIRED: 'Please enter a template name',
       PIPE_FIRST: 'create pipeline first',
       PERSET_REQUIRED: 'Please select a template',
@@ -1393,6 +1394,7 @@ export const messages = {
       USER_TYPE: '账号类型',
     },
     VIDEO: {
+      PRE_TEMPLATE: '预置模版',
       TEMPLATE_NAME_REQUIRED: '请输入模版名名称',
       PIPE_FIRST: '需要先创建模版',
       PERSET_REQUIRED: '请选择转码模版',

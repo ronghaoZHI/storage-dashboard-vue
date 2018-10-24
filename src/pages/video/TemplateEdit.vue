@@ -27,7 +27,7 @@
                    class="line-width" />
           </FormItem>
           <div class="tips-wrap">
-            <span>预置模版:</span>
+            <span>{{$t('VIDEO.PRE_TEMPLATE')}}:</span>
             <Poptip placement="bottom" :key="type" v-for="type in showType" trigger="hover">
                 <a><span>{{type}}</span></a>
                 <div class="tips-content" slot="content">
