@@ -26,6 +26,28 @@
                    :placeholder="$t('VIDEO.TEMPLATE_NAME')"
                    class="line-width" />
           </FormItem>
+          <div class="tips-wrap">
+            <span>预置模版:</span>
+            <Poptip placement="bottom" :key="type" v-for="type in showType" trigger="hover">
+                <a><span>{{type}}</span></a>
+                <div class="tips-content" slot="content">
+                  <ul>
+                    <li :key="item.index" v-for="item in templateLists.filter((v)=>(v.Type===type))">
+                      <Row type="flex" justify="space-between" class="code-row-bg">
+                          <Col span="22">
+                            <p>{{item.Name}}</p>
+                            <p>{{item.template.Description}}</p>
+                          </Col>
+                          <Col style="lineHeight:3.5" span="2">
+                            <Button size="small" @click="changeTemplate(item)">应用</Button> 
+                          </Col>
+                      </Row>
+                      <div class="divider"></div>
+                    </li>
+                  </ul>
+              </div>
+            </Poptip>
+          </div>
         </div>
         <div class="form-item">
           <FormItem :label="$t('VIDEO.TEMPLATE_DESCRIPTION')"
@@ -342,11 +364,14 @@
 <script>
 import { transcoder } from '@/service/Aws'
 import { putTranscoderUrl, postTranscoderUrl } from 'api'
+import { showType, templateDefaultLists } from './TemplateList.js'
 
 export default {
   data() {
     return {
+      showType,
       videoDisabled: false,
+      templateLists: templateDefaultLists(),
       template: _.cloneDeep(templateDefult),
       auxiliary: _.cloneDeep(auxiliaryDefult),
       containerList: [
@@ -467,6 +492,10 @@ export default {
     this.readPreset()
   },
   methods: {
+    changeTemplate(item) {
+      Object.assign(this.template, item.template)
+      Object.assign(this.auxiliary, item.auxiliary)
+    },
     async beforeSubmit() {
       this.$refs['basicValidate'].validate((valid) => {
         if (!valid) {
@@ -541,7 +570,7 @@ export default {
       }
     },
     validateDiscription(rule, value, callback) {
-      if (new TextEncoder('utf-8').encode(value).length > 100) {
+      if (new TextEncoder('utf-8').encode(value).length > 150) {
         callback(new Error(this.$t('VIDEO.TEMPLATE_DESCRIPTION_CHAR_NUMBER')))
       } else {
         callback()
@@ -702,5 +731,34 @@ const container2codec = { mp3: 'mp3', wma: 'wmav2', mp2: 'mp2' }
 .button-save {
   margin-left: 388px;
   transform: translateX(-50%);
+}
+.tips-wrap {
+  margin-top: -10px;
+  margin-left: 165px;
+  line-height: 2;
+  height: 15px;
+  & > span {
+    margin-left: 10px;
+  }
+  a {
+    margin: 0 10px;
+    font-size: 1.1em;
+  }
+  .tips-content {
+    height: 150px;
+    ul li {
+      white-space: pre-line;
+      width: 470px;
+      padding: 3px;
+      .divider {
+        border: 1px #444 dashed;
+      }
+    }
+    ul li:last-child {
+      .divider {
+        border: 0;
+      }
+    }
+  }
 }
 </style>
