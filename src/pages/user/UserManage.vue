@@ -430,13 +430,14 @@ export default {
     canBindUser() {
       return isSubCount(this)
         ? checkRole('BIND_USER', true) && checkRole('READ_USER')
-        : checkRole('BIND_USER')
+        : checkRole('BIND_USER') && !checkRole('LIST_USERS')
     },
     userHeader() {
       let headers = [this.username, this.email, this.creation]
       if (
-        checkRole('WRITE_USER', 'BIND_USER') ||
-        (checkRole('READ_USER') && checkRole('BIND_USER', true))
+        (checkRole('BIND_USER') ||
+          (checkRole('READ_USER') && checkRole('BIND_USER', true))) &&
+        !checkRole('LIST_USERS')
       ) {
         headers = headers.concat([this.company, this.unbind])
       } else if (
