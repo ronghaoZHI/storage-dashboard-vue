@@ -279,7 +279,6 @@ export default {
       isSubCount(this)
         ? (path += `&customer=${this.$store.state.current.username}`)
         : path
-      console.log(path)
       return getBillTranscoderUrl(path)
     },
     tabToggle(index, ref) {
