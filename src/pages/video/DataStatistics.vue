@@ -105,7 +105,6 @@ import { getBillTranscoderUrl } from 'api'
 import { time, timesK, date } from '@/service/BucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
-import store from '@/store'
 export default {
   components: {
     chart: ECharts,
@@ -277,7 +276,10 @@ export default {
     getApiURL() {
       let path = ''
       path += '?custom_range=' + this.dateRange
-      isSubCount(this) ? (path += '&customer=' + store.current.username) : path
+      isSubCount(this)
+        ? (path += `&customer=${this.$store.state.current.username}`)
+        : path
+      console.log(path)
       return getBillTranscoderUrl(path)
     },
     tabToggle(index, ref) {
