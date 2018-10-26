@@ -105,7 +105,6 @@ import { getBillTranscoderUrl } from 'api'
 import { time, timesK, date } from '@/service/BucketService'
 import Csv from '@/pages/dashboard/csv'
 import fileSaver from 'file-saver'
-import { checkRole } from 'helper'
 import store from '@/store'
 export default {
   components: {
@@ -278,9 +277,7 @@ export default {
     getApiURL() {
       let path = ''
       path += '?custom_range=' + this.dateRange
-      if (checkRole('SUBUSER')) {
-        path += '&customer=' + store.current.username
-      }
+      isSubCount(this) ? (path += '&customer=' + store.current.username) : path
       return getBillTranscoderUrl(path)
     },
     tabToggle(index, ref) {
@@ -332,7 +329,12 @@ export default {
     },
   },
 }
-
+const isSubCount = (that) => {
+  return (
+    that.$store.state.manager.length &&
+    that.$store.state.manager[0].username !== that.$store.state.current.username
+  )
+}
 const exportDic = {
   videoTranscodingCount: '视频转码任务数(个)',
   audioTranscodingCount: '音频转码任务数(个)',
