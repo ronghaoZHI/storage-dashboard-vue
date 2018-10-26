@@ -364,7 +364,7 @@
 <script>
 import { transcoder } from '@/service/Aws'
 import { putTranscoderUrl, postTranscoderUrl } from 'api'
-import { showType, templateDefaultLists } from './TemplateList.js'
+import { showType, templateDefaultLists } from './defaultTemplateList.js'
 
 export default {
   data() {

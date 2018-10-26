@@ -58,7 +58,7 @@ const listPipelinePage = async (pageToken) => {
     let res = !pageToken
       ? await transcoder('listPipelines')
       : await transcoder('listPipelines', { PageToken: pageToken })
-    pipeList.push(...res.Pipelines)
+    res.Pipelines.length > 0 && pipeList.push(...res.Pipelines)
     if (res.NextPageToken) {
       await listPipelinePage(res.NextPageToken)
     }

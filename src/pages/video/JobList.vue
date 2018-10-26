@@ -195,8 +195,9 @@ export default {
   },
   methods: {
     async listJobs() {
-      this.pipes = await listPipelines()
-      if (this.pipes.length > 0) {
+      const res = await listPipelines()
+      if (res.length > 0) {
+        this.pipes = res
         this.pipeId = this.pipes[0].Id
         await this.listJobsByPipeline(this.pipeId)
       }
