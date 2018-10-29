@@ -30,6 +30,10 @@
         </Tooltip>
         <Button @click="batchDeleteFileConfirm"
                 :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
+        <Button v-show="showTranscode"
+                @click="fastTrancode"
+                type="primary"
+                :disabled="!selectedFileList.length > 0">一键转码</Button>
         <Button type="primary"
                 v-if="!showSearch"
                 @click="showSearch = true">查找文件</Button>
@@ -134,6 +138,99 @@
                 type="primary">{{$t("STORAGE.SAVE_PERMISSIONS")}}</Button>
       </div>
     </Modal>
+    <Modal v-model="openTrancodeModal"
+           title="转码配置"
+           width="700">
+      <Form ref="outputForm"
+            :model="outputModal"
+            :label-width="155"
+            :rules="ruleValidate">
+        <FormItem :label="$t('VIDEO.TRANSCODING_TEMPLATE') + ' : '"
+                  prop="PresetId"
+                  required>
+          <Select v-model="outputModal.PresetId"
+                  class="line-width"
+                  @on-change="templateChange"
+                  filterable>
+            <Option v-for="template in this.templateInfo.templateList"
+                    :value="template.Id"
+                    :key="template.Id">{{template.Name}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem :label="$t('VIDEO.OUTPUT_FILE_NAME') + ' : '"
+                  prop="Key"
+                  required>
+          <Input v-model="outputModal.Key"
+                 :placeholder="$t('VIDEO.OUTPUT_FILE_NAME')"
+                 class="line-width" />
+        </FormItem>
+        <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH') + ' : '"
+                  prop="SegmentDuration"
+                  v-if="HLSShow">
+          <Slider v-model="outputModal.SegmentDuration"
+                  :min="0"
+                  :max="50"
+                  class="my-slider"
+                  show-input></Slider>
+        </FormItem>
+        <FormItem label="视频剪辑 : ">
+          <i-switch v-model="isComposition"
+                    style="margin-top:3px;">
+            <span slot="open">{{$t('VIDEO.ON')}}</span>
+            <span slot="close">{{$t('VIDEO.OFF')}}</span>
+          </i-switch>
+        </FormItem>
+        <FormItem label="剪辑开始时间 : "
+                  v-if="isComposition">
+          <TimePicker type="time"
+                      placeholder="时分秒"
+                      :value="outputModal.StartTime"
+                      @on-change="value => timeChange(value, 'StartTime')"
+                      style="width: 168px"></TimePicker> .
+          <InputNumber v-model="outputModal.StartTimeMS"
+                       :min="0"></InputNumber> ms
+        </FormItem>
+        <FormItem label="剪辑时长 : "
+                  v-if="isComposition">
+          <TimePicker type="time"
+                      placeholder="时分秒"
+                      :value="outputModal.Duration"
+                      @on-change="value => timeChange(value, 'Duration')"
+                      style="width: 168px"></TimePicker> .
+          <InputNumber v-model="outputModal.DurationMS"
+                       :min="0"></InputNumber> ms
+        </FormItem>
+        <p class="page-info"
+           v-if="isAutoCodec"
+           style="padding-left:155px">转码模版的视频编码方式为“不变”时不能添加水印</p>
+        <FormItem label="水印 : ">
+          <i-switch v-model="isWaterMarkerOpen"
+                    style="margin-top:3px;"
+                    :disabled="isAutoCodec">
+            <span slot="open">{{$t('VIDEO.ON')}}</span>
+            <span slot="close">{{$t('VIDEO.OFF')}}</span>
+          </i-switch>
+        </FormItem>
+        <FormItem label="文件Key : "
+                  prop="InputKey"
+                  v-if="isWaterMarkerOpen">
+          <Input v-model="outputModal.InputKey"
+                 placeholder="水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png"
+                 class="line-width"
+                 :disabled="isAutoCodec" />
+        </FormItem>
+      </Form>
+      <div slot="footer"
+           class="copy-modal-footer">
+        <Button type="primary"
+                @click="updateOutputs">{{$t('VIDEO.OK')}}</Button>
+      </div>
+    </Modal>
+    <Modal v-model="showTransListModal"
+           title="任务列表">
+      <Table>
+      </Table>
+    </Modal>
     <a download
        id="element-download"
        style="display:none">
@@ -186,6 +283,8 @@ import { checkRole } from 'helper'
 import legendList from '@/components/legend/legend'
 import moment from 'moment'
 import filePermission from './FilePermissions'
+import { getTemplateInfo, getSS } from '@/pages/video/data'
+import { postTranscoderUrl } from 'api'
 export default {
   components: {
     filePermission,
@@ -204,7 +303,16 @@ export default {
   },
   data() {
     return {
+      HLSShow: false,
+      isAutoCodec: false,
+      isWaterMarkerOpen: false,
+      isComposition: false, // video Composition 视频剪辑
+      templateInfo: [],
+      showTranscode: checkRole('TRANSCODE'),
+      outputModal: outputsDefult(),
+      openTrancodeModal: false,
       clipUrl: '',
+      showTransListModal: false,
       showPicturePreview: false,
       selectedIndex: 0,
       searchValue: '',
@@ -592,6 +700,32 @@ export default {
       permissionKey: '',
       searchInputFocus: false,
       canUpload: false,
+      ruleValidate: {
+        SegmentDuration: [{ validator: this.validateSegment, trigger: 'blur' }],
+        InputKey: [{ validator: this.validateInputKey, trigger: 'change' }],
+        PresetId: [
+          {
+            required: true,
+            message: this.$t('VIDEO.PERSET_REQUIRED'),
+            trigger: 'change',
+          },
+        ],
+        Key: [
+          {
+            required: true,
+            message: this.$t('VIDEO.KEY_SUFFIX_REQUIRED'),
+            trigger: 'change',
+          },
+        ],
+        Time: [
+          {
+            type: 'number',
+            min: 1,
+            message: this.$t('PUBLIC.NOT_LESS', { num: '1' }),
+            trigger: 'change',
+          },
+        ],
+      },
     }
   },
   computed: {
@@ -626,6 +760,7 @@ export default {
     this.getData()
     this.checkCanUpload()
     this.hasFileReadAcl()
+    this.getTemplateList()
   },
   methods: {
     async getData(nextMarker, searchValue = '') {
@@ -903,6 +1038,105 @@ export default {
       this.copyModal = false
       this.$Message.success($t('STORAGE.COPIED'))
     },
+    updateOutputs() {
+      this.$refs['outputForm'].validate((valid) => {
+        if (!valid) {
+          this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
+        } else {
+          this.createJob()
+        }
+      })
+    },
+    templateChange(id) {
+      this.HLSShow = this.isTS(id)
+      if (!this.HLSShow) {
+        this.outputModal.SegmentDuration = 0
+      }
+      this.isAutoCodec = this.isAC(id)
+    },
+    isAC(id) {
+      return id ? this.templateInfo.templateVideoCodec[id] === 'auto' : false
+    },
+    isTS(id) {
+      return id ? this.templateInfo.templateContainer[id] === 'ts' : false
+    },
+    timeChange(value, name) {
+      this.outputModal[name] = value
+    },
+    async getTemplateList() {
+      this.templateInfo = await getTemplateInfo()
+    },
+    async createJob() {
+      this.outputModal.template = `${this.outputModal.PresetId}+${
+        this.templateInfo.templateName[this.outputModal.PresetId]
+      }`
+      const outputSave = this.isWaterMarkerOpen
+        ? Object.assign(this.outputModal, {
+            Watermarks: [{ InputKey: this.outputModal.InputKey }],
+          })
+        : this.outputModal
+      delete outputSave.InputKey
+      this.isAutoCodec && delete outputSave.Watermarks
+      if (this.isComposition) {
+        outputSave.Composition = [
+          {
+            TimeSpan: {
+              StartTime: getSS(
+                this.outputModal.StartTime,
+                this.outputModal.StartTimeMS,
+              ),
+              Duration: getSS(
+                this.outputModal.Duration,
+                this.outputModal.DurationMS,
+              ),
+            },
+          },
+        ]
+      }
+      delete outputSave.StartTime
+      delete outputSave.StartTimeMS
+      delete outputSave.Duration
+      delete outputSave.DurationMS
+      console.log(this.outputModal)
+      this.outputModal.SegmentDuration &&
+        this.outputModal.SegmentDuration !== 0 &&
+        (this.outputModal.SegmentDuration = this.outputModal.SegmentDuration.toString())
+      console.log(this.outputModal)
+      this.showTransListModal = true
+      try {
+        await postTranscoderUrl('jobs', outputSave)
+        this.outputModal.SegmentDuration &&
+          (this.outputModal.SegmentDuration = parseInt(
+            this.outputModal.SegmentDuration,
+          ))
+      } catch (error) {
+        this.$Loading.error()
+      }
+    },
+    validateInputKey(rule, value, callback) {
+      if (!this.isAutoCodec && this.isWaterMarkerOpen && !value) {
+        callback(new Error('请填写水印文件key'))
+      } else {
+        callback()
+      }
+    },
+    validateOutputKeys(rule, value, callback) {
+      if (value.length === 0 && this.MPOpen) {
+        callback(new Error('请选择输出文件名'))
+      } else {
+        callback()
+      }
+    },
+    validateSegment(rule, value, callback) {
+      if (this.isTS(this.outputModal.PresetId) && this.MPOpen && value === 0) {
+        callback(new Error(this.$t('VIDEO.HLS_SLICE_LENGTH_CANNOT_BE_0')))
+      } else {
+        callback()
+      }
+    },
+    fastTrancode() {
+      this.openTrancodeModal = true
+    },
   },
 }
 
@@ -939,6 +1173,17 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
   } catch (error) {
     this.$Loading.error()
     return Promise.reject(error)
+  }
+}
+const outputsDefult = () => {
+  return {
+    Key: '',
+    PresetId: '',
+    SegmentDuration: 0,
+    StartTime: '0:0:0',
+    StartTimeMS: '0',
+    Duration: '0:0:0',
+    DurationMS: '0',
   }
 }
 </script>
