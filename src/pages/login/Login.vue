@@ -454,7 +454,7 @@ export default {
         this.searchedSubUserList = this.subUserList
         return
       }
-      let searchArr = this.searchSubUserInput.split('')
+      let searchArr = this.searchSubUserInput.replace(/\s+/g, '').split('')
       let reg = new RegExp(searchArr.join('.*'))
       this.searchedSubUserList = this.subUserList.filter(
         (item) => reg.test(item.username) || reg.test(item.company),

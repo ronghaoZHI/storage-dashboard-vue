@@ -23,7 +23,7 @@ export const getKey = async () => {
 
 export const config = async ({
   key,
-  timeout = 10000,
+  timeout = 100000,
   host = HOST.awsHost,
   s3ForcePathStyle,
   region = 'us-west-1',
@@ -41,7 +41,7 @@ export const config = async ({
 }
 
 export const getS3 = async ({
-  timeout = 10000,
+  timeout = 100000,
   key = awsKey,
   host = HOST.awsHost,
   s3ForcePathStyle = true,
@@ -55,7 +55,7 @@ export const handler = async (
   params = '',
   host = HOST.awsHost,
   s3ForcePathStyle = true,
-  timeout = 10000,
+  timeout = 100000,
 ) => {
   try {
     const s3 = await getS3({ timeout, host, s3ForcePathStyle })
