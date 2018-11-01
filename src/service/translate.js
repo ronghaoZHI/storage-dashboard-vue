@@ -1040,7 +1040,7 @@ export const messages = {
       KEEPCATALOGMSG:
         '例子：a是目录，1是文件名，源文件a/1.mp4，则转码后输出的文件是a/1.flv',
       MANUALCATALOGMSG:
-        '例子：b是自定义目录，c是文件后缀，1是文件名，源文件a/1.mp4，则转码后输出的文件是b/1-c.flv',
+        '例子：b是自定义目录，_720p.flv是文件后缀，1是文件名，源文件a/1.mp4，则转码后输出的文件是b/1_720p.flv',
       FINDFILE: '查找文件',
       FASFTTRANS: '一键转码',
       NO_BUCKET: '当前账户下没有创建 Bucket',

@@ -1178,7 +1178,7 @@ export default {
         })
       } else {
         outputs.push({
-          Key: `${this.prefix}${this.outputFileModal.prefix}/${key.join('.')}-${
+          Key: `${this.prefix}${this.outputFileModal.prefix}/${key.join('.')}${
             this.outputFileModal.key
           }`,
           ...outputSave,
