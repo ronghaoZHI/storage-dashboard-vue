@@ -85,6 +85,22 @@ export const messages = {
       DELETE_KEY_COM: 'Are you sure you want to delete [{accesskey}] ？',
     },
     STORAGE: {
+      FILESUFFIXMSG: 'Please input a file name suffix',
+      FILESUFFIX: 'suffix',
+      FILEPREFIXMSG: 'Please input a file name prefix',
+      FILEPREFIX: 'prefix',
+      OUTPUTINFO: 'Output file information :',
+      CREATECATALOG: 'Create a directory with the source file name',
+      KEEPCATALOG: 'Keep source file directory',
+      MANUALCATALOG: 'Custom directory',
+      CREATECATALOGMSG:
+        'Example: a is the directory, 1 is the file name, the source file is a/1.mp4, and the file output after transcoding is a/1/1.flv',
+      KEEPCATALOGMSG:
+        'Example: a is the directory, 1 is the file name, the source file is a/1.mp4, and the file output after transcoding is a/1.flv',
+      MANUALCATALOGMSG:
+        'Example: b is a custom directory, c is the file suffix, 1 is the file name, source file a/1.mp4, then the file output after transcoding is b/1-c.flv',
+      FINDFILE: 'Look up',
+      FASFTTRANS: 'Video transcode',
       NO_BUCKET: 'No buckets',
       TABLE_BUCKET_NAME: 'Bucket name',
       TOGGLE_THEME: 'Toggle theme',
@@ -493,6 +509,17 @@ export const messages = {
       USER_TYPE: 'User type',
     },
     VIDEO: {
+      TIMES: 'Minutes and seconds',
+      TRANSCODETIPS:
+        'When the video encoding method of the transcoding template is "unchanged", the watermark cannot be added',
+      WATERMSG:
+        'The watermark image should be in a directory with the video source file, and the file key can be entered, for example, abc.png',
+      FILEKEY: 'file`s key',
+      TIMESECTION: 'time section',
+      STARTTIME: 'star time',
+      EDIT: 'Video edit',
+      OUTPUTRULE: 'output rules',
+      TRANSCONFIG: 'transcode config',
       PRE_TEMPLATE: 'some pre-template',
       TEMPLATE_NAME_REQUIRED: 'Please enter a template name',
       PIPE_FIRST: 'create pipeline first',
@@ -1000,6 +1027,20 @@ export const messages = {
       JOB: '任务管理',
     },
     STORAGE: {
+      FILESUFFIX: '文件后缀',
+      FILEPREFIX: '文件前缀',
+      OUTPUTINFO: '输出文件信息 :',
+      CREATECATALOG: '以源文件名创建目录',
+      KEEPCATALOG: '保留源文件目录',
+      MANUALCATALOG: '自定义目录',
+      CREATECATALOGMSG:
+        '例子：a是目录，1是文件名，源文件a/1.mp4，则转码后输出的文件是a/1/1.flv',
+      KEEPCATALOGMSG:
+        '例子：a是目录，1是文件名，源文件a/1.mp4，则转码后输出的文件是a/1.flv',
+      MANUALCATALOGMSG:
+        '例子：b是自定义目录，c是文件后缀，1是文件名，源文件a/1.mp4，则转码后输出的文件是b/1-c.flv',
+      FINDFILE: '查找文件',
+      FASFTTRANS: '一键转码',
       NO_BUCKET: '当前账户下没有创建 Bucket',
       TABLE_BUCKET_NAME: '空间名',
       TOGGLE_THEME: '切换主题',
@@ -1395,6 +1436,16 @@ export const messages = {
       USER_TYPE: '账号类型',
     },
     VIDEO: {
+      TIMES: '时分秒',
+      TRANSCODETIPS: '转码模版的视频编码方式为“不变”时不能添加水印',
+      WATERMSG:
+        '水印图片要和视频源文件在一个目录下，输入文件key即可，例如abc.png',
+      FILEKEY: '文件Key :',
+      TIMESECTION: '剪辑时长 :',
+      STARTTIME: '剪辑开始时间',
+      EDIT: '视频剪辑',
+      OUTPUTRULE: '输出文件规则 :',
+      TRANSCONFIG: '转码配置',
       PRE_TEMPLATE: '预置模版',
       TEMPLATE_NAME_REQUIRED: '请输入模版名名称',
       PIPE_FIRST: '需要先创建模版',

@@ -33,10 +33,10 @@
         <Button v-show="showTranscode"
                 @click="showTrans"
                 type="primary"
-                :disabled="!selectedFileList.length > 0">一键转码</Button>
+                :disabled="!selectedFileList.length > 0">{{$t("STORAGE.FASFTTRANS")}}</Button>
         <Button type="primary"
                 v-if="!showSearch"
-                @click="showSearch = true">查找文件</Button>
+                @click="showSearch = true">{{$t("STORAGE.FINDFILE")}}</Button>
         <transition name="slide-fade">
           <div class="section-search"
                v-if="showSearch">
@@ -139,31 +139,37 @@
       </div>
     </Modal>
     <Modal v-model="openTrancodeModal"
-           title="转码配置"
+           :title="$t('VIDEO.TRANSCONFIG')"
            width="700">
       <Form ref="outputsForm"
             :model="outputModal"
             :label-width="155"
             :rules="ruleValidate">
-        <FormItem label="输出文件规则 :"
+        <FormItem :label="$t('VIDEO.OUTPUTRULE')"
                   required>
         <RadioGroup v-model="outputType">
-            <Radio label="fileDict">以源文件名创建目录</Radio>
-            <Radio label="currentDict">保留源文件目录</Radio>
-            <Radio label="manualDict">自定义目录</Radio>
+            <Radio label="fileDict"><Poptip trigger="hover" placement="top" >{{$t('STORAGE.CREATECATALOG')}}<div slot="content">
+              <p>{{$t('STORAGE.CREATECATALOGMSG')}}</p>
+            </div></Poptip></Radio>
+            <Radio label="currentDict"><Poptip trigger="hover" placement="top">{{$t('STORAGE.KEEPCATALOG')}}<div slot="content">
+              <p>{{$t('STORAGE.KEEPCATALOGMSG')}}</p>
+            </div></Poptip></Radio>
+            <Radio label="manualDict"><Poptip trigger="hover" placement="top">{{$t('STORAGE.MANUALCATALOG')}}<div slot="content">
+              <p>{{$t('STORAGE.MANUALCATALOGMSG')}}</p>
+            </div></Poptip></Radio>
         </RadioGroup>
         </FormItem>
         <FormItem v-if="outputType === 'manualDict'"
-                  label="输出文件信息 :"
+                  :label="$t('STORAGE.OUTPUTINFO')"
                   required>
-          文件前缀 :
+          {{$t('STORAGE.FILEPREFIX')}} :
           <Input v-model="outputFileModal.prefix"
-          placeholder="请输入文件前缀"
+          :placeholder="$t('STORAGE.')"
           class="line-width" 
           style="width: 180px"/>
-          文件名后缀 :
-          <Input v-model="outputFileModal.Key"
-          placeholder="请输入文件名后缀"
+          {{$t('STORAGE.FILESUFFIX')}} :
+          <Input v-model="outputFileModal.key"
+          :placeholder="$t('STORAGE.FILESUFFIXMSG')"
           class="line-width" 
           style="width: 180px"/>
         </FormItem>
@@ -172,6 +178,7 @@
                   required>
           <Select v-model="outputModal.PipelineId"
                   class="line-width"
+                  @on-change="pipeIDChange"
                   filterable>
             <Option v-for="item in pipes"
                     :value="item.Id"
@@ -199,27 +206,27 @@
                   class="my-slider"
                   show-input></Slider>
         </FormItem>
-        <FormItem label="视频剪辑 : ">
+        <FormItem :label="$t('VIDEO.EDIT')">
           <i-switch v-model="isComposition"
                     style="margin-top:3px;">
             <span slot="open">{{$t('VIDEO.ON')}}</span>
             <span slot="close">{{$t('VIDEO.OFF')}}</span>
           </i-switch>
         </FormItem>
-        <FormItem label="剪辑开始时间 : "
+        <FormItem :label="$t('VIDEO.STARTTIME')"
                   v-if="isComposition">
           <TimePicker type="time"
-                      placeholder="时分秒"
+                      :placeholder="$t('VIDEO.TIMES')"
                       :value="outputModal.StartTime"
                       @on-change="value => timeChange(value, 'StartTime')"
                       style="width: 168px"></TimePicker> .
           <InputNumber v-model="outputModal.StartTimeMS"
                        :min="0"></InputNumber> ms
         </FormItem>
-        <FormItem label="剪辑时长 : "
+        <FormItem :label="$t('VIDEO.TIMESECTION')"
                   v-if="isComposition">
           <TimePicker type="time"
-                      placeholder="时分秒"
+                      :placeholder="$t('VIDEO.TIMES')"
                       :value="outputModal.Duration"
                       @on-change="value => timeChange(value, 'Duration')"
                       style="width: 168px"></TimePicker> .
@@ -228,8 +235,8 @@
         </FormItem>
         <p class="page-info"
            v-if="isAutoCodec"
-           style="padding-left:155px">转码模版的视频编码方式为“不变”时不能添加水印</p>
-        <FormItem label="水印 : ">
+           style="padding-left:155px">{{$t('VIDEO.TRANSCODETIPS')}}</p>
+        <FormItem :label="$t('VIDEO.WATERMARK')">
           <i-switch v-model="isWaterMarkerOpen"
                     style="margin-top:3px;"
                     :disabled="isAutoCodec">
@@ -237,11 +244,11 @@
             <span slot="close">{{$t('VIDEO.OFF')}}</span>
           </i-switch>
         </FormItem>
-        <FormItem label="文件Key : "
+        <FormItem :label="$t('VIDEO.FILEKEY')"
                   v-if="isWaterMarkerOpen">
           <Input v-model="outputModal.InputKey"
                  prop="InputKey"
-                 placeholder="水印图片要和视频源文件在一个目录下，输入文件key即可，例如abc.png"
+                 :placeholder="$t('VIDEO.WATERMSG')"
                  class="line-width"
                  :disabled="isAutoCodec" />
         </FormItem>
@@ -251,11 +258,6 @@
         <Button type="primary"
                 @click="updateOutputs">{{$t('VIDEO.OK')}}</Button>
       </div>
-    </Modal>
-    <Modal v-model="showTransListModal"
-           title="任务列表">
-      <Table>
-      </Table>
     </Modal>
     <a download
        id="element-download"
@@ -336,6 +338,7 @@ export default {
       outputType: 'fileDict',
       pipes: [],
       job: jobDefult(),
+      jobs: [],
       HLSShow: false,
       outFileType: '',
       isAutoCodec: false,
@@ -346,7 +349,6 @@ export default {
       outputModal: outputsDefult(),
       openTrancodeModal: false,
       clipUrl: '',
-      showTransListModal: false,
       showPicturePreview: false,
       selectedIndex: 0,
       searchValue: '',
@@ -1088,6 +1090,11 @@ export default {
         }
       })
     },
+    pipeIDChange(id) {
+      this.$store.dispatch('setBaseInfo', {
+        pipeID: id,
+      })
+    },
     templateChange(id) {
       this.HLSShow = this.isTS(id)
       this.outFileType = this.getOutFileType(id)
@@ -1148,80 +1155,78 @@ export default {
       delete outputSave.PipelineId
       return outputSave
     },
-    formatJob(data) {
-      const files = this.selectedFileList.filter((item) => {
-        return item.Type === 'file'
-      })
-      const inputs = files.map((item) => {
-        return { Key: item.Key }
-      })
-      const outputSave = this.formatOutputs(data)
-      let outputs = []
+    getOutPuts(item, outputSave) {
+      const outputs = []
+      let key = item.Key.split('.')
+      key.splice(-1, 1)
       if (this.outputType === 'fileDict') {
-        outputs = files.map((item) => {
-          let key = item.Key.split('.')
-          key.splice(-1, 1)
-          return {
-            ...outputSave,
-            Key: this.HLSShow
+        outputs.push({
+          ...outputSave,
+          Key:
+            this.HLSShow && this.outputModal.SegmentDuration !== 0
               ? `${this.prefix}${key.join('.')}/${key.join('.')}`
               : `${this.prefix}${key.join('.')}/${key.join('.')}.${
                   this.outFileType
                 }`,
-          }
         })
       } else if (this.outputType === 'currentDict') {
-        outputs = files.map((item) => {
-          let key = item.Key.split('.')
-          key.splice(-1, 1)
-          return {
-            Key: this.HLSShow
+        outputs.push({
+          Key:
+            this.HLSShow && this.outputModal.SegmentDuration !== 0
               ? `${this.prefix}${key.join('.')}`
               : `${this.prefix}${key.join('.')}.${this.outFileType}`,
-            ...outputSave,
-          }
+          ...outputSave,
         })
       } else {
-        outputs = files.map((item) => {
-          let key = item.Key.split('.')
-          key.splice(-1, 1)
-          return {
-            Key: this.HLSShow
-              ? `${this.prefix}${this.outputFileModal.prefix}${key.join('.')}-${
-                  this.outputFileModal.key
-                }`
-              : `${this.prefix}${this.outputFileModal.prefix}${key.join('.')}-${
-                  this.outputFileModal.key
-                }.${this.outFileType}`,
-            ...outputSave,
-          }
+        outputs.push({
+          Key: `${this.prefix}${this.outputFileModal.prefix}/${key.join('.')}-${
+            this.outputFileModal.key
+          }`,
+          ...outputSave,
         })
       }
-      Object.assign(data, {
-        Inputs: inputs,
-        Outputs: outputs,
+      return outputs
+    },
+    formatJob(data) {
+      const files = this.selectedFileList.filter((item) => {
+        return item.Type === 'file'
       })
-      const front = _.clone(data)
-      const saved = _.clone(data)
-      saved.Outputs = front.Outputs.map((item) => {
-        let res = _.clone(item)
-        if (item.SegmentDuration && item.SegmentDuration !== 0) {
-          res.SegmentDuration = item.SegmentDuration.toString()
-        } else {
-          delete res.SegmentDuration
-        }
-        return res
+      const outputSave = this.formatOutputs(this.job)
+      files.map((item) => {
+        const outputs = this.getOutPuts(item, outputSave)
+        Object.assign(data, {
+          Inputs: [{ Key: item.Key }],
+          Outputs: outputs,
+        })
+        const front = _.clone(data)
+        const saved = _.clone(data)
+        saved.Outputs = front.Outputs.map((item) => {
+          let res = _.clone(item)
+          if (item.SegmentDuration && item.SegmentDuration !== 0) {
+            res.SegmentDuration = item.SegmentDuration.toString()
+          } else {
+            delete res.SegmentDuration
+          }
+          return res
+        })
+        this.jobs.push(saved)
       })
-      return saved
+      console.log(this.jobs)
+      return this.jobs
     },
     async createJob() {
-      let saved = this.formatJob(this.job)
       try {
         this.$Loading.start()
-        await postTranscoderUrl('jobs', saved)
-        this.$Loading.finish()
-        this.$Message.success(this.$t('VIDEO.CREATED'))
-        this.$router.push({ name: 'job' })
+        Promise.all(
+          this.formatJob(this.job).map((item) => {
+            postTranscoderUrl('jobs', item)
+          }),
+        ).then(() => {
+          this.jobs = []
+          this.$Loading.finish()
+          this.$Message.success(this.$t('VIDEO.CREATED'))
+          this.$router.push({ name: 'job' })
+        })
       } catch (error) {
         this.$Loading.error()
       }

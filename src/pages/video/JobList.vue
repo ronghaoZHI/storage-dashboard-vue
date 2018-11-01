@@ -198,7 +198,7 @@ export default {
       const res = await listPipelines()
       if (res.length > 0) {
         this.pipes = res
-        this.pipeId = this.pipes[0].Id
+        this.pipeId = this.$store.getters.pipeID || this.pipes[0].Id
         await this.listJobsByPipeline(this.pipeId)
       }
     },

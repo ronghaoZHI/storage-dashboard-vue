@@ -25,6 +25,7 @@ function checkSessionStorage() {
       perms: [], // permission
       buckets: {},
       logs: [],
+      pipeID: '',
     }
   }
 }
@@ -166,6 +167,9 @@ const store = new Vuex.Store({
     },
     users: (state) => {
       return state.users || []
+    },
+    pipeID: (state) => {
+      return state.pipeID || ''
     },
   },
 })
