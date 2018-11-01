@@ -1027,7 +1027,9 @@ export const messages = {
       JOB: '任务管理',
     },
     STORAGE: {
+      FILESUFFIXMSG: '请输入文件名后缀',
       FILESUFFIX: '文件后缀',
+      FILEPREFIXMSG: '请输入文件前缀',
       FILEPREFIX: '文件前缀',
       OUTPUTINFO: '输出文件信息 :',
       CREATECATALOG: '以源文件名创建目录',

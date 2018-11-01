@@ -24,7 +24,7 @@
                 v-show="canUpload"
                 @click="createFolderModal = true">{{$t("STORAGE.CREATE_FOLDER")}}</Button>
         <Tooltip v-if="canUseBatchDownload"
-                content="页面提醒是否允许自动下载时，点击允许"
+                 content="页面提醒是否允许自动下载时，点击允许"
                  placement="bottom">
           <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
         </Tooltip>
@@ -164,7 +164,7 @@
                   required>
           {{$t('STORAGE.FILEPREFIX')}} :
           <Input v-model="outputFileModal.prefix"
-          :placeholder="$t('STORAGE.')"
+          :placeholder="$t('STORAGE.FILEPREFIXMSG')"
           class="line-width" 
           style="width: 180px"/>
           {{$t('STORAGE.FILESUFFIX')}} :
