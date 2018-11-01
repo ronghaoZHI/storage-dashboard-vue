@@ -31,7 +31,7 @@
         <Button @click="batchDeleteFileConfirm"
                 :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
         <Button v-show="showTranscode"
-                @click="fastTrancode"
+                @click="showTrans"
                 type="primary"
                 :disabled="!selectedFileList.length > 0">一键转码</Button>
         <Button type="primary"
@@ -141,11 +141,44 @@
     <Modal v-model="openTrancodeModal"
            title="转码配置"
            width="700">
-      <Form ref="outputForm"
+      <Form ref="outputsForm"
             :model="outputModal"
             :label-width="155"
             :rules="ruleValidate">
-        <FormItem :label="$t('VIDEO.TRANSCODING_TEMPLATE') + ' : '"
+        <FormItem label="输出文件规则 :"
+                  required>
+        <RadioGroup v-model="outputType">
+            <Radio label="fileDict">以源文件名创建目录</Radio>
+            <Radio label="currentDict">保留源文件目录</Radio>
+            <Radio label="manualDict">自定义目录</Radio>
+        </RadioGroup>
+        </FormItem>
+        <FormItem v-if="outputType === 'manualDict'"
+                  label="输出文件信息 :"
+                  required>
+          文件前缀 :
+          <Input v-model="outputFileModal.prefix"
+          placeholder="请输入文件前缀"
+          class="line-width" 
+          style="width: 180px"/>
+          文件名后缀 :
+          <Input v-model="outputFileModal.Key"
+          placeholder="请输入文件名后缀"
+          class="line-width" 
+          style="width: 180px"/>
+        </FormItem>
+        <FormItem :label="$t('VIDEO.JOB_PIPE')"
+                  prop="PipelineId"
+                  required>
+          <Select v-model="outputModal.PipelineId"
+                  class="line-width"
+                  filterable>
+            <Option v-for="item in pipes"
+                    :value="item.Id"
+                    :key="item.Id">{{ item.Name }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem :label="$t('VIDEO.TRANSCODING_TEMPLATE') + ' :'"
                   prop="PresetId"
                   required>
           <Select v-model="outputModal.PresetId"
@@ -156,13 +189,6 @@
                     :value="template.Id"
                     :key="template.Id">{{template.Name}}</Option>
           </Select>
-        </FormItem>
-        <FormItem :label="$t('VIDEO.OUTPUT_FILE_NAME') + ' : '"
-                  prop="Key"
-                  required>
-          <Input v-model="outputModal.Key"
-                 :placeholder="$t('VIDEO.OUTPUT_FILE_NAME')"
-                 class="line-width" />
         </FormItem>
         <FormItem :label="$t('VIDEO.HLS_SLICE_LENGTH') + ' : '"
                   prop="SegmentDuration"
@@ -212,10 +238,10 @@
           </i-switch>
         </FormItem>
         <FormItem label="文件Key : "
-                  prop="InputKey"
                   v-if="isWaterMarkerOpen">
           <Input v-model="outputModal.InputKey"
-                 placeholder="水印图片要和视频源文件在一个bucket里，输入文件key即可，例如abc.png"
+                 prop="InputKey"
+                 placeholder="水印图片要和视频源文件在一个目录下，输入文件key即可，例如abc.png"
                  class="line-width"
                  :disabled="isAutoCodec" />
         </FormItem>
@@ -283,7 +309,7 @@ import { checkRole } from 'helper'
 import legendList from '@/components/legend/legend'
 import moment from 'moment'
 import filePermission from './FilePermissions'
-import { getTemplateInfo, getSS } from '@/pages/video/data'
+import { getTemplateInfo, getSS, listPipelines } from '@/pages/video/data'
 import { postTranscoderUrl } from 'api'
 export default {
   components: {
@@ -303,7 +329,15 @@ export default {
   },
   data() {
     return {
+      outputFileModal: {
+        prefix: '',
+        key: '',
+      },
+      outputType: 'fileDict',
+      pipes: [],
+      job: jobDefult(),
       HLSShow: false,
+      outFileType: '',
       isAutoCodec: false,
       isWaterMarkerOpen: false,
       isComposition: false, // video Composition 视频剪辑
@@ -703,6 +737,13 @@ export default {
       ruleValidate: {
         SegmentDuration: [{ validator: this.validateSegment, trigger: 'blur' }],
         InputKey: [{ validator: this.validateInputKey, trigger: 'change' }],
+        PipelineId: [
+          {
+            required: true,
+            message: '请选择管道',
+            trigger: 'change',
+          },
+        ],
         PresetId: [
           {
             required: true,
@@ -713,7 +754,7 @@ export default {
         Key: [
           {
             required: true,
-            message: this.$t('VIDEO.KEY_SUFFIX_REQUIRED'),
+            message: '请输入文件相应信息',
             trigger: 'change',
           },
         ],
@@ -760,7 +801,7 @@ export default {
     this.getData()
     this.checkCanUpload()
     this.hasFileReadAcl()
-    this.getTemplateList()
+    this.getVideoInfo()
   },
   methods: {
     async getData(nextMarker, searchValue = '') {
@@ -1039,7 +1080,7 @@ export default {
       this.$Message.success($t('STORAGE.COPIED'))
     },
     updateOutputs() {
-      this.$refs['outputForm'].validate((valid) => {
+      this.$refs['outputsForm'].validate((valid) => {
         if (!valid) {
           this.$Message.error(this.$t('PUBLIC.FORM_VALID_FAILED'))
         } else {
@@ -1049,6 +1090,7 @@ export default {
     },
     templateChange(id) {
       this.HLSShow = this.isTS(id)
+      this.outFileType = this.getOutFileType(id)
       if (!this.HLSShow) {
         this.outputModal.SegmentDuration = 0
       }
@@ -1057,25 +1099,29 @@ export default {
     isAC(id) {
       return id ? this.templateInfo.templateVideoCodec[id] === 'auto' : false
     },
+    getOutFileType(id) {
+      return id && this.templateInfo.templateContainer[id]
+    },
     isTS(id) {
       return id ? this.templateInfo.templateContainer[id] === 'ts' : false
     },
     timeChange(value, name) {
       this.outputModal[name] = value
     },
-    async getTemplateList() {
+    async getVideoInfo() {
       this.templateInfo = await getTemplateInfo()
+      let pipesAll = await listPipelines()
+      this.pipes = pipesAll.filter((pipe) => {
+        return pipe.Status === 'Active' && pipe.InputBucket === this.bucket
+      })
+      !this.pipes[0] && this.$Message.warning(this.$t('VIDEO.PIPE_FIRST'))
     },
-    async createJob() {
-      this.outputModal.template = `${this.outputModal.PresetId}+${
-        this.templateInfo.templateName[this.outputModal.PresetId]
-      }`
+    formatOutputs(data) {
       const outputSave = this.isWaterMarkerOpen
         ? Object.assign(this.outputModal, {
-            Watermarks: [{ InputKey: this.outputModal.InputKey }],
+            Watermarks: [{ InputKey: this.prefix + this.outputModal.InputKey }],
           })
         : this.outputModal
-      delete outputSave.InputKey
       this.isAutoCodec && delete outputSave.Watermarks
       if (this.isComposition) {
         outputSave.Composition = [
@@ -1093,22 +1139,89 @@ export default {
           },
         ]
       }
+      Object.assign(data, { PipelineId: outputSave.PipelineId })
+      delete outputSave.InputKey
       delete outputSave.StartTime
       delete outputSave.StartTimeMS
       delete outputSave.Duration
       delete outputSave.DurationMS
-      console.log(this.outputModal)
-      this.outputModal.SegmentDuration &&
-        this.outputModal.SegmentDuration !== 0 &&
-        (this.outputModal.SegmentDuration = this.outputModal.SegmentDuration.toString())
-      console.log(this.outputModal)
-      this.showTransListModal = true
+      delete outputSave.PipelineId
+      return outputSave
+    },
+    formatJob(data) {
+      const files = this.selectedFileList.filter((item) => {
+        return item.Type === 'file'
+      })
+      const inputs = files.map((item) => {
+        return { Key: item.Key }
+      })
+      const outputSave = this.formatOutputs(data)
+      let outputs = []
+      if (this.outputType === 'fileDict') {
+        outputs = files.map((item) => {
+          let key = item.Key.split('.')
+          key.splice(-1, 1)
+          return {
+            ...outputSave,
+            Key: this.HLSShow
+              ? `${this.prefix}${key.join('.')}/${key.join('.')}`
+              : `${this.prefix}${key.join('.')}/${key.join('.')}.${
+                  this.outFileType
+                }`,
+          }
+        })
+      } else if (this.outputType === 'currentDict') {
+        outputs = files.map((item) => {
+          let key = item.Key.split('.')
+          key.splice(-1, 1)
+          return {
+            Key: this.HLSShow
+              ? `${this.prefix}${key.join('.')}`
+              : `${this.prefix}${key.join('.')}.${this.outFileType}`,
+            ...outputSave,
+          }
+        })
+      } else {
+        outputs = files.map((item) => {
+          let key = item.Key.split('.')
+          key.splice(-1, 1)
+          return {
+            Key: this.HLSShow
+              ? `${this.prefix}${this.outputFileModal.prefix}${key.join('.')}-${
+                  this.outputFileModal.key
+                }`
+              : `${this.prefix}${this.outputFileModal.prefix}${key.join('.')}-${
+                  this.outputFileModal.key
+                }.${this.outFileType}`,
+            ...outputSave,
+          }
+        })
+      }
+      Object.assign(data, {
+        Inputs: inputs,
+        Outputs: outputs,
+      })
+      const front = _.clone(data)
+      const saved = _.clone(data)
+      saved.Outputs = front.Outputs.map((item) => {
+        let res = _.clone(item)
+        if (item.SegmentDuration && item.SegmentDuration !== 0) {
+          res.SegmentDuration = item.SegmentDuration.toString()
+        } else {
+          delete res.SegmentDuration
+        }
+        return res
+      })
+      return saved
+    },
+    async createJob() {
+      let saved = this.formatJob(this.job)
       try {
-        await postTranscoderUrl('jobs', outputSave)
-        this.outputModal.SegmentDuration &&
-          (this.outputModal.SegmentDuration = parseInt(
-            this.outputModal.SegmentDuration,
-          ))
+        this.$Loading.start()
+        await postTranscoderUrl('jobs', saved)
+        this.$Loading.finish()
+        this.$Message.success(this.$t('VIDEO.CREATED'))
+        this.$router.push({ name: 'job' })
       } catch (error) {
         this.$Loading.error()
       }
@@ -1134,7 +1247,8 @@ export default {
         callback()
       }
     },
-    fastTrancode() {
+    async showTrans() {
+      await this.getVideoInfo()
       this.openTrancodeModal = true
     },
   },
@@ -1175,15 +1289,30 @@ const getURL = async (bucket, file, prefix, isDownload = false) => {
     return Promise.reject(error)
   }
 }
+
+const jobDefult = () => {
+  return {
+    Inputs: [
+      {
+        Key: '',
+      },
+    ],
+    OutputKeyPrefix: '',
+    Outputs: [],
+    PipelineId: '',
+  }
+}
+
 const outputsDefult = () => {
   return {
-    Key: '',
     PresetId: '',
     SegmentDuration: 0,
     StartTime: '0:0:0',
     StartTimeMS: '0',
     Duration: '0:0:0',
     DurationMS: '0',
+    PipelineId: '',
+    InputKey: '',
   }
 }
 </script>
