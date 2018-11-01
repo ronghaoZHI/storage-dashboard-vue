@@ -803,7 +803,6 @@ export default {
     this.getData()
     this.checkCanUpload()
     this.hasFileReadAcl()
-    this.getVideoInfo()
   },
   methods: {
     async getData(nextMarker, searchValue = '') {
@@ -1211,7 +1210,6 @@ export default {
         })
         this.jobs.push(saved)
       })
-      console.log(this.jobs)
       return this.jobs
     },
     async createJob() {
