@@ -259,6 +259,19 @@
                 @click="updateOutputs">{{$t('VIDEO.OK')}}</Button>
       </div>
     </Modal>
+    <Modal v-model="showJobsState"
+           title=""
+           width="900"
+           :closable=false>
+     <div slot="footer">
+      <Button type="primary" @click="removeTimer">关闭</Button>
+    </div>
+    <Table border
+           :context="self"
+           :stripe="true"
+           :columns="listHeader"
+           :data="currentJobs"
+           :no-data-text="$t('STORAGE.NO_LIST')"></Table></Modal>
     <a download
        id="element-download"
        style="display:none">
@@ -306,13 +319,16 @@ import bscBreadcrumb from '@/components/breadcrumb'
 import upload from '@/components/upload/upload'
 import Clipboard from 'clipboard'
 import store from '@/store'
-import { getRedirectBucketFilesAcl } from 'api'
 import { checkRole } from 'helper'
 import legendList from '@/components/legend/legend'
 import moment from 'moment'
 import filePermission from './FilePermissions'
 import { getTemplateInfo, getSS, listPipelines } from '@/pages/video/data'
-import { postTranscoderUrl } from 'api'
+import {
+  getRedirectBucketFilesAcl,
+  postTranscoderUrl,
+  getTranscoderUrl,
+} from 'api'
 export default {
   components: {
     filePermission,
@@ -331,6 +347,8 @@ export default {
   },
   data() {
     return {
+      showJobsState: false,
+      currentJobs: [],
       outputFileModal: {
         prefix: '',
         key: '',
@@ -769,6 +787,59 @@ export default {
           },
         ],
       },
+      listHeader: [
+        {
+          title: this.$t('VIDEO.JOB_ID'),
+          width: '9%',
+          render: (h, params) => {
+            let jobiId = params.row.Id.split('-')[1]
+            return h('div', [jobiId])
+          },
+        },
+        {
+          title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
+          width: '17%',
+          render: (h, params) => {
+            let names = params.row.Outputs
+            if (names && names.length > 0) {
+              return h(
+                'Poptip',
+                names.map((item) =>
+                  h(
+                    'Tag',
+                    {
+                      props: {
+                        type: 'border',
+                      },
+                    },
+                    item.Key,
+                  ),
+                ),
+              )
+            }
+          },
+        },
+        {
+          title: this.$t('VIDEO.PIPE_ID'),
+          width: '17%',
+          key: 'PipelineId',
+        },
+        {
+          title: this.$t('VIDEO.STATUS'),
+          width: '10%',
+          key: 'Status',
+        },
+        {
+          title: this.$t('VIDEO.CREATE_TIME'),
+          width: '17%',
+          render: (h, params) => {
+            let ctime = params.row.Timing.SubmittedTimeMillis
+            if (ctime && ctime.length > 0) {
+              return h('div', [h('div', [moment(ctime).format('HH:mm:ss')])])
+            }
+          },
+        },
+      ],
     }
   },
   computed: {
@@ -800,11 +871,29 @@ export default {
     },
   },
   created() {
-    this.getData()
+    this.removeTimer()
     this.checkCanUpload()
     this.hasFileReadAcl()
   },
   methods: {
+    async getJobsState() {
+      let result = []
+      await Promise.all(
+        this.currentJobs.map((item) => {
+          getTranscoderUrl(`jobs/${item.Id}`).then((res) => {
+            result.push(res.Job)
+          })
+        }),
+      ).then(() => {
+        this.currentJobs = result
+      })
+    },
+    removeTimer() {
+      this.interval && window.clearInterval(this.interval)
+      this.showJobsState = false
+      this.currentJobs = []
+      this.getData()
+    },
     async getData(nextMarker, searchValue = '') {
       this.$Loading.start()
       this.spinShow = true
@@ -1214,16 +1303,22 @@ export default {
     },
     async createJob() {
       try {
+        let result = []
         this.$Loading.start()
-        Promise.all(
+        await Promise.all(
           this.formatJob(this.job).map((item) => {
-            postTranscoderUrl('jobs', item)
+            postTranscoderUrl('jobs', item).then((res) => {
+              result.push(res.Job)
+            })
           }),
         ).then(() => {
+          this.currentJobs = result
           this.jobs = []
+          this.openTrancodeModal = false
           this.$Loading.finish()
           this.$Message.success(this.$t('VIDEO.CREATED'))
-          this.$router.push({ name: 'job' })
+          this.interval = window.setInterval(this.getJobsState, 10000)
+          this.showJobsState = true
         })
       } catch (error) {
         this.$Loading.error()
