@@ -798,7 +798,7 @@ export default {
         },
         {
           title: this.$t('VIDEO.OUTPUT_FILE_NAME'),
-          width: '17%',
+          width: '25%',
           render: (h, params) => {
             let names = params.row.Outputs
             if (names && names.length > 0) {
@@ -835,7 +835,11 @@ export default {
           render: (h, params) => {
             let ctime = params.row.Timing.SubmittedTimeMillis
             if (ctime && ctime.length > 0) {
-              return h('div', [h('div', [moment(ctime).format('HH:mm:ss')])])
+              return h('div', [
+                h('div', [
+                  moment(parseInt(ctime)).format('YYYY-MM-DD HH:mm:ss'),
+                ]),
+              ])
             }
           },
         },
@@ -878,15 +882,19 @@ export default {
   methods: {
     async getJobsState() {
       let result = []
-      await Promise.all(
-        this.currentJobs.map((item) => {
-          getTranscoderUrl(`jobs/${item.Id}`).then((res) => {
-            result.push(res.Job)
-          })
-        }),
-      ).then(() => {
-        this.currentJobs = result
-      })
+      try {
+        await Promise.all(
+          this.currentJobs.map((item) => {
+            getTranscoderUrl(`jobs/${item.Id}`).then((res) => {
+              result.push(res.Job)
+            })
+          }),
+        ).then(() => {
+          this.currentJobs = result
+        })
+      } catch (error) {
+        this.$Loading.error()
+      }
     },
     removeTimer() {
       this.interval && window.clearInterval(this.interval)
