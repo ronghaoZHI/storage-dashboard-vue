@@ -262,9 +262,10 @@
     <Modal v-model="showJobsState"
            title=""
            width="900"
+           height="680"
            :closable=false>
      <div slot="footer">
-      <Button type="primary" @click="removeTimer">关闭</Button>
+      <Button type="primary" @click="removeTimer">{{$t('PUBLIC.CLOSE')}}</Button>
     </div>
     <Table border
            :context="self"
