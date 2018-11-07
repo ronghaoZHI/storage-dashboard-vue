@@ -1364,7 +1364,7 @@ export default {
     },
   },
   beforeDestroy() {
-    window.clearTimeout(this.timeout)
+    this.timeout && window.clearTimeout(this.timeout)
   },
 }
 
