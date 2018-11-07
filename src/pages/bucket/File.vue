@@ -350,7 +350,6 @@ export default {
   data() {
     return {
       showJobsState: false,
-      compaltedJobs: [],
       currentJobs: [],
       outputFileModal: {
         prefix: '',
@@ -360,7 +359,6 @@ export default {
       pipes: [],
       job: jobDefult(),
       jobs: [],
-      count: 0,
       HLSShow: false,
       outFileType: '',
       isAutoCodec: false,
