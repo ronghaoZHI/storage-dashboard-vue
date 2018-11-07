@@ -139,10 +139,12 @@ export default {
         this.$Message.error(this.$t('NAV.PASSWORD_CHECK'))
         return false
       }
-      await repassword({
-        email: store.state.current.email,
-        password: this.rePasswordForm.password,
-      })
+      await repassword(
+        {
+          password: this.rePasswordForm.password,
+        },
+        this.$store.state.current.username,
+      )
       logout()
     },
     openDoc() {

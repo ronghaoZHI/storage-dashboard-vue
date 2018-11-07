@@ -33,9 +33,10 @@ export function deleteAccesskey(params, customer) {
   })
 }
 
-export function repassword(parmas, customer) {
+export function repassword(params, customer) {
+  console.log('params', params, customer)
   return request(group('user/update/user', customer), {
     method: 'post',
-    parmas,
+    data: params,
   })
 }
