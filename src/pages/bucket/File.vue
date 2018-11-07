@@ -886,10 +886,11 @@ export default {
       Promise.all(
         this.currentJobs.map((item) => {
           if (item.Status) {
-            ;(item.Status === 'Submitted' || item.Status === 'Progressing') &&
+            if (item.Status === 'Submitted' || item.Status === 'Progressing') {
               getTranscoderUrl(`jobs/${item.Id}`).then((res) => {
                 item.Status = res.Job.Status
               })
+            }
           } else {
             getTranscoderUrl(`jobs/${item.Id}`).then((res) => {
               item.Status = res.Job.Status
@@ -1328,7 +1329,7 @@ export default {
           this.$Loading.finish()
           this.$Message.success(this.$t('VIDEO.CREATED'))
           this.interval = window.setInterval(this.getJobsState, 10000)
-          window.setTimeout(() => {
+          this.timeout = window.setTimeout(() => {
             this.showJobsState = true
           }, 500)
         })
@@ -1361,6 +1362,9 @@ export default {
       await this.getVideoInfo()
       this.openTrancodeModal = true
     },
+  },
+  beforeDestroy() {
+    window.clearTimeout(this.timeout)
   },
 }
 
