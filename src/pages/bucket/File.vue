@@ -350,6 +350,7 @@ export default {
   data() {
     return {
       showJobsState: false,
+      compaltedJobs: [],
       currentJobs: [],
       outputFileModal: {
         prefix: '',
@@ -359,6 +360,7 @@ export default {
       pipes: [],
       job: jobDefult(),
       jobs: [],
+      count: 0,
       HLSShow: false,
       outFileType: '',
       isAutoCodec: false,
@@ -883,24 +885,25 @@ export default {
   },
   methods: {
     async getJobsState() {
-      let result = []
-      try {
-        await Promise.all(
-          this.currentJobs.map((item) => {
+      Promise.all(
+        this.currentJobs.map((item) => {
+          if (item.Status) {
+            ;(item.Status === 'Submitted' || item.Status === 'Progressing') &&
+              getTranscoderUrl(`jobs/${item.Id}`).then((res) => {
+                item.Status = res.Job.Status
+              })
+          } else {
             getTranscoderUrl(`jobs/${item.Id}`).then((res) => {
-              result.push(res.Job)
+              item.Status = res.Job.Status
             })
-          }),
-        ).then(() => {
-          this.currentJobs = result
-        })
-      } catch (error) {
-        this.$Loading.error()
-      }
+          }
+        }),
+      )
     },
     removeTimer() {
       this.interval && window.clearInterval(this.interval)
       this.showJobsState = false
+      this.count = 0
       this.currentJobs = []
       this.getData()
     },
@@ -1257,7 +1260,7 @@ export default {
     getOutPuts(item, outputSave) {
       const outputs = []
       let key = item.Key.split('.')
-      key.splice(-1, 1)
+      key.length > 1 && key.splice(-1, 1)
       if (this.outputType === 'fileDict') {
         outputs.push({
           ...outputSave,
@@ -1278,7 +1281,7 @@ export default {
         })
       } else {
         outputs.push({
-          Key: `${this.prefix}${this.outputFileModal.prefix}/${key.join('.')}${
+          Key: `${this.prefix}${this.outputFileModal.prefix}${key.join('.')}${
             this.outputFileModal.key
           }`,
           ...outputSave,
@@ -1294,7 +1297,7 @@ export default {
       files.map((item) => {
         const outputs = this.getOutPuts(item, outputSave)
         Object.assign(data, {
-          Inputs: [{ Key: item.Key }],
+          Inputs: [{ Key: this.prefix + item.Key }],
           Outputs: outputs,
         })
         const front = _.clone(data)
@@ -1314,22 +1317,22 @@ export default {
     },
     async createJob() {
       try {
-        let result = []
         this.$Loading.start()
-        await Promise.all(
+        Promise.all(
           this.formatJob(this.job).map((item) => {
             postTranscoderUrl('jobs', item).then((res) => {
-              result.push(res.Job)
+              this.currentJobs.push(res.Job)
             })
           }),
-        ).then(() => {
-          this.currentJobs = result
+        ).then(async () => {
           this.jobs = []
           this.openTrancodeModal = false
           this.$Loading.finish()
           this.$Message.success(this.$t('VIDEO.CREATED'))
           this.interval = window.setInterval(this.getJobsState, 10000)
-          this.showJobsState = true
+          window.setTimeout(() => {
+            this.showJobsState = true
+          }, 500)
         })
       } catch (error) {
         this.$Loading.error()
