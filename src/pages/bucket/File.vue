@@ -263,6 +263,7 @@
            title=""
            width="900"
            height="680"
+           :mask-closable=false
            :closable=false>
      <div slot="footer">
       <Button type="primary" @click="removeTimer">{{$t('PUBLIC.CLOSE')}}</Button>
@@ -906,6 +907,7 @@ export default {
     async getData(nextMarker, searchValue = '') {
       this.$Loading.start()
       this.spinShow = true
+      this.selectedFileList = []
       try {
         let self = this
         let res = await handler('listObjects', {
