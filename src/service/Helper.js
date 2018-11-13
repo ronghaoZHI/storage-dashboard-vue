@@ -99,7 +99,7 @@ export async function getUsers() {
         : await getListSubUser()
 }
 
-export function sentMessage(message, stak = '') {
+export function sentMessage(message, stak = {}) {
   if (process.env.NODE_ENV === 'production') {
     const msg = {
       attachments: [
@@ -121,13 +121,21 @@ export function sentMessage(message, stak = '') {
             {
               title: 'store',
               value: JSON.stringify({
-                user: store.state.user,
+                user: store.state,
               }),
               short: false,
             },
             {
-              title: 'stack',
-              value: JSON.stringify(stak),
+              title: 'stak',
+              value: JSON.stringify(
+                stak.response
+                  ? {
+                      data: stak.response.data,
+                      status: stak.response.status,
+                      statusText: stak.response.statusText,
+                    }
+                  : 'No stak',
+              ),
               short: false,
             },
           ],
