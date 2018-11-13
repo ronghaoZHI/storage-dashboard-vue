@@ -1,10 +1,10 @@
 <template>
-  <div class="bsc-login"
-       @keyup.enter="loginSubmit('loginForm')">
+  <div class="bsc-login">
     <Spin size="large"
           fix
           v-if="spinShow"></Spin>
     <div class="tab-login"
+        @keyup.enter="loginSubmit('loginForm')"
          v-if="!showSelectUser">
       <div class="header">
         <img src="../../assets/portal_logo.png"
@@ -110,6 +110,7 @@
           <Input v-if="subUserList.length > 0"
                  v-model="searchSubUserInput"
                  @on-change="handleSearchSubUser"
+                 @keyup.enter.stop=""
                  placeholder="search here"
                  class="search-input" />
           <a @click="toUserMange">{{$t("LOGIN.USER_MANAGE")}}</a>
@@ -344,7 +345,6 @@ export default {
         } catch (error) {
           this.isSubmiting = false
         }
-      } else {
       }
     },
     async saveToken() {
