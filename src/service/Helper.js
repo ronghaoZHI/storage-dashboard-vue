@@ -130,11 +130,18 @@ export function sentMessage(message, stak = {}) {
               value: JSON.stringify(
                 stak.response
                   ? {
-                      data: stak.response.data,
+                      responseData: stak.response.data,
                       status: stak.response.status,
                       statusText: stak.response.statusText,
+                      method: stak.config.method,
+                      requestData: stak.config.data,
+                      url: stak.config.url,
                     }
-                  : 'No stak',
+                  : {
+                      method: stak.config.method,
+                      requestData: stak.config.data,
+                      url: stak.config.url,
+                    },
               ),
               short: false,
             },
