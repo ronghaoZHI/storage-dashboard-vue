@@ -36,6 +36,9 @@ const bytes = (bytes, digit = 1) => {
 
   return bytesArray[0] + ' ' + bytesArray[1]
 }
+const isFolder = (fileName) => {
+  return fileName.slice(fileName.length - 1) === '/' ? 'folder' : 'file'
+}
 const bytesSpliteUnits = (bt, digit = 1) => {
   let bytes = bt
   if (typeof bytes !== 'number') {
@@ -263,6 +266,7 @@ export {
   time,
   bytes,
   bps,
+  isFolder,
   times,
   timesK,
   date,

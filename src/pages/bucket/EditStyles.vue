@@ -947,8 +947,8 @@ export default {
         background: color2Save(data.background),
       }
     },
-    uploadSuccess(fileName) {
-      this.imgName = fileName
+    uploadSuccess(file) {
+      this.imgName = file.name
     },
     radiusFormater(value) {
       return value > 1000 ? 'max' : value

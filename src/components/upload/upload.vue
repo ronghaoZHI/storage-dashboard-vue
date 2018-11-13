@@ -172,7 +172,11 @@ export default {
             ) {
               this.uploadFile(file).then(
                 () => {
-                  this.$emit('uploadSuccess', file.name)
+                  this.$emit('uploadSuccess', {
+                    ...file,
+                    bucket: this.bucket,
+                    prefix: this.prefix,
+                  })
                 },
                 () => {
                   this.$Message.error(

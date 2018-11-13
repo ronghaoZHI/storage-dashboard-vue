@@ -26,7 +26,9 @@
         <Tooltip v-if="canUseBatchDownload"
                  content="页面提醒是否允许自动下载时，点击允许"
                  placement="bottom">
-          <Button type="primary" @click="batchDownload" :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
+          <Button type="primary"
+                  @click="batchDownload"
+                  :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DOWNLOAD_FILES")}}</Button>
         </Tooltip>
         <Button @click="batchDeleteFileConfirm"
                 :disabled="!selectedFileList.length > 0">{{$t("STORAGE.DELETE_FILES")}}</Button>
@@ -106,7 +108,6 @@
     <Modal v-model="uploadModal"
            :mask-closable="uploadModalMaskClosable"
            :title="$t('STORAGE.UPLOAD_FLIE')"
-           @on-cancel="uploadModalClose"
            width="700">
       <RadioGroup v-model="aclType">
         <Radio label="authenticated-read">{{$t("STORAGE.AUTHENTICATED_READ")}}</Radio>
@@ -116,8 +117,13 @@
               style="margin-top:15px"
               :bucket="bucket"
               :prefix="prefix"
+              v-on:uploadSuccess="uploadSuccess"
               :acl-type="aclType"></upload>
-      <div slot="footer"></div>
+      <div slot="footer">
+        <Button size="small"
+                type="primary"
+                @click="uploadModal = false">Close</Button>
+      </div>
     </Modal>
     <Modal v-model="showPermissonModal"
            :title="$t('STORAGE.FILE_PERMISSIONS')"
@@ -143,31 +149,43 @@
             :rules="ruleValidate">
         <FormItem :label="$t('VIDEO.OUTPUTRULE')"
                   required>
-        <RadioGroup v-model="outputType">
-            <Radio label="fileDict"><Poptip trigger="hover" placement="top" >{{$t('STORAGE.CREATECATALOG')}}<div slot="content">
-              <p>{{$t('STORAGE.CREATECATALOGMSG')}}</p>
-            </div></Poptip></Radio>
-            <Radio label="currentDict"><Poptip trigger="hover" placement="top">{{$t('STORAGE.KEEPCATALOG')}}<div slot="content">
-              <p>{{$t('STORAGE.KEEPCATALOGMSG')}}</p>
-            </div></Poptip></Radio>
-            <Radio label="manualDict"><Poptip trigger="hover" placement="top">{{$t('STORAGE.MANUALCATALOG')}}<div slot="content">
-              <p>{{$t('STORAGE.MANUALCATALOGMSG')}}</p>
-            </div></Poptip></Radio>
-        </RadioGroup>
+          <RadioGroup v-model="outputType">
+            <Radio label="fileDict">
+              <Poptip trigger="hover"
+                      placement="top">{{$t('STORAGE.CREATECATALOG')}}<div slot="content">
+                  <p>{{$t('STORAGE.CREATECATALOGMSG')}}</p>
+                </div>
+              </Poptip>
+            </Radio>
+            <Radio label="currentDict">
+              <Poptip trigger="hover"
+                      placement="top">{{$t('STORAGE.KEEPCATALOG')}}<div slot="content">
+                  <p>{{$t('STORAGE.KEEPCATALOGMSG')}}</p>
+                </div>
+              </Poptip>
+            </Radio>
+            <Radio label="manualDict">
+              <Poptip trigger="hover"
+                      placement="top">{{$t('STORAGE.MANUALCATALOG')}}<div slot="content">
+                  <p>{{$t('STORAGE.MANUALCATALOGMSG')}}</p>
+                </div>
+              </Poptip>
+            </Radio>
+          </RadioGroup>
         </FormItem>
         <FormItem v-if="outputType === 'manualDict'"
                   :label="$t('STORAGE.OUTPUTINFO')"
                   required>
           {{$t('STORAGE.FILEPREFIX')}} :
           <Input v-model="outputFileModal.prefix"
-          :placeholder="$t('STORAGE.FILEPREFIXMSG')"
-          class="line-width" 
-          style="width: 180px"/>
+                 :placeholder="$t('STORAGE.FILEPREFIXMSG')"
+                 class="line-width"
+                 style="width: 180px" />
           {{$t('STORAGE.FILESUFFIX')}} :
           <Input v-model="outputFileModal.key"
-          :placeholder="$t('STORAGE.FILESUFFIXMSG')"
-          class="line-width" 
-          style="width: 180px"/>
+                 :placeholder="$t('STORAGE.FILESUFFIXMSG')"
+                 class="line-width"
+                 style="width: 180px" />
         </FormItem>
         <FormItem :label="$t('VIDEO.JOB_PIPE')"
                   prop="PipelineId"
@@ -261,15 +279,17 @@
            height="680"
            :mask-closable=false
            :closable=false>
-     <div slot="footer">
-      <Button type="primary" @click="removeTimer">{{$t('PUBLIC.CLOSE')}}</Button>
-    </div>
-    <Table border
-           :context="self"
-           :stripe="true"
-           :columns="listHeader"
-           :data="currentJobs"
-           :no-data-text="$t('STORAGE.NO_LIST')"></Table></Modal>
+      <div slot="footer">
+        <Button type="primary"
+                @click="removeTimer">{{$t('PUBLIC.CLOSE')}}</Button>
+      </div>
+      <Table border
+             :context="self"
+             :stripe="true"
+             :columns="listHeader"
+             :data="currentJobs"
+             :no-data-text="$t('STORAGE.NO_LIST')"></Table>
+    </Modal>
     <a download
        id="element-download"
        style="display:none">
@@ -312,7 +332,12 @@
 <script>
 import picturePreview from '@/components/picturePreview/picturePreview'
 import { getS3, handler } from '@/service/Aws'
-import { bytes, keyFilter, convertPrefix2Router } from '@/service/BucketService'
+import {
+  bytes,
+  keyFilter,
+  convertPrefix2Router,
+  isFolder,
+} from '@/service/BucketService'
 import bscBreadcrumb from '@/components/breadcrumb'
 import upload from '@/components/upload/upload'
 import Clipboard from 'clipboard'
@@ -974,6 +999,21 @@ export default {
         this.$Message.error(this.$t('STORAGE.RENAME_PLACEHOLDER'))
       }
     },
+    uploadSuccess(file) {
+      if (this.bucket === file.bucket && this.prefix === file.prefix) {
+        this.fileList = [
+          {
+            Key: file.name,
+            LastModified: moment(file.LastModified).format('YYYY-MM-DD HH:mm'),
+            Size: file.size,
+            convertSize: file.size,
+            isImage: isImage({ Key: file.name }),
+            Type: isFolder(file.name),
+          },
+          ...this.fileList,
+        ]
+      }
+    },
     back() {
       this.$router.back()
     },
@@ -1143,10 +1183,6 @@ export default {
         '/prefix/' +
         repliceAllString(prefix, '/', '%2F')
       )
-    },
-    async uploadModalClose() {
-      await this.getData()
-      this.$refs.upload.clearFiles()
     },
     async checkCanUpload() {
       if (checkRole('SUBUSER')) {

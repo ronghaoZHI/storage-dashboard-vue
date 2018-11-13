@@ -423,9 +423,9 @@ export default {
     back() {
       this.$router.back()
     },
-    uploadSuccess(fileName) {
-      const file = { Key: this.prefix + fileName }
-      this.getObject(file).then(() => {
+    uploadSuccess(file) {
+      const _file = { Key: this.prefix + file.name }
+      this.getObject(_file).then(() => {
         this.showUploadModal = false
       })
     },
