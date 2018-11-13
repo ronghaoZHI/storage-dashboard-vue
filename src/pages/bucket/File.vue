@@ -15,7 +15,7 @@
       </bsc-breadcrumb>
     </div>
     <Row class="toolbar-nav">
-      <Col span="10">
+      <Col span="14">
       <div>
         <Button type="primary"
                 v-show="canUpload"
@@ -42,10 +42,6 @@
                v-if="showSearch">
             <span class="bsc-input">
               <input type="text"
-                     class="input-append-before"
-                     disabled
-                     :value="prefix" />
-              <input type="text"
                      @focus="searchInputFocus = true"
                      v-model="searchValue" />
               <Button type="text"
@@ -59,7 +55,7 @@
         </transition>
       </div>
       </Col>
-      <Col span="14"
+      <Col span="10"
            style="text-align:right">
       <legend-list :data="legendList"></legend-list>
       </Col>
@@ -409,10 +405,6 @@ export default {
         {
           icon: 'link',
           text: 'PUBLIC.COPY',
-        },
-        {
-          icon: 'ios-trash',
-          text: 'PUBLIC.DELETE',
         },
       ],
       inputCheck: false,
@@ -1467,21 +1459,11 @@ const outputsDefult = () => {
   .section-search {
     position: absolute;
     z-index: 100;
-    width: 400px;
+    width: 250px;
 
-    input.input-append-before {
-      border-right: 1px solid #eff2f7;
-      color: #99a9bf;
-      width: 100px;
-      margin: -5px 0 -5px -7px;
-      height: 30px;
-      background-color: #f9fafc !important;
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
     .@{css-prefix}input {
       margin-left: 4px;
-      width: 400px;
+      width: 250px;
     }
   }
 
