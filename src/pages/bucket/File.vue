@@ -1143,7 +1143,7 @@ export default {
           },
         })
         if (res.Contents.length === 1000) {
-          this.deleteFolders(folder, res.Contents[1000].Key)
+          this.deleteFolders(folder, res.Contents[999].Key)
         } else {
           await handler('deleteObject', {
             Bucket: this.bucket,
