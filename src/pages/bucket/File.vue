@@ -206,7 +206,7 @@
                   class="line-width"
                   @on-change="templateChange"
                   filterable>
-            <Option v-for="template in this.templateInfo.templateList"
+            <Option v-for="template in templateList"
                     :value="template.Id"
                     :key="template.Id">{{template.Name}}</Option>
           </Select>
@@ -385,8 +385,9 @@ export default {
       isAutoCodec: false,
       isWaterMarkerOpen: false,
       isComposition: false, // video Composition 视频剪辑
-      templateInfo: [],
-      showTranscode: false,
+      templateInfo: {},
+      templateList: [],
+      showTranscode: checkRole('TRANSCODE'),
       outputModal: outputsDefult(),
       openTrancodeModal: false,
       clipUrl: '',
@@ -1246,6 +1247,7 @@ export default {
     },
     async getVideoInfo() {
       this.templateInfo = await getTemplateInfo()
+      this.templateList = this.templateInfo.templateList
       let pipesAll = await listPipelines()
       this.pipes = pipesAll.filter((pipe) => {
         return pipe.Status === 'Active' && pipe.InputBucket === this.bucket
@@ -1345,25 +1347,37 @@ export default {
     async createJob() {
       try {
         this.$Loading.start()
-        Promise.all(
+        await Promise.all(
           this.formatJob(this.job).map((item) => {
             postTranscoderUrl('jobs', item).then((res) => {
               this.currentJobs.push(res.Job)
             })
           }),
-        ).then(async () => {
-          this.jobs = []
-          this.openTrancodeModal = false
-          this.$Loading.finish()
-          this.$Message.success(this.$t('VIDEO.CREATED'))
-          this.interval = window.setInterval(this.getJobsState, 10000)
-          this.timeout = window.setTimeout(() => {
-            this.showJobsState = true
-          }, 500)
-        })
+        )
+        this.defultConfig()
+        this.openTrancodeModal = false
+        this.$Loading.finish()
+        this.$Message.success(this.$t('VIDEO.CREATED'))
+        this.interval = window.setInterval(this.getJobsState, 10000)
+        this.timeout = window.setTimeout(() => {
+          this.showJobsState = true
+        }, 500)
       } catch (error) {
         this.$Loading.error()
       }
+    },
+    defultConfig() {
+      this.job = jobDefult()
+      this.outputModal = outputsDefult()
+      this.outputFileModal = {
+        prefix: '',
+        key: '',
+      }
+      this.outputType = 'fileDict'
+      this.isAutoCodec = false
+      this.isComposition = false
+      this.isWaterMarkerOpen = false
+      this.jobs = []
     },
     validateInputKey(rule, value, callback) {
       if (!this.isAutoCodec && this.isWaterMarkerOpen && !value) {
