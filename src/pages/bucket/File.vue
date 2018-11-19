@@ -386,7 +386,7 @@ export default {
       isWaterMarkerOpen: false,
       isComposition: false, // video Composition 视频剪辑
       templateInfo: [],
-      showTranscode: checkRole('TRANSCODE'),
+      showTranscode: false,
       outputModal: outputsDefult(),
       openTrancodeModal: false,
       clipUrl: '',
