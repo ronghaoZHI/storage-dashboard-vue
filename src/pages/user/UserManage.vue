@@ -479,7 +479,7 @@ export default {
           })
         }),
       )
-      return _.each(users, (user) => {
+      _.each(users, (user) => {
         user.acl = []
         _.each(buckets, (bucket) => {
           _.each(bucket.acl, (acl) => {
@@ -489,16 +489,17 @@ export default {
             ) {
               user.acl.push({
                 bucket: bucket.bucket,
-                bucket_acl: acl.bucket_acl,
-                bucket_acl_obj: convertArray2Object(acl.bucket_acl),
-                file_acl: acl.file_acl,
-                file_acl_obj: convertArray2Object(acl.file_acl),
+                bucket_acl: acl.bucket_acl.permission,
+                bucket_acl_obj: convertArray2Object(acl.bucket_acl.permission),
+                file_acl: acl.file_acl.permission,
+                file_acl_obj: convertArray2Object(acl.file_acl.permission),
                 redirect: true,
               })
             }
           })
         })
       })
+      return users
     },
     async getUserList(update = true) {
       this.$Loading.start()
