@@ -1,178 +1,178 @@
 <template>
-  <div class="bsc-user">
-    <Button type="primary"
-            style="marginRight:2px"
-            v-show="canCreateSub"
-            @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
-    <Button type="primary"
-            v-show="canCreateUser"
-            style="marginRight:2px"
-            @click="openCreateUserModal">{{$t("USER.CREATE_USER")}}</Button>
-    <Button type="primary"
-            v-show="canBindUser"
-            style="marginRight:2px"
-            @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
-    <Input v-if="userList.length || subUserList.length"
-           v-model="searchUserInput"
-           @on-change="handleSearchUser"
-           placeholder="search here"
-           style="width:300px" />
-    <Table class="table"
-           v-if="!canShowTab"
-           :show-header="true"
-           :stripe="true"
-           :context="self"
-           :columns="userHeader"
-           :data="searchedUserList"
-           :no-data-text="$t('USER.NO_USER')"></Table>
-    <Tabs size="small"
-          v-model="tabName"
-          v-if="canShowTab"
-          @on-click="tabChange"
-          style="marginTop:10px"
-          :animated="false">
-      <Tab-pane :label="$t('USER.USER_MANAGE')"
-                name="user">
+    <div class="bsc-user">
+        <Button type="primary"
+                style="marginRight:2px"
+                v-show="canCreateSub"
+                @click="openCreateSubUserModal">{{$t("USER.CREATE_SUB_USER")}}</Button>
+        <Button type="primary"
+                v-show="canCreateUser"
+                style="marginRight:2px"
+                @click="openCreateUserModal">{{$t("USER.CREATE_USER")}}</Button>
+        <Button type="primary"
+                v-show="canBindUser"
+                style="marginRight:2px"
+                @click="openBindUserModal">{{$t("USER.BIND_USER")}}</Button>
+        <Input v-if="userList.length || subUserList.length"
+               v-model="searchUserInput"
+               @on-change="handleSearchUser"
+               placeholder="search here"
+               style="width:300px" />
         <Table class="table"
+               v-if="!canShowTab"
                :show-header="true"
                :stripe="true"
                :context="self"
                :columns="userHeader"
                :data="searchedUserList"
                :no-data-text="$t('USER.NO_USER')"></Table>
-      </Tab-pane>
-      <Tab-pane :label="$t('USER.SUB_USER_MANAGE')"
-                name="subUser">
-        <Table class="table"
-               :show-header="true"
-               :stripe="true"
-               :context="self"
-               :columns="subUserHeader"
-               :data="searchedSubUserList"
-               :no-data-text="$t('USER.NO_USER')"></Table>
-      </Tab-pane>
-    </Tabs>
-    <Modal v-model="createUserModal"
-           :title="$t('USER.CREATE_USER')"
-           @on-ok="createUserCheck"
-           @on-cancel="createBucketValue = ''">
-      <Form ref="createUserForm"
-            :model="createUserForm"
-            :rules="userRuleValidate"
-            :label-width="100">
-        <Form-item :label="$t('USER.USER_NAME')"
-                   prop="username">
-          <Input v-model="createUserForm.username"
-                 placeholder="User name" />
-        </Form-item>
-        <Form-item :label="$t('USER.EMAILL')"
-                   prop="email">
-          <Input v-model="createUserForm.email"
-                 placeholder="Email" />
-        </Form-item>
-        <Form-item :label="$t('USER.PASSWORD')"
-                   prop="password">
-          <Input v-model="createUserForm.password"
-                 placeholder="Password" />
-        </Form-item>
-        <Form-item :label="$t('USER.COMPANY')"
-                   prop="company">
-          <Input v-model="createUserForm.company"
-                 placeholder="Company" />
-          <span style="position: absolute;right: 10px;">*{{$t("USER.BUSNISS_LICENSE")}}</span>
-        </Form-item>
-        <Form-item :label="$t('USER.PERMISSON_CONFIG')"
-                   prop="perms"
-                   v-if="canCreatePerms.length">
-          <CheckboxGroup v-model="createUserForm.perms">
-            <Checkbox v-for="perm in canCreatePerms"
-                      :label="perm"
-                      :disabled="perm === 'BASE'"
-                      :key="perm"></Checkbox>
-          </CheckboxGroup>
-        </Form-item>
-        <Form-item :label="$t('USER.USER_TYPE')"
-                   prop="sso_type"
-                   v-show="canUseSSOType">
-          <Radio-group v-model="createUserForm.sso_type">
-            <Radio label="2">Customer</Radio>
-            <Radio label="1">Staff</Radio>
-          </Radio-group>
-        </Form-item>
-      </Form>
-    </Modal>
-    <Modal v-model="bindUserModal"
-           :title="$t('USER.BIND_USER')"
-           width="880"
-           @on-ok="bindUser">
-      <div class="bind-modal-wrap">
-        <Spin size="large"
+        <Tabs size="small"
+              v-model="tabName"
+              v-if="canShowTab"
+              @on-click="tabChange"
+              style="marginTop:10px"
+              :animated="false">
+            <Tab-pane :label="$t('USER.USER_MANAGE')"
+                      name="user">
+                <Table class="table"
+                       :show-header="true"
+                       :stripe="true"
+                       :context="self"
+                       :columns="userHeader"
+                       :data="searchedUserList"
+                       :no-data-text="$t('USER.NO_USER')"></Table>
+            </Tab-pane>
+            <Tab-pane :label="$t('USER.SUB_USER_MANAGE')"
+                      name="subUser">
+                <Table class="table"
+                       :show-header="true"
+                       :stripe="true"
+                       :context="self"
+                       :columns="subUserHeader"
+                       :data="searchedSubUserList"
+                       :no-data-text="$t('USER.NO_USER')"></Table>
+            </Tab-pane>
+        </Tabs>
+        <Modal v-model="createUserModal"
+               :title="$t('USER.CREATE_USER')"
+               @on-ok="createUserCheck"
+               @on-cancel="createBucketValue = ''">
+            <Form ref="createUserForm"
+                  :model="createUserForm"
+                  :rules="userRuleValidate"
+                  :label-width="100">
+                <Form-item :label="$t('USER.USER_NAME')"
+                           prop="username">
+                    <Input v-model="createUserForm.username"
+                           placeholder="User name" />
+                </Form-item>
+                <Form-item :label="$t('USER.EMAILL')"
+                           prop="email">
+                    <Input v-model="createUserForm.email"
+                           placeholder="Email" />
+                </Form-item>
+                <Form-item :label="$t('USER.PASSWORD')"
+                           prop="password">
+                    <Input v-model="createUserForm.password"
+                           placeholder="Password" />
+                </Form-item>
+                <Form-item :label="$t('USER.COMPANY')"
+                           prop="company">
+                    <Input v-model="createUserForm.company"
+                           placeholder="Company" />
+                    <span style="position: absolute;right: 10px;">*{{$t("USER.BUSNISS_LICENSE")}}</span>
+                </Form-item>
+                <Form-item :label="$t('USER.PERMISSON_CONFIG')"
+                           prop="perms"
+                           v-if="canCreatePerms.length">
+                    <CheckboxGroup v-model="createUserForm.perms">
+                        <Checkbox v-for="perm in canCreatePerms"
+                                  :label="perm"
+                                  :disabled="perm === 'BASE'"
+                                  :key="perm"></Checkbox>
+                    </CheckboxGroup>
+                </Form-item>
+                <Form-item :label="$t('USER.USER_TYPE')"
+                           prop="sso_type"
+                           v-show="canUseSSOType">
+                    <Radio-group v-model="createUserForm.sso_type">
+                        <Radio label="2">Customer</Radio>
+                        <Radio label="1">Staff</Radio>
+                    </Radio-group>
+                </Form-item>
+            </Form>
+        </Modal>
+        <Modal v-model="bindUserModal"
+               :title="$t('USER.BIND_USER')"
+               width="880"
+               @on-ok="bindUser">
+            <div class="bind-modal-wrap">
+                <Spin size="large"
+                      fix
+                      v-if="spinShow"></Spin>
+                <Input size="small"
+                       v-model="searchBindUserInput"
+                       @on-change="handleSearchBindUser"
+                       placeholder="search here"
+                       style="width:300px" />
+                <div class="bsc-user-box">
+                    <div class="user-card"
+                         v-show="user.show"
+                         :class="{'user-card-selected': user.selected}"
+                         @click="user.selected = !user.selected"
+                         v-for="user in searchBindUserList"
+                         :key="user.username">
+                        {{user.username}}
+                    </div>
+                </div>
+            </div>
+        </Modal>
+        <Modal v-model="createSubUserModal"
+               :title="$t('USER.CREATE_SUB_USER')"
+               ok-text="确定(请勿多次尝试)"
+               @on-ok="createSubUser">
+            <div class="section-separator">
+                <div class="separator-body">
+                    <span class="separator-icon"></span>
+                    <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
+                </div>
+            </div>
+            <Form ref="createSubUserForm"
+                  :model="createSubUserForm"
+                  :rules="subUserRuleValidate"
+                  :label-width="110">
+                <Form-item :label="$t('USER.USER_NAME')"
+                           prop="username">
+                    <Input v-model="createSubUserForm.username"
+                           :placeholder="$t('USER.REQUIRE_USER_NAME')" />
+                </Form-item>
+                <Form-item :label="$t('USER.EMAILL')"
+                           prop="email">
+                    <Input v-model="createSubUserForm.email"
+                           :placeholder="$t('LOGIN.EMAILL_ALERT')" />
+                </Form-item>
+                <Form-item :label="$t('USER.PASSWORD')"
+                           prop="password">
+                    <Input v-model="createSubUserForm.password"
+                           :placeholder="$t('LOGIN.KEY_ALERT')" />
+                </Form-item>
+                <Form-item :label="$t('USER.COMPANY')"
+                           prop="company">
+                    <Input v-model="createSubUserForm.company"
+                           :placeholder="$t('USER.REQUIRE_COMPANY')" />
+                </Form-item>
+            </Form>
+            <Acls :aclsData=subUserAclForm />
+        </Modal>
+        <Modal v-model="openEditSubUserModal"
+               title="编辑子账号"
+               ok-text="确定(请勿多次尝试)"
+               @on-ok="editSubUser">
+            <Acls :aclsData=subUserAclForm />
+        </Modal>
+        <Spin size="bigger"
               fix
               v-if="spinShow"></Spin>
-        <Input size="small"
-               v-model="searchBindUserInput"
-               @on-change="handleSearchBindUser"
-               placeholder="search here"
-               style="width:300px" />
-        <div class="bsc-user-box">
-          <div class="user-card"
-               v-show="user.show"
-               :class="{'user-card-selected': user.selected}"
-               @click="user.selected = !user.selected"
-               v-for="user in searchBindUserList"
-               :key="user.username">
-            {{user.username}}
-          </div>
-        </div>
-      </div>
-    </Modal>
-    <Modal v-model="createSubUserModal"
-           :title="$t('USER.CREATE_SUB_USER')"
-           ok-text="确定(请勿多次尝试)"
-           @on-ok="createSubUser">
-      <div class="section-separator">
-        <div class="separator-body">
-          <span class="separator-icon"></span>
-          <span class="separator-info">{{$t("USER.BASE_INFO")}}</span>
-        </div>
-      </div>
-      <Form ref="createSubUserForm"
-            :model="createSubUserForm"
-            :rules="subUserRuleValidate"
-            :label-width="110">
-        <Form-item :label="$t('USER.USER_NAME')"
-                   prop="username">
-          <Input v-model="createSubUserForm.username"
-                 :placeholder="$t('USER.REQUIRE_USER_NAME')" />
-        </Form-item>
-        <Form-item :label="$t('USER.EMAILL')"
-                   prop="email">
-          <Input v-model="createSubUserForm.email"
-                 :placeholder="$t('LOGIN.EMAILL_ALERT')" />
-        </Form-item>
-        <Form-item :label="$t('USER.PASSWORD')"
-                   prop="password">
-          <Input v-model="createSubUserForm.password"
-                 :placeholder="$t('LOGIN.KEY_ALERT')" />
-        </Form-item>
-        <Form-item :label="$t('USER.COMPANY')"
-                   prop="company">
-          <Input v-model="createSubUserForm.company"
-                 :placeholder="$t('USER.REQUIRE_COMPANY')" />
-        </Form-item>
-      </Form>
-      <Acls :aclsData=subUserAclForm />
-    </Modal>
-    <Modal v-model="openEditSubUserModal"
-           title="编辑子账号"
-           ok-text="确定(请勿多次尝试)"
-           @on-ok="editSubUser">
-      <Acls :aclsData=subUserAclForm />
-    </Modal>
-    <Spin size="bigger"
-          fix
-          v-if="spinShow"></Spin>
-  </div>
+    </div>
 </template>
 <script>
 import Acls from './Acls.vue'
@@ -463,7 +463,7 @@ export default {
       return headers
     },
   },
-  created() {
+  mounted() {
     this.getUserList(false)
   },
   methods: {
@@ -479,7 +479,7 @@ export default {
           })
         }),
       )
-      _.each(users, (user) => {
+      return _.each(users, (user) => {
         user.acl = []
         _.each(buckets, (bucket) => {
           _.each(bucket.acl, (acl) => {
@@ -489,17 +489,20 @@ export default {
             ) {
               user.acl.push({
                 bucket: bucket.bucket,
-                bucket_acl: acl.bucket_acl.permission,
-                bucket_acl_obj: convertArray2Object(acl.bucket_acl.permission),
-                file_acl: acl.file_acl.permission,
-                file_acl_obj: convertArray2Object(acl.file_acl.permission),
+                bucket_acl: acl.bucket_acl.permission || [],
+                bucket_acl_obj: convertArray2Object(
+                  acl.bucket_acl.permission || [],
+                ),
+                file_acl: acl.file_acl.permission || [],
+                file_acl_obj: convertArray2Object(
+                  acl.file_acl.permission || [],
+                ),
                 redirect: true,
               })
             }
           })
         })
       })
-      return users
     },
     async getUserList(update = true) {
       this.$Loading.start()
@@ -927,6 +930,7 @@ const convertObject2Array = (object) => {
 }
 
 const convertArray2Object = (array) => {
+  if (!Array.isArray(array) || array.length === 0) return {}
   let aclObj = {
     READ: false,
     WRITE: false,
