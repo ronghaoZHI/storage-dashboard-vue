@@ -51,6 +51,8 @@ export default {
 @import '../../styles/index.less';
 
 .@{css-prefix}user {
+  max-height: 400px;
+  overflow: auto;
   & > div.table {
     margin-top: 16px;
   }
