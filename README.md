@@ -19,7 +19,7 @@
     $ npm install
     $ npm run dev
     ```
-- 修改 **host** 文件(目前登录统一采用白山 SSO 账户系统登录并自动跳转，故需要做一层 hosts 配置)， 以 Mac 为例
+- 修改 **host** 文件(目前登录统一采用白山SSO账户系统登录并自动跳转，故需要做一层 hosts 配置)， 以 Mac 为例
     ```bash
     $ sudo vim /etc/hosts
     ```
